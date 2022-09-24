@@ -1,16 +1,14 @@
-﻿namespace BolApp;
+﻿using BolApp.Services;
+using BolApp.ViewModels;
+
+namespace BolApp;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
-	public MainPage()
+	public MainPage(MainPageViewModel mainPageViewModel)
 	{
 		InitializeComponent();
-	}
-
-	private void NavigateToCodename(object sender, EventArgs e)
-	{
+		BindingContext = mainPageViewModel;
 	}
 }
 
