@@ -1,4 +1,7 @@
-﻿namespace BolApp;
+﻿using BolApp.Services;
+using BolApp.ViewModels;
+
+namespace BolApp;
 
 public static class MauiProgram
 {
@@ -11,7 +14,18 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
-
+		
+		// Register Services
+		builder.Services.AddScoped<INavigationService, NavigationService>();
+		
+		// Register Pages
+		builder.Services.AddTransient<MainPage>();
+		builder.Services.AddTransient<CodenamePage>();
+		
+		// RegisterViewModels
+		builder.Services.AddTransient<CodenameViewModel>();
+		builder.Services.AddTransient<MainPageViewModel>();
+		
 		return builder.Build();
 	}
 }
