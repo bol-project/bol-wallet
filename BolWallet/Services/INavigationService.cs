@@ -1,5 +1,5 @@
 #nullable enable
-namespace BolApp.Services;
+namespace BolWallet.Services;
 
 public interface INavigationService
 {

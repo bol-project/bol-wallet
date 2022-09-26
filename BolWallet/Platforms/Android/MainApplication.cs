@@ -1,7 +1,8 @@
 ﻿using Android.App;
 using Android.Runtime;
+using BolWallet;
 
-namespace BolApp;
+namespace BolWallet;
 
 [Application]
 public class MainApplication : MauiApplication

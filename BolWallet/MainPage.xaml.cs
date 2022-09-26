@@ -1,7 +1,6 @@
-﻿using BolApp.Services;
-using BolApp.ViewModels;
+﻿using BolWallet.ViewModels;
 
-namespace BolApp;
+namespace BolWallet;
 
 public partial class MainPage : ContentPage
 {

@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace BolApp;
+namespace BolWallet;
 
 public class Program
 {

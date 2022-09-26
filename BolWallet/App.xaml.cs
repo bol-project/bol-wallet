@@ -1,4 +1,4 @@
-﻿namespace BolApp;
+﻿namespace BolWallet;
 
 public partial class App : Application
 {

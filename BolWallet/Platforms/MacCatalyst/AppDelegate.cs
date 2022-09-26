@@ -1,6 +1,7 @@
-﻿using Foundation;
+﻿using BolWallet;
+using Foundation;
 
-namespace BolApp;
+namespace BolWallet;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

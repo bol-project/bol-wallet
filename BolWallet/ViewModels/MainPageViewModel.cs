@@ -1,6 +1,6 @@
-using BolApp.Services;
+using BolWallet.Services;
 
-namespace BolApp.ViewModels;
+namespace BolWallet.ViewModels;
 
 public class MainPageViewModel
 {

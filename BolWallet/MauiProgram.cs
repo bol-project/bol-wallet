@@ -1,7 +1,7 @@
-﻿using BolApp.Services;
-using BolApp.ViewModels;
+﻿using BolWallet.Services;
+using BolWallet.ViewModels;
 
-namespace BolApp;
+namespace BolWallet;
 
 public static class MauiProgram
 {

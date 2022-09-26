@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BolApp", "BolApp.csproj", "{7422772F-828D-4BA8-9259-0724B01FA680}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BolWallet", "BolWallet.csproj", "{7422772F-828D-4BA8-9259-0724B01FA680}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

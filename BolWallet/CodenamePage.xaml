@@ -1,8 +1,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BolApp.CodenamePage"
-             xmlns:viewmodel="clr-namespace:BolApp.ViewModels"
-             x:DataType="viewmodel:CodenameViewModel"
+             xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+             x:Class="BolWallet.CodenamePage"
+             x:DataType="viewModels:CodenameViewModel"
              BackgroundColor="{DynamicResource SecondaryColor}">
     <ScrollView>
 
