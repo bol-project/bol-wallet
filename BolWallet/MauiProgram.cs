@@ -28,4 +28,16 @@ public static class MauiProgram
 		
 		return builder.Build();
 	}
+
+	private static IServiceCollection RegisterContent(this IServiceCollection services)
+	{
+		var countries = CountriesHelper.GetCountries().Result;
+		
+		services.AddSingleton(new WalletAppContent
+		{
+			Countries = countries
+		});
+		
+		return services;
+	}
 }
