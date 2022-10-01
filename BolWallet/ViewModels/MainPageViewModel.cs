@@ -1,5 +1,3 @@
-using BolWallet.Services;
-
 namespace BolWallet.ViewModels;
 
 public class MainPageViewModel

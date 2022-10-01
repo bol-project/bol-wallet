@@ -1,6 +1,4 @@
-﻿using BolWallet.ViewModels;
-
-namespace BolWallet;
+﻿namespace BolWallet;
 
 public partial class MainPage : ContentPage
 {
