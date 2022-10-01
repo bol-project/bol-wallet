@@ -1,12 +1,9 @@
 namespace BolWallet.ViewModels;
 
-public class CodenameViewModel
+public class CodenameViewModel : BaseViewModel
 {
-	private readonly INavigationService _navigationService;
-
-	public CodenameViewModel(INavigationService navigationService)
-	{
-		_navigationService = navigationService;
+    public CodenameViewModel(INavigationService navigationService) : base(navigationService)
+    {
 		Form = new CreateCodenameForm();
 	}
 

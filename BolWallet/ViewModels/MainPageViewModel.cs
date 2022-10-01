@@ -1,13 +1,10 @@
 namespace BolWallet.ViewModels;
 
-public class MainPageViewModel
+public class MainPageViewModel : BaseViewModel
 {
-	private readonly INavigationService _navigationService;
-
-	public MainPageViewModel(INavigationService navigationService)
+	public MainPageViewModel(INavigationService navigationService) : base(navigationService)
 	{
-		_navigationService = navigationService;
 	}
 
-	public Command NavigateToCodenamePage => new( () => _navigationService.NavigateToPage<CodenamePage>(true));
+	public Command NavigateToCodenamePage => new(() => NavigationService.NavigateToPage<CodenamePage>(true));
 }
