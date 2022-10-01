@@ -37,10 +37,10 @@
         </MauiSplashScreen>
 
         <!-- Images -->
-        <MauiImage Include="Resources\Images\*"/>
+        <MauiImage Include="Resources\Images\*" />
 
         <!-- Custom Fonts -->
-        <MauiFont Include="Resources\Fonts\*"/>
+        <MauiFont Include="Resources\Fonts\*" />
     </ItemGroup>
     
     <ItemGroup>
@@ -71,14 +71,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="content\country_code.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1" />
+        <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1"/>
-        <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*"/>
+      <Content Include="Content\country_code.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
