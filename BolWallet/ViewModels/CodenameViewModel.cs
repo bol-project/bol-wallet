@@ -1,4 +1,4 @@
-using BolWallet.Services;
+using BolWallet.Models;
 
 namespace BolWallet.ViewModels;
 
@@ -9,5 +9,8 @@ public class CodenameViewModel
 	public CodenameViewModel(INavigationService navigationService)
 	{
 		_navigationService = navigationService;
+		Form = new CreateCodenameForm();
 	}
+
+	public CreateCodenameForm Form { get; }
 }
