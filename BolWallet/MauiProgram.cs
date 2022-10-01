@@ -1,7 +1,4 @@
-﻿using BolWallet.Services;
-using BolWallet.ViewModels;
-
-namespace BolWallet;
+﻿namespace BolWallet;
 
 public static class MauiProgram
 {
@@ -15,16 +12,20 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
 		
+		var services = builder.Services;
+		
 		// Register Services
-		builder.Services.AddScoped<INavigationService, NavigationService>();
+		services.AddScoped<INavigationService, NavigationService>();
 		
 		// Register Pages
-		builder.Services.AddTransient<MainPage>();
-		builder.Services.AddTransient<CodenamePage>();
+		services.AddTransient<MainPage>();
+		services.AddTransient<CodenamePage>();
 		
 		// RegisterViewModels
-		builder.Services.AddTransient<CodenameViewModel>();
-		builder.Services.AddTransient<MainPageViewModel>();
+		services.AddTransient<CodenameViewModel>();
+		services.AddTransient<MainPageViewModel>();
+		
+		// RegisterContent(services);
 		
 		return builder.Build();
 	}
