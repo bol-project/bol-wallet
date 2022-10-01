@@ -1,5 +1,4 @@
 using System.Text.Json;
-using BolWallet.Models;
 
 namespace BolWallet.Helpers;
 

@@ -1,5 +1,3 @@
-using BolWallet.Models;
-
 namespace BolWallet.content;
 
 public class WalletAppContent

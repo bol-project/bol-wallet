@@ -1,7 +1,8 @@
-global using BolWallet.Services;
-global using BolWallet.Views;
+global using System.Threading.Tasks;
 global using BolWallet.content;
 global using BolWallet.Helpers;
+global using BolWallet.Models;
+global using BolWallet.Services;
 global using BolWallet.ViewModels;
-global using System.Threading.Tasks;
+global using BolWallet.Views;
 global using Microsoft.Maui.Controls;
