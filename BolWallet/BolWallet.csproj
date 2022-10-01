@@ -27,10 +27,14 @@
 
     <ItemGroup>
         <!-- App Icon -->
-		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
+        <MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </MauiIcon>
 
         <!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />
+        <MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </MauiSplashScreen>
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*"/>
@@ -66,5 +70,15 @@
         </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="content\country_code.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1"/>
+        <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*"/>
+    </ItemGroup>
 
 </Project>
