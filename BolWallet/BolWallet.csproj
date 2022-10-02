@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0-android;net6.0-ios;</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>BolWallet</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+
+        <!-- Display name -->
+        <ApplicationTitle>BolWallet</ApplicationTitle>
+
+        <!-- App Identifier -->
+        <ApplicationId>com.companyname.BolWallet</ApplicationId>
+
+        <!-- Versions -->
+        <ApplicationVersion>1</ApplicationVersion>
+
+        <!-- Required for C# Hot Reload -->
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+
+        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">23.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- App Icon -->
+        <MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </MauiIcon>
+
+        <!-- Splash Screen -->
+        <MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </MauiSplashScreen>
+
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <MauiXaml Update="Views\App.xaml">
+            <SubType>Designer</SubType>
+        </MauiXaml>
+        <MauiXaml Update="Views\CodenamePage.xaml">
+            <SubType>Designer</SubType>
+        </MauiXaml>
+        <MauiXaml Update="Views\MainPage.xaml">
+            <SubType>Designer</SubType>
+        </MauiXaml>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Views\App.xaml.cs">
+            <DependentUpon>App.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\CodenamePage.xaml.cs">
+            <DependentUpon>CodenamePage.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainPage.xaml.cs">
+            <DependentUpon>MainPage.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+        <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
+    </ItemGroup>
+
+</Project>
