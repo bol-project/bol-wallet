@@ -12,7 +12,7 @@
                 x:Name="CodenameForm"
                 DataObject="{Binding Form}"
                 EditorLabelColor="Grey"
-                EditorLabelFontAttributes="Italic"
+                EditorLabelFontFamily="MaterialIcons-Regular"
                 GroupHeaderTextColor="#f05b41"
                 PickerSourceProvider="{Binding CodenameFormDataProvider}"
                 ValidationMode="LostFocus" />

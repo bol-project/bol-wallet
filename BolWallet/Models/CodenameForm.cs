@@ -5,7 +5,7 @@ namespace BolWallet.Models;
 
 public class CodenameForm
 {
-	[DataFormDisplayOptions(LabelIcon = "user", LabelWidth = "auto")]
+	[DataFormDisplayOptions(LabelText = "\ue7fd", LabelWidth = "auto")]
 	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 1)]
 	[DataFormTextEditor(InplaceLabelText = "Surname")]
 	public string Surname { get; set; }
@@ -17,19 +17,22 @@ public class CodenameForm
 
 	[DataFormDisplayOptions(IsLabelVisible = false)]
 	[DataFormTextEditor(InplaceLabelText = "Third name")]
-	[DataFormItemPosition(RowOrder = 2, ItemOrderInRow = 1)]
+	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 3)]
 	public string ThirdName { get; set; }
 
-	[DataFormDisplayOptions(LabelWidth = "auto")]
+	[DataFormDisplayOptions(LabelText = "\ue7e9", LabelWidth = "auto")]
+	[DataFormTextEditor(InplaceLabelText = "Birthday")]
 	public DateTime? Birthday { get; set; }
 
-	[DataFormDisplayOptions(LabelWidth = "auto")]
+	[DataFormDisplayOptions(LabelText = "\uf8d9", LabelWidth = "auto")]
+	[DataFormComboBoxEditor(InplaceLabelText = "Gender")]
 	public Gender Gender { get; set; }
 
-	[DataFormDisplayOptions(LabelWidth = "auto")]
-	[DataFormComboBoxEditor]
+	[DataFormDisplayOptions(LabelText = "\ue80b", LabelWidth = "auto")]
+	[DataFormComboBoxEditor(InplaceLabelText = "Country")]
 	public string Country { get; set; }
 
-	[DataFormDisplayOptions(LabelWidth = "auto")]
-	public string Combination { get; set; }
+	[DataFormDisplayOptions(LabelText = "\ue9f4", LabelWidth = "auto", HelpText = "To be added")]
+	[DataFormTextEditor(InplaceLabelText = "Combination")]
+	public string Combination { get; set; } = "1";
 }
