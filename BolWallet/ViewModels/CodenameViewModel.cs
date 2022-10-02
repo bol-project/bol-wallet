@@ -6,7 +6,7 @@ public class CodenameViewModel : BaseViewModel
 		: base(navigationService)
 	{
 		CodenameFormDataProvider = codenameFormDataProvider;
-		Form = new CodenameForm { DateOfBirth = DateTime.Today };
+		Form = new CodenameForm();
 	}
 
 	public CodenameForm Form { get; }
