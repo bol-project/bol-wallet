@@ -10,7 +10,11 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseDevExpress()
-			.ConfigureFonts(fonts => { fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); });
+			.ConfigureFonts(fonts =>
+			{
+				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
+			});
 
 		var services = builder.Services;
 
