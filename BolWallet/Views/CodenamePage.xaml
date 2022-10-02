@@ -11,9 +11,8 @@
             <dxdf:DataFormView
                 x:Name="CodenameForm"
                 DataObject="{Binding Form}"
-                EditorLabelColor="Gray"
-                EditorLabelWidth="40"
-                GroupHeaderBackgroundColor="#e9e9e9"
+                EditorLabelColor="Grey"
+                EditorLabelFontAttributes="Italic"
                 GroupHeaderTextColor="#f05b41"
                 PickerSourceProvider="{Binding CodenameFormDataProvider}"
                 ValidationMode="LostFocus" />
