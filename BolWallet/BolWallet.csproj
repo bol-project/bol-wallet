@@ -75,10 +75,4 @@
         <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="Content\country_code.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-
 </Project>
