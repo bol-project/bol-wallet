@@ -11,4 +11,9 @@ public partial class CodenameViewModel : BaseViewModel
 
 	public CodenameForm Form { get; }
 	public CodenameFormDataProvider CodenameFormDataProvider { get; }
+
+	[RelayCommand]
+	private void Submit()
+	{
+	}
 }

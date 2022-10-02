@@ -2,8 +2,10 @@
     x:Class="BolWallet.Views.CodenamePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
     xmlns:dxdf="clr-namespace:DevExpress.Maui.DataForm;assembly=DevExpress.Maui.Editors"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    Title="Create your CodeName"
     x:DataType="viewModels:CodenameViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
     <ScrollView>
@@ -16,6 +18,7 @@
                 GroupHeaderTextColor="#f05b41"
                 PickerSourceProvider="{Binding CodenameFormDataProvider}"
                 ValidationMode="LostFocus" />
+            <controls:SimpleButton Command="{Binding SubmitCommand}" Text="Submit" />
         </StackLayout>
     </ScrollView>
 </ContentPage>
