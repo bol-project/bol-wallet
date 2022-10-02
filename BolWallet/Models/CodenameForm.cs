@@ -1,5 +1,6 @@
 using Bol.Core.Model;
 using DevExpress.Maui.DataForm;
+using System.ComponentModel.DataAnnotations;
 
 namespace BolWallet.Models;
 
@@ -34,5 +35,7 @@ public class CodenameForm
 
 	[DataFormDisplayOptions(LabelText = "\ue9f4", LabelWidth = "auto", HelpText = "To be added")]
 	[DataFormTextEditor(InplaceLabelText = "Combination")]
+	[MaxLength(1, ErrorMessage = "Combination should be only one digit/letter")]
+	[RegularExpression("[A-Z0-9]", ErrorMessage = "Combination should be a capital letter or a number")]
 	public string Combination { get; set; } = "1";
 }
