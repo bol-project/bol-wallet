@@ -1,6 +1,6 @@
 global using System.Threading.Tasks;
+global using System.Collections;
 global using BolWallet.content;
-global using BolWallet.Helpers;
 global using BolWallet.Models;
 global using BolWallet.Services;
 global using BolWallet.ViewModels;
