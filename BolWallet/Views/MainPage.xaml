@@ -30,7 +30,7 @@
 
             <Button
                 Grid.Row="2"
-                Command="{Binding NavigateToCodenamePage}"
+                Command="{Binding NavigateToCodenamePageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 Text="Let's get started" />
