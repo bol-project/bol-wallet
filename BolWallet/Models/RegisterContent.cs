@@ -1,4 +1,4 @@
-namespace BolWallet.content;
+namespace BolWallet.Models;
 
 public class RegisterContent
 {
