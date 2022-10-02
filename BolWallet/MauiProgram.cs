@@ -9,39 +9,29 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-            .UseDevExpress()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-			});
-		
+			.UseDevExpress()
+			.ConfigureFonts(fonts => { fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"); });
+
 		var services = builder.Services;
-		
+
 		// Register Services
 		services.AddScoped<INavigationService, NavigationService>();
-		
+		services.AddScoped<ICountriesService, CountriesService>();
+
 		// Register Pages
 		services.AddTransient<MainPage>();
 		services.AddTransient<CodenamePage>();
-		
+
 		// RegisterViewModels
 		services.AddTransient<CodenameViewModel>();
 		services.AddTransient<MainPageViewModel>();
-		
-		// RegisterContent(services);
-		
-		return builder.Build();
-	}
 
-	private static IServiceCollection RegisterContent(this IServiceCollection services)
-	{
-		var countries = CountriesHelper.GetCountries().Result;
-		
-		services.AddSingleton(new WalletAppContent
-		{
-			Countries = countries
-		});
-		
-		return services;
+		// This model will hold the data from the Register flow
+		services.AddSingleton(new RegisterContent());
+
+		// Register Helpers - Special services
+		services.AddScoped(sp => new CodenameFormDataProvider(sp.GetRequiredService<ICountriesService>()));
+
+		return builder.Build();
 	}
 }
