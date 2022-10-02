@@ -11,19 +11,19 @@ public class CountriesService : ICountriesService
 		_registerContent = registerContent;
 	}
 	
-	// TODO make this method async
-	public IEnumerable<Country> Get()
+	public async Task<IEnumerable<Country>> GetAsync()
 	{
 		if (_registerContent.Countries is not null)
 		{
 			return _registerContent.Countries;
 		}
-		
-		using var reader = new StreamReader(".content/country_code.json");
-		var countryCodeJson = reader.ReadToEnd();
 
-		_registerContent.Countries = JsonSerializer.Deserialize<IList<Country>>(countryCodeJson);
+		//await using var stream = await FileSystem.OpenAppPackageFileAsync("country_code.json");
+		using var reader = new StreamReader(".content/country_code.json");
+		var countryCodeJson = await reader.ReadToEndAsync();
 		
+		_registerContent.Countries = JsonSerializer.Deserialize<IList<Country>>(countryCodeJson);
+
 		return _registerContent.Countries;
 	}
 }
