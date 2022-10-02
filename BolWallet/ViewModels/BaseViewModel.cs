@@ -1,6 +1,6 @@
 ﻿namespace BolWallet.ViewModels;
 
-public class BaseViewModel
+public class BaseViewModel : ObservableObject
 {
     protected readonly INavigationService NavigationService;
 

@@ -1,6 +1,6 @@
 namespace BolWallet.ViewModels;
 
-public class CodenameViewModel : BaseViewModel
+public partial class CodenameViewModel : BaseViewModel
 {
 	public CodenameViewModel(INavigationService navigationService, CodenameFormDataProvider codenameFormDataProvider)
 		: base(navigationService)
