@@ -30,7 +30,7 @@ public static class MauiProgram
 		services.AddSingleton(new RegisterContent());
 
 		// Register Helpers - Special services
-		services.AddScoped(sp => new CodenameFormDataProvider(sp.GetRequiredService<ICountriesService>()));
+		services.AddScoped<CodenameFormDataProvider>();
 
 		return builder.Build();
 	}
