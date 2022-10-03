@@ -15,10 +15,15 @@
                 DataObject="{Binding Form}"
                 EditorLabelColor="Grey"
                 EditorLabelFontFamily="MaterialIcons-Regular"
+                EditorLabelFontSize="20"
+                EditorLabelHorizontalAlignment="Center"
+                EditorLabelMaxWidth="40"
+                EditorLabelMinWidth="12"
                 GroupHeaderTextColor="#f05b41"
                 PickerSourceProvider="{Binding CodenameFormDataProvider}"
                 ValidationMode="LostFocus" />
             <controls:SimpleButton Command="{Binding SubmitCommand}" Text="Submit" />
+                ValidationMode="PropertyChanged" />
         </StackLayout>
     </ScrollView>
 </ContentPage>
