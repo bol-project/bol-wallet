@@ -15,7 +15,7 @@ namespace BolWallet.Services
 		{
 			return propertyName switch
 			{
-				nameof(CodenameForm.Country) => _content.Countries.Select(c => c.Name).ToArray(),
+				nameof(CodenameForm.Country) => _content.Countries.ToArray(),
 				_ => null
 			};
 		}
