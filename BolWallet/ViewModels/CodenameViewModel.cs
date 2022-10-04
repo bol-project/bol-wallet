@@ -27,9 +27,10 @@ public partial class CodenameViewModel : BaseViewModel
     public CodenameFormDataProvider CodenameFormDataProvider { get; }
 
     [RelayCommand]
-    private void Submit()
+    private async Task Submit()
     {
-        var person = new NaturalPerson
+		
+		var person = new NaturalPerson
         {
             FirstName = Form.Firstname,
             MiddleName = Form.MiddleName,
@@ -42,6 +43,12 @@ public partial class CodenameViewModel : BaseViewModel
             Birthdate = Form.Birthday.Value
         };
 
-        Codename = _codeNameService.Generate(person);
+        var result = _codeNameService.Generate(person);
+		
+		await _repository.CreateAsync("codename", result);
+		
+		var codename = await _repository.GetAsync<string>("codename");
+		
+		Codename = codename;
     }
 }
