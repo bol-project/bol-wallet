@@ -19,6 +19,7 @@ public static class MauiProgram
 		var services = builder.Services;
 
 		// Register Services
+		services.AddScoped<IRepository>(sp => new AkavacheRepository(BlobCache.UserAccount));
 		services.AddScoped<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 
@@ -35,6 +36,7 @@ public static class MauiProgram
 
 		// Register Helpers - Special services
 		services.AddScoped<CodenameFormDataProvider>();
+		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
 		return builder.Build();
 	}
