@@ -49,6 +49,20 @@ public class Repository : IRepository
 		return result;
 	}
 
+	public async Task<TEntity> GetSecureAsync<TEntity>(string key) where TEntity : class
+	{
+		if (key is null)
+		{
+			throw new ArgumentNullException(nameof(key));
+		}
+
+		var result = await _secureStorage.GetAsync(key);
+
+		var entity = JsonSerializer.Deserialize<TEntity>(result);
+
+		return entity;
+	}
+
 	public async Task CreateSecureAsync(string key, string value)
 	{
 		if (key is null || value is null)
@@ -58,5 +72,16 @@ public class Repository : IRepository
 
 		await _secureStorage.SetAsync(key, value);
 	}
+
+	public async Task CreateSecureAsync<TEntity>(string key, TEntity entity) where TEntity : class
+	{
+		if (key is null)
+		{
+			throw new ArgumentNullException(nameof(key));
+		}
+
+		var entityAsJson = JsonSerializer.Serialize(entity);
+
+		await _secureStorage.SetAsync(key, entityAsJson);
 	}
 }
