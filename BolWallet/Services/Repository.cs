@@ -27,9 +27,14 @@ public class Repository : IRepository
 	public async Task CreateAsync<TEntity>(string key, TEntity entity, CancellationToken token = default)
 		where TEntity : class
 	{
-		if (key is null || entity is null)
+		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key));
+		}
+		
+		if (entity is null)
+		{
+			throw new ArgumentNullException(nameof(entity));
 		}
 
 		await _blobCache
@@ -65,9 +70,14 @@ public class Repository : IRepository
 
 	public async Task CreateSecureAsync(string key, string value)
 	{
-		if (key is null || value is null)
+		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key));
+		}
+		
+		if (value is null)
+		{
+			throw new ArgumentNullException(nameof(value));
 		}
 
 		await _secureStorage.SetAsync(key, value);
@@ -78,6 +88,11 @@ public class Repository : IRepository
 		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key));
+		}
+
+		if (entity is null)
+		{
+			throw new ArgumentNullException(nameof(entity));
 		}
 
 		var entityAsJson = JsonSerializer.Serialize(entity);
