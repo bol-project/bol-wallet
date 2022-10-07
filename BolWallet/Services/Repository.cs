@@ -1,0 +1,59 @@
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using Akavache;
+
+namespace BolWallet.Services;
+
+public class Repository : IRepository
+{
+	private readonly IBlobCache _blobCache;
+
+	public Repository(IBlobCache blobCache)
+	{
+		_blobCache = blobCache ?? throw new ArgumentNullException(nameof(blobCache));
+	}
+
+	public async Task<TEntity> GetAsync<TEntity>(string key, CancellationToken token = default)
+		where TEntity : class
+	{
+		return await _blobCache
+			.GetObject<TEntity>(key)
+			.Catch(Observable.Catch<TEntity>())
+			.ToTask(token);
+	}
+
+	public async Task CreateAsync<TEntity>(string key, TEntity entity, CancellationToken token = default)
+		where TEntity : class
+	{
+		if (key is null || entity is null)
+		{
+			throw new ArgumentNullException(nameof(key));
+		}
+
+		await _blobCache
+			.InsertObject(key, entity)
+			.ToTask(token);
+	}
+
+	public async Task<string> GetSecureAsync(string key)
+	{
+		if (key is null)
+		{
+			throw new ArgumentNullException(nameof(key));
+		}
+
+		var result = await SecureStorage.Default.GetAsync(key);
+		
+		return result;
+	}
+
+	public async Task CreateSecureAsync(string key, string value)
+	{
+		if (key is null || value is null)
+		{
+			throw new ArgumentNullException(nameof(key));
+		}
+
+		await SecureStorage.Default.SetAsync(key, value);
+	}
+}
