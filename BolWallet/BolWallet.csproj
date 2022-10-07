@@ -71,10 +71,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1" />
         <PackageReference Include="akavache" Version="9.0.1" />
+        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.2" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
         <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Platforms\iOS\Entitlements.plist">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
