@@ -7,10 +7,12 @@ namespace BolWallet.Services;
 public class Repository : IRepository
 {
 	private readonly IBlobCache _blobCache;
+	private readonly ISecureStorage _secureStorage;
 
-	public Repository(IBlobCache blobCache)
+	public Repository(IBlobCache blobCache, ISecureStorage secureStorage)
 	{
 		_blobCache = blobCache ?? throw new ArgumentNullException(nameof(blobCache));
+		_secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
 	}
 
 	public async Task<TEntity> GetAsync<TEntity>(string key, CancellationToken token = default)
@@ -42,8 +44,8 @@ public class Repository : IRepository
 			throw new ArgumentNullException(nameof(key));
 		}
 
-		var result = await SecureStorage.Default.GetAsync(key);
-		
+		var result = await _secureStorage.GetAsync(key);
+
 		return result;
 	}
 
@@ -54,6 +56,7 @@ public class Repository : IRepository
 			throw new ArgumentNullException(nameof(key));
 		}
 
-		await SecureStorage.Default.SetAsync(key, value);
+		await _secureStorage.SetAsync(key, value);
+	}
 	}
 }
