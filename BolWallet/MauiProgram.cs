@@ -30,6 +30,7 @@ public static class MauiProgram
 		// RegisterViewModels
 		services.AddTransient<CodenameViewModel>();
 		services.AddTransient<MainPageViewModel>();
+		services.AddBolSdk();
 
 		// This model will hold the data from the Register flow
 		services.AddSingleton(new RegisterContent());

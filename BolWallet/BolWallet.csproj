@@ -72,7 +72,7 @@
 
     <ItemGroup>
         <PackageReference Include="akavache" Version="9.0.1" />
-        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.2" />
+        <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.5" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
         <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
     </ItemGroup>
