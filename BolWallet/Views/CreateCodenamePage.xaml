@@ -1,0 +1,103 @@
+<ContentPage
+    x:Class="BolWallet.Views.CreateCodenamePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
+    xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:editors="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
+    xmlns:localConverters="clr-namespace:BolWallet.Converters"
+    xmlns:models="clr-namespace:BolWallet.Models"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    Title="Create your CodeName"
+    x:DataType="viewModels:CreateCodenameViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="CountryItemTemplate" x:DataType="models:Country">
+                <Label Text="{Binding Name}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+        <StackLayout>
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.FirstName.ErrorMessage}"
+                HasError="{Binding CodenameForm.FirstName.HasError}"
+                LabelText="First Name*"
+                Text="{Binding CodenameForm.FirstName.Value}">
+            </editors:TextEdit>
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.Surname.ErrorMessage}"
+                HasError="{Binding CodenameForm.Surname.HasError}"
+                LabelText="Surname"
+                Text="{Binding CodenameForm.Surname.Value}" />
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.MiddleName.ErrorMessage}"
+                HasError="{Binding CodenameForm.MiddleName.HasError}"
+                LabelText="Middle Name"
+                Text="{Binding CodenameForm.MiddleName.Value}" />
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.ThirdName.ErrorMessage}"
+                HasError="{Binding CodenameForm.ThirdName.HasError}"
+                LabelText="Third Name"
+                Text="{Binding CodenameForm.ThirdName.Value}" />
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.Combination.ErrorMessage}"
+                HasError="{Binding CodenameForm.Combination.HasError}"
+                LabelText="Combination"
+                Text="{Binding CodenameForm.Combination.Value}" />
+            <editors:ComboBoxEdit
+                Margin="8,4"
+                LabelText="Gender"
+                SelectedItem="{Binding CodenameForm.Gender}" />
+            <editors:ComboBoxEdit
+                Margin="8,4"
+                EndIconColor="Red"
+                ItemTemplate="{StaticResource CountryItemTemplate}"
+                ItemsSource="{Binding CodenameForm.Countries}"
+                LabelText="Country"
+                SelectedItem="{Binding CodenameForm.SelectedCountry}"
+                SelectedItemTemplate="{StaticResource CountryItemTemplate}">
+
+                <editors:ComboBoxEdit.EndIcon>
+                    <FontImageSource
+                        FontFamily="MaterialIconsRegular"
+                        Glyph="&#xe000;"
+                        Size="24"
+                        Color="Red" />
+                </editors:ComboBoxEdit.EndIcon>
+            </editors:ComboBoxEdit>
+            <editors:DateEdit
+                Margin="8,4"
+                Date="{Binding CodenameForm.Birthdate.Value}"
+                ErrorText="{Binding CodenameForm.Birthdate.ErrorMessage}"
+                HasError="{Binding CodenameForm.Birthdate.HasError}"
+                IsEndIconVisible="{Binding CodenameForm.Birthdate.IsNotReady}"
+                LabelText="Birthdate" />
+            <editors:TextEdit
+                Margin="8,4"
+                ErrorText="{Binding CodenameForm.NIN.ErrorMessage}"
+                HasError="{Binding CodenameForm.NIN.HasError}"
+                HelpText="{Binding CodenameForm.NIN.HelpMessage}"
+                LabelText="NIN"
+                Text="{Binding CodenameForm.NIN.Value}" />
+            <controls:SimpleButton
+                Margin="8,4"
+                Command="{Binding SubmitCommand}"
+                IsEnabled="{Binding CodenameForm.IsFormComplete}"
+                Text="Submit" />
+            <editors:TextEdit
+                Margin="8,4"
+                IsLabelFloating="True"
+                IsReadOnly="True"
+                LabelText="Generated codename"
+                Text="{Binding Codename}"
+                TextFontSize="15" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

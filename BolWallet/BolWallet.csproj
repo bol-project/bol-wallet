@@ -47,7 +47,7 @@
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
-        <MauiXaml Update="Views\CodenamePage.xaml">
+        <MauiXaml Update="Views\CreateCodenamePage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
         <MauiXaml Update="Views\MainPage.xaml">
@@ -60,8 +60,8 @@
             <DependentUpon>App.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
-        <Compile Update="Views\CodenamePage.xaml.cs">
-            <DependentUpon>CodenamePage.xaml</DependentUpon>
+        <Compile Update="Views\CreateCodenamePage.xaml.cs">
+            <DependentUpon>CreateCodenamePage.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
         <Compile Update="Views\MainPage.xaml.cs">

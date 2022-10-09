@@ -9,6 +9,6 @@ public partial class MainPageViewModel : BaseViewModel
     [RelayCommand]
     private void NavigateToCodenamePage()
     {
-        NavigationService.NavigateToPage<CodenamePage>(true);
+        NavigationService.NavigateToPage<CreateCodenamePage>(true);
     }
 }
