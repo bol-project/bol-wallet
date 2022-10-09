@@ -71,9 +71,29 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bol.Core" Version="0.0.1-alpha.1" />
+        <PackageReference Include="akavache" Version="9.0.1" />
+        <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.5" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
         <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Platforms\iOS\Entitlements.plist">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="appsettings.json" />
+      <EmbeddedResource Include="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="appsettings.Development.json" />
+      <EmbeddedResource Include="appsettings.Development.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <DependentUpon>appsettings.json</DependentUpon>
+      </EmbeddedResource>
+    </ItemGroup>
 </Project>
