@@ -27,7 +27,8 @@ public static class MauiProgram
 		var services = builder.Services;
 
 		// Register Services
-		services.AddScoped<IRepository>(sp => new Repository(BlobCache.UserAccount, SecureStorage.Default));
+		services.AddScoped<IRepository>(sp => new Repository(BlobCache.UserAccount));
+		services.AddScoped<ISecureRepository>(sp => new SecureRepository(SecureStorage.Default));
 		services.AddScoped<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 
