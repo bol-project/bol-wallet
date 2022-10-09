@@ -1,53 +1,103 @@
-using Bol.Core.Model;
-using DevExpress.Maui.DataForm;
-using System.ComponentModel.DataAnnotations;
+﻿using Bol.Core.Model;
+using System.Text.RegularExpressions;
 
 namespace BolWallet.Models;
 
-public class CodenameForm
+[INotifyPropertyChanged]
+public partial class CodenameForm
 {
-	[DataFormDisplayOptions(LabelText = "\ue7fd")]
-	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 1)]
-	[DataFormTextEditor(InplaceLabelText = "Firstname")]
-	[RegularExpression("[A-Z]+", ErrorMessage = "Firstname should be only in capital letters")]
-	public string Firstname { get; set; }
+    private readonly RegisterContent _content;
 
-	[DataFormDisplayOptions(LabelText = "", LabelWidth = "auto")]
-	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 2)]
-	[DataFormTextEditor(InplaceLabelText = "Surname")]
-	[RegularExpression("[A-Z]+", ErrorMessage = "Surname should be only in capital letters")]
-	public string Surname { get; set; }
+    public CodenameForm(RegisterContent content)
+    {
+        _content = content;
+    }
 
-	[DataFormDisplayOptions(LabelText = "")]
-	[DataFormItemPosition(RowOrder = 2, ItemOrderInRow = 1)]
-	[DataFormTextEditor(InplaceLabelText = "Middle name")]
-	[RegularExpression("[A-Z]*", ErrorMessage = "Middle name should be only in capital letters")]
-	public string MiddleName { get; set; }
+    public BaseProperty FirstName { get; set; } = new()
+    {
+        ErrorMessage = "First Name should be only in capital letters",
+        IsValid = (value) =>
+        {
+            var regex = new Regex("^[A-Z]+$");
+            return regex.IsMatch(value);
+        },
+        Value = "",
+        IsMandatory = true
+    };
 
-	[DataFormDisplayOptions(LabelText = "", LabelWidth = "auto")]
-	[DataFormItemPosition(RowOrder = 2, ItemOrderInRow = 2)]
-	[DataFormTextEditor(InplaceLabelText = "Third name")]
-	[RegularExpression("[A-Z]*", ErrorMessage = "Third name should be only in capital letters")]
-	public string ThirdName { get; set; }
+    public BaseProperty Surname { get; set; } = new()
+    {
+        ErrorMessage = "Surname should be only in capital letters",
+        IsValid = (value) =>
+        {
+            var regex = new Regex("^[A-Z]+$");
+            return regex.IsMatch(value);
+        },
+        IsMandatory = true
+    };
 
-	[DataFormDisplayOptions(LabelText = "\ue7e9")]
-	[DataFormDateEditor(InplaceLabelText = "Birthday")]
-	public DateTime? Birthday { get; set; }
+    public BaseProperty MiddleName { get; set; } = new()
+    {
+        ErrorMessage = "Middle Name should be only in capital letters",
+        IsValid = (value) =>
+        {
+            var regex = new Regex("^[A-Z]*$");
+            return regex.IsMatch(value);
+        }
+    };
 
-	[DataFormDisplayOptions(LabelText = "\uf8d9")]
-	[DataFormComboBoxEditor(InplaceLabelText = "Gender")]
-	public Gender Gender { get; set; }
+    public BaseProperty ThirdName { get; set; } = new()
+    {
+        ErrorMessage = "Third Name should be only in capital letters",
+        IsValid = (value) =>
+        {
+            var regex = new Regex("^[A-Z]*$");
+            return regex.IsMatch(value);
+        }
+    };
 
-	[DataFormDisplayOptions(LabelText = "\ue80b")]
-	[DataFormComboBoxEditor(
-		InplaceLabelText = "Country",
-		ValueMember = nameof(Models.Country.Alpha3),
-		DisplayMember = nameof(Models.Country.Name))]
-	public string Country { get; set; }
+    public BaseProperty Birthdate { get; set; } = new()
+    {
+        ErrorMessage = "Birthdate cannot be in the future",
+        IsValid = (value) =>
+        {
+            var date = DateTime.Parse(value);
+            return date.CompareTo(DateTime.Today) < 0;
+        },
+        IsMandatory = true
+    };
 
-	[DataFormDisplayOptions(LabelText = "\ue9f4", HelpText = "To be added")]
-	[DataFormTextEditor(InplaceLabelText = "Combination")]
-	[MaxLength(1, ErrorMessage = "Combination should be only one digit/letter")]
-	[RegularExpression("[A-Z0-9]", ErrorMessage = "Combination should be a capital letter or a number")]
-	public string Combination { get; set; } = "1";
+    public Gender Gender { get; set; }
+
+    public BaseProperty Combination { get; set; } = new()
+    {
+        ErrorMessage = "Combination should be a capital letter or a number",
+        IsValid = (value) =>
+        {
+            var regex = new Regex("^[A-Z0-9]$");
+            return regex.IsMatch(value);
+        },
+        Value = "1",
+        IsMandatory = true
+    };
+
+    public BaseProperty NIN { get; set; } = new()
+    {
+        IsValid = (value) => true,
+        HelpMessage = "",
+        IsMandatory = true
+    };
+
+    public IEnumerable<Country> Countries => _content.Countries;
+
+    private Country _selectedCountry;
+    public Country SelectedCountry
+    {
+        get => _selectedCountry;
+        set
+        {
+            SetProperty(ref _selectedCountry, value);
+            NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
+        }
+    }
 }
