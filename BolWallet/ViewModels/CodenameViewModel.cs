@@ -6,16 +6,19 @@ namespace BolWallet.ViewModels;
 public partial class CodenameViewModel : BaseViewModel
 {
     private readonly ICodeNameService _codeNameService;
+	private readonly IRepository _repository;
 
-    public CodenameViewModel(
+	public CodenameViewModel(
         INavigationService navigationService,
         CodenameFormDataProvider codenameFormDataProvider,
-        ICodeNameService codeNameService)
+        ICodeNameService codeNameService,
+		IRepository repository)
         : base(navigationService)
     {
         CodenameFormDataProvider = codenameFormDataProvider;
         _codeNameService = codeNameService;
-        Form = new CodenameForm();
+		_repository = repository;
+		Form = new CodenameForm();
     }
 
     [ObservableProperty]
@@ -45,9 +48,9 @@ public partial class CodenameViewModel : BaseViewModel
 
         var result = _codeNameService.Generate(person);
 		
-		await _repository.CreateAsync("codename", result);
+		await _repository.CreateSecureAsync("codename", result);
 		
-		var codename = await _repository.GetAsync<string>("codename");
+		var codename = await _repository.GetSecureAsync("codename");
 		
 		Codename = codename;
     }
