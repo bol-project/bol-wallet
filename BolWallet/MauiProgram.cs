@@ -1,4 +1,11 @@
-﻿using DevExpress.Maui;
+﻿using System.Reflection;
+using Akavache;
+using Bol.Core.Extensions;
+using Bol.Core.Model;
+using DevExpress.Maui;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Country = BolWallet.Models.Country;
 
 namespace BolWallet;
 
@@ -8,14 +15,15 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
-			.UseDevExpress()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
-			});
-
+		.UseMauiApp<App>()
+		.UseDevExpress()
+		.ConfigureFonts(fonts =>
+		{
+			fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+			fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
+		})
+		.AddConfiguration("BolWallet.appsettings.json");
+		
 		var services = builder.Services;
 
 		// Register Services
@@ -52,5 +60,25 @@ public static class MauiProgram
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
 		return builder.Build();
+	}
+	
+	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
+	{
+		var assembly = Assembly.GetExecutingAssembly();
+		using var stream = assembly.GetManifestResourceStream(appSettingsPath);
+
+		var configRoot = new ConfigurationBuilder()
+			.AddJsonStream(stream)
+			.Build();
+		
+		builder.Configuration.AddConfiguration(configRoot);
+
+		var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+		
+		var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
+
+		builder.Services.AddSingleton(bolConfig);
+
+		return builder;
 	}
 }
