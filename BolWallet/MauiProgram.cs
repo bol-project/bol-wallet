@@ -55,9 +55,6 @@ public static class MauiProgram
 		// This model will hold the data from the Register flow
 		services.AddSingleton(content);
 
-		// Register Helpers - Special services
-		services.AddScoped<CodenameFormDataProvider>();
-		
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
 		return builder.Build();
