@@ -34,11 +34,11 @@ public static class MauiProgram
 
 		// Register Pages
 		services.AddTransient<MainPage>();
-		services.AddTransient<CodenamePage>();
+		services.AddTransient<CreateCodenamePage>();
 
 		// RegisterViewModels
 		services.AddTransient<MainPageViewModel>();
-		services.AddTransient<CodenameViewModel>();
+		services.AddTransient<CreateCodenameViewModel>();
 
 		services.AddBolSdk();
 
