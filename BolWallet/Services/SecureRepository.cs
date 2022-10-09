@@ -39,7 +39,7 @@ public class SecureRepository : ISecureRepository
 
 	public async Task SetAsync<TEntity>(string key, TEntity entity) where TEntity : class
 	{
-		ValidateKey(key);
+		ValidateKey(key);	
 
 		if (entity is null)
 		{
@@ -56,7 +56,7 @@ public class SecureRepository : ISecureRepository
 		if (key is null) throw new ArgumentNullException(nameof(key));
 	}
 
-	private static void ValidateValue(string value)
+	private static void ValidateValue(object value)
 	{
 		if (value is null) throw new ArgumentNullException(nameof(value));
 	}
