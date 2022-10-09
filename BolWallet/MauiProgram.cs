@@ -28,15 +28,27 @@ public static class MauiProgram
 		services.AddTransient<CodenamePage>();
 
 		// RegisterViewModels
-		services.AddTransient<CodenameViewModel>();
 		services.AddTransient<MainPageViewModel>();
+		services.AddTransient<CodenameViewModel>();
+
 		services.AddBolSdk();
 
+		using var sp = services.BuildServiceProvider();
+
+		var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
+		var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
+		var content = new RegisterContent
+		{
+			Countries = countries.Select(c => new Country{Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region}).ToArray(),
+			NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
+		};
+
 		// This model will hold the data from the Register flow
-		services.AddSingleton(new RegisterContent());
+		services.AddSingleton(content);
 
 		// Register Helpers - Special services
 		services.AddScoped<CodenameFormDataProvider>();
+		
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
 		return builder.Build();
