@@ -39,12 +39,8 @@ public class SecureRepository : ISecureRepository
 
 	public async Task SetAsync<TEntity>(string key, TEntity entity) where TEntity : class
 	{
-		ValidateKey(key);	
-
-		if (entity is null)
-		{
-			throw new ArgumentNullException(nameof(entity));
-		}
+		ValidateKey(key);
+		ValidateValue(entity);
 
 		var entityAsJson = JsonSerializer.Serialize(entity);
 
