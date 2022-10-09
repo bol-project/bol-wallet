@@ -7,12 +7,10 @@ namespace BolWallet.Services;
 public class Repository : IRepository
 {
 	private readonly IBlobCache _blobCache;
-	private readonly ISecureStorage _secureStorage;
 
-	public Repository(IBlobCache blobCache, ISecureStorage secureStorage)
+	public Repository(IBlobCache blobCache)
 	{
 		_blobCache = blobCache ?? throw new ArgumentNullException(nameof(blobCache));
-		_secureStorage = secureStorage ?? throw new ArgumentNullException(nameof(secureStorage));
 	}
 
 	public async Task<TEntity> GetAsync<TEntity>(string key, CancellationToken token = default)
@@ -24,7 +22,7 @@ public class Repository : IRepository
 			.ToTask(token);
 	}
 
-	public async Task CreateAsync<TEntity>(string key, TEntity entity, CancellationToken token = default)
+	public async Task SetAsync<TEntity>(string key, TEntity entity, CancellationToken token = default)
 		where TEntity : class
 	{
 		if (key is null)
@@ -40,63 +38,5 @@ public class Repository : IRepository
 		await _blobCache
 			.InsertObject(key, entity)
 			.ToTask(token);
-	}
-
-	public async Task<string> GetSecureAsync(string key)
-	{
-		if (key is null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-
-		var result = await _secureStorage.GetAsync(key);
-
-		return result;
-	}
-
-	public async Task<TEntity> GetSecureAsync<TEntity>(string key) where TEntity : class
-	{
-		if (key is null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-
-		var result = await _secureStorage.GetAsync(key);
-
-		var entity = JsonSerializer.Deserialize<TEntity>(result);
-
-		return entity;
-	}
-
-	public async Task CreateSecureAsync(string key, string value)
-	{
-		if (key is null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-		
-		if (value is null)
-		{
-			throw new ArgumentNullException(nameof(value));
-		}
-
-		await _secureStorage.SetAsync(key, value);
-	}
-
-	public async Task CreateSecureAsync<TEntity>(string key, TEntity entity) where TEntity : class
-	{
-		if (key is null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-
-		if (entity is null)
-		{
-			throw new ArgumentNullException(nameof(entity));
-		}
-
-		var entityAsJson = JsonSerializer.Serialize(entity);
-
-		await _secureStorage.SetAsync(key, entityAsJson);
 	}
 }
