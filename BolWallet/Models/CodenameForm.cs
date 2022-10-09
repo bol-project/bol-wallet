@@ -100,4 +100,18 @@ public partial class CodenameForm
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
         }
     }
+
+    public bool IsFormComplete
+    {
+        get
+        {
+            return FirstName.IsNotReady &&
+                   Surname.IsNotReady &&
+                   MiddleName.IsNotReady &&
+                   ThirdName.IsNotReady &&
+                   Birthdate.IsNotReady &&
+                   Combination.IsNotReady &&
+                   NIN.IsNotReady;
+        }
+    }
 }
