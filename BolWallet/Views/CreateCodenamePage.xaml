@@ -52,6 +52,7 @@
                 LabelText="Combination"
                 Text="{Binding CodenameForm.Combination.Value}" />
             <editors:ComboBoxEdit
+                x:Name="GenderSelection"
                 Margin="8,4"
                 LabelText="Gender"
                 SelectedItem="{Binding CodenameForm.Gender}" />
