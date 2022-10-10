@@ -30,7 +30,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     [RelayCommand]
     private async Task Submit()
     {
-        if (!CodenameForm.IsFormComplete)
+        if (!CodenameForm.IsFormFilled)
         {
             return;
         }
