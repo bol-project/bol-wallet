@@ -101,17 +101,18 @@ public partial class CodenameForm
         }
     }
 
-    public bool IsFormComplete
+    public bool IsFormFilled
     {
         get
         {
-            return FirstName.IsNotReady &&
-                   Surname.IsNotReady &&
-                   MiddleName.IsNotReady &&
-                   ThirdName.IsNotReady &&
-                   Birthdate.IsNotReady &&
-                   Combination.IsNotReady &&
-                   NIN.IsNotReady;
+
+            return FirstName.IsFilled &&
+                   Surname.IsFilled &&
+                   MiddleName.IsFilled &&
+                   ThirdName.IsFilled &&
+                   Birthdate.IsFilled &&
+                   Combination.IsFilled &&
+                   NIN.IsFilled;
         }
     }
 }
