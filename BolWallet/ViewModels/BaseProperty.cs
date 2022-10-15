@@ -4,7 +4,6 @@ public partial class BaseProperty : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasError))]
-    [NotifyPropertyChangedFor(nameof(IsFilled))]
     [NotifyPropertyChangedFor(nameof(IsReady))]
     [NotifyPropertyChangedFor(nameof(State))]
     private string _value;
@@ -16,39 +15,29 @@ public partial class BaseProperty : ObservableObject
 
     public bool IsMandatory { private get; set; }
 
-    public bool IsFilled
+    public bool IsReady
     {
         get
         {
             if (IsMandatory)
             {
-                return IsReady;
+                return !string.IsNullOrEmpty(Value) && IsValid(Value);
             }
 
             return string.IsNullOrEmpty(Value) || IsValid(Value);
         }
     }
 
-    public bool IsReady
-    {
-        get => !string.IsNullOrEmpty(Value) && IsValid(Value);
-    }
-
     public PropertyState State
     {
         get
         {
-            if (HasError)
+            if (string.IsNullOrEmpty(Value))
             {
-                return PropertyState.HasError;
+                return PropertyState.IsEmpty;
             }
 
-            if (IsReady)
-            {
-                return PropertyState.IsReady;
-            }
-
-            return PropertyState.IsEmpty;
+            return IsValid(Value) ? PropertyState.IsReady : PropertyState.HasError;
         }
     }
 

@@ -106,13 +106,13 @@ public partial class CodenameForm
         get
         {
 
-            return FirstName.IsFilled &&
-                   Surname.IsFilled &&
-                   MiddleName.IsFilled &&
-                   ThirdName.IsFilled &&
-                   Birthdate.IsFilled &&
-                   Combination.IsFilled &&
-                   NIN.IsFilled;
+            return FirstName.IsReady &&
+                   Surname.IsReady &&
+                   MiddleName.IsReady &&
+                   ThirdName.IsReady &&
+                   Birthdate.IsReady &&
+                   Combination.IsReady &&
+                   NIN.IsReady;
         }
     }
 }
