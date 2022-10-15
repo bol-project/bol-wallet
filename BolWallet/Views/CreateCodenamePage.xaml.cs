@@ -1,4 +1,7 @@
 using Bol.Core.Model;
+using CommunityToolkit.Maui.Alerts;
+using System.ComponentModel;
+
 namespace BolWallet.Views;
 
 public partial class CreateCodenamePage : ContentPage
@@ -8,5 +11,12 @@ public partial class CreateCodenamePage : ContentPage
 		InitializeComponent();
 		BindingContext = createCodenameViewModel;
 		GenderSelection.ItemsSource = typeof(Gender).GetEnumValues();
+	}
+
+	private void OnTapCopy(object sender, HandledEventArgs e)
+	{
+		Clipboard.Default.SetTextAsync(Codename.Text);
+
+		Toast.Make("Copied to Clipboard").Show();
 	}
 }

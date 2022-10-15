@@ -2,6 +2,7 @@
 using Akavache;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
+using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ public static class MauiProgram
 		builder
 		.UseMauiApp<App>()
 		.UseDevExpress()
+		.UseMauiCommunityToolkit()
 		.ConfigureFonts(fonts =>
 		{
 			fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
