@@ -42,6 +42,14 @@ public static class MauiProgram
 		services.AddTransient<MainPageViewModel>();
 		services.AddTransient<CreateCodenameViewModel>();
 
+        var viewModelToView = new Dictionary<Type, Type>
+        {
+            { typeof(MainViewModel), typeof(MainPage) },
+            { typeof(CreateCodenameViewModel), typeof(CreateCodenamePage) }
+        };
+        
+        services.AddSingleton<IViewModelToViewResolver>(sp => new ViewModelToViewResolver(sp, viewModelToView));
+        
 		services.AddBolSdk();
 
 		using var sp = services.BuildServiceProvider();
