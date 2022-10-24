@@ -39,7 +39,7 @@ public static class MauiProgram
 		services.AddTransient<CreateCodenamePage>();
 
 		// RegisterViewModels
-		services.AddTransient<MainPageViewModel>();
+		services.AddTransient<MainViewModel>();
 		services.AddTransient<CreateCodenameViewModel>();
 
         var viewModelToView = new Dictionary<Type, Type>
