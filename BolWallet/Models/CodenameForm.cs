@@ -6,6 +6,10 @@ namespace BolWallet.Models;
 [INotifyPropertyChanged]
 public partial class CodenameForm
 {
+    private static readonly Regex OneOrMoreCapitalLetters = new ("^[A-Z]+$");
+    private static readonly Regex ZeroOrMoreCapitalLetters = new ("^[A-Z]*$");
+    private static readonly Regex OneCapitalLetterOrDigit = new ("^[A-Z0-9]$");
+
     private readonly RegisterContent _content;
 
     public CodenameForm(RegisterContent content)
@@ -16,11 +20,7 @@ public partial class CodenameForm
     public BaseProperty FirstName { get; set; } = new()
     {
         ErrorMessage = "First Name should be only in capital letters",
-        IsValid = (value) =>
-        {
-            var regex = new Regex("^[A-Z]+$");
-            return regex.IsMatch(value);
-        },
+        IsValid = value => OneOrMoreCapitalLetters.IsMatch(value),
         Value = "",
         IsMandatory = true
     };
@@ -28,38 +28,26 @@ public partial class CodenameForm
     public BaseProperty Surname { get; set; } = new()
     {
         ErrorMessage = "Surname should be only in capital letters",
-        IsValid = (value) =>
-        {
-            var regex = new Regex("^[A-Z]+$");
-            return regex.IsMatch(value);
-        },
+        IsValid = value => OneOrMoreCapitalLetters.IsMatch(value),
         IsMandatory = true
     };
 
     public BaseProperty MiddleName { get; set; } = new()
     {
         ErrorMessage = "Middle Name should be only in capital letters",
-        IsValid = (value) =>
-        {
-            var regex = new Regex("^[A-Z]*$");
-            return regex.IsMatch(value);
-        }
+        IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value),
     };
 
     public BaseProperty ThirdName { get; set; } = new()
     {
         ErrorMessage = "Third Name should be only in capital letters",
-        IsValid = (value) =>
-        {
-            var regex = new Regex("^[A-Z]*$");
-            return regex.IsMatch(value);
-        }
+        IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value)
     };
 
     public BaseProperty Birthdate { get; set; } = new()
     {
         ErrorMessage = "Birthdate cannot be in the future",
-        IsValid = (value) =>
+        IsValid = value =>
         {
             var date = DateTime.Parse(value);
             return date.CompareTo(DateTime.Today) < 0;
@@ -71,19 +59,15 @@ public partial class CodenameForm
 
     public BaseProperty Combination { get; set; } = new()
     {
-        ErrorMessage = "Combination should be a capital letter or a number",
-        IsValid = (value) =>
-        {
-            var regex = new Regex("^[A-Z0-9]$");
-            return regex.IsMatch(value);
-        },
+        ErrorMessage = "Combination should be a capital letter or a digit",
+        IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
         Value = "1",
         IsMandatory = true
     };
 
     public BaseProperty NIN { get; set; } = new()
     {
-        IsValid = (value) => true,
+        IsValid = _ => true,
         HelpMessage = "",
         IsMandatory = true
     };
@@ -105,7 +89,6 @@ public partial class CodenameForm
     {
         get
         {
-
             return FirstName.IsReady &&
                    Surname.IsReady &&
                    MiddleName.IsReady &&
