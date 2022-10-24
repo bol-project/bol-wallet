@@ -43,7 +43,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
             ThirdName = CodenameForm.ThirdName.Value,
             Gender = CodenameForm.Gender,
             Combination = CodenameForm.Combination.Value,
-            Nin = "1234567",
+            Nin = CodenameForm.NIN.Value,
             Birthdate = DateTime.Parse(CodenameForm.Birthdate.Value),
             CountryCode = CodenameForm.SelectedCountry.Alpha3
         };
