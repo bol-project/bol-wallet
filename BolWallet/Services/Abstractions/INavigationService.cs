@@ -2,7 +2,7 @@ namespace BolWallet.Services.Abstractions;
 
 public interface INavigationService
 {
-    public Task NavigateToPage<T>(bool useAnimation = false) where T : Page;
+    public Task NavigateTo<TViewModel>(bool useAnimation = false) where TViewModel : class;
 
     public Task NavigateBack();
 }
