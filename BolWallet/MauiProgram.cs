@@ -2,6 +2,7 @@
 using Akavache;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
+using BolWallet.Helpers;
 using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +30,8 @@ public static class MauiProgram
 		var services = builder.Services;
 
 		// Register Services
-		services.AddScoped<IRepository>(sp => new Repository(BlobCache.UserAccount));
-		services.AddScoped<ISecureRepository>(sp => new SecureRepository(SecureStorage.Default));
+		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
+		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
 		services.AddScoped<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 
