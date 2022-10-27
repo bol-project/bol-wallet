@@ -34,18 +34,9 @@ public static class MauiProgram
 		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
 		services.AddScoped<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
+		
+		services.RegisterViewAndViewModelSubsystem();
 
-		// Register Pages
-		services.AddTransient<MainPage>();
-		services.AddTransient<CreateCodenamePage>();
-
-		// RegisterViewModels
-		services.AddTransient<MainViewModel>();
-		services.AddTransient<CreateCodenameViewModel>();
-
-        
-        services.AddSingleton<IViewModelToViewResolver>(sp => new ViewModelToViewResolver(sp, viewModelToView));
-        
 		services.AddBolSdk();
 
 		using var sp = services.BuildServiceProvider();
