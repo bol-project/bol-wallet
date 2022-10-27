@@ -2,30 +2,33 @@
 
 public interface IViewModelToViewResolver
 {
-    Page Resolve<TViewModel>() where TViewModel : class;
+	Page Resolve<TViewModel>() where TViewModel : class;
 }
 
 public class ViewModelToViewResolver : IViewModelToViewResolver
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly Dictionary<Type, Type> _viewModelToView;
+	private readonly IServiceProvider _serviceProvider;
+	private readonly IViewModelToViewBinder _binder;
     
-    public ViewModelToViewResolver(IServiceProvider serviceProvider, Dictionary<Type,Type> viewModelToView)
-    {
-        _serviceProvider = serviceProvider;
-        _viewModelToView = viewModelToView;
-    }
+	public ViewModelToViewResolver(IServiceProvider serviceProvider)
+	{
+		_serviceProvider = serviceProvider;
+		_binder = _serviceProvider.GetRequiredService<IViewModelToViewBinder>();
+	}
     
-    public Page Resolve<TViewModel>() where TViewModel : class
-    {
-        if (!_viewModelToView.TryGetValue(typeof(TViewModel),out var pageType))
-        {
-            throw new KeyNotFoundException($"Unable to resolve {typeof(TViewModel)}");
-        }
-        
-        var page = (Page) _serviceProvider.GetRequiredService(pageType);
+	public Page Resolve<TViewModel>() where TViewModel : class
+	{
+		try
+		{
+			var viewType = _binder.GetBoundViewType(typeof(TViewModel));
+			
+			var page = (Page) _serviceProvider.GetRequiredService(viewType);
 
-        return page;
-    }
-
+			return page;
+		}
+		catch (Exception e)
+		{
+			throw new InvalidOperationException($"Unable to resolve {typeof(TViewModel)}", e);
+		}
+	}
 }
