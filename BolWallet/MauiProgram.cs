@@ -43,11 +43,6 @@ public static class MauiProgram
 		services.AddTransient<MainViewModel>();
 		services.AddTransient<CreateCodenameViewModel>();
 
-        var viewModelToView = new Dictionary<Type, Type>
-        {
-            { typeof(MainViewModel), typeof(MainPage) },
-            { typeof(CreateCodenameViewModel), typeof(CreateCodenamePage) }
-        };
         
         services.AddSingleton<IViewModelToViewResolver>(sp => new ViewModelToViewResolver(sp, viewModelToView));
         
