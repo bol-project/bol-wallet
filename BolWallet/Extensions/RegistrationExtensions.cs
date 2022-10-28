@@ -10,19 +10,19 @@ public static class RegistrationExtensions
 		services.AddSingleton<IViewModelToViewResolver, ViewModelToViewResolver>();
 		
 		services
-			.BindViewToViewModel<MainPage, MainViewModel>()
-			.BindViewToViewModel<CreateCodenamePage, CreateCodenameViewModel>();
+			.BindViewModelToView<MainViewModel, MainPage>()
+			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>();
 		
 		return services;
 	}
 	
-	private static IServiceCollection BindViewToViewModel<TView, TViewModel>(this IServiceCollection services)
-		where TView: class
+	private static IServiceCollection BindViewModelToView<TViewModel, TView>(this IServiceCollection services)
 		where TViewModel : class
+		where TView: class
 	{
-		services.AddTransient<TView>();
 		services.AddTransient<TViewModel>();
-		
+		services.AddTransient<TView>();
+
 		var binder = services.BuildServiceProvider().GetService<IViewModelToViewBinder>();
 		
 		if (binder is null)
