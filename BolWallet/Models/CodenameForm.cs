@@ -1,41 +1,101 @@
-using Bol.Core.Model;
-using DevExpress.Maui.DataForm;
-using System.ComponentModel.DataAnnotations;
+﻿using Bol.Core.Model;
+using System.Text.RegularExpressions;
 
 namespace BolWallet.Models;
 
-public class CodenameForm
+[INotifyPropertyChanged]
+public partial class CodenameForm
 {
-	[DataFormDisplayOptions(LabelText = "\ue7fd", LabelWidth = "auto")]
-	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 1)]
-	[DataFormTextEditor(InplaceLabelText = "Surname")]
-	public string Surname { get; set; }
+    private static readonly Regex OneOrMoreCapitalLetters = new ("^[A-Z]+$");
+    private static readonly Regex ZeroOrMoreCapitalLetters = new ("^[A-Z]*$");
+    private static readonly Regex OneCapitalLetterOrDigit = new ("^[A-Z0-9]$");
 
-	[DataFormDisplayOptions(IsLabelVisible = false)]
-	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 2)]
-	[DataFormTextEditor(InplaceLabelText = "Middle name")]
-	public string MiddleName { get; set; }
+    private readonly RegisterContent _content;
 
-	[DataFormDisplayOptions(IsLabelVisible = false)]
-	[DataFormTextEditor(InplaceLabelText = "Third name")]
-	[DataFormItemPosition(RowOrder = 1, ItemOrderInRow = 3)]
-	public string ThirdName { get; set; }
+    public CodenameForm(RegisterContent content)
+    {
+        _content = content;
+    }
 
-	[DataFormDisplayOptions(LabelText = "\ue7e9", LabelWidth = "auto")]
-	[DataFormTextEditor(InplaceLabelText = "Birthday")]
-	public DateTime? Birthday { get; set; }
+    public BaseProperty FirstName { get; set; } = new()
+    {
+        ErrorMessage = "First Name should be only in capital letters",
+        IsValid = value => OneOrMoreCapitalLetters.IsMatch(value),
+        Value = "",
+        IsMandatory = true
+    };
 
-	[DataFormDisplayOptions(LabelText = "\uf8d9", LabelWidth = "auto")]
-	[DataFormComboBoxEditor(InplaceLabelText = "Gender")]
-	public Gender Gender { get; set; }
+    public BaseProperty Surname { get; set; } = new()
+    {
+        ErrorMessage = "Surname should be only in capital letters",
+        IsValid = value => OneOrMoreCapitalLetters.IsMatch(value),
+        IsMandatory = true
+    };
 
-	[DataFormDisplayOptions(LabelText = "\ue80b", LabelWidth = "auto")]
-	[DataFormComboBoxEditor(InplaceLabelText = "Country")]
-	public string Country { get; set; }
+    public BaseProperty MiddleName { get; set; } = new()
+    {
+        ErrorMessage = "Middle Name should be only in capital letters",
+        IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value),
+    };
 
-	[DataFormDisplayOptions(LabelText = "\ue9f4", LabelWidth = "auto", HelpText = "To be added")]
-	[DataFormTextEditor(InplaceLabelText = "Combination")]
-	[MaxLength(1, ErrorMessage = "Combination should be only one digit/letter")]
-	[RegularExpression("[A-Z0-9]", ErrorMessage = "Combination should be a capital letter or a number")]
-	public string Combination { get; set; } = "1";
+    public BaseProperty ThirdName { get; set; } = new()
+    {
+        ErrorMessage = "Third Name should be only in capital letters",
+        IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value)
+    };
+
+    public BaseProperty Birthdate { get; set; } = new()
+    {
+        ErrorMessage = "Birthdate cannot be in the future",
+        IsValid = value =>
+        {
+            var date = DateTime.Parse(value);
+            return date.CompareTo(DateTime.Today) < 0;
+        },
+        IsMandatory = true
+    };
+
+    public Gender Gender { get; set; }
+
+    public BaseProperty Combination { get; set; } = new()
+    {
+        ErrorMessage = "Combination should be a capital letter or a digit",
+        IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
+        Value = "1",
+        IsMandatory = true
+    };
+
+    public BaseProperty NIN { get; set; } = new()
+    {
+        IsValid = _ => true,
+        HelpMessage = "",
+        IsMandatory = true
+    };
+
+    public IEnumerable<Country> Countries => _content.Countries;
+
+    private Country _selectedCountry;
+    public Country SelectedCountry
+    {
+        get => _selectedCountry;
+        set
+        {
+            SetProperty(ref _selectedCountry, value);
+            NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
+        }
+    }
+
+    public bool IsFormFilled
+    {
+        get
+        {
+            return FirstName.IsReady &&
+                   Surname.IsReady &&
+                   MiddleName.IsReady &&
+                   ThirdName.IsReady &&
+                   Birthdate.IsReady &&
+                   Combination.IsReady &&
+                   NIN.IsReady;
+        }
+    }
 }

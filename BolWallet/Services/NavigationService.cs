@@ -1,14 +1,16 @@
 ﻿#nullable enable
+using BolWallet.Helpers;
+
 namespace BolWallet.Services;
 
 public class NavigationService : INavigationService
 {
-	private readonly IServiceProvider _serviceProvider;
+    private readonly IViewModelToViewResolver _viewModelToViewResolver;
 
-	public NavigationService(IServiceProvider serviceProvider)
-	{
-		_serviceProvider = serviceProvider;
-	}
+    public NavigationService(IViewModelToViewResolver viewModelToViewResolver)
+    {
+        _viewModelToViewResolver = viewModelToViewResolver;
+    }
 
 	private static INavigation Navigation
 	{
@@ -25,17 +27,19 @@ public class NavigationService : INavigationService
 		}
 	}
 
-	public Task NavigateToPage<T>(bool useAnimation = true) where T : Page
+	public Task NavigateTo<TViewModel>(bool useAnimation = true) where TViewModel : class
 	{
-		var page = ResolvePage<T>();
-
-		if (page is not null)
-		{
-			return Navigation.PushAsync(page, useAnimation);
-		}
-
-		throw new InvalidOperationException($"Unable to resolve type {typeof(T).FullName}");
-	}
+        try
+        {
+            var page = _viewModelToViewResolver.Resolve<TViewModel>();
+            
+            return Navigation.PushAsync(page, useAnimation);
+        }
+        catch (Exception exception)
+        {
+            throw new InvalidOperationException($"Unable to navigate to {typeof(TViewModel).FullName}", exception);
+        }
+    }
 
 	public Task NavigateBack()
 	{
@@ -46,6 +50,4 @@ public class NavigationService : INavigationService
 
 		throw new InvalidOperationException("No pages to navigate back to!");
 	}
-
-	private T? ResolvePage<T>() where T : Page => _serviceProvider.GetService<T>();
 }
