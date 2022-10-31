@@ -22,8 +22,10 @@ public static class RegistrationExtensions
 	{
 		services.AddTransient<TViewModel>();
 		services.AddTransient<TView>();
-
-		var binder = services.BuildServiceProvider().GetService<IViewModelToViewBinder>();
+		
+		using var serviceProvider = services.BuildServiceProvider();
+		
+		var binder = serviceProvider.GetService<IViewModelToViewBinder>();
 		
 		if (binder is null)
 		{
