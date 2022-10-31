@@ -2,7 +2,7 @@
 using Akavache;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
-using BolWallet.Helpers;
+using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
@@ -32,25 +32,11 @@ public static class MauiProgram
 		// Register Services
 		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
 		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
-		services.AddScoped<INavigationService, NavigationService>();
+		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
+		
+		services.RegisterViewAndViewModelSubsystem();
 
-		// Register Pages
-		services.AddTransient<MainPage>();
-		services.AddTransient<CreateCodenamePage>();
-
-		// RegisterViewModels
-		services.AddTransient<MainViewModel>();
-		services.AddTransient<CreateCodenameViewModel>();
-
-        var viewModelToView = new Dictionary<Type, Type>
-        {
-            { typeof(MainViewModel), typeof(MainPage) },
-            { typeof(CreateCodenameViewModel), typeof(CreateCodenamePage) }
-        };
-        
-        services.AddSingleton<IViewModelToViewResolver>(sp => new ViewModelToViewResolver(sp, viewModelToView));
-        
 		services.AddBolSdk();
 
 		using var sp = services.BuildServiceProvider();
