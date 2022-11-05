@@ -35,6 +35,7 @@ public static class MauiProgram
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 		
+		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		services.RegisterViewAndViewModelSubsystem();
 
 		services.AddBolSdk();
