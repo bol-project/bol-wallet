@@ -50,6 +50,9 @@
         <MauiXaml Update="Views\CreateCodenamePage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\CreateEdiPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\MainPage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>

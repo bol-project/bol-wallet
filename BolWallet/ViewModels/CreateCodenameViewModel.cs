@@ -53,5 +53,5 @@ public partial class CreateCodenameViewModel : BaseViewModel
         await _secureRepository.SetAsync("codename", result);
 
         Codename = result;
-    }
+	}
 }

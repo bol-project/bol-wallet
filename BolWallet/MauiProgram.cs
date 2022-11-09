@@ -1,12 +1,20 @@
 ﻿using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using Akavache;
+using Bol.App.Core.Services;
+using Bol.Core.Abstractions;
 using Bol.Core.Extensions;
+using Bol.Core.Helpers;
 using Bol.Core.Model;
+using Bol.Core.Serializers;
+using Bol.Core.Services;
+using Bol.Core.Validators;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using YamlDotNet.Serialization;
 using Country = BolWallet.Models.Country;
 
 namespace BolWallet;
@@ -34,7 +42,21 @@ public static class MauiProgram
 		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
-		
+		services.AddSingleton<IPermissionService, PermissionService>();
+
+
+
+
+		services.AddSingleton<ISerializer, Serializer>();
+		services.AddSingleton<IDeserializer, Deserializer>();
+		services.AddSingleton<IYamlSeralizer, YamlSerializer>();
+		services.AddSingleton<IHashTableValidator, HashTableValidator>();
+		services.AddSingleton<IYamlSeralizer, YamlSerializer>();
+		services.AddSingleton<IRegexHelper, RegexHelper>();
+		services.AddSingleton<ICodeNameValidator, CodeNameValidator>();
+		services.AddSingleton<IEncryptedDigitalMatrixValidator, EncryptedDigitalMatrixValidator>();
+		services.AddSingleton<IEncryptedDigitalIdentityService, EncryptedDigitalIdentityService>();
+
 		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		services.RegisterViewAndViewModelSubsystem();
 
