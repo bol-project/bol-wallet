@@ -44,9 +44,6 @@ public static class MauiProgram
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
 
-
-
-
 		services.AddSingleton<ISerializer, Serializer>();
 		services.AddSingleton<IDeserializer, Deserializer>();
 		services.AddSingleton<IYamlSeralizer, YamlSerializer>();
