@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using FluentValidation;
+using Microsoft.Maui.Storage;
 using Plugin.AudioRecorder;
 using System.Runtime.Intrinsics.X86;
 using MediaPicker = Microsoft.Maui.Media.MediaPicker;
@@ -13,6 +14,8 @@ public partial class EdiViewModel : BaseViewModel
 	private readonly IBase16Encoder _base16Encoder;
 	private readonly ISecureRepository _secureRepository;
 	private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
+
+	private EncryptedDigitalMatrix encryptedDigitalMatrix;
 
 	AudioRecorderService recorder;
 
@@ -29,19 +32,19 @@ public partial class EdiViewModel : BaseViewModel
 		_encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
 
 		EdiForm = new EdiForm();
-		EdiFormPaths = new EdiFormPaths();
 		recorder = new AudioRecorderService
 		{
 			AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
 			TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
 		};
+		encryptedDigitalMatrix = new EncryptedDigitalMatrix();
 	}
 
 	[ObservableProperty]
 	private EdiForm _ediForm;
 
 	[ObservableProperty]
-	private EdiFormPaths _ediFormPaths;
+	private EdiForm _ediFormPaths;
 
 	[RelayCommand]
 	private async Task PickPhotoAsync(string propertyName)
@@ -86,8 +89,10 @@ public partial class EdiViewModel : BaseViewModel
 
 				if (audiofile != null)
 				{
-					EdiForm.Voice = File.ReadAllBytes(audiofile);
-					EdiFormPaths.VoicePath = audiofile;
+					var fileBytes = File.ReadAllBytes(audiofile);
+					var encodedFileBytes = _base16Encoder.Encode(fileBytes);
+					encryptedDigitalMatrix.Hashes.Voice = encodedFileBytes;
+					EdiForm.VoicePath = audiofile;
 					OnPropertyChanged(nameof(EdiFormPaths));
 				}
 				else throw new();
@@ -119,74 +124,79 @@ public partial class EdiViewModel : BaseViewModel
 
 	private void PathPerImport(string propertyName, FileResult fileResult)
 	{
-		byte[] fileBytes = null;
+		string encodedFileBytes = null;
+		encryptedDigitalMatrix.Hashes = encryptedDigitalMatrix.Hashes ?? new HashTable();
+		if (fileResult != null)
+		{
+			var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+			encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
-		if (fileResult != null) fileBytes = File.ReadAllBytes(fileResult.FullPath);
+		}
 		else return;
 
 		switch (propertyName)
 		{
 			case nameof(EdiFormPaths.IdentityCardPath):
 				{
-					EdiForm.IdentityCard = fileBytes;
-					EdiFormPaths.IdentityCardPath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.IdentityCard = encodedFileBytes;
+					EdiForm.IdentityCardPath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.PassportPath):
 				{
-					EdiForm.Passport = fileBytes;
-					EdiFormPaths.PassportPath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.Passport = encodedFileBytes;
+					EdiForm.PassportPath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.DrivingLicencePath):
 				{
-					EdiForm.DrivingLicense = fileBytes;
-					EdiFormPaths.DrivingLicencePath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.DrivingLicense = encodedFileBytes;
+					EdiForm.DrivingLicencePath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.PhotoPath):
 				{
-					EdiForm.Photo = fileBytes;
-					EdiFormPaths.PhotoPath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.Photo = encodedFileBytes;
+					EdiForm.PhotoPath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.NinCertificatePath):
 				{
-					EdiForm.NinCertificate = fileBytes;
-					EdiFormPaths.NinCertificatePath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.NinCertificate = encodedFileBytes;
+					EdiForm.NinCertificatePath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.BirthCertificatePath):
 				{
-					EdiForm.BirthCertificate = fileBytes;
-					EdiFormPaths.BirthCertificatePath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.BirthCertificate = encodedFileBytes;
+					EdiForm.BirthCertificatePath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.TelephoneBillPath):
 				{
-					EdiForm.TelephoneBill = fileBytes;
-					EdiFormPaths.TelephoneBillPath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.TelephoneBill = encodedFileBytes;
+					EdiForm.TelephoneBillPath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.OtherPath):
 				{
-					EdiForm.Other = fileBytes;
-					EdiFormPaths.OtherPath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.Other = encodedFileBytes;
+					EdiForm.OtherPath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 			case nameof(EdiFormPaths.VoicePath):
 				{
-					EdiForm.Voice = fileBytes;
-					EdiFormPaths.VoicePath = fileResult.FullPath;
-					OnPropertyChanged(nameof(EdiFormPaths));
+					encryptedDigitalMatrix.Hashes.Voice = encodedFileBytes;
+					EdiForm.VoicePath = fileResult.FullPath;
+					OnPropertyChanged(nameof(EdiForm));
 					break;
 				}
 		}
@@ -194,33 +204,13 @@ public partial class EdiViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task Submit()
 	{
-		if (!(EdiForm.DrivingLicense?.Length > 0 && EdiForm.IdentityCard?.Length > 0 && EdiForm.Passport?.Length > 0))
+		if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) || string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) || string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
 		{
 			return;
 		}
 
-		EncryptedDigitalMatrix matrix = EdiFormModelToEncryptedDigitalMatrix();
-
-		var result = _encryptedDigitalIdentityService.Generate(matrix);
+		var result = _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix);
 
 		await _secureRepository.SetAsync("edi", result);
-	}
-
-	private EncryptedDigitalMatrix EdiFormModelToEncryptedDigitalMatrix()
-	{
-		EncryptedDigitalMatrix encryptedDigitalMatrix = new EncryptedDigitalMatrix();
-		encryptedDigitalMatrix.Hashes = new HashTable();
-
-		if (EdiForm.BirthCertificate != null) encryptedDigitalMatrix.Hashes.BirthCertificate = _base16Encoder.Encode(EdiForm.BirthCertificate);
-		if (EdiForm.DrivingLicense != null) encryptedDigitalMatrix.Hashes.DrivingLicense = _base16Encoder.Encode(EdiForm.DrivingLicense);
-		if (EdiForm.IdentityCard != null) encryptedDigitalMatrix.Hashes.IdentityCard = _base16Encoder.Encode(EdiForm.IdentityCard);
-		if (EdiForm.NinCertificate != null) encryptedDigitalMatrix.Hashes.NinCertificate = _base16Encoder.Encode(EdiForm.NinCertificate);
-		if (EdiForm.Passport != null) encryptedDigitalMatrix.Hashes.Passport = _base16Encoder.Encode(EdiForm.Passport);
-		if (EdiForm.Voice != null) encryptedDigitalMatrix.Hashes.Voice = _base16Encoder.Encode(EdiForm.Voice);
-		if (EdiForm.TelephoneBill != null) encryptedDigitalMatrix.Hashes.TelephoneBill = _base16Encoder.Encode(EdiForm.TelephoneBill);
-		if (EdiForm.Other != null) encryptedDigitalMatrix.Hashes.Other = _base16Encoder.Encode(EdiForm.Other);
-		if (EdiForm.TextInfo != null) encryptedDigitalMatrix.Hashes.TextInfo = _base16Encoder.Encode(EdiForm.TextInfo);
-
-		return encryptedDigitalMatrix;
 	}
 }

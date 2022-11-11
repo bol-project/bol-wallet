@@ -27,7 +27,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="IdentityCardPath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="IdentityCardPath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.IdentityCardPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.IdentityCardPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 			<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
 		</Grid>
 		<Grid Margin="0,0,0,10" >
@@ -41,7 +41,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="DrivingLicencePath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="DrivingLicencePath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.DrivingLicencePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.DrivingLicencePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 			<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
 		</Grid>
 		<Grid Margin="0,0,0,10" >
@@ -55,7 +55,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="PassportPath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="PassportPath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.PassportPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.PassportPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 			<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
 		</Grid>
 		<Grid Margin="0,0,0,10" >
@@ -69,7 +69,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="Photo"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="Photo"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.PhotoPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.PhotoPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Grid Margin="0,0,0,10" >
 			<Grid.ColumnDefinitions>
@@ -82,7 +82,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="NinCertificatePath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="NinCertificatePath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.NinCertificatePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.NinCertificatePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Grid Margin="0,0,0,10" >
 			<Grid.ColumnDefinitions>
@@ -95,7 +95,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="BirthCertificatePath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="BirthCertificatePath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.BirthCertificatePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.BirthCertificatePath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Grid Margin="0,0,0,10" >
 			<Grid.ColumnDefinitions>
@@ -108,7 +108,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="TelephoneBillPath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="TelephoneBillPath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.TelephoneBillPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.TelephoneBillPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Grid Margin="0,0,0,10" >
 			<Grid.ColumnDefinitions>
@@ -121,7 +121,7 @@
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="OtherPath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
 				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="OtherPath"  Source="camera.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.OtherPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.OtherPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Grid Margin="0,0,0,10" >
 			<Grid.ColumnDefinitions>
@@ -132,9 +132,9 @@
 			<Label Margin="10,0,10,0"  Text="Voice" FontSize="18" VerticalOptions="Center" />
 			<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
 				<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="VoicePath"  Source="plus.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"/>
-				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="TelephoneBillPath"  Source="record.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
+				<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="VoicePath"  Source="record.png" BackgroundColor="#ffffff" HorizontalOptions="Center" HeightRequest="30" WidthRequest="30"  />
 			</StackLayout>
-			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiFormPaths.TelephoneBillPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			<Label  Grid.Column="2" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.TelephoneBillPath}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
 		</Grid>
 		<Button   Grid.Column="1" VerticalOptions="EndAndExpand" Text="Submit" BackgroundColor="#063289" Margin="20, 0, 20, 20"  HorizontalOptions="Fill"  Command="{Binding SubmitCommand}"/>
 	</StackLayout>
