@@ -209,8 +209,18 @@ public partial class EdiViewModel : BaseViewModel
 			return;
 		}
 
+		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+
+		encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
+		encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
+		encryptedDigitalMatrix.Nin = userData.Person.Nin;
+		encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
+		encryptedDigitalMatrix.CodeName = userData.Codename;
+
 		var result = _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix);
 
-		await _secureRepository.SetAsync("edi", result);
+		userData.Edi = result;
+
+		await _secureRepository.SetAsync("userdata", userData);
 	}
 }

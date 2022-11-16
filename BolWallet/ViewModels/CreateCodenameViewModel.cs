@@ -50,8 +50,15 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
         var result = _codeNameService.Generate(person);
 
-        await _secureRepository.SetAsync("codename", result);
+		UserData userData = new UserData();
 
-        Codename = result;
+        userData.Codename = result;
+        userData.Person = person;
+
+		await _secureRepository.SetAsync<UserData>("userdata", userData);
+
+		await NavigationService.NavigateTo<EdiViewModel>(true);
+
+		Codename = result;
 	}
 }

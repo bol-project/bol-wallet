@@ -4,7 +4,7 @@ public partial class App : Application
 {
 	private readonly ICountriesService _countriesService;
 
-	public App(CreateEdiPage mainPage, ICountriesService countriesService)
+	public App(MainPage mainPage, ICountriesService countriesService)
 	{
 		_countriesService = countriesService;
 		InitializeComponent();
