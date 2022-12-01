@@ -5,7 +5,6 @@ using FluentValidation;
 using Microsoft.Maui.Storage;
 using Plugin.AudioRecorder;
 using System.Runtime.Intrinsics.X86;
-using MediaPicker = Microsoft.Maui.Media.MediaPicker;
 
 namespace BolWallet.ViewModels;
 public partial class EdiViewModel : BaseViewModel
@@ -14,7 +13,7 @@ public partial class EdiViewModel : BaseViewModel
 	private readonly IBase16Encoder _base16Encoder;
 	private readonly ISecureRepository _secureRepository;
 	private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
-
+	private readonly IMediaPicker _mediaPicker;
 	private EncryptedDigitalMatrix encryptedDigitalMatrix;
 
 	AudioRecorderService recorder;
@@ -23,13 +22,15 @@ public partial class EdiViewModel : BaseViewModel
 		IPermissionService permissionService,
 		IBase16Encoder base16Encoder,
 		ISecureRepository secureRepository,
-		IEncryptedDigitalIdentityService encryptedDigitalIdentityService)
+		IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
+		IMediaPicker mediaPicker)
 		: base(navigationService)
 	{
 		_permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
 		_base16Encoder = base16Encoder ?? throw new ArgumentNullException(nameof(base16Encoder));
 		_secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
 		_encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
+		_mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
 
 		EdiForm = new EdiForm();
 		recorder = new AudioRecorderService
@@ -72,7 +73,7 @@ public partial class EdiViewModel : BaseViewModel
 	{
 		if (!(await _permissionService.CheckCameraPermission())) return;
 
-		var takePictureResult = await MediaPicker.CapturePhotoAsync();
+		var takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
 		PathPerImport(propertyName, takePictureResult);
 	}

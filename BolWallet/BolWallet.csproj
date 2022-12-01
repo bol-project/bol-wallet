@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0-android;net6.0-ios;</TargetFrameworks>
+			<TargetFrameworks>net6.0-android;net6.0-ios;</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <RootNamespace>BolWallet</RootNamespace>
         <UseMaui>true</UseMaui>
@@ -22,8 +22,8 @@
         <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
 
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">23.0</SupportedOSPlatformVersion>
-    </PropertyGroup>
+			  <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">23.0</SupportedOSPlatformVersion>
+		</PropertyGroup>
 
     <ItemGroup>
         <!-- App Icon -->
@@ -42,7 +42,7 @@
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
@@ -75,7 +75,7 @@
 
     <ItemGroup>
         <PackageReference Include="akavache" Version="9.0.1" />
-        <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.5" />
+        <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.7" />
         <PackageReference Include="CommunityToolkit.Maui" Version="1.3.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
         <PackageReference Include="DevExpress.Maui.Editors" Version="22.1.*" />
@@ -100,5 +100,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <DependentUpon>appsettings.json</DependentUpon>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiFont Include="Helpers\Icons.cs" />
     </ItemGroup>
 </Project>
