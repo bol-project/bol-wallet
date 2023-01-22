@@ -46,11 +46,11 @@ public partial class CodenameForm
 
     public BaseProperty Birthdate { get; set; } = new()
     {
-        ErrorMessage = "Birthdate cannot be in the future",
+        ErrorMessage = "Birthdate cannot be in the future or in the current year",
         IsValid = value =>
         {
             var date = DateTime.Parse(value);
-            return date.CompareTo(DateTime.Today) < 0;
+            return date.Year.CompareTo(DateTime.Today.Year) < 0;
         },
         IsMandatory = true
     };
@@ -69,10 +69,22 @@ public partial class CodenameForm
     {
         IsValid = _ => true,
         HelpMessage = "",
-        IsMandatory = true
+        IsMandatory = true,
     };
 
     public IEnumerable<Country> Countries => _content.Countries;
+
+    private string _nin;
+    public string Nin
+    {
+        get => _nin;
+        set
+        {
+            SetProperty(ref _nin, value);
+            NIN.IsValid = value => _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
+            NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}.";
+        }
+    }
 
     private Country _selectedCountry;
     public Country SelectedCountry
@@ -82,6 +94,7 @@ public partial class CodenameForm
         {
             SetProperty(ref _selectedCountry, value);
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
+            NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
         }
     }
 

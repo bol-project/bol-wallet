@@ -149,8 +149,9 @@
                 HasError="{Binding CodenameForm.NIN.HasError}"
                 HelpText="{Binding CodenameForm.NIN.HelpMessage}"
                 LabelText="NIN*"
+				IsEnabled="{Binding CodenameForm.NIN.IsEnabled}"
                 State="{Binding CodenameForm.NIN.State}"
-                Text="{Binding CodenameForm.NIN.Value}" />
+                Text="{Binding CodenameForm.Nin}" />
 
             <controls1:ExtendedTextEdit
                 Margin="8,4"
