@@ -44,16 +44,6 @@ public static class MauiProgram
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
 
-		services.AddSingleton<ISerializer, Serializer>();
-		services.AddSingleton<IDeserializer, Deserializer>();
-		services.AddSingleton<IYamlSeralizer, YamlSerializer>();
-		services.AddSingleton<IHashTableValidator, HashTableValidator>();
-		services.AddSingleton<IYamlSeralizer, YamlSerializer>();
-		services.AddSingleton<IRegexHelper, RegexHelper>();
-		services.AddSingleton<ICodeNameValidator, CodeNameValidator>();
-		services.AddSingleton<IEncryptedDigitalMatrixValidator, EncryptedDigitalMatrixValidator>();
-		services.AddSingleton<IEncryptedDigitalIdentityService, EncryptedDigitalIdentityService>();
-
 		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		services.RegisterViewAndViewModelSubsystem();
 
