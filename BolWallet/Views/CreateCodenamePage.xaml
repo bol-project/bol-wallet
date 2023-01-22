@@ -151,7 +151,7 @@
                 LabelText="NIN*"
 				IsEnabled="{Binding CodenameForm.NIN.IsEnabled}"
                 State="{Binding CodenameForm.NIN.State}"
-                Text="{Binding CodenameForm.Nin}" />
+                Text="{Binding CodenameForm.NIN.Value}" />
 
             <controls1:ExtendedTextEdit
                 Margin="8,4"

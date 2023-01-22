@@ -67,24 +67,10 @@ public partial class CodenameForm
 
     public BaseProperty NIN { get; set; } = new()
     {
-        IsValid = _ => true,
-        HelpMessage = "",
         IsMandatory = true,
     };
 
     public IEnumerable<Country> Countries => _content.Countries;
-
-    private string _nin;
-    public string Nin
-    {
-        get => _nin;
-        set
-        {
-            SetProperty(ref _nin, value);
-            NIN.IsValid = value => _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
-            NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}.";
-        }
-    }
 
     private Country _selectedCountry;
     public Country SelectedCountry
@@ -95,6 +81,8 @@ public partial class CodenameForm
             SetProperty(ref _selectedCountry, value);
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
             NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
+            NIN.IsValid = value => _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
+            NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}.";
         }
     }
 
