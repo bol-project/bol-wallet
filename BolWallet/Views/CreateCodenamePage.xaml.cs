@@ -19,4 +19,10 @@ public partial class CreateCodenamePage : ContentPage
 
 		Toast.Make("Copied to Clipboard").Show();
 	}
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await ((CreateCodenameViewModel)BindingContext).Initialize();
+    }
 }

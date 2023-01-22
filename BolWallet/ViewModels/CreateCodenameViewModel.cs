@@ -1,3 +1,4 @@
+using System.Globalization;
 using Bol.Core.Abstractions;
 using Bol.Core.Model;
 
@@ -63,4 +64,24 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
 		Codename = result;
 	}
+
+    public async Task Initialize()
+    {
+        var userData = await _secureRepository.GetAsync<UserData>("userdata");
+        if (userData is null) return;
+
+        CodenameForm.FirstName.Value = userData.Person.FirstName;
+        CodenameForm.MiddleName.Value = userData.Person.MiddleName;
+        CodenameForm.Surname.Value = userData.Person.Surname;
+        CodenameForm.ThirdName.Value = userData.Person.ThirdName;
+        CodenameForm.Gender = userData.Person.Gender;
+        CodenameForm.Combination.Value = userData.Person.Combination;
+        CodenameForm.NIN.Value = userData.Person.Nin;
+        CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString(CultureInfo.InvariantCulture);
+        CodenameForm.SelectedCountry = CodenameForm
+            .Countries
+            .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
+
+        Codename = userData.Codename;
+    }
 }
