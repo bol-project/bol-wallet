@@ -54,10 +54,9 @@ public partial class EdiViewModel : BaseViewModel
 		var customFileType =
 			new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 		{
-					 { DevicePlatform.iOS, new[] { "com.adobe.pdf" } },
+					 { DevicePlatform.iOS, new[] { "com.adobe.pdf","public.image", "public.audio" } },
 					 { DevicePlatform.Android, new[] { "application/pdf", "image/*","audio/*" } },
-					 { DevicePlatform.Tizen, new[] { "*/*" } },
-					 { DevicePlatform.macOS, new[] { "pdf"} },
+					 { DevicePlatform.macOS, new[] { "pdf","public.image", "public.audio" } },
 			});
 		var pickResult = await FilePicker.PickAsync(new PickOptions
 		{
@@ -96,26 +95,12 @@ public partial class EdiViewModel : BaseViewModel
 					EdiForm.VoicePath = audiofile;
 					OnPropertyChanged(nameof(EdiFormPaths));
 				}
-				else throw new();
+				else throw new Exception("No audio file created");
 			}
 			else
 			{
 				await recorder.StopRecording();
 			}
-		}
-		catch (Exception ex)
-		{
-			throw new InvalidOperationException(ex.Message);
-		}
-	}
-
-	[RelayCommand]
-	private async Task StopRecordAudio()
-	{
-		if (!recorder.IsRecording) return;
-		try
-		{
-			await recorder.StopRecording();
 		}
 		catch (Exception ex)
 		{
