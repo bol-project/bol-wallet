@@ -76,12 +76,12 @@ public partial class CreateCodenameViewModel : BaseViewModel
         CodenameForm.ThirdName.Value = userData.Person.ThirdName;
         CodenameForm.Gender = userData.Person.Gender;
         CodenameForm.Combination.Value = userData.Person.Combination;
+        CodenameForm.SelectedCountry = CodenameForm
+                    .Countries
+                    .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
         CodenameForm.NIN.Value = userData.Person.Nin;
         CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString(CultureInfo.InvariantCulture);
-        CodenameForm.SelectedCountry = CodenameForm
-            .Countries
-            .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-
+        
         Codename = userData.Codename;
     }
 }
