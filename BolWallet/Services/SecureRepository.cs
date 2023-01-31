@@ -42,7 +42,7 @@ public class SecureRepository : ISecureRepository
 		ValidateKey(key);
 		ValidateValue(entity);
 
-		var entityAsJson = JsonSerializer.Serialize(entity);
+        var entityAsJson = JsonSerializer.Serialize(entity);
 
 		await _secureStorage.SetAsync(key, entityAsJson);
 	}
