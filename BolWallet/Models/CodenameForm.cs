@@ -15,6 +15,14 @@ public partial class CodenameForm
     public CodenameForm(RegisterContent content)
     {
         _content = content;
+
+        FirstName.PropertyChanged += (sender, args) => Invalidate();
+        Surname.PropertyChanged += (sender, args) => Invalidate();
+        MiddleName.PropertyChanged += (sender, args) => Invalidate();
+        ThirdName.PropertyChanged += (sender, args) => Invalidate();
+        Birthdate.PropertyChanged += (sender, args) => Invalidate();
+        Combination.PropertyChanged += (sender, args) => Invalidate();
+        NIN.PropertyChanged += (sender, args) => Invalidate();
     }
 
     public BaseProperty FirstName { get; set; } = new()
@@ -55,7 +63,17 @@ public partial class CodenameForm
         IsMandatory = true
     };
 
-    public Gender Gender { get; set; }
+    private Gender _gender;
+    public Gender Gender
+    {
+        get => _gender;
+        set
+        {
+            _gender = value;
+            OnPropertyChanged();
+            Invalidate();
+        }
+    }
 
     public BaseProperty Combination { get; set; } = new()
     {
@@ -83,20 +101,26 @@ public partial class CodenameForm
             NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
             NIN.IsValid = value => _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
             NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}.";
+            Invalidate();
         }
     }
 
     public bool IsFormFilled
+    private bool _isInvalidated = true;
+    public bool IsInvalidated
     {
-        get
+        get => _isInvalidated;
+        set
         {
-            return FirstName.IsReady &&
-                   Surname.IsReady &&
-                   MiddleName.IsReady &&
-                   ThirdName.IsReady &&
-                   Birthdate.IsReady &&
-                   Combination.IsReady &&
-                   NIN.IsReady;
+            _isInvalidated = value;
+            OnPropertyChanged();
         }
+    }
+
+    private void Invalidate()
+    {
+        IsInvalidated = true;
+        OnPropertyChanged(nameof(IsFormFilled));
+        OnPropertyChanged(nameof(IsInvalidated));
     }
 }
