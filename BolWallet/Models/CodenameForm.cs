@@ -43,7 +43,7 @@ public partial class CodenameForm
         ErrorMessage = "Third Name should be only in capital letters",
         IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value)
     };
-
+    
     public BaseProperty Birthdate { get; set; } = new()
     {
         ErrorMessage = "Birthdate cannot be in the future or in the current year",
