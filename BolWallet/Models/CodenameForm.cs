@@ -101,6 +101,7 @@ public partial class CodenameForm
             NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
             NIN.IsValid = value => _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
             NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}.";
+            OnPropertyChanged(nameof(NIN));
             Invalidate();
         }
     }
