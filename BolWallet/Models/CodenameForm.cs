@@ -105,7 +105,16 @@ public partial class CodenameForm
         }
     }
 
-    public bool IsFormFilled
+    public bool IsFormFilled =>
+        FirstName.IsReady &&
+        Surname.IsReady &&
+        MiddleName.IsReady &&
+        ThirdName.IsReady &&
+        Birthdate.IsReady &&
+        Combination.IsReady &&
+        NIN.IsReady &&
+        SelectedCountry is not null;
+
     private bool _isInvalidated = true;
     public bool IsInvalidated
     {
