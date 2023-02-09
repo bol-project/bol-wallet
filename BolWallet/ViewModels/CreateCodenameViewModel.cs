@@ -31,7 +31,13 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
 
     [RelayCommand]
-    private async Task Submit()
+    private Task Submit()
+    {
+        return NavigationService.NavigateTo<EdiViewModel>(true);
+    }
+    
+    [RelayCommand]
+    private async Task Generate()
     {
         if (!CodenameForm.IsFormFilled)
         {
@@ -53,17 +59,17 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
         var result = _codeNameService.Generate(person);
 
-		UserData userData = new UserData();
+        var userData = new UserData
+        {
+            Codename = result,
+            Person = person
+        };
 
-        userData.Codename = result;
-        userData.Person = person;
-
-		await _secureRepository.SetAsync<UserData>("userdata", userData);
-
-		await NavigationService.NavigateTo<EdiViewModel>(true);
-
-		Codename = result;
-	}
+        await _secureRepository.SetAsync("userdata", userData);
+        
+        Codename = result;
+        CodenameForm.IsInvalidated = false;
+    }
 
     public async Task Initialize()
     {
