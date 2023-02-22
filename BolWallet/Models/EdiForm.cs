@@ -2,14 +2,14 @@
 {
 	public partial class EdiForm : ObservableObject
 	{
-		public string IdentityCardPath { get; set; }
-		public string PassportPath { get; set; }
-		public string DrivingLicencePath { get; set; }
-		public string PhotoPath { get; set; }
-		public string NinCertificatePath { get; set; }
-		public string BirthCertificatePath { get; set; }
-		public string TelephoneBillPath { get; set; }
-		public string OtherPath { get; set; }
-		public string VoicePath { get; set; }
+		public string IdentityCard { get; set; }
+		public string Passport { get; set; }
+		public string DrivingLicense { get; set; }
+		public string Photo { get; set; }
+		public string NinCertificate { get; set; }
+		public string BirthCertificate { get; set; }
+		public string TelephoneBill { get; set; }
+		public string Other { get; set; }
+		public string Voice { get; set; }
 	}
 }
