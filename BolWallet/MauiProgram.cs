@@ -1,20 +1,13 @@
 ﻿using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 using Akavache;
 using Bol.App.Core.Services;
-using Bol.Core.Abstractions;
 using Bol.Core.Extensions;
-using Bol.Core.Helpers;
 using Bol.Core.Model;
-using Bol.Core.Serializers;
-using Bol.Core.Services;
-using Bol.Core.Validators;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using YamlDotNet.Serialization;
 using Country = BolWallet.Models.Country;
 
 namespace BolWallet;

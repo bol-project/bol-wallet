@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using Bol.App.Core.Services;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Cryptography;
 using FluentValidation;
@@ -40,19 +41,16 @@ public partial class CreateEdiViewModel : BaseViewModel
             AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
             TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
         };
-        encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable()};
+        encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
     }
 
     [ObservableProperty]
     private EdiForm _ediForm;
 
-    [ObservableProperty]
-    private EdiForm _ediFormPaths;
-
     [RelayCommand]
     private async Task PickPhotoAsync(string propertyName)
     {
-        if (!(await _permissionService.CheckStoragePermission())) return;
+        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.StorageRead>() != PermissionStatus.Granted) return;
 
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
@@ -75,7 +73,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        if (!(await _permissionService.CheckCameraPermission())) return;
+        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.Camera>() != PermissionStatus.Granted) return;
 
         FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
@@ -84,10 +82,12 @@ public partial class CreateEdiViewModel : BaseViewModel
         PathPerImport(propertyNameInfo, takePictureResult);
     }
 
+
+
     [RelayCommand]
     private async Task RecordAudio()
     {
-        if (!await _permissionService.CheckSpeechPermission()) return;
+        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.Speech>() != PermissionStatus.Granted) return;
 
         if (recorder.IsRecording) await recorder.StopRecording();
 
@@ -120,8 +120,8 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task Submit()
     {
-        if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) || 
-             string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) || 
+        if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
+             string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
              string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
         {
             return;
