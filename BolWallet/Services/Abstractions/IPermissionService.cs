@@ -2,5 +2,6 @@
 
 public interface IPermissionService
 {
-    Task<PermissionStatus> CheckPermissionAndDisplayMessageAsync<T>() where T : Permissions.BasePermission, new();
+    Task<PermissionStatus> CheckPermissionAsync<T>() where T : Permissions.BasePermission, new();
+    Task DisplayWarningAsync<T>() where T : Permissions.BasePermission, new();
 }

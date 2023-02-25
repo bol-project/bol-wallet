@@ -50,7 +50,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task PickPhotoAsync(string propertyName)
     {
-        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.StorageRead>() != PermissionStatus.Granted) return;
+        if (await _permissionService.CheckPermissionAsync<Permissions.StorageRead>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.StorageRead>(); return; }
 
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
@@ -73,7 +73,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.Camera>() != PermissionStatus.Granted) return;
+        if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
 
         FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
@@ -82,12 +82,10 @@ public partial class CreateEdiViewModel : BaseViewModel
         PathPerImport(propertyNameInfo, takePictureResult);
     }
 
-
-
     [RelayCommand]
     private async Task RecordAudio()
     {
-        if (await _permissionService.CheckPermissionAndDisplayMessageAsync<Permissions.Speech>() != PermissionStatus.Granted) return;
+        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
 
         if (recorder.IsRecording) await recorder.StopRecording();
 
