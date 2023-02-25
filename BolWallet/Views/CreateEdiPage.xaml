@@ -14,7 +14,7 @@
 	xmlns:local="clr-namespace:BolWallet;assembly=BolWallet"
     x:Name="This"
     Title="Create your Edi"
-    x:DataType="viewModels:EdiViewModel"
+    x:DataType="viewModels:CreateEdiViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
 	<StackLayout >
 		<Grid Margin="0,0,0,10" >

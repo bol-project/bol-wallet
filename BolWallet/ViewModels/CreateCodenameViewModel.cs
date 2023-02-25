@@ -33,7 +33,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     [RelayCommand]
     private Task Submit()
     {
-        return NavigationService.NavigateTo<EdiViewModel>(true);
+        return NavigationService.NavigateTo<CreateEdiViewModel>(true);
     }
     
     [RelayCommand]

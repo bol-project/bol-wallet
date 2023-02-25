@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Runtime.Intrinsics.X86;
 
 namespace BolWallet.ViewModels;
-public partial class EdiViewModel : BaseViewModel
+public partial class CreateEdiViewModel : BaseViewModel
 {
     private readonly IPermissionService _permissionService;
     private readonly IBase16Encoder _base16Encoder;
@@ -19,7 +19,7 @@ public partial class EdiViewModel : BaseViewModel
 
     AudioRecorderService recorder;
 
-    public EdiViewModel(
+    public CreateEdiViewModel(
         INavigationService navigationService,
         IPermissionService permissionService,
         IBase16Encoder base16Encoder,
