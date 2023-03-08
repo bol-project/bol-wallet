@@ -137,6 +137,8 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         userData.Edi = result;
 
+        userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
+
         await _secureRepository.SetAsync("userdata", userData);
     }
 
