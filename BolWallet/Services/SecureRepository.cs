@@ -23,8 +23,10 @@ public class SecureRepository : ISecureRepository
 		ValidateKey(key);
 
 		var result = await _secureStorage.GetAsync(key);
+        
+        if (string.IsNullOrWhiteSpace(result)) return null;
 
-		var entity = JsonSerializer.Deserialize<TEntity>(result);
+        var entity = JsonSerializer.Deserialize<TEntity>(result);
 
 		return entity;
 	}
@@ -42,7 +44,7 @@ public class SecureRepository : ISecureRepository
 		ValidateKey(key);
 		ValidateValue(entity);
 
-		var entityAsJson = JsonSerializer.Serialize(entity);
+        var entityAsJson = JsonSerializer.Serialize(entity);
 
 		await _secureStorage.SetAsync(key, entityAsJson);
 	}

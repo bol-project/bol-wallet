@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Akavache;
+using Bol.App.Core.Services;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
 using BolWallet.Extensions;
@@ -34,7 +35,9 @@ public static class MauiProgram
 		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
-		
+		services.AddSingleton<IPermissionService, PermissionService>();
+
+		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		services.RegisterViewAndViewModelSubsystem();
 
 		services.AddBolSdk();

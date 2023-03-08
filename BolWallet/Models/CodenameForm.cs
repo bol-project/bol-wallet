@@ -15,6 +15,14 @@ public partial class CodenameForm
     public CodenameForm(RegisterContent content)
     {
         _content = content;
+
+        FirstName.PropertyChanged += (sender, args) => Invalidate();
+        Surname.PropertyChanged += (sender, args) => Invalidate();
+        MiddleName.PropertyChanged += (sender, args) => Invalidate();
+        ThirdName.PropertyChanged += (sender, args) => Invalidate();
+        Birthdate.PropertyChanged += (sender, args) => Invalidate();
+        Combination.PropertyChanged += (sender, args) => Invalidate();
+        NIN.PropertyChanged += (sender, args) => Invalidate();
     }
 
     public BaseProperty FirstName { get; set; } = new()
@@ -43,19 +51,29 @@ public partial class CodenameForm
         ErrorMessage = "Third Name should be only in capital letters",
         IsValid = value => ZeroOrMoreCapitalLetters.IsMatch(value)
     };
-
+    
     public BaseProperty Birthdate { get; set; } = new()
     {
-        ErrorMessage = "Birthdate cannot be in the future",
+        ErrorMessage = "Birthdate cannot be in the future or in the current year",
         IsValid = value =>
         {
             var date = DateTime.Parse(value);
-            return date.CompareTo(DateTime.Today) < 0;
+            return date.Year.CompareTo(DateTime.Today.Year) < 0;
         },
         IsMandatory = true
     };
 
-    public Gender Gender { get; set; }
+    private Gender _gender;
+    public Gender Gender
+    {
+        get => _gender;
+        set
+        {
+            _gender = value;
+            OnPropertyChanged();
+            Invalidate();
+        }
+    }
 
     public BaseProperty Combination { get; set; } = new()
     {
@@ -67,9 +85,7 @@ public partial class CodenameForm
 
     public BaseProperty NIN { get; set; } = new()
     {
-        IsValid = _ => true,
-        HelpMessage = "",
-        IsMandatory = true
+        IsMandatory = true,
     };
 
     public IEnumerable<Country> Countries => _content.Countries;
@@ -82,20 +98,39 @@ public partial class CodenameForm
         {
             SetProperty(ref _selectedCountry, value);
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
+            NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
+            NIN.IsValid = value => new Regex(@"^[A-F0-9]+$").IsMatch(value) && _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
+            NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}. Only capital letters(A-F) and numbers accepted";
+            OnPropertyChanged(nameof(NIN));
+            Invalidate();
         }
     }
 
-    public bool IsFormFilled
+    public bool IsFormFilled =>
+        FirstName.IsReady &&
+        Surname.IsReady &&
+        MiddleName.IsReady &&
+        ThirdName.IsReady &&
+        Birthdate.IsReady &&
+        Combination.IsReady &&
+        NIN.IsReady &&
+        SelectedCountry is not null;
+
+    private bool _isInvalidated = true;
+    public bool IsInvalidated
     {
-        get
+        get => _isInvalidated;
+        set
         {
-            return FirstName.IsReady &&
-                   Surname.IsReady &&
-                   MiddleName.IsReady &&
-                   ThirdName.IsReady &&
-                   Birthdate.IsReady &&
-                   Combination.IsReady &&
-                   NIN.IsReady;
+            _isInvalidated = value;
+            OnPropertyChanged();
         }
+    }
+
+    private void Invalidate()
+    {
+        IsInvalidated = true;
+        OnPropertyChanged(nameof(IsFormFilled));
+        OnPropertyChanged(nameof(IsInvalidated));
     }
 }

@@ -37,6 +37,8 @@
 
             <converters:VariableMultiValueConverter x:Key="AllTrueConverter" ConditionType="All" />
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <converters:IsNullConverter x:Key="IsNullConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
 
             <localConverters:StateColorConverter x:Key="EndIconColorConverter" />
 
@@ -149,6 +151,7 @@
                 HasError="{Binding CodenameForm.NIN.HasError}"
                 HelpText="{Binding CodenameForm.NIN.HelpMessage}"
                 LabelText="NIN*"
+				IsEnabled="{Binding CodenameForm.NIN.IsEnabled}"
                 State="{Binding CodenameForm.NIN.State}"
                 Text="{Binding CodenameForm.NIN.Value}" />
 
@@ -166,19 +169,60 @@
                 Text="Submit">
                 <controls:SimpleButton.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
-                        <Binding Mode="OneWay" Path="CodenameForm.FirstName.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.Surname.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.MiddleName.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.ThirdName.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.Birthdate.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.NIN.IsReady" />
-                        <Binding Mode="OneWay" Path="CodenameForm.Combination.IsReady" />
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsFormFilled" />
+                        <Binding
+                            Converter="{StaticResource InvertedBoolConverter}"
+                            Mode="OneWay"
+                            Path="CodenameForm.IsInvalidated" />
                         <Binding
                             Converter="{StaticResource IsNotNullConverter}"
                             Mode="OneWay"
-                            Path="CodenameForm.SelectedCountry" />
+                            Path="Codename" />
                     </MultiBinding>
                 </controls:SimpleButton.IsEnabled>
+                <controls:SimpleButton.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsFormFilled" />
+                        <Binding
+                            Converter="{StaticResource InvertedBoolConverter}"
+                            Mode="OneWay"
+                            Path="CodenameForm.IsInvalidated" />
+                        <Binding
+                            Converter="{StaticResource IsNotNullConverter}"
+                            Mode="OneWay"
+                            Path="Codename" />
+                    </MultiBinding>
+                </controls:SimpleButton.IsVisible>
+            </controls:SimpleButton>
+
+            <controls:SimpleButton
+                Margin="8,4"
+                Command="{Binding GenerateCommand}"
+                Text="Generate">
+                <controls:SimpleButton.IsEnabled>
+                    <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsFormFilled" />
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsInvalidated" />
+                    </MultiBinding>
+                </controls:SimpleButton.IsEnabled>
+                <controls:SimpleButton.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsFormFilled" />
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsInvalidated" />
+                    </MultiBinding>
+                </controls:SimpleButton.IsVisible>
             </controls:SimpleButton>
 
             <controls1:ExtendedTextEdit
@@ -196,14 +240,17 @@
                 TextFontSize="15">
                 <controls1:ExtendedTextEdit.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
-                        <Binding Path="CodenameForm.FirstName.IsReady" />
-                        <Binding Path="CodenameForm.Surname.IsReady" />
-                        <Binding Path="CodenameForm.MiddleName.IsReady" />
-                        <Binding Path="CodenameForm.ThirdName.IsReady" />
-                        <Binding Path="CodenameForm.Birthdate.IsReady" />
-                        <Binding Path="CodenameForm.NIN.IsReady" />
-                        <Binding Path="CodenameForm.Combination.IsReady" />
-                        <Binding Converter="{StaticResource IsNotNullConverter}" Path="CodenameForm.SelectedCountry" />
+                        <Binding
+                            Mode="OneWay"
+                            Path="CodenameForm.IsFormFilled" />
+                        <Binding
+                            Converter="{StaticResource InvertedBoolConverter}"
+                            Mode="OneWay"
+                            Path="CodenameForm.IsInvalidated" />
+                        <Binding
+                            Converter="{StaticResource IsNotNullConverter}"
+                            Mode="OneWay"
+                            Path="Codename" />
                     </MultiBinding>
                 </controls1:ExtendedTextEdit.IsEnabled>
             </controls1:ExtendedTextEdit>

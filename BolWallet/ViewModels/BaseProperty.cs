@@ -50,6 +50,9 @@ public partial class BaseProperty : ObservableObject
     [ObservableProperty]
     private string _label;
 
+    [ObservableProperty]
+    private bool _isEnabled;
+
     public Func<string, bool> IsValid { private get; set; }
 }
 
