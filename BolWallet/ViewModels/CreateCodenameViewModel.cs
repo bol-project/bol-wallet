@@ -8,7 +8,6 @@ public partial class CreateCodenameViewModel : BaseViewModel
 {
     private readonly ICodeNameService _codeNameService;
     private readonly ISecureRepository _secureRepository;
-    private readonly RegisterContent _content;
 
     public CreateCodenameViewModel(
         INavigationService navigationService,
@@ -20,7 +19,6 @@ public partial class CreateCodenameViewModel : BaseViewModel
         _codeNameService = codeNameService;
         _secureRepository = secureRepository;
         CodenameForm = new CodenameForm(content);
-        _content = content;
     }
 
     [ObservableProperty]

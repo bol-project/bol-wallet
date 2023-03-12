@@ -118,7 +118,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task Submit()
     {
-        if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
+		if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
              string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
              string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
         {
@@ -140,9 +140,11 @@ public partial class CreateEdiViewModel : BaseViewModel
         userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
 
         await _secureRepository.SetAsync("userdata", userData);
-    }
 
-    private PropertyInfo GetPropertyInfo(string propertyName)
+		await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
+	}
+
+	private PropertyInfo GetPropertyInfo(string propertyName)
     {
         return this.EdiForm.GetType().GetProperty(propertyName);
     }
