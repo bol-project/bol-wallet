@@ -26,11 +26,17 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 	[ObservableProperty]
 	private string _password = "";
 
+
+	[ObservableProperty]
+	private bool _isLoading = false;
+
 	[RelayCommand]
 	private async Task Submit()
 	{
 		if (string.IsNullOrEmpty(Password))
 			return;
+
+		IsLoading = true;
 
 		byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
 
@@ -39,5 +45,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
 		var bolWallet = await this._walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey);
+
+		IsLoading = false;
 	}
 }
