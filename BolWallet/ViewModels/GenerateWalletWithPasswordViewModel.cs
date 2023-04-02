@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using AndroidX.Lifecycle;
+using Bol.Core.Abstractions;
 using Bol.Cryptography;
 using System.Text;
 
@@ -45,6 +46,10 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
 		var bolWallet = await this._walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey);
+
+		userData.BolWallet = bolWallet;
+
+		await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
 
 		IsLoading = false;
 	}
