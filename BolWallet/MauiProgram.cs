@@ -5,7 +5,6 @@ using Bol.Core.Extensions;
 using Bol.Core.Model;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
-using DevExpress.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Country = BolWallet.Models.Country;
@@ -19,7 +18,6 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 		.UseMauiApp<App>()
-		.UseDevExpress()
 		.UseMauiCommunityToolkit()
 		.ConfigureFonts(fonts =>
 		{

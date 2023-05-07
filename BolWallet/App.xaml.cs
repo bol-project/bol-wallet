@@ -1,4 +1,6 @@
-﻿namespace BolWallet;
+﻿using BolWallet.Controls;
+
+namespace BolWallet;
 
 public partial class App : Application
 {
@@ -8,8 +10,28 @@ public partial class App : Application
 	{
 		_countriesService = countriesService;
 		InitializeComponent();
-	
-		MainPage = new NavigationPage(mainPage);
+		Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(ExtendedTextEdit),
+			(handler, view) =>
+			{
+#if __ANDROID__
+				handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#elif __IOS__
+handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
+handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
+#endif
+            });
+
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(ExtendedComboBox),
+            (handler, view) =>
+            {
+#if __ANDROID__
+                handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#elif __IOS__
+handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
+handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
+#endif
+            });
+        MainPage = new NavigationPage(mainPage);
 	}
 
 	protected override Window CreateWindow(IActivationState activationState)
