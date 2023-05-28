@@ -12,7 +12,8 @@ public static class RegistrationExtensions
 		services
 			.BindViewModelToView<MainViewModel, MainPage>()
 			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
-			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>();
+			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
+			.BindViewModelToView<UserViewModel, UserPage>();
 
 		return services;
 	}

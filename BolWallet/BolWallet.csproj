@@ -65,6 +65,9 @@
         <MauiXaml Update="Views\MainPage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\UserPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
@@ -116,9 +119,6 @@
       <EmbeddedResource Include="appsettings.Development.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <DependentUpon>appsettings.json</DependentUpon>
-      </EmbeddedResource>
-      <EmbeddedResource Include="Views\UserPage.xaml">
-        <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       </EmbeddedResource>
     </ItemGroup>
 
