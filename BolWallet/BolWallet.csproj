@@ -44,6 +44,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiXaml Remove="Views\UserPage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
@@ -99,6 +103,9 @@
       <EmbeddedResource Include="appsettings.Development.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <DependentUpon>appsettings.json</DependentUpon>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Views\UserPage.xaml">
+        <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       </EmbeddedResource>
     </ItemGroup>
 

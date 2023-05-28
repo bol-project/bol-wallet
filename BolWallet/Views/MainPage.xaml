@@ -34,6 +34,13 @@
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 Text="Let's get started" />
+
+            <Button
+                Grid.Row="3"
+                Command="{Binding NavigateToUserPageCommand}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Text="User" />
         </Grid>
     </ScrollView>
 </ContentPage>

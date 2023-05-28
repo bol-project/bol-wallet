@@ -11,4 +11,10 @@ public partial class MainViewModel : BaseViewModel
     {
         NavigationService.NavigateTo<CreateCodenameViewModel>(true);
     }
+
+    [RelayCommand]
+    private void NavigateToUserPage()
+    {
+        NavigationService.NavigateTo<UserViewModel>(true);
+    }
 }
