@@ -10,7 +10,7 @@ public partial class ExtendedTextEdit : ContentView
 
     public static readonly BindableProperty ReturnTypeProperty = BindableProperty.Create(nameof(ReturnType), typeof(ReturnType), typeof(ExtendedTextEdit), ReturnType.Default);
     public static readonly BindableProperty IsPasswordProperty = BindableProperty.Create("IsPassword", typeof(bool), typeof(ExtendedTextEdit), default(bool));
-    public static readonly BindableProperty KeyboardProperty = BindableProperty.Create("Keyboard", typeof(Keyboard), typeof(ExtendedTextEdit), Keyboard.Default, coerceValue: (o, v) => (Keyboard)v ?? Keyboard.Default);
+    public static readonly BindableProperty KeyboardProperty = BindableProperty.Create("Keyboard", typeof(Microsoft.Maui.Keyboard), typeof(ExtendedTextEdit), Microsoft.Maui.Keyboard.Default, coerceValue: (o, v) => (Microsoft.Maui.Keyboard)v ?? Microsoft.Maui.Keyboard.Default);
     public static readonly BindableProperty ClearIconVisibilityProperty = BindableProperty.Create(nameof(ClearIconVisibility),typeof(ClearButtonVisibility),typeof(ExtendedTextEdit));
     public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(nameof(FontSize), typeof(int), typeof(ExtendedTextEdit));
     public static readonly BindableProperty BoxHeightProperty = BindableProperty.Create(nameof(BoxHeight), typeof(int), typeof(ExtendedTextEdit));
@@ -43,7 +43,14 @@ public partial class ExtendedTextEdit : ContentView
     private readonly EndIconConverter _endIconConverter;
 
     int _placeholderFontSize = 18;
-    int _titleFontSize = 10;
+int _titleFontSize =
+#if MACCATALYST
+    16;
+#elif WINDOWS
+    16;
+#else
+    12;
+#endif
     int _topMargin = -20;
     static async void HandleBindingPropertyChangedDelegate(BindableObject bindable, object oldValue, object newValue)
     {
@@ -224,9 +231,9 @@ public partial class ExtendedTextEdit : ContentView
         set { SetValue(IsPasswordProperty, value); }
     }
 
-    public Keyboard Keyboard
+    public Microsoft.Maui.Keyboard Keyboard
     {
-        get { return (Keyboard)GetValue(KeyboardProperty); }
+        get { return (Microsoft.Maui.Keyboard)GetValue(KeyboardProperty); }
         set { SetValue(KeyboardProperty, value); }
     }
     public PropertyState State

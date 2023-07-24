@@ -60,7 +60,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ScrollView>
-        <StackLayout>
+        <StackLayout Margin="5">
 
             <Grid
                 Margin="8"
@@ -108,7 +108,8 @@
                     HasError="{Binding CodenameForm.MiddleName.HasError}"
                     LabelText="Middle Name"
                     State="{Binding CodenameForm.MiddleName.State}"
-                    Text="{Binding CodenameForm.MiddleName.Value, Mode=TwoWay}" />
+                    Text="{Binding CodenameForm.MiddleName.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
 
                 <controls1:ExtendedTextEdit
                     Grid.Column="1"
@@ -116,12 +117,13 @@
                     HasError="{Binding CodenameForm.ThirdName.HasError}"
                     LabelText="Third Name"
                     State="{Binding CodenameForm.ThirdName.State}"
-                    Text="{Binding CodenameForm.ThirdName.Value, Mode=TwoWay}" />
+                    Text="{Binding CodenameForm.ThirdName.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
 
             </Grid>
             <controls1:ExtendedComboBox x:Name="GenderSelection"
                 Margin="8,4"
-                SelectedItem="{Binding CodenameForm.Gender}" 
+                SelectedItem="{Binding CodenameForm.Gender, Mode=TwoWay}" 
                 FocusedBorderColor="{StaticResource FocusedColor}"
                 FocusedLabelColor="{StaticResource FocusedColor}"
                 LabelText="Gender*"/>
@@ -136,10 +138,10 @@
                 Margin="8,4"
                 FocusedBorderColor="{StaticResource FocusedColor}"
                 FocusedLabelColor="{StaticResource FocusedColor}"
-                ItemsSource="{Binding CodenameForm.Countries}"
+                ItemsSource="{Binding CodenameForm.Countries, Mode=TwoWay}"
                 ItemText="Name"
                 LabelText="Country*"
-                SelectedItem="{Binding CodenameForm.SelectedCountry}"
+                SelectedItem="{Binding CodenameForm.SelectedCountry, Mode=TwoWay}"
                  />
 <!-- ToDo
  ClearIconVisibility="Never"           
@@ -148,7 +150,7 @@
             <controls1:ExtendedDatePicker x:Name="dBirthdate"
                 Margin="8,4"
                 Format="dd-MM-yyyy"
-                Date="{Binding CodenameForm.Birthdate.Value}"
+                Date="{Binding CodenameForm.Birthdate.Value, Mode=TwoWay}"
                 EndIconColor="{Binding CodenameForm.Birthdate.State, Converter={StaticResource EndIconColorConverter}}"
                 ErrorText="{Binding CodenameForm.Birthdate.ErrorMessage}"
                 FocusedBorderColor="{Binding CodenameForm.Birthdate.State, Converter={StaticResource EndIconColorConverter}}"
@@ -166,7 +168,7 @@
                 HasError="{Binding CodenameForm.NIN.HasError}"
                 HelpText="{Binding CodenameForm.NIN.HelpMessage}"
                 LabelText="NIN*"
-				IsEnabled="{Binding CodenameForm.NIN.IsEnabled}"
+				IsReadOnly="{Binding CodenameForm.NIN.IsEnabled}"
                 State="{Binding CodenameForm.NIN.State}"
                 Text="{Binding CodenameForm.NIN.Value, Mode=TwoWay}" />
 

@@ -23,6 +23,7 @@ public partial class CodenameForm
         Birthdate.PropertyChanged += (sender, args) => Invalidate();
         Combination.PropertyChanged += (sender, args) => Invalidate();
         NIN.PropertyChanged += (sender, args) => Invalidate();
+
     }
 
     public BaseProperty FirstName { get; set; } = new()
@@ -86,9 +87,10 @@ public partial class CodenameForm
     public BaseProperty NIN { get; set; } = new()
     {
         IsMandatory = true,
+        IsEnabled = true
     };
 
-    public IEnumerable<Country> Countries => _content.Countries;
+    public List<Country> Countries => _content.Countries;
 
     private Country _selectedCountry;
     public Country SelectedCountry
@@ -98,7 +100,7 @@ public partial class CodenameForm
         {
             SetProperty(ref _selectedCountry, value);
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
-            NIN.IsEnabled = !string.IsNullOrEmpty(SelectedCountry.Alpha3);
+            NIN.IsEnabled = string.IsNullOrEmpty(SelectedCountry.Alpha3);
             NIN.IsValid = value => new Regex(@"^[A-F0-9]+$").IsMatch(value) && _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
             NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}. Only capital letters(A-F) and numbers accepted";
             OnPropertyChanged(nameof(NIN));

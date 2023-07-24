@@ -4,6 +4,6 @@ namespace BolWallet.Models;
 
 public class RegisterContent
 {
-	public IEnumerable<Country> Countries { get; set; }
+	public List<Country> Countries { get; set; }
 	public IDictionary<string, NinSpecification> NinPerCountryCode { get; set; }
 }
