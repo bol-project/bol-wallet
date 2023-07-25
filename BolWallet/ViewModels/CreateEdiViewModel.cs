@@ -11,139 +11,148 @@ using System.Runtime.Intrinsics.X86;
 namespace BolWallet.ViewModels;
 public partial class CreateEdiViewModel : BaseViewModel
 {
-    private readonly IPermissionService _permissionService;
-    private readonly IBase16Encoder _base16Encoder;
-    private readonly ISecureRepository _secureRepository;
-    private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
-    private readonly IMediaPicker _mediaPicker;
-    private EncryptedDigitalMatrix encryptedDigitalMatrix;
+	private readonly IPermissionService _permissionService;
+	private readonly IBase16Encoder _base16Encoder;
+	private readonly ISecureRepository _secureRepository;
+	private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
+	private readonly IMediaPicker _mediaPicker;
+	private EncryptedDigitalMatrix encryptedDigitalMatrix;
 
-    AudioRecorderService recorder;
+	AudioRecorderService recorder;
 
-    public CreateEdiViewModel(
-        INavigationService navigationService,
-        IPermissionService permissionService,
-        IBase16Encoder base16Encoder,
-        ISecureRepository secureRepository,
-        IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker) : base(navigationService)
+	public CreateEdiViewModel(
+		INavigationService navigationService,
+		IPermissionService permissionService,
+		IBase16Encoder base16Encoder,
+		ISecureRepository secureRepository,
+		IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
+		IMediaPicker mediaPicker) : base(navigationService)
 
-    {
-        _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
-        _base16Encoder = base16Encoder ?? throw new ArgumentNullException(nameof(base16Encoder));
-        _secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
-        _encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
-        _mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
+	{
+		_permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
+		_base16Encoder = base16Encoder ?? throw new ArgumentNullException(nameof(base16Encoder));
+		_secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
+		_encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
+		_mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
 
-        EdiForm = new EdiForm();
-        recorder = new AudioRecorderService
-        {
-            AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
-            TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
-        };
-        encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
-    }
+		EdiForm = new EdiForm();
+		recorder = new AudioRecorderService
+		{
+			AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
+			TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
+		};
+		encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
+	}
 
-    [ObservableProperty]
-    private EdiForm _ediForm;
+	[ObservableProperty]
+	private EdiForm _ediForm;
 
-    [RelayCommand]
-    private async Task PickPhotoAsync(string propertyName)
-    {
-        if (await _permissionService.CheckPermissionAsync<Permissions.StorageRead>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.StorageRead>(); return; }
+	[ObservableProperty]
+	private bool _isLoading = false;
 
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-                    { DevicePlatform.iOS, new[] { "com.adobe.pdf","public.image", "public.audio" } },
-                    { DevicePlatform.Android, new[] { "application/pdf", "image/*","audio/*" } },
-                    { DevicePlatform.macOS, new[] { "pdf","public.image", "public.audio" } },
-        });
+	[RelayCommand]
+	private async Task PickPhotoAsync(string propertyName)
+	{
+		if (await _permissionService.CheckPermissionAsync<Permissions.StorageRead>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.StorageRead>(); return; }
 
-        var pickResult = await FilePicker.PickAsync(new PickOptions
-        {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
-        });
+		var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+		{
+					{ DevicePlatform.iOS, new[] { "com.adobe.pdf","public.image", "public.audio" } },
+					{ DevicePlatform.Android, new[] { "application/pdf", "image/*","audio/*" } },
+					{ DevicePlatform.macOS, new[] { "pdf","public.image", "public.audio" } },
+		});
 
-        PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+		var pickResult = await FilePicker.PickAsync(new PickOptions
+		{
+			FileTypes = customFileType,
+			PickerTitle = "Pick a file"
+		});
 
-        PathPerImport(propertyNameInfo, pickResult);
-    }
+		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-    [RelayCommand]
-    private async Task TakePhotoAsync(string propertyName)
-    {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
+		PathPerImport(propertyNameInfo, pickResult);
+	}
 
-        FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
+	[RelayCommand]
+	private async Task TakePhotoAsync(string propertyName)
+	{
+		if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
 
-        PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+		FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
-        PathPerImport(propertyNameInfo, takePictureResult);
-    }
+		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-    [RelayCommand]
-    private async Task RecordAudio()
-    {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
+		PathPerImport(propertyNameInfo, takePictureResult);
+	}
 
-        if (recorder.IsRecording) await recorder.StopRecording();
+	[RelayCommand]
+	private async Task RecordAudio()
+	{
+		if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
 
-        Task<string> audioRecordTask = await recorder.StartRecording();
+		if (recorder.IsRecording) await recorder.StopRecording();
 
-        string audiofilePath = await audioRecordTask;
+		Task<string> audioRecordTask = await recorder.StartRecording();
 
-        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(EdiForm.Voice));
+		string audiofilePath = await audioRecordTask;
 
-        PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
-    }
+		PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(EdiForm.Voice));
 
-    private void PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
-    {
-        if (fileResult == null) return;
+		PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
+	}
 
-        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+	private void PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
+	{
+		if (fileResult == null) return;
 
-        var encodedFileBytes = _base16Encoder.Encode(fileBytes);
+		var fileBytes = File.ReadAllBytes(fileResult.FullPath);
 
-        propertyNameInfo.SetValue(EdiForm, fileResult.FullPath);
+		var encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
-        encryptedDigitalMatrix.Hashes.GetType()
-                                     .GetProperty(propertyNameInfo.Name)
-                                     .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
+		propertyNameInfo.SetValue(EdiForm, fileResult.FullPath);
 
-        OnPropertyChanged(nameof(EdiForm));
-    }
+		encryptedDigitalMatrix.Hashes.GetType()
+									 .GetProperty(propertyNameInfo.Name)
+									 .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
 
-    [RelayCommand]
-    private async Task Submit()
-    {
-        if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
-             string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
-             string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
-        {
-            return;
-        }
+		OnPropertyChanged(nameof(EdiForm));
+	}
 
-        UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+	[RelayCommand]
+	private async Task Submit()
+	{
+		if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
+			 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
+			 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
+		{
+			return;
+		}
 
-        encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
-        encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
-        encryptedDigitalMatrix.Nin = userData.Person.Nin;
-        encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
-        encryptedDigitalMatrix.CodeName = userData.Codename;
+		IsLoading = true;
 
-        var result = _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix);
+		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        userData.Edi = result;
+		encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
+		encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
+		encryptedDigitalMatrix.Nin = userData.Person.Nin;
+		encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
+		encryptedDigitalMatrix.CodeName = userData.Codename;
 
-        userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
+		var result = _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix);
 
-        await _secureRepository.SetAsync("userdata", userData);
-    }
+		userData.Edi = result;
 
-    private PropertyInfo GetPropertyInfo(string propertyName)
-    {
-        return this.EdiForm.GetType().GetProperty(propertyName);
-    }
+		userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
+
+		await _secureRepository.SetAsync("userdata", userData);
+
+		IsLoading = true;
+
+		await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
+	}
+
+	private PropertyInfo GetPropertyInfo(string propertyName)
+	{
+		return this.EdiForm.GetType().GetProperty(propertyName);
+	}
 }
