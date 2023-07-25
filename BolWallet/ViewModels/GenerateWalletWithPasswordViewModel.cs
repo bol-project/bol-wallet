@@ -1,5 +1,4 @@
-﻿using AndroidX.Lifecycle;
-using Bol.Core.Abstractions;
+﻿using Bol.Core.Abstractions;
 using Bol.Cryptography;
 using System.Text;
 
