@@ -252,7 +252,7 @@
                 LabelText="Generated codename"
                 Tap="OnTapCopy"
                 NumberOfTapsRequired="1"
-                Text="{Binding Codename}"
+                Text="{Binding Codename, Mode=TwoWay}"
                 FontSize="15">
                 <controls1:ExtendedTextEdit.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">

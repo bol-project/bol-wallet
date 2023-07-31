@@ -8,7 +8,8 @@ namespace BolWallet.Views;
 public partial class CreateCodenamePage : ContentPage
 {
 	public DateTime maxDate { get; set; }
-public DateTime minDate { get; set; }
+	public DateTime minDate { get; set; }
+
 	public CreateCodenamePage(CreateCodenameViewModel createCodenameViewModel)
 	{
 		InitializeComponent();

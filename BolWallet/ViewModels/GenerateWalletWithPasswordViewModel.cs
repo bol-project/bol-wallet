@@ -31,25 +31,27 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     private bool _isLoading = false;
 
     [RelayCommand]
-    private async Task Submit()
-    {
-        if (string.IsNullOrEmpty(Password))
-            return;
+	private async Task Submit()
+	{
+		if (string.IsNullOrEmpty(Password))
+			return;
 
-        IsLoading = true;
+		IsLoading = true;
 
-        byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
+		byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
 
-        string privateKey = _base16Encoder.Encode(hash);
+		string privateKey = _base16Encoder.Encode(hash);
 
-        UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
 		var bolWallet = await this._walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey);
 
-        userData.BolWallet = bolWallet;
+		userData.BolWallet = bolWallet;
 
-        await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
+		await _secureRepository.SetAsync("userdata", userData);
 
-        IsLoading = false;
-    }
+		await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
+
+		IsLoading = false;
+	}
 }
