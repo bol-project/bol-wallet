@@ -56,6 +56,9 @@
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\BolCommunityView.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\CreateCodenamePage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
@@ -65,8 +68,17 @@
         <MauiXaml Update="Views\MainPage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
-        <MauiXaml Update="Views\UserPage.xaml">
+        <MauiXaml Update="Views\MainPageWithAccount.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\RetrieveBolPage.xaml">
           <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\SendBolPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\UserPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
         </MauiXaml>
     </ItemGroup>
 

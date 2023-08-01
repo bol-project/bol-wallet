@@ -13,8 +13,8 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void NavigateToUserPage()
+    private void NavigateToAccountMainPage()
     {
-        NavigationService.NavigateTo<UserViewModel>(true);
+        NavigationService.NavigateTo<MainWithAccountViewModel>(true);
     }
 }
