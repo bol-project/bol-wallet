@@ -1,5 +1,5 @@
 ﻿<ContentPage
-    x:Class="BolWallet.Views.MainPageWithAccount"
+    x:Class="BolWallet.Views.MainWithAccountPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"

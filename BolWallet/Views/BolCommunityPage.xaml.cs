@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.Views;
-public partial class MainPageWithAccount : ContentPage
+public partial class BolCommunityPage : ContentPage
 {
-    public MainPageWithAccount(MainWithAccountViewModel mainWithAccountViewModel)
+    public BolCommunityPage(BolCommunityViewModel bolCommunityViewModel)
     {
         InitializeComponent();
-        BindingContext = mainWithAccountViewModel;
+        BindingContext = bolCommunityViewModel;
     }
 
     private void OnClickTodo(object sender, EventArgs e)
