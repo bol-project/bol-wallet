@@ -2,10 +2,8 @@
     x:Class="BolWallet.Views.CreateCodenamePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:DevExpress.Maui.Controls;assembly=DevExpress.Maui.Controls"
     xmlns:controls1="clr-namespace:BolWallet.Controls"
     xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:editors="clr-namespace:DevExpress.Maui.Editors;assembly=DevExpress.Maui.Editors"
     xmlns:localConverters="clr-namespace:BolWallet.Converters"
     xmlns:models="clr-namespace:BolWallet.Models"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
@@ -14,6 +12,13 @@
     x:DataType="viewModels:CreateCodenameViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
     <ContentPage.Resources>
+        <StyleSheet>
+            <![CDATA[
+            .border-style {
+                background-color: lightgray;
+            }
+            ]]>
+        </StyleSheet>
         <ResourceDictionary>
 
             <DataTemplate x:Key="CountrySelectedItemTemplate" x:DataType="models:Country">
@@ -43,18 +48,19 @@
             <localConverters:StateColorConverter x:Key="EndIconColorConverter" />
 
             <Style TargetType="controls1:ExtendedTextEdit">
-                <Setter Property="ClearIconVisibility" Value="Never" />
+                <Setter Property="ClearIconVisibility" Value="Never" /> 
                 <Setter Property="HorizontalOptions" Value="Fill" />
                 <Setter Property="IsErrorIconVisible" Value="False" />
                 <Setter Property="BoxHeight" Value="56" />
+                <Setter Property="FontSize" Value="18" />
             </Style>
-
+            
             <Color x:Key="FocusedColor">#718792</Color>
 
         </ResourceDictionary>
     </ContentPage.Resources>
     <ScrollView>
-        <StackLayout>
+        <StackLayout Margin="5">
 
             <Grid
                 Margin="8"
@@ -65,24 +71,26 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-
-                <controls1:ExtendedTextEdit
+                <controls1:ExtendedTextEdit 
                     x:Name="FirstName"
                     Grid.Column="0"
                     ErrorText="{Binding CodenameForm.FirstName.ErrorMessage}"
                     HasError="{Binding CodenameForm.FirstName.HasError}"
                     LabelText="First Name*"
                     State="{Binding CodenameForm.FirstName.State}"
-                    Text="{Binding CodenameForm.FirstName.Value}" />
-
+                    Text="{Binding CodenameForm.FirstName.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"
+                />
+                
                 <controls1:ExtendedTextEdit
                     Grid.Column="1"
                     ErrorText="{Binding CodenameForm.Surname.ErrorMessage}"
                     HasError="{Binding CodenameForm.Surname.HasError}"
                     LabelText="Surname*"
                     State="{Binding CodenameForm.Surname.State}"
-                    Text="{Binding CodenameForm.Surname.Value}" />
-
+                    Text="{Binding CodenameForm.Surname.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
+                
             </Grid>
 
             <Grid
@@ -100,7 +108,8 @@
                     HasError="{Binding CodenameForm.MiddleName.HasError}"
                     LabelText="Middle Name"
                     State="{Binding CodenameForm.MiddleName.State}"
-                    Text="{Binding CodenameForm.MiddleName.Value}" />
+                    Text="{Binding CodenameForm.MiddleName.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
 
                 <controls1:ExtendedTextEdit
                     Grid.Column="1"
@@ -108,52 +117,60 @@
                     HasError="{Binding CodenameForm.ThirdName.HasError}"
                     LabelText="Third Name"
                     State="{Binding CodenameForm.ThirdName.State}"
-                    Text="{Binding CodenameForm.ThirdName.Value}" />
+                    Text="{Binding CodenameForm.ThirdName.Value, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
 
             </Grid>
+            <controls1:ExtendedComboBox x:Name="GenderSelection"
+                Margin="8,4"
+                SelectedItem="{Binding CodenameForm.Gender, Mode=TwoWay}" 
+                FocusedBorderColor="{StaticResource FocusedColor}"
+                FocusedLabelColor="{StaticResource FocusedColor}"
+                LabelText="Gender*"/>
 
-            <editors:ComboBoxEdit
-                x:Name="GenderSelection"
+            <!-- ToDo
+            ClearIconVisibility="Never"
+            IsErrorIconVisible="False"
+            ItemTemplate="{StaticResource CountryListItemTemplate}"
+            SelectedItemTemplate="{StaticResource CountrySelectedItemTemplate}"
+            -->
+            <controls1:ExtendedComboBox 
                 Margin="8,4"
                 FocusedBorderColor="{StaticResource FocusedColor}"
                 FocusedLabelColor="{StaticResource FocusedColor}"
-                LabelText="Gender*"
-                SelectedItem="{Binding CodenameForm.Gender}" />
-
-            <editors:ComboBoxEdit
-                Margin="8,4"
-                ClearIconVisibility="Never"
-                FocusedBorderColor="{StaticResource FocusedColor}"
-                FocusedLabelColor="{StaticResource FocusedColor}"
-                IsErrorIconVisible="False"
-                ItemTemplate="{StaticResource CountryListItemTemplate}"
-                ItemsSource="{Binding CodenameForm.Countries}"
+                ItemsSource="{Binding CodenameForm.Countries, Mode=TwoWay}"
+                ItemText="Name"
                 LabelText="Country*"
-                SelectedItem="{Binding CodenameForm.SelectedCountry}"
-                SelectedItemTemplate="{StaticResource CountrySelectedItemTemplate}" />
-
-            <editors:DateEdit
+                SelectedItem="{Binding CodenameForm.SelectedCountry, Mode=TwoWay}"
+                 />
+<!-- ToDo
+ ClearIconVisibility="Never"           
+ IsEndIconVisible="{Binding CodenameForm.Birthdate.IsReady}"
+                IsErrorIconVisible="False"           -->
+            <controls1:ExtendedDatePicker x:Name="dBirthdate"
                 Margin="8,4"
-                ClearIconVisibility="Never"
-                Date="{Binding CodenameForm.Birthdate.Value}"
+                Format="dd-MM-yyyy"
+                Date="{Binding CodenameForm.Birthdate.Value, Mode=TwoWay}"
                 EndIconColor="{Binding CodenameForm.Birthdate.State, Converter={StaticResource EndIconColorConverter}}"
                 ErrorText="{Binding CodenameForm.Birthdate.ErrorMessage}"
                 FocusedBorderColor="{Binding CodenameForm.Birthdate.State, Converter={StaticResource EndIconColorConverter}}"
                 FocusedLabelColor="{Binding CodenameForm.Birthdate.State, Converter={StaticResource EndIconColorConverter}}"
                 HasError="{Binding CodenameForm.Birthdate.HasError}"
-                IsEndIconVisible="{Binding CodenameForm.Birthdate.IsReady}"
-                IsErrorIconVisible="False"
-                LabelText="Birthdate*" />
-
+                State="{Binding CodenameForm.Birthdate.State}"
+                
+                LabelText="Birthdate*" >
+                
+            </controls1:ExtendedDatePicker>
+            
             <controls1:ExtendedTextEdit
                 Margin="8,4"
                 ErrorText="{Binding CodenameForm.NIN.ErrorMessage}"
                 HasError="{Binding CodenameForm.NIN.HasError}"
                 HelpText="{Binding CodenameForm.NIN.HelpMessage}"
                 LabelText="NIN*"
-				IsEnabled="{Binding CodenameForm.NIN.IsEnabled}"
+				IsReadOnly="{Binding CodenameForm.NIN.IsEnabled}"
                 State="{Binding CodenameForm.NIN.State}"
-                Text="{Binding CodenameForm.NIN.Value}" />
+                Text="{Binding CodenameForm.NIN.Value, Mode=TwoWay}" />
 
             <controls1:ExtendedTextEdit
                 Margin="8,4"
@@ -161,13 +178,11 @@
                 HasError="{Binding CodenameForm.Combination.HasError}"
                 LabelText="Combination*"
                 State="{Binding CodenameForm.Combination.State}"
-                Text="{Binding CodenameForm.Combination.Value}" />
-
-            <controls:SimpleButton
-                Margin="8,4"
+                Text="{Binding CodenameForm.Combination.Value, Mode=TwoWay}" />
+            <Button Margin="8,4"
                 Command="{Binding SubmitCommand}"
                 Text="Submit">
-                <controls:SimpleButton.IsEnabled>
+                <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
                         <Binding
                             Mode="OneWay"
@@ -181,8 +196,8 @@
                             Mode="OneWay"
                             Path="Codename" />
                     </MultiBinding>
-                </controls:SimpleButton.IsEnabled>
-                <controls:SimpleButton.IsVisible>
+                </Button.IsEnabled>
+                <Button.IsVisible>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
                         <Binding
                             Mode="OneWay"
@@ -196,14 +211,14 @@
                             Mode="OneWay"
                             Path="Codename" />
                     </MultiBinding>
-                </controls:SimpleButton.IsVisible>
-            </controls:SimpleButton>
+                </Button.IsVisible>
+            </Button>
 
-            <controls:SimpleButton
+            <Button
                 Margin="8,4"
                 Command="{Binding GenerateCommand}"
                 Text="Generate">
-                <controls:SimpleButton.IsEnabled>
+                <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
                         <Binding
                             Mode="OneWay"
@@ -212,8 +227,8 @@
                             Mode="OneWay"
                             Path="CodenameForm.IsInvalidated" />
                     </MultiBinding>
-                </controls:SimpleButton.IsEnabled>
-                <controls:SimpleButton.IsVisible>
+                </Button.IsEnabled>
+                <Button.IsVisible>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
                         <Binding
                             Mode="OneWay"
@@ -222,8 +237,8 @@
                             Mode="OneWay"
                             Path="CodenameForm.IsInvalidated" />
                     </MultiBinding>
-                </controls:SimpleButton.IsVisible>
-            </controls:SimpleButton>
+                </Button.IsVisible>
+            </Button>
 
             <controls1:ExtendedTextEdit
                 x:Name="Codename"
@@ -236,8 +251,9 @@
                 IsReadOnly="True"
                 LabelText="Generated codename"
                 Tap="OnTapCopy"
-                Text="{Binding Codename}"
-                TextFontSize="15">
+                NumberOfTapsRequired="1"
+                Text="{Binding Codename, Mode=TwoWay}"
+                FontSize="15">
                 <controls1:ExtendedTextEdit.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllTrueConverter}">
                         <Binding

@@ -1,5 +1,4 @@
-﻿using BolWallet;
-using Foundation;
+﻿using Foundation;
 
 namespace BolWallet;
 

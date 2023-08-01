@@ -1,37 +1,36 @@
-﻿using AndroidX.Lifecycle;
-using Bol.Core.Abstractions;
+﻿using Bol.Core.Abstractions;
 using Bol.Cryptography;
 using System.Text;
 
 namespace BolWallet.ViewModels;
 public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 {
-	private readonly IWalletService _walletService;
-	private readonly ISecureRepository _secureRepository;
-	private readonly ISha256Hasher _sha256Hasher;
-	private readonly IBase16Encoder _base16Encoder;
+    private readonly IWalletService _walletService;
+    private readonly ISecureRepository _secureRepository;
+    private readonly ISha256Hasher _sha256Hasher;
+    private readonly IBase16Encoder _base16Encoder;
 
-	public GenerateWalletWithPasswordViewModel(
-		INavigationService navigationService,
-		IWalletService walletService,
-		ISecureRepository secureRepository,
-		ISha256Hasher sha256Hasher,
-		IBase16Encoder base16Encoder) : base(navigationService)
-	{
-		_walletService = walletService;
-		_secureRepository = secureRepository;
-		_sha256Hasher = sha256Hasher;
-		_base16Encoder = base16Encoder;
-	}
+    public GenerateWalletWithPasswordViewModel(
+        INavigationService navigationService,
+        IWalletService walletService,
+        ISecureRepository secureRepository,
+        ISha256Hasher sha256Hasher,
+        IBase16Encoder base16Encoder) : base(navigationService)
+    {
+        _walletService = walletService;
+        _secureRepository = secureRepository;
+        _sha256Hasher = sha256Hasher;
+        _base16Encoder = base16Encoder;
+    }
 
-	[ObservableProperty]
-	private string _password = "";
+    [ObservableProperty]
+    private string _password = "";
 
 
-	[ObservableProperty]
-	private bool _isLoading = false;
+    [ObservableProperty]
+    private bool _isLoading = false;
 
-	[RelayCommand]
+    [RelayCommand]
 	private async Task Submit()
 	{
 		if (string.IsNullOrEmpty(Password))
@@ -48,6 +47,8 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 		var bolWallet = await this._walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey);
 
 		userData.BolWallet = bolWallet;
+
+		await _secureRepository.SetAsync("userdata", userData);
 
 		await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
 

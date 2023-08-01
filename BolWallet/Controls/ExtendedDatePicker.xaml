@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BolWallet.Controls.ExtendedDatePicker"
+             x:Name="this">
+    <ContentView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="0" BorderColor="{Binding FocusedBorderColor, Source={x:Reference this}}" Padding="8,0,0,0" CornerRadius="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <DatePicker x:Name="ePicker" Grid.Column="0" 
+                       FontSize="{Binding FontSize, Source={x:Reference this}}"
+                       Unfocused="Handle_Unfocused" 
+                       Focused="Handle_Focused"
+                       BackgroundColor="Transparent"
+                       MinimumDate="{Binding MinimumDate, Source={x:Reference this},Mode=TwoWay}"
+                       MaximumDate="{Binding MaximumDate, Source={x:Reference this},Mode=TwoWay}"
+                       Date="{Binding Date, Source={x:Reference this},Mode=TwoWay}"
+                       Format="{Binding Format, Source={x:Reference this}}"         
+                       >
+                        <!--
+                        
+                        CharacterSpacing, of type double, is the spacing between characters of the item displayed by the Picker.
+FontAttributes of type FontAttributes, which defaults to FontAtributes.None.
+FontAutoScalingEnabled, of type bool, which determines whether the text respects scaling preferences set in the operating system. The default value of this property is true.
+FontFamily of type string, which defaults to null.
+HorizontalTextAlignment, of type TextAlignment, is the horizontal alignment of the text displayed by the Picker.
+TextColor of type Color, the color used to display the text.
+TextTransform, of type TextTransform, which defines whether to transform the casing of text.
+Title of type string, which defaults to null.
+TitleColor of type Color, the color used to display the Title text.
+VerticalTextAlignment, of type TextAlignment, is the vertical alignment of the text displayed by the Picker.
+                   -->
+                    </DatePicker>
+                    
+                    <Label x:Name="LabelTitle" Margin="2,0,0,0" 
+                        Text="{Binding LabelText, Source={x:Reference this}}" 
+                        TextColor="{Binding PlaceholderColor, Source={x:Reference this}}" 
+                        BackgroundColor="White"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Handle_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="1" Margin="0,8,0,0" 
+                        Text="&#xebcc;"
+                        TextColor="Black"
+                        FontFamily="MaterialIconsRegular"
+                        FontSize="18" />
+                    <Label Grid.Column="2" Margin="0,8,0,0" 
+                        Text="{Binding EndIcon.Glyph, Source={x:Reference this}}"
+                        TextColor="{Binding EndIconColor, Source={x:Reference this}}"
+                        FontFamily="{Binding EndIcon.FontFamily, Source={x:Reference this}}"
+                        FontSize="{Binding EndIcon.Size, Source={x:Reference this}}" />
+                </Grid>
+            </Frame>
+            <Label Grid.Row="1" 
+                Text="{Binding ErrorText, Source={x:Reference this}}" 
+                IsVisible="{Binding HasError, Source={x:Reference this}, Mode = OneWay}"
+                TextColor="{Binding ErrorColor, Source={x:Reference this}, Mode = OneWay}"
+                VerticalOptions="Center" 
+                HorizontalOptions="StartAndExpand" />
+        </Grid>
+
+    </ContentView.Content>
+</ContentView>

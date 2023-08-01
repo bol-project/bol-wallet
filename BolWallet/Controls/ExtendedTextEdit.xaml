@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BolWallet.Controls.ExtendedTextEdit"
+             x:Name="this">
+    <ContentView.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="0"  ZIndex="1" BorderColor="{Binding FocusedBorderColor, Source={x:Reference this}}" Padding="8,0,0,0" CornerRadius="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Entry x:Name="eEntry" Grid.Column="0" 
+                       Completed="Handle_Completed" 
+                       Text="{Binding Text, Source={x:Reference this}, Mode=TwoWay}"
+
+                       FontSize="{Binding FontSize, Source={x:Reference this}}"
+                       ReturnCommand="{Binding ReturnCommand, Source={x:Reference this}}"
+                       ReturnCommandParameter="{Binding ReturnCommandParameter, Source={x:Reference this}}"
+                       
+                       ReturnType="{Binding ReturnType, Source={x:Reference this}}"
+                       IsPassword="{Binding IsPassword, Source={x:Reference this}}"
+                       Keyboard="{Binding Keyboard, Source={x:Reference this}}"
+                       ClearButtonVisibility="{Binding ClearIconVisibility, Source={x:Reference this}}"
+                       IsReadOnly="{Binding IsReadOnly, Source={x:Reference this}}"
+                       Unfocused="Handle_Unfocused" 
+                       Focused="Handle_Focused"
+                       TextTransform="{Binding TextTransform, Source={x:Reference this}}"
+                       ZIndex="2"
+                       >
+                        <Entry.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"
+                                NumberOfTapsRequired="{Binding NumberOfTapsRequired, Source={x:Reference this}}" />
+                        </Entry.GestureRecognizers>
+                        <!--TextChanged ="Handle_TextChanged"
+                    CharacterSpacing, of type double, sets the spacing between characters in the entered text.
+CursorPosition, of type int, defines the position of the cursor within the entry.
+FontAttributes, of type FontAttributes, determines text style.
+FontAutoScalingEnabled, of type bool, defines whether the text will reflect scaling preferences set in the operating system. The default value of this property is true.
+FontFamily, of type string, defines the font family.
+HorizontalTextAlignment, of type TextAlignment, defines the horizontal alignment of the text.
+IsTextPredictionEnabled, of type bool, controls whether text prediction and automatic text correction is enabled.
+SelectionLength, of type int, represents the length of selected text within the entry.
+TextColor, of type Color, defines the color of the entered text.
+VerticalTextAlignment, of type TextAlignment, defines the vertical alignment of the text.
+
+IsSpellCheckEnabled, of type bool, controls whether spell checking is enabled.
+MaxLength, of type int, defines the maximum input length.
+                    TextColor="#374955"
+                    BackgroundColor="#E6F4F1"
+                   --> 
+                    </Entry>
+                    <Label x:Name="LabelTitle" 
+                        Text="{Binding LabelText, Source={x:Reference this}}" 
+                        TextColor="{Binding PlaceholderColor, Source={x:Reference this}}" 
+                        ZIndex="3"
+                        BackgroundColor="White"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Handle_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="1" Margin="0,8,0,0" 
+                        Text="{Binding EndIcon.Glyph, Source={x:Reference this}}"
+                        TextColor="{Binding EndIconColor, Source={x:Reference this}}"
+                        FontFamily="{Binding EndIcon.FontFamily, Source={x:Reference this}}"
+                        FontSize="{Binding EndIcon.Size, Source={x:Reference this}}" 
+                        ZIndex="4"/>
+                </Grid>
+            </Frame>
+            <Label Grid.Row="1" 
+                Text="{Binding ErrorText, Source={x:Reference this}}" 
+                IsVisible="{Binding HasError, Source={x:Reference this}, Mode = OneWay}"
+                TextColor="{Binding ErrorColor, Source={x:Reference this}, Mode = OneWay}"
+                BackgroundColor="White"
+                VerticalOptions="Center" 
+                HorizontalOptions="FillAndExpand" />
+        </Grid>
+
+    </ContentView.Content>
+</ContentView>
