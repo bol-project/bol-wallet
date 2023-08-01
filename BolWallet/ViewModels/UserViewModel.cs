@@ -20,7 +20,7 @@ public partial class UserViewModel : BaseViewModel
     public string CodenameLabel => "Greetings " + _userData?.Codename + "!";
 
     public string EdiLabel => "Edi: " + _userData?.Edi;
-
+    public string Address { get; set; }
     // TODO section
 
     //Replace 2nd string with var

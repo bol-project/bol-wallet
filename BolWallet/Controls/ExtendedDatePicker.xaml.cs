@@ -26,7 +26,14 @@ public partial class ExtendedDatePicker : ContentView
     private readonly EndIconConverter _endIconConverter;
 
     int _placeholderFontSize = 18;
-    int _titleFontSize = 10;
+    int _titleFontSize =
+#if MACCATALYST
+    16;
+#elif WINDOWS
+        16;
+#else
+    12;
+#endif
     int _topMargin = -20;
     static async void HandleBindingPropertyChangedDelegate(BindableObject bindable, object oldValue, object newValue)
     {

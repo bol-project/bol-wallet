@@ -13,11 +13,7 @@ public static class RegistrationExtensions
 			.BindViewModelToView<MainViewModel, MainPage>()
 			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
 			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
-			.BindViewModelToView<UserViewModel, UserPage>()
-            .BindViewModelToView<MainWithAccountViewModel, MainPageWithAccount>()
-            .BindViewModelToView<BolCommunityViewModel, BolCommunityView>()
-            .BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
-            .BindViewModelToView<SendBolViewModel, SendBolPage>();
+			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>();
 
 		return services;
 	}

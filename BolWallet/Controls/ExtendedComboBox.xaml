@@ -19,15 +19,14 @@
                         <ColumnDefinition Width="2*" />
                     </Grid.ColumnDefinitions>
 
-                    <Picker x:Name="ePicker" Grid.Column="0" 
+                    <Picker x:Name="ePicker" Grid.Column="0"  HorizontalOptions="FillAndExpand"
                        FontSize="{Binding FontSize, Source={x:Reference this}}"
-                       
                        SelectedIndex="{Binding SelectedIndex, Source={x:Reference this}, Mode=TwoWay}" 
-                       SelectedItem ="{Binding SelectedItem , Source={x:Reference this}}" 
+                       SelectedItem ="{Binding SelectedItem , Source={x:Reference this}, Mode=TwoWay}" 
                        Unfocused="Handle_Unfocused" 
                        Focused="Handle_Focused"
                        BackgroundColor="Transparent"
-                            SelectedIndexChanged="ePicker_SelectedIndexChanged"
+                       SelectedIndexChanged="ePicker_SelectedIndexChanged"
                        >
                         <!--CharacterSpacing, of type double, is the spacing between characters of the item displayed by the Picker.
 FontAttributes of type FontAttributes, which defaults to FontAtributes.None.
@@ -55,15 +54,17 @@ VerticalTextAlignment, of type TextAlignment, is the vertical alignment of the t
                         Text="{Binding EndIcon.Glyph, Source={x:Reference this}}"
                         TextColor="{Binding EndIconColor, Source={x:Reference this}}"
                         FontFamily="{Binding EndIcon.FontFamily, Source={x:Reference this}}"
-                        FontSize="{Binding EndIcon.Size, Source={x:Reference this}}" />
+                        FontSize="{Binding EndIcon.Size, Source={x:Reference this}}" 
+                           BackgroundColor="White"/>
                 </Grid>
             </Frame>
             <Label Grid.Row="1" 
                 Text="{Binding ErrorText, Source={x:Reference this}}" 
                 IsVisible="{Binding HasError, Source={x:Reference this}, Mode = OneWay}"
                 TextColor="{Binding ErrorColor, Source={x:Reference this}, Mode = OneWay}"
+                BackgroundColor="White"
                 VerticalOptions="Center" 
-                HorizontalOptions="StartAndExpand" />
+                HorizontalOptions="FillAndExpand" />
         </Grid>
 
     </ContentView.Content>

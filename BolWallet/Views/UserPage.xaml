@@ -4,8 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:UserViewModel"
-    BackgroundColor="{DynamicResource SecondaryColor}">
-
+    BackgroundColor="{DynamicResource SecondaryColor}"
+    xmlns:local="clr-namespace:BolWallet.Converters">
+    <ContentPage.Resources>
+        <local:HTMLPathConverter x:Key="HTMLPathConverter" />
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem 
             Text="Settings"
@@ -18,7 +21,7 @@
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                     Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
             ColumnDefinitions="*,*"
             RowSpacing="25"
             ColumnSpacing="8">
@@ -65,7 +68,16 @@
                 HorizontalOptions="Center"
                 FontSize="8"
                 Text="{Binding TransactionButton2Label}" />
-
+            
+            <Entry x:Name="eEntry" Grid.Column="0" Grid.Row="4"
+            Text="{Binding Address, Mode=TwoWay}"/>
+            <Button Clicked="ValidButton_Click" Text="Validate" x:Name="vBtn"
+                    Grid.Column="1" Grid.Row="4"></Button>
+            <WebView x:Name="wView"
+                Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Source="{Binding Address, Converter={StaticResource HTMLPathConverter}}" />
         </Grid>
     </ScrollView>
 </ContentPage>

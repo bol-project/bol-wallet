@@ -22,7 +22,7 @@ public class CountriesService : ICountriesService
 		using var reader = new StreamReader(".content/country_code.json");
 		var countryCodeJson = await reader.ReadToEndAsync();
 		
-		_registerContent.Countries = JsonSerializer.Deserialize<IList<Country>>(countryCodeJson);
+		_registerContent.Countries = JsonSerializer.Deserialize<List<Country>>(countryCodeJson);
 
 		return _registerContent.Countries;
 	}

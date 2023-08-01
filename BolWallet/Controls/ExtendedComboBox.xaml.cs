@@ -1,4 +1,5 @@
 using BolWallet.Converters;
+using Microsoft.Maui.Controls;
 using System.Dynamic;
 using System.Globalization;
 
@@ -17,7 +18,7 @@ public partial class ExtendedComboBox : ContentView
     public static readonly BindableProperty EndIconProperty = BindableProperty.Create(nameof(EndIcon), typeof(FontImageSource), typeof(ExtendedComboBox));
     public static readonly BindableProperty StateProperty = BindableProperty.Create(nameof(State), typeof(PropertyState), typeof(ExtendedComboBox));
     public static readonly BindableProperty PlaceholderColorProperty = BindableProperty.Create(nameof(PlaceholderColor), typeof(Color), typeof(ExtendedComboBox));
-    public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IEnumerable), typeof(ExtendedComboBox));
+    public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(System.Collections.IList), typeof(ExtendedComboBox));
     public static readonly BindableProperty SelectedIndexProperty = BindableProperty.Create(nameof(SelectedIndex), typeof(int), typeof(ExtendedComboBox));
     public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(ExtendedComboBox));
     public static readonly BindableProperty ItemTextProperty = BindableProperty.Create(nameof(ItemText), typeof(string), typeof(ExtendedComboBox));
@@ -26,7 +27,14 @@ public partial class ExtendedComboBox : ContentView
     private readonly EndIconConverter _endIconConverter;
 
     int _placeholderFontSize = 18;
-    int _titleFontSize = 10;
+    int _titleFontSize =
+#if MACCATALYST
+    16;
+#elif WINDOWS
+        16;
+#else
+    12;
+#endif
     int _topMargin = -20;
     static async void HandleBindingPropertyChangedDelegate(BindableObject bindable, object oldValue, object newValue)
     {
@@ -55,9 +63,9 @@ public partial class ExtendedComboBox : ContentView
         LabelTitle.FontSize = _placeholderFontSize;
         FocusedBorderColor = Color.Parse("Gray");
     }
-    public System.Collections.IEnumerable ItemsSource
+    public System.Collections.IList ItemsSource
     {
-        get { return (System.Collections.IEnumerable)GetValue(ItemsSourceProperty); }
+        get { return (System.Collections.IList)GetValue(ItemsSourceProperty); }
         set { SetValue(ItemsSourceProperty, value); }
     }
 
@@ -247,13 +255,10 @@ public partial class ExtendedComboBox : ContentView
         {
             if(!string.IsNullOrEmpty(ItemText) && ItemsSource != null)
             {
-                var items = new List<string>();
-                foreach (object item in ItemsSource)
-                {
-                    items.Add(item.GetType().GetProperty(ItemText).GetValue(item).ToString());
-                }
-                ePicker.ItemsSource = items;
-            }else if(propertyName == ItemsSourceProperty.PropertyName)
+                ePicker.ItemDisplayBinding = new Binding(ItemText);
+                ePicker.ItemsSource = ItemsSource;
+            }
+            else if(propertyName == ItemsSourceProperty.PropertyName)
             {
                 var items = new List<string>();
                 foreach (object item in ItemsSource)
