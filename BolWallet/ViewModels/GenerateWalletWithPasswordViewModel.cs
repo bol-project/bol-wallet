@@ -47,6 +47,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 		var bolWallet = await this._walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey);
 
 		userData.BolWallet = bolWallet;
+		userData.WalletPassword = Password;
 
 		await _secureRepository.SetAsync("userdata", userData);
 
