@@ -9,7 +9,6 @@
     xmlns:models="clr-namespace:BolWallet.Models"
     xmlns:helpers="clr-namespace:BolWallet.Helpers"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
-	xmlns:local="clr-namespace:BolWallet;assembly=BolWallet"
     x:Name="This"
     Title="Create your Edit"
     x:DataType="viewModels:CreateEdiViewModel"

@@ -146,7 +146,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
 		await _secureRepository.SetAsync("userdata", userData);
 
-		IsLoading = true;
+		IsLoading = false;
 
 		await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
 	}
