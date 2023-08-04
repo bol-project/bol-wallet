@@ -82,13 +82,14 @@
 
 	<ItemGroup>
 	  <PackageReference Include="akavache" Version="9.1.20" />
-	  <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.8" />
+	  <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.10" />
 	  <PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
 	  <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
+	  <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
 	</ItemGroup>
 
     <ItemGroup>

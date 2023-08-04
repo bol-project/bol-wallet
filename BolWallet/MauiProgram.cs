@@ -1,8 +1,11 @@
 ﻿using System.Reflection;
 using Akavache;
 using Bol.App.Core.Services;
+using Bol.Core.Abstractions;
+using Bol.Core.Accessors;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
+using Bol.Core.Services;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
@@ -51,11 +54,30 @@ public static class MauiProgram
         // This model will hold the data from the Register flow
         services.AddSingleton(content);
 
-        Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
+		ConfigureWalletServices(services, sp);
+
+		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
         return builder.Build();
 	}
-    private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
+
+	private static void ConfigureWalletServices(IServiceCollection services, ServiceProvider sp)
+	{
+		ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
+		UserData userData = null;
+		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
+
+		if (userData?.BolWallet is not null)
+		{
+			services.AddSingleton(typeof(IOptions<WalletConfiguration>), Microsoft.Extensions.Options.Options.Create(new WalletConfiguration { Password = userData.WalletPassword }));
+			services.AddSingleton(typeof(IOptions<Bol.Core.Model.BolWallet>), Microsoft.Extensions.Options.Options.Create(userData.BolWallet));
+
+			services.AddSingleton<IContextAccessor, WalletContextAccessor>();
+			services.AddSingleton<IBolService, BolService>();
+		}
+	}
+
+	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
     {
         var assembly = Assembly.GetExecutingAssembly();
         using var stream = assembly.GetManifestResourceStream(appSettingsPath);
