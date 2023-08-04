@@ -113,6 +113,9 @@
         <MauiXaml Update="Views\MainPage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\RegistrationPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
