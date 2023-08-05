@@ -19,7 +19,8 @@ public static class RegistrationExtensions
             .BindViewModelToView<MainWithAccountViewModel, MainWithAccountPage>()
             .BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
             .BindViewModelToView<SendBolViewModel, SendBolPage>()
-            .BindViewModelToView<UserViewModel, UserPage>();
+            .BindViewModelToView<UserViewModel, UserPage>()
+            .BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
 
 		return services;
 	}

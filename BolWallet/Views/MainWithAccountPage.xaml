@@ -36,7 +36,7 @@
             <Button
                 Grid.Row="2"
                 Grid.ColumnSpan="3"
-                Command="{Binding NavigateToUserPageCommand}"
+                Clicked="OnClickTodo"
                 FontAttributes="Bold"
                 FontSize="8"
                 HorizontalOptions="FillAndExpand"
@@ -73,7 +73,7 @@
                 Grid.Row="5"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
-                Clicked="OnClickTodo"
+                Command="{Binding NavigateToMoveClaimPageCommand}"
                 FontAttributes="Bold"
                 FontSize="8"
                 HorizontalOptions="FillAndExpand"

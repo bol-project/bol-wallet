@@ -25,9 +25,9 @@ public partial class SendBolViewModel : BaseViewModel
     [RelayCommand]
     private void SendBol()
     {
-        TestLabel = "From Address: " + _sendBolForm.ComAddress +
-                    "\nReciever Codename: " + _sendBolForm.RecieverCodename +
-                    "\nReciever Address: " + _sendBolForm.RecieverAddress +
-                    "\nAmount: " + _sendBolForm.Amount;
+        TestLabel = "From Address: " + SendBolForm.ComAddress +
+                    "\nReciever Codename: " + SendBolForm.RecieverCodename +
+                    "\nReciever Address: " + SendBolForm.RecieverAddress +
+                    "\nAmount: " + SendBolForm.Amount;
     }
 }

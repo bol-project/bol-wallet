@@ -119,6 +119,9 @@
         <MauiXaml Update="Views\MainWithAccountPage.xaml">
             <Generator>MSBuild:Compile</Generator>
         </MauiXaml>
+        <MauiXaml Update="Views\MoveClaimPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\RetrieveBolPage.xaml">
           <Generator>MSBuild:Compile</Generator>
         </MauiXaml>

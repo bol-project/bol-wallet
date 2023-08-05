@@ -39,6 +39,12 @@ public partial class MainWithAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private void NavigateToMoveClaimPage()
+    {
+        NavigationService.NavigateTo<MoveClaimViewModel>(true);
+    }
+
+    [RelayCommand]
     private void NavigateToRetrieveBolPage()
     {
         NavigationService.NavigateTo<RetrieveBolViewModel>(true);
