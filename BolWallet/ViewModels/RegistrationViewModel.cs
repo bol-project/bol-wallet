@@ -44,6 +44,8 @@ public partial class RegistrationViewModel : BaseViewModel
 	{
 		IsLoading = true;
 
+		await Task.Delay(100);
+
 		BolAccount bolAccount = await _bolService.Register();
 
 		IsLoading = false;
