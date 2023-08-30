@@ -1,4 +1,5 @@
 namespace BolWallet.Views;
+using CommunityToolkit.Maui.Alerts;
 
 public partial class RegistrationPage : ContentPage
 {
@@ -12,5 +13,15 @@ public partial class RegistrationPage : ContentPage
 	{
 		base.OnAppearing();
 		await ((RegistrationViewModel)BindingContext).Initialize();
+	}
+
+	private void OnTapCopy(object sender, EventArgs e)
+	{
+		if (sender is Label label)
+		{
+			Clipboard.Default.SetTextAsync(label.Text);
+
+			Toast.Make("Copied to Clipboard").Show();
+		}
 	}
 }

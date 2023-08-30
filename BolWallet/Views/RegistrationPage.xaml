@@ -14,30 +14,39 @@
             FontSize="18"
             TextColor="DarkSlateBlue" />
 
-		<Label
-            Text="{Binding Codename}"
-            BackgroundColor="WhiteSmoke"
-            TextColor="Black"/>
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding Codename}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
 
 		<Label
             Text="EDI"
             FontSize="18"
             TextColor="DarkSlateBlue" />
 
-		<Label
-            Text="{Binding Edi}"
-            BackgroundColor="WhiteSmoke"
-            TextColor="Black"/>
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding Edi}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
 
 		<Label
             Text="Main Address"
             FontSize="18"
             TextColor="DarkSlateBlue" />
 
-		<Label
-            Text="{Binding MainAddress}"
-            BackgroundColor="WhiteSmoke"
-            TextColor="Black"/>
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding MainAddress}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
 
 		<Button 
             Text="Register" 
