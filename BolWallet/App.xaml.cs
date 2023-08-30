@@ -7,7 +7,7 @@ public partial class App : Application
 	private readonly ICountriesService _countriesService;
 	private readonly ISecureRepository _secureRepository;
 
-	public App(MainPage mainPage, RegistrationPage registrationPage, ISecureRepository secureRepository, ICountriesService countriesService)
+	public App(MainPage mainPage, IServiceProvider serviceProvider, ISecureRepository secureRepository, ICountriesService countriesService)
 	{
 		_countriesService = countriesService;
 		_secureRepository = secureRepository;
@@ -39,6 +39,7 @@ public partial class App : Application
 
 		if (userData?.BolWallet is not null)
 		{
+			var registrationPage = serviceProvider.GetRequiredService<RegistrationPage>();
 			MainPage = new NavigationPage(registrationPage);
 		}
 		else
