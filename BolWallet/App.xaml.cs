@@ -13,6 +13,9 @@ public partial class App : Application
 		_secureRepository = secureRepository;
 
 		InitializeComponent();
+
+		UserAppTheme = AppTheme.Light;
+
 		Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(ExtendedTextEdit),
 			(handler, view) =>
 			{
