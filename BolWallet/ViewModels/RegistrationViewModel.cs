@@ -1,5 +1,6 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
+using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
 public partial class RegistrationViewModel : BaseViewModel
@@ -42,12 +43,19 @@ public partial class RegistrationViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task Register()
 	{
-		IsLoading = true;
+		try
+		{
+			IsLoading = true;
 
-		await Task.Delay(100);
+			await Task.Delay(100);
 
-		BolAccount bolAccount = await _bolService.Register();
+			BolAccount bolAccount = await _bolService.Register();
 
-		IsLoading = false;
+			IsLoading = false;
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
 	}
 }

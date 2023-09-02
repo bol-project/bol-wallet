@@ -56,12 +56,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
 		IsLoading = false;
 
-		var builder = MauiApp.CreateBuilder();
-
-		using var sp = builder.Services.BuildServiceProvider();
-
-		builder.Services.ConfigureWalletServices(sp);
-
+		// TODO: Implement a method for registering wallet services.
 		await NavigationService.NavigateTo<RegistrationViewModel>(true);
 	}
 }

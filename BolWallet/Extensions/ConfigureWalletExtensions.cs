@@ -7,9 +7,10 @@ using Microsoft.Extensions.Options;
 namespace BolWallet.Extensions;
 public static class ConfigureWalletExtensions
 {
-	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services, ServiceProvider sp)
+	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services, IServiceProvider sp)
 	{
 		ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
+
 		UserData userData = null;
 		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
 
