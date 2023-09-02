@@ -138,7 +138,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 		encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
 		encryptedDigitalMatrix.CodeName = userData.Codename;
 
-		var result = _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix);
+		var result = await Task.Run(() => _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix));
 
 		userData.Edi = result;
 
