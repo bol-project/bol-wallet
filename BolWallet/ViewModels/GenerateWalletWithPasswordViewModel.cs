@@ -52,11 +52,13 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
 		await _secureRepository.SetAsync("userdata", userData);
 
+		await Task.Delay(100);
+
 		await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
 
 		IsLoading = false;
 
 		// TODO: Implement a method for registering wallet services.
-		await NavigationService.NavigateTo<RegistrationViewModel>(true);
+		App.Current.Quit();
 	}
 }

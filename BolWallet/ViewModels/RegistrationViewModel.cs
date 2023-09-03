@@ -37,7 +37,7 @@ public partial class RegistrationViewModel : BaseViewModel
 
 		Codename = userData.Codename;
 		Edi = userData.Edi;
-		MainAddress = userData.BolWallet.accounts.FirstOrDefault(a => a.Label == "main").Address;
+		MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 	}
 
 	[RelayCommand]
