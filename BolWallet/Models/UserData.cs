@@ -8,4 +8,5 @@ public class UserData
 	public string Edi { get; set; }
     public EncryptedDigitalMatrix EncryptedDigitalMatrix { get; set; }
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
+    public string WalletPassword { get; set; }
 }

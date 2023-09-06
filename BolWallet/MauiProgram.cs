@@ -15,63 +15,75 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
 		builder
 			.UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .ConfigureFonts(fonts =>
+			.UseMauiCommunityToolkit()
+			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
-            });
-        var services = builder.Services;
+				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
+			});
 
-        // Register Services
-        services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
-        services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
-        services.AddSingleton<INavigationService, NavigationService>();
-        services.AddScoped<ICountriesService, CountriesService>();
-        services.AddSingleton<IPermissionService, PermissionService>();
+		builder.AddConfiguration("BolWallet.appsettings.json");
 
-        services.AddSingleton<IMediaPicker, Services.MediaPicker>();
-        services.RegisterViewAndViewModelSubsystem();
+		var services = builder.Services;
 
-        services.AddBolSdk();
+		// Register Services
+		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
+		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
+		services.AddSingleton<INavigationService, NavigationService>();
+		services.AddScoped<ICountriesService, CountriesService>();
+		services.AddSingleton<IPermissionService, PermissionService>();
 
-        using var sp = services.BuildServiceProvider();
+		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+		services.RegisterViewAndViewModelSubsystem();
 
-        var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
-        var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
-        var content = new RegisterContent
-        {
-            Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
-            NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
-        };
+		// Register RpcEndpoint and Contract
+		var bolConfig = new BolConfig();
+		builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
+		services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
-        // This model will hold the data from the Register flow
-        services.AddSingleton(content);
+		services.AddBolSdk();
 
-        Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
+		using var sp = services.BuildServiceProvider();
 
-        return builder.Build();
+		var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
+		var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
+		var content = new RegisterContent
+		{
+			Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
+			NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
+		};
+
+		// This model will hold the data from the Register flow
+		services.AddSingleton(content);
+
+		services.ConfigureWalletServices(sp);
+
+		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
+
+		return builder.Build();
 	}
-    private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        using var stream = assembly.GetManifestResourceStream(appSettingsPath);
 
-        var configRoot = new ConfigurationBuilder()
-            .AddJsonStream(stream)
-            .Build();
+	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
+	{
+		var assembly = Assembly.GetExecutingAssembly();
+		using var stream = assembly.GetManifestResourceStream(appSettingsPath);
 
-        builder.Configuration.AddConfiguration(configRoot);
+		var configRoot = new ConfigurationBuilder()
+			.AddJsonStream(stream)
+			.Build();
 
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+		builder.Configuration.AddConfiguration(configRoot);
 
-        var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
+		var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
 
-        builder.Services.AddSingleton(bolConfig);
+		var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
 
-        return builder;
-    }
+		builder.Services.AddSingleton(bolConfig);
+
+		return builder;
+	}
 }
