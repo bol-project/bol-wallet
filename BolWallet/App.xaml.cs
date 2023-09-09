@@ -42,8 +42,14 @@ public partial class App : Application
 
 		if (userData?.BolWallet is not null)
 		{
-			var registrationPage = serviceProvider.GetRequiredService<RegistrationPage>();
-			MainPage = new NavigationPage(registrationPage);
+			ContentPage contentPage = new ContentPage();
+
+			if (userData.IsRegisteredAccount)
+				contentPage = serviceProvider.GetRequiredService<CertifyPage>();
+			else
+				contentPage = serviceProvider.GetRequiredService<RegistrationPage>();
+
+			MainPage = new NavigationPage(contentPage);
 		}
 		else
 		{

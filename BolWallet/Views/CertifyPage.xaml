@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BolWallet.Views.CertifyPage"
+			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+             Title="Certify Your Account"
+			 BackgroundColor="{DynamicResource SecondaryColor}"
+			 NavigationPage.HasBackButton="False">
+	
+	<StackLayout VerticalOptions="CenterAndExpand" Spacing="15" Padding="10" >
+		<Button 
+		Text="Select Mandatory Certifiers"
+		BackgroundColor="DarkSlateBlue"
+		TextColor="White"
+		Command="{Binding SelectMandatoryCertifiersCommand}"	/>
+
+		<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<StackLayout  Padding="3">
+						<Frame BackgroundColor="WhiteSmoke" Padding="10">
+							<Label Text="{Binding Key}" TextColor="Black">
+								<Label.GestureRecognizers>
+									<TapGestureRecognizer Tapped="OnTapCopy" />
+								</Label.GestureRecognizers>
+							</Label>
+						</Frame>
+					</StackLayout>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+
+
+		<Button 
+		Text="{Binding Certifications, StringFormat='Request Certification No.{0} out of 2'}"
+		BackgroundColor="DarkSlateBlue"
+		TextColor="White"
+		Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
+
+		<Entry Placeholder="Paste Certifier Codename" Text="{Binding CertifierCodename, Mode=TwoWay}" PlaceholderColor="Black" WidthRequest="400"  HeightRequest="50" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+
+	</StackLayout>
+
+</ContentPage>
