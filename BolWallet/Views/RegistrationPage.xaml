@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BolWallet.Views.RegistrationPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Register your Main Address"
+	xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:RegistrationViewModel"
+	BackgroundColor="{DynamicResource SecondaryColor}">
+
+	<StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+		<Label
+            Text="Code Name"
+            FontSize="18"
+            TextColor="DarkSlateBlue" />
+
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding Codename}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
+
+		<Label
+            Text="EDI"
+            FontSize="18"
+            TextColor="DarkSlateBlue" />
+
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding Edi}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
+
+		<Label
+            Text="Main Address"
+            FontSize="18"
+            TextColor="DarkSlateBlue" />
+
+		<Frame BackgroundColor="WhiteSmoke" Padding="10">
+			<Label Text="{Binding MainAddress}" TextColor="Black">
+				<Label.GestureRecognizers>
+					<TapGestureRecognizer Tapped="OnTapCopy"/>
+				</Label.GestureRecognizers>
+			</Label>
+		</Frame>
+
+		<Button 
+            Text="Register" 
+            BackgroundColor="DarkSlateBlue"
+            TextColor="White"
+			Command="{Binding RegisterCommand}"/>
+		
+		<StackLayout>
+			<ActivityIndicator VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsRunning="{Binding IsLoading}" />
+		</StackLayout>
+		
+	</StackLayout>
+
+</ContentPage>

@@ -21,6 +21,9 @@ public static class RegistrationExtensions
             .BindViewModelToView<SendBolViewModel, SendBolPage>()
             .BindViewModelToView<UserViewModel, UserPage>()
             .BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
+			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
+			.BindViewModelToView<RegistrationViewModel, RegistrationPage>()
+			.BindViewModelToView<UserViewModel, UserPage>();
 
 		return services;
 	}
