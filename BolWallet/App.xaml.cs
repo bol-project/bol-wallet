@@ -58,8 +58,11 @@ public partial class App : Application
 		if (userData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
 		{
 			contentPage = serviceProvider.GetRequiredService<CertifyPage>();
+			MainPage = new NavigationPage(contentPage);
+			return;
 		}
 
+		contentPage = serviceProvider.GetRequiredService<MainWithAccountPage>();
 		MainPage = new NavigationPage(contentPage);
 	}
 

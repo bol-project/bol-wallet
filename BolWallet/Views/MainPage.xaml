@@ -6,21 +6,21 @@
     x:DataType="viewModels:MainViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
-    <ScrollView>
-        <Grid
+	<ScrollView>
+		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
             RowDefinitions="Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
-            <Label
+			<Label
                 Grid.Row="0"
                 FontSize="32"
                 HorizontalOptions="Center"
                 SemanticProperties.HeadingLevel="Level1"
                 Text="Welcome to Bol!" />
 
-            <Image
+			<Image
                 Grid.Row="1"
                 HeightRequest="310"
                 HorizontalOptions="Center"
@@ -28,19 +28,13 @@
                 Source="bol_logo"
                 WidthRequest="250" />
 
-            <Button
+			<Button
                 Grid.Row="2"
                 Command="{Binding NavigateToCodenamePageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 Text="Let's get started" />
 
-            <Button
-                Grid.Row="3"
-                Command="{Binding NavigateToAccountMainPageCommand}"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                Text="Retrieve Account" />
-        </Grid>
-    </ScrollView>
+		</Grid>
+	</ScrollView>
 </ContentPage>
