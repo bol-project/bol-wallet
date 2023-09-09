@@ -9,21 +9,21 @@ public static class RegistrationExtensions
 	{
 		services.AddSingleton<IViewModelToViewBinder>(new ViewModelToViewBinder());
 		services.AddSingleton<IViewModelToViewResolver, ViewModelToViewResolver>();
-		
+
 		services
 			.BindViewModelToView<MainViewModel, MainPage>()
 			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
 			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
 			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
-            .BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
-            .BindViewModelToView<MainWithAccountViewModel, MainWithAccountPage>()
-            .BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
-            .BindViewModelToView<SendBolViewModel, SendBolPage>()
-            .BindViewModelToView<UserViewModel, UserPage>()
-            .BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
-			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
 			.BindViewModelToView<RegistrationViewModel, RegistrationPage>()
-			.BindViewModelToView<UserViewModel, UserPage>();
+			.BindViewModelToView<CertifyViewModel, CertifyPage>()
+
+			.BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
+			.BindViewModelToView<MainWithAccountViewModel, MainWithAccountPage>()
+			.BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
+			.BindViewModelToView<SendBolViewModel, SendBolPage>()
+			.BindViewModelToView<UserViewModel, UserPage>()
+			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
 
 		return services;
 	}
