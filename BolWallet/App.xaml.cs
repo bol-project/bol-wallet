@@ -40,21 +40,27 @@ public partial class App : Application
 		UserData userData = null;
 		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
 
-		if (userData?.BolWallet is not null)
-		{
-			ContentPage contentPage = new ContentPage();
-
-			if (userData.IsRegisteredAccount)
-				contentPage = serviceProvider.GetRequiredService<CertifyPage>();
-			else
-				contentPage = serviceProvider.GetRequiredService<RegistrationPage>();
-
-			MainPage = new NavigationPage(contentPage);
-		}
-		else
+		if (userData?.BolWallet == null)
 		{
 			MainPage = new NavigationPage(mainPage);
+			return;
 		}
+
+		ContentPage contentPage = new ContentPage();
+
+		if (!userData.IsRegisteredAccount)
+		{
+			contentPage = serviceProvider.GetRequiredService<RegistrationPage>();
+			MainPage = new NavigationPage(contentPage);
+			return;
+		}
+
+		if (userData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
+		{
+			contentPage = serviceProvider.GetRequiredService<CertifyPage>();
+		}
+
+		MainPage = new NavigationPage(contentPage);
 	}
 
 	protected override Window CreateWindow(IActivationState activationState)
