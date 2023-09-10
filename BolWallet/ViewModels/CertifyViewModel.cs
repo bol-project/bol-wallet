@@ -27,20 +27,32 @@ public partial class CertifyViewModel : BaseViewModel
 	private int _certifications = 0;
 
 	[ObservableProperty]
+	private bool _isCertified = false;
+
+	[ObservableProperty]
+	private BolAccount _bolAccount = new();
+
+	[ObservableProperty]
 	public Dictionary<string, string> _mandatoryCertifiers;
+
+	private UserData userData;
 
 	public async Task Initialize()
 	{
-		var userData = await _secureRepository.GetAsync<UserData>("userdata");
+		userData = await _secureRepository.GetAsync<UserData>("userdata");
 
 		if (userData is null) return;
 
-		BolAccount bolAccount = await _bolService.GetAccount(userData.Codename);
+		BolAccount = await _bolService.GetAccount(userData.Codename);
 
-		if (bolAccount.AccountStatus == AccountStatus.PendingCertifications)
+		if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
 		{
-			Certifications = bolAccount.Certifications + 1;
-			MandatoryCertifiers = bolAccount.MandatoryCertifiers;
+			Certifications = BolAccount.Certifications + 1;
+			MandatoryCertifiers = BolAccount.MandatoryCertifiers;
+		}
+		else if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+		{
+			IsCertified = true;
 		}
 	}
 
@@ -80,6 +92,31 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Delay(100);
 
 			BolAccount bolAccount = await _bolService.RequestCertification(CertifierCodename);
+
+			IsLoading = false;
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
+	}
+
+	[RelayCommand]
+	private async Task PayCertificationFees()
+	{
+		try
+		{
+			IsLoading = true;
+
+			await Task.Delay(100);
+
+			userData.AccountStatus = BolAccount.AccountStatus;
+
+			await Task.Run(() => _secureRepository.SetAsync("userdata", userData));
 
 			IsLoading = false;
 		}
