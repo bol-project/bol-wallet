@@ -9,8 +9,19 @@ public partial class MainWithAccountPage : ContentPage
         BindingContext = mainWithAccountViewModel;
     }
 
-    private void OnClickTodo(object sender, EventArgs e)
-    {
-        Toast.Make("TODO").Show();
-    }
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await ((MainWithAccountViewModel)BindingContext).Initialize();
+	}
+
+	private void OnTapCopy(object sender, EventArgs e)
+	{
+		if (sender is Label label)
+		{
+			Clipboard.Default.SetTextAsync(label.Text);
+
+			Toast.Make("Copied to Clipboard").Show();
+		}
+	}
 }
