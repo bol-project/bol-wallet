@@ -46,18 +46,20 @@ public partial class App : Application
 			return;
 		}
 
+		using var scope = serviceProvider.CreateScope();
+
 		ContentPage contentPage = new ContentPage();
 
 		if (!userData.IsRegisteredAccount)
 		{
-			contentPage = serviceProvider.GetRequiredService<RegistrationPage>();
+			contentPage = scope.ServiceProvider.GetRequiredService<RegistrationPage>();
 			MainPage = new NavigationPage(contentPage);
 			return;
 		}
 
 		if (userData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
 		{
-			contentPage = serviceProvider.GetRequiredService<CertifyPage>();
+			contentPage = scope.ServiceProvider.GetRequiredService<CertifyPage>();
 		}
 
 		MainPage = new NavigationPage(contentPage);
