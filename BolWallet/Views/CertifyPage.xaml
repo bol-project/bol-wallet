@@ -74,8 +74,8 @@
 		TextColor="White"
 		Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
 
-
 		<Button 
+		IsVisible="{Binding IsCertified}"
 		Text="Pay Certification Fees"
 		BackgroundColor="DarkSlateBlue"
 		TextColor="White"
