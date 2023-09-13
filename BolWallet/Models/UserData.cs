@@ -9,4 +9,6 @@ public class UserData
     public EncryptedDigitalMatrix EncryptedDigitalMatrix { get; set; }
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
     public string WalletPassword { get; set; }
+    public bool IsRegisteredAccount { get; set; }
+    public AccountStatus AccountStatus { get; set; } = AccountStatus.PendingCertifications;
 }

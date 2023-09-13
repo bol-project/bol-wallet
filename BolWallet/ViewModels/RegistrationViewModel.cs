@@ -11,8 +11,7 @@ public partial class RegistrationViewModel : BaseViewModel
 	public RegistrationViewModel(
 		INavigationService navigationService,
 		ISecureRepository secureRepository,
-		IBolService bolService)
-		: base(navigationService)
+		IBolService bolService) : base(navigationService)
 	{
 		_secureRepository = secureRepository;
 		_bolService = bolService;
@@ -30,9 +29,12 @@ public partial class RegistrationViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isLoading = false;
 
+	private UserData userData;
+
 	public async Task Initialize()
 	{
-		var userData = await _secureRepository.GetAsync<UserData>("userdata");
+		userData = await _secureRepository.GetAsync<UserData>("userdata");
+
 		if (userData is null) return;
 
 		Codename = userData.Codename;
@@ -51,11 +53,19 @@ public partial class RegistrationViewModel : BaseViewModel
 
 			BolAccount bolAccount = await _bolService.Register();
 
-			IsLoading = false;
+			userData.IsRegisteredAccount = true;
+
+			await Task.Run(() => _secureRepository.SetAsync("userdata", userData));
+
+			await NavigationService.NavigateTo<CertifyViewModel>(true);
 		}
 		catch (Exception ex)
 		{
 			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
 		}
 	}
 }

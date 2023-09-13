@@ -105,6 +105,9 @@
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\CertifyPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\CreateCodenamePage.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
