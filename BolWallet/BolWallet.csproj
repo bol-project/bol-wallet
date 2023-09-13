@@ -105,6 +105,9 @@
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
+        <MauiXaml Update="Views\BolCommunityPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\CertifyPage.xaml">
           <Generator>MSBuild:Compile</Generator>
         </MauiXaml>
@@ -116,6 +119,21 @@
         </MauiXaml>
         <MauiXaml Update="Views\MainPage.xaml">
             <SubType>Designer</SubType>
+        </MauiXaml>
+        <MauiXaml Update="Views\MainWithAccountPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\MoveClaimPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\RetrieveBolPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\SendBolPage.xaml">
+          <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\UserPage.xaml">
+            <Generator>MSBuild:Compile</Generator>
         </MauiXaml>
         <MauiXaml Update="Views\RegistrationPage.xaml">
           <Generator>MSBuild:Compile</Generator>
@@ -136,6 +154,9 @@
             <DependentUpon>App.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\BolCommunityPage.xaml.cs">
+          <DependentUpon>BolCommunityPage.xaml</DependentUpon>
+        </Compile>
         <Compile Update="Views\CreateCodenamePage.xaml.cs">
             <DependentUpon>CreateCodenamePage.xaml</DependentUpon>
             <SubType>Code</SubType>
@@ -143,6 +164,9 @@
         <Compile Update="Views\MainPage.xaml.cs">
             <DependentUpon>MainPage.xaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\MainWithAccountPage.xaml.cs">
+          <DependentUpon>MainWithAccountPage.xaml</DependentUpon>
         </Compile>
     </ItemGroup>
 

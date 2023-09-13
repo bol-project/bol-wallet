@@ -1,0 +1,103 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.MainWithAccountPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:MainWithAccountViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+	<ScrollView>
+		<Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                 Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+            ColumnDefinitions="*,*,*"
+            RowSpacing="25"
+            ColumnSpacing="8">
+
+			<Label 
+				Grid.Row="0"
+                Grid.ColumnSpan="3" 
+				Text="Codename" 
+				TextColor="Black"/>
+			<Frame   
+				Grid.Row="1"
+                Grid.ColumnSpan="3" 
+				BackgroundColor="WhiteSmoke" 
+				Padding="10">
+				<Label Text="{Binding BolAccount.CodeName}" TextColor="Black">
+					<Label.GestureRecognizers>
+						<TapGestureRecognizer Tapped="OnTapCopy"/>
+					</Label.GestureRecognizers>
+				</Label>
+			</Frame>
+
+			<Label 
+				Grid.Row="2"
+                Grid.ColumnSpan="3" 
+				Text="Total Balance" 
+				TextColor="Black"/>
+			<Frame   
+				Grid.Row="3"
+                Grid.ColumnSpan="3" 
+				BackgroundColor="WhiteSmoke" 
+				Padding="10">
+				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
+			</Frame>
+
+			<Button
+                Grid.Row="4"
+                Grid.ColumnSpan="3"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding AccountText}" />
+
+			<Button
+                Grid.Row="5"
+                Grid.ColumnSpan="3"
+                Command="{Binding NavigateToSendBolPageCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding SendText}" />
+
+			<Button
+                Grid.Row="6"
+                Grid.ColumnSpan="3"
+                Command="{Binding NavigateToRetrieveBolPageCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding RecieveText}" />
+
+			<Button
+                Grid.Row="7"
+                Grid.Column="0"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Command="{Binding ClaimCommand}"
+                Text="{Binding ClaimText}" />
+
+			<Button
+                Grid.Row="7"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Command="{Binding NavigateToMoveClaimPageCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding MoveClaimText}" />
+
+			<Button
+                Grid.Row="8"
+                Grid.ColumnSpan="3"
+                Command="{Binding NavigateToBolCommunityPageCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding CommunityText}" />
+		</Grid>
+	</ScrollView>
+</ContentPage>

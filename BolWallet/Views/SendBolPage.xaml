@@ -1,0 +1,86 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.SendBolPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls1="clr-namespace:BolWallet.Controls"
+    xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:SendBolViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+    <ContentPage.Resources>
+        <StyleSheet>
+            <![CDATA[
+            .border-style {
+                background-color: lightgray;
+            }
+            ]]>
+        </StyleSheet>
+        <ResourceDictionary>
+
+            <Style TargetType="controls1:ExtendedTextEdit">
+                <Setter Property="ClearIconVisibility" Value="Never" />
+                <Setter Property="HorizontalOptions" Value="Fill" />
+                <Setter Property="IsErrorIconVisible" Value="False" />
+                <Setter Property="BoxHeight" Value="56" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+
+            <Color x:Key="FocusedColor">#718792</Color>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ScrollView>
+        <Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                 Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowSpacing="25">
+
+            <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                FontSize="32"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="{Binding SendBolLabel}" />
+
+            <controls1:ExtendedTextEdit 
+                    Grid.Row="1"
+                    LabelText="{Binding FromAddressText}"
+                    Text="{Binding SendBolForm.ComAddress, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
+
+            <controls1:ExtendedTextEdit 
+                    Grid.Row="2"
+                    LabelText="{Binding RecieverCodenameText}"
+                    Text="{Binding SendBolForm.RecieverCodename, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
+
+            <controls1:ExtendedTextEdit 
+                    Grid.Row="3"
+                    LabelText="{Binding RecieverAddressText}"
+                    Text="{Binding SendBolForm.RecieverAddress, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
+
+            <controls1:ExtendedTextEdit 
+                    Grid.Row="4"
+                    LabelText="{Binding AmountText}"
+                    Text="{Binding SendBolForm.Amount, Mode=TwoWay}" 
+                    TextTransform="Uppercase"/>
+
+            <Label Grid.Row="5" Text="{Binding TestLabel}"/>
+
+            <Button
+                Grid.Row="6"
+                Command="{Binding SendBolCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding SendText}" />
+
+        </Grid>
+    </ScrollView>
+</ContentPage>    
