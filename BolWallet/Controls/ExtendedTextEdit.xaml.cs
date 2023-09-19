@@ -42,12 +42,15 @@ public partial class ExtendedTextEdit : ContentView
     private readonly StateColorConverter _labelTemplateConverter;
     private readonly EndIconConverter _endIconConverter;
 
+    public int EntryWidth { get; set; } = Convert.ToInt32(Math.Round(DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density * 0.9));
+
+
     int _placeholderFontSize = 18;
 int _titleFontSize =
 #if MACCATALYST
-    16;
+    14;
 #elif WINDOWS
-    16;
+    14;
 #else
     12;
 #endif
@@ -270,13 +273,13 @@ int _titleFontSize =
     {
         if (animated)
         {
-            var t1 = LabelTitle.TranslateTo(0, _topMargin, 100);
+            var t1 = LabelTitle.TranslateTo(10, _topMargin, 100);
             var t2 = SizeTo(_titleFontSize);
             await Task.WhenAll(t1, t2);
         }
         else
         {
-            LabelTitle.TranslationX = 0;
+            LabelTitle.TranslationX = 10;
             LabelTitle.TranslationY = -30;
             LabelTitle.FontSize = 14;
         }

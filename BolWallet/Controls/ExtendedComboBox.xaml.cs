@@ -29,9 +29,9 @@ public partial class ExtendedComboBox : ContentView
     int _placeholderFontSize = 18;
     int _titleFontSize =
 #if MACCATALYST
-    16;
+    14;
 #elif WINDOWS
-        16;
+    14;
 #else
     12;
 #endif
@@ -194,13 +194,13 @@ public partial class ExtendedComboBox : ContentView
     {
         if (animated)
         {
-            var t1 = LabelTitle.TranslateTo(0, _topMargin, 100);
+            var t1 = LabelTitle.TranslateTo(10, _topMargin, 100);
             var t2 = SizeTo(_titleFontSize);
             await Task.WhenAll(t1, t2);
         }
         else
         {
-            LabelTitle.TranslationX = 0;
+            LabelTitle.TranslationX = 10;
             LabelTitle.TranslationY = -30;
             LabelTitle.FontSize = 14;
         }
