@@ -55,7 +55,9 @@ public partial class RegistrationViewModel : BaseViewModel
 
 			userData.IsRegisteredAccount = true;
 
-			await Task.Run(() => _secureRepository.SetAsync("userdata", userData));
+			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
+
+			await Task.Delay(1500);
 
 			await NavigationService.NavigateTo<CertifyViewModel>(true);
 		}

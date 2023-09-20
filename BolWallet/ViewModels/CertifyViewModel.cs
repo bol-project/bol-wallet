@@ -120,6 +120,8 @@ public partial class CertifyViewModel : BaseViewModel
 
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
+			await Task.Delay(1500);
+
 			IsLoading = false;
 		}
 		catch (Exception ex)
