@@ -40,11 +40,20 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	public async Task Initialize()
 	{
-		userData = await _secureRepository.GetAsync<UserData>("userdata");
+		try
+		{
+			userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-		if (userData is null) return;
+			if (userData is null) return;
 
-		BolAccount = await _bolService.GetAccount(userData.Codename);
+			BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
+
+			await Clipboard.SetTextAsync(JsonSerializer.Serialize(BolAccount));
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
 	}
 
 	[RelayCommand]
