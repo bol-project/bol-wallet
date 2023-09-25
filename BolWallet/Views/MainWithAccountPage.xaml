@@ -48,6 +48,7 @@
 			<Button
                 Grid.Row="4"
                 Grid.ColumnSpan="3"
+                Command="{Binding NavigateToUserPageCommand}"
                 FontAttributes="Bold"
                 FontSize="8"
                 HorizontalOptions="FillAndExpand"

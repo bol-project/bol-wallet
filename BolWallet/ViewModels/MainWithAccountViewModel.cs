@@ -70,7 +70,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	[RelayCommand]
 	private void NavigateToUserPage()
 	{
-		NavigationService.NavigateTo<UserViewModel>(true);
+		NavigationService.NavigateTo<AccountViewModel>(true);
 	}
 
 	[RelayCommand]
