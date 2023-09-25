@@ -96,6 +96,9 @@
         <MauiXaml Update="Controls\ExtendedComboBox.xaml">
           <Generator>MSBuild:Compile</Generator>
         </MauiXaml>
+        <MauiXaml Update="Views\AccountPage.xaml">
+          <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+        </MauiXaml>
         <MauiXaml Update="Views\App.xaml">
             <SubType>Designer</SubType>
         </MauiXaml>
@@ -125,6 +128,9 @@
         </MauiXaml>
         <MauiXaml Update="Views\SendBolPage.xaml">
           <Generator>MSBuild:Compile</Generator>
+        </MauiXaml>
+        <MauiXaml Update="Views\TransactionsPage.xaml">
+          <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
         </MauiXaml>
         <MauiXaml Update="Views\UserPage.xaml">
             <Generator>MSBuild:Compile</Generator>
