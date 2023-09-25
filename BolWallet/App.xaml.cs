@@ -37,27 +37,30 @@ public partial class App : Application
 				handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
 #endif
 			});
-		UserData userData = null;
-		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
-
-		if (userData?.BolWallet == null)
+		UserData UserData = null;
+        /*if (UserData?.BolWallet == null)
 		{
 			MainPage = new NavigationPage(mainPage);
 			return;
-		}
+		}*/
 
-		using var scope = serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
 
 		ContentPage contentPage = new ContentPage();
 
-		if (!userData.IsRegisteredAccount)
+        contentPage = scope.ServiceProvider.GetRequiredService<MainWithAccountPage>();
+        MainPage = new NavigationPage(contentPage);
+
+		return;
+
+        if (!UserData.IsRegisteredAccount)
 		{
 			contentPage = scope.ServiceProvider.GetRequiredService<RegistrationPage>();
 			MainPage = new NavigationPage(contentPage);
 			return;
 		}
 
-		if (userData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
+		if (UserData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
 		{
 			contentPage = scope.ServiceProvider.GetRequiredService<CertifyPage>();
 		}

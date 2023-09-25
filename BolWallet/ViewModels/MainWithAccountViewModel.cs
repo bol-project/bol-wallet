@@ -1,12 +1,14 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Newtonsoft.Json;
+using System.Reflection;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
 {
 	private readonly ISecureRepository _secureRepository;
-	private readonly IBolService _bolService;
+	//private readonly IBolService _bolService;
 
 	public string AccountText => "Account";
 	public string SendText => "Send";
@@ -23,36 +25,41 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	private UserData userData;
 
-	public MainWithAccountViewModel(
-		INavigationService navigationService,
-		ISecureRepository secureRepository,
-		IBolService bolService) : base(navigationService)
-	{
-		userData = new UserData
-		{
-			Codename = "Codename Dummy",
-			Edi = "Edi Dummy"
-		};
+    public MainWithAccountViewModel(
+        INavigationService navigationService,
+        ISecureRepository secureRepository
+        /*IBolService bolService*/) : base(navigationService)
+    {
+        userData = new UserData
+        {
+            Codename = "Codename Dummy",
+            Edi = "Edi Dummy"
+        };
+        _secureRepository = secureRepository;
+        //_bolService = bolService;
+    }
+    public async Task Initialize()
+    {
+        try
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using var stream = assembly.GetManifestResourceStream("BolWallet.bol_account.json");
+            using var reader = new StreamReader(stream);
+            var jsonContent = await reader.ReadToEndAsync();
+            _bolAccount = JsonConvert.DeserializeObject<BolAccount>(jsonContent);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
 
-		_secureRepository = secureRepository;
-		_bolService = bolService;
-	}
-
-	public async Task Initialize()
-	{
-		userData = await _secureRepository.GetAsync<UserData>("userdata");
-
-		if (userData is null) return;
-
-		BolAccount = await _bolService.GetAccount(userData.Codename);
-	}
-
-	[RelayCommand]
+    [RelayCommand]
 	private async Task Claim()
 	{
 		try
 		{
-			BolAccount = await _bolService.Claim();
+			//BolAccount = await _bolService.Claim();
 		}
 		catch (Exception ex)
 		{
