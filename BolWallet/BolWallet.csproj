@@ -80,10 +80,6 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<ItemGroup>
-
-	</ItemGroup>
-
     <ItemGroup>
         <MauiXaml Update="Controls\ExtendedDatePicker.xaml">
           <Generator>MSBuild:Compile</Generator>
