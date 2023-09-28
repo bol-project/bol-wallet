@@ -31,16 +31,48 @@
 		<AssemblyName>$(MSBuildProjectName)_App</AssemblyName>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
+		<WarningsAsErrors />
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\Images\bol_logo.png"  BaseSize="128,128" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		
+
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
@@ -48,117 +80,125 @@
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-    <ItemGroup>
-        <MauiXaml Update="Controls\ExtendedDatePicker.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Controls\ExtendedTextEdit.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Controls\ExtendedComboBox.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\App.xaml">
-            <SubType>Designer</SubType>
-        </MauiXaml>
-        <MauiXaml Update="Views\BolCommunityPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\CertifyPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\CreateCodenamePage.xaml">
-            <SubType>Designer</SubType>
-        </MauiXaml>
-        <MauiXaml Update="Views\CreateEdiPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\MainPage.xaml">
-            <SubType>Designer</SubType>
-        </MauiXaml>
-        <MauiXaml Update="Views\MainWithAccountPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\MoveClaimPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\RetrieveBolPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\SendBolPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\UserPage.xaml">
-            <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-        <MauiXaml Update="Views\RegistrationPage.xaml">
-          <Generator>MSBuild:Compile</Generator>
-        </MauiXaml>
-    </ItemGroup>
+	<ItemGroup>
+		<MauiXaml Update="Controls\ExtendedDatePicker.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\ExtendedTextEdit.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\ExtendedComboBox.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\App.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
+		<MauiXaml Update="Views\BolCommunityPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\CertifyPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\CreateCodenamePage.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
+		<MauiXaml Update="Views\CreateEdiPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\MainPage.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
+		<MauiXaml Update="Views\MainWithAccountPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\MoveClaimPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\RetrieveBolPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\SendBolPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\UserPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\RegistrationPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="Controls\ExtendedDatePicker.xaml.cs">
-          <DependentUpon>ExtendedDatePicker.xaml</DependentUpon>
-        </Compile>
-        <Compile Update="Controls\ExtendedTextEdit.xaml.cs">
-          <DependentUpon>ExtendedTextEdit.xaml</DependentUpon>
-        </Compile>
-        <Compile Update="Controls\ExtendedComboBox.xaml.cs">
-          <DependentUpon>ExtendedComboBox.xaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\App.xaml.cs">
-            <DependentUpon>App.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\BolCommunityPage.xaml.cs">
-          <DependentUpon>BolCommunityPage.xaml</DependentUpon>
-        </Compile>
-        <Compile Update="Views\CreateCodenamePage.xaml.cs">
-            <DependentUpon>CreateCodenamePage.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\MainPage.xaml.cs">
-            <DependentUpon>MainPage.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Update="Views\MainWithAccountPage.xaml.cs">
-          <DependentUpon>MainWithAccountPage.xaml</DependentUpon>
-        </Compile>
-    </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Controls\ExtendedDatePicker.xaml.cs">
+			<DependentUpon>ExtendedDatePicker.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Controls\ExtendedTextEdit.xaml.cs">
+			<DependentUpon>ExtendedTextEdit.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Controls\ExtendedComboBox.xaml.cs">
+			<DependentUpon>ExtendedComboBox.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\App.xaml.cs">
+			<DependentUpon>App.xaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\BolCommunityPage.xaml.cs">
+			<DependentUpon>BolCommunityPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\CreateCodenamePage.xaml.cs">
+			<DependentUpon>CreateCodenamePage.xaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\MainPage.xaml.cs">
+			<DependentUpon>MainPage.xaml</DependentUpon>
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\MainWithAccountPage.xaml.cs">
+			<DependentUpon>MainWithAccountPage.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
-    <ItemGroup>
-			  <PackageReference Include="akavache" Version="9.1.20" />
-			  <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
-			  <PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
-			  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-			  <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-			  <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
-			  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-			  <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-        <PackageReference Include="Neo.VM" Version="2.4.3.1" />
-        <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="akavache" Version="9.1.20" />
+		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
+		<PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
+		<PackageReference Include="Neo.VM" Version="2.4.3.1" />
+		<PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
+		<PackageReference Include="SkiaSharp" Version="2.88.5" />
+		<PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.5" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.5" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <None Update="Platforms\iOS\Entitlements.plist">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+	<ItemGroup>
+		<None Update="Platforms\iOS\Entitlements.plist">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
-    <ItemGroup>
-      <None Remove="appsettings.json" />
-      <EmbeddedResource Include="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="appsettings.Development.json" />
-      <EmbeddedResource Include="appsettings.Development.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <DependentUpon>appsettings.json</DependentUpon>
-      </EmbeddedResource>
-    </ItemGroup>
+	<ItemGroup>
+		<None Remove="appsettings.json" />
+		<EmbeddedResource Include="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<None Remove="appsettings.Development.json" />
+		<EmbeddedResource Include="appsettings.Development.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<DependentUpon>appsettings.json</DependentUpon>
+		</EmbeddedResource>
+	</ItemGroup>
 
-    <ItemGroup>
-      <MauiFont Include="Helpers\Icons.cs" />
-    </ItemGroup>
+	<ItemGroup>
+		<MauiFont Include="Helpers\Icons.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	</ItemGroup>
 
 </Project>
