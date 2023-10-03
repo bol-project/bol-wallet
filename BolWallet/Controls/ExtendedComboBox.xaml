@@ -3,23 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BolWallet.Controls.ExtendedComboBox"
              x:Name="this">
-    <ContentView.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Frame Grid.Row="0" BorderColor="{Binding FocusedBorderColor, Source={x:Reference this}}" Padding="8,0,0,0" CornerRadius="5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="8*" />
-                        <ColumnDefinition Width="2*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Picker x:Name="ePicker" Grid.Column="0"  HorizontalOptions="FillAndExpand"
+    <Grid HorizontalOptions="Fill" 
+            BackgroundColor="Transparent"
+            ColumnSpacing="0"
+            RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Margin="1,1,5,1"
+                        Padding="8,0,0,0" BackgroundColor="Transparent"  HorizontalOptions="FillAndExpand" StrokeThickness="1"
+                        Stroke="{Binding FocusedBorderColor, Source={x:Reference this}}"
+                        >
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5" />
+            </Border.StrokeShape>
+            <Grid HorizontalOptions="FillAndExpand" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="{OnPlatform Android=6*, iOS=6*, MacCatalyst=9*, WinUI=9*}" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Picker x:Name="ePicker" Grid.Column="0"  
+                       HorizontalOptions="FillAndExpand"                        
                        FontSize="{Binding FontSize, Source={x:Reference this}}"
                        SelectedIndex="{Binding SelectedIndex, Source={x:Reference this}, Mode=TwoWay}" 
                        SelectedItem ="{Binding SelectedItem , Source={x:Reference this}, Mode=TwoWay}" 
@@ -28,7 +33,7 @@
                        BackgroundColor="Transparent"
                        SelectedIndexChanged="ePicker_SelectedIndexChanged"
                        >
-                        <!--CharacterSpacing, of type double, is the spacing between characters of the item displayed by the Picker.
+                    <!--CharacterSpacing, of type double, is the spacing between characters of the item displayed by the Picker.
 FontAttributes of type FontAttributes, which defaults to FontAtributes.None.
 FontAutoScalingEnabled, of type bool, which determines whether the text respects scaling preferences set in the operating system. The default value of this property is true.
 FontFamily of type string, which defaults to null.
@@ -40,32 +45,31 @@ Title of type string, which defaults to null.
 TitleColor of type Color, the color used to display the Title text.
 VerticalTextAlignment, of type TextAlignment, is the vertical alignment of the text displayed by the Picker.
                    -->
-                    </Picker>
-                    <Label x:Name="LabelTitle" Margin="2,0,0,0" 
-                        Text="{Binding LabelText, Source={x:Reference this}}" 
-                        TextColor="{Binding PlaceholderColor, Source={x:Reference this}}" 
-                        BackgroundColor="White"
-                        VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="Handle_Tapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                    <Label Grid.Column="1" Margin="0,8,0,0" 
+                </Picker>
+                <Label Margin="0,8,0,0" Grid.Column="1"
                         Text="{Binding EndIcon.Glyph, Source={x:Reference this}}"
                         TextColor="{Binding EndIconColor, Source={x:Reference this}}"
                         FontFamily="{Binding EndIcon.FontFamily, Source={x:Reference this}}"
                         FontSize="{Binding EndIcon.Size, Source={x:Reference this}}" 
-                           BackgroundColor="White"/>
-                </Grid>
-            </Frame>
-            <Label Grid.Row="1" 
+                        ZIndex="4"/>
+            </Grid>
+        </Border>
+        <Label x:Name="LabelTitle" Margin="0,0,25,0"
+                        Text="{Binding LabelText, Source={x:Reference this}}" 
+                        TextColor="{Binding PlaceholderColor, Source={x:Reference this}}" 
+                        ZIndex="3"
+                        BackgroundColor="White"
+                        VerticalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Handle_Tapped" />
+            </Label.GestureRecognizers>
+        </Label>
+        <Label Grid.Row="1" 
                 Text="{Binding ErrorText, Source={x:Reference this}}" 
                 IsVisible="{Binding HasError, Source={x:Reference this}, Mode = OneWay}"
                 TextColor="{Binding ErrorColor, Source={x:Reference this}, Mode = OneWay}"
                 BackgroundColor="White"
                 VerticalOptions="Center" 
                 HorizontalOptions="FillAndExpand" />
-        </Grid>
-
-    </ContentView.Content>
+    </Grid>
 </ContentView>
