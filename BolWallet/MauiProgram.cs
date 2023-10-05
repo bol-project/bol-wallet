@@ -45,7 +45,7 @@ public static class MauiProgram
 
 		// Register Services
 		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
-		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
+		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
@@ -60,6 +60,8 @@ public static class MauiProgram
 
 		services.AddBolSdk();
 
+		services.AddSingleton<HttpClient>();
+
 		using var sp = services.BuildServiceProvider();
 
 		var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
@@ -73,7 +75,7 @@ public static class MauiProgram
 		// This model will hold the data from the Register flow
 		services.AddSingleton(content);
 
-		services.ConfigureWalletServices(sp);
+		services.ConfigureWalletServices();
 
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 

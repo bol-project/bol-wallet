@@ -58,4 +58,9 @@ public class SecureRepository : ISecureRepository
 	{
 		if (value is null) throw new ArgumentNullException(nameof(value));
 	}
+
+	public TEntity Get<TEntity>(string key) where TEntity : class
+	{
+		throw new NotImplementedException();
+	}
 }

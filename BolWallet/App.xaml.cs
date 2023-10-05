@@ -42,8 +42,8 @@ public partial class App : Application
 			});
 			
 		SKTextRunLookup.Instance.AddFontAwesome();
-		UserData userData = null;
-		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
+
+		UserData userData = secureRepository.Get<UserData>("userdata");
 
 		if (userData?.BolWallet == null)
 		{

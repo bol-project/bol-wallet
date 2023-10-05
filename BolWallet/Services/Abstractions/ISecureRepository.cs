@@ -2,6 +2,8 @@ namespace BolWallet.Services.Abstractions;
 
 public interface ISecureRepository
 {
+	TEntity Get<TEntity>(string key) where TEntity : class;
+
 	/// <summary>
 	/// Gets the value of this <see cref="key"/> from the secure encrypted storage.
 	/// </summary>
