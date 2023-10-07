@@ -6,7 +6,8 @@
     Title="Register your Main Address"
 	xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:RegistrationViewModel"
-	BackgroundColor="{DynamicResource SecondaryColor}">
+	BackgroundColor="{DynamicResource SecondaryColor}"
+	NavigationPage.HasBackButton="False">
 
 	<StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 		<Label

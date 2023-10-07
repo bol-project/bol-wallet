@@ -73,6 +73,8 @@ public partial class MainViewModel : BaseViewModel
 			userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
 
 			await _secureRepository.SetAsync("userdata", userData);
+
+			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 		}
 		catch (Exception ex)
 		{

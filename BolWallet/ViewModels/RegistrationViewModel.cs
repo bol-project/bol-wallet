@@ -57,8 +57,6 @@ public partial class RegistrationViewModel : BaseViewModel
 
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
-			await Task.Delay(1500);
-
 			await NavigationService.NavigateTo<CertifyViewModel>(true);
 		}
 		catch (Exception ex)

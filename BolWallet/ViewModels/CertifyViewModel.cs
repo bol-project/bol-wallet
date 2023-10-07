@@ -18,7 +18,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[ObservableProperty]
-	private string _certifierCodename = "";
+	private string _certifierCodename = string.Empty;
 
 	[ObservableProperty]
 	private bool _isLoading = false;
@@ -37,22 +37,52 @@ public partial class CertifyViewModel : BaseViewModel
 
 	private UserData userData;
 
+	private Timer _pollingTimer;
+
 	public async Task Initialize()
 	{
 		userData = await _secureRepository.GetAsync<UserData>("userdata");
 
 		if (userData is null) return;
 
-		BolAccount = await _bolService.GetAccount(userData.Codename);
+		StartPolling();
+	}
 
-		if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
+	private void StartPolling()
+	{
+		_pollingTimer = new Timer(async (e) =>
 		{
-			Certifications = BolAccount.Certifications + 1;
-			MandatoryCertifiers = BolAccount.MandatoryCertifiers;
+			await UpdateBolAccount();
+		}, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+	}
+
+	private async Task UpdateBolAccount()
+	{
+		try
+		{
+			BolAccount = await _bolService.GetAccount(userData.Codename);
+
+			if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
+			{
+				Certifications = BolAccount.Certifications + 1;
+				MandatoryCertifiers = BolAccount.MandatoryCertifiers;
+			}
+			else if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+			{
+				IsCertified = true;
+			}
+			else if(BolAccount.AccountStatus == AccountStatus.Open)
+			{
+				userData.AccountStatus = BolAccount.AccountStatus;
+
+				await _secureRepository.SetAsync("userdata", userData);
+
+				await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+			}
 		}
-		else if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+		catch (Exception ex)
 		{
-			IsCertified = true;
+			await Toast.Make(ex.Message).Show();
 		}
 	}
 
@@ -66,8 +96,6 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Delay(100);
 
 			BolAccount bolAccount = await _bolService.SelectMandatoryCertifiers();
-
-			MandatoryCertifiers = bolAccount.MandatoryCertifiers;
 		}
 		catch (Exception ex)
 		{
@@ -92,6 +120,8 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Delay(100);
 
 			BolAccount bolAccount = await _bolService.RequestCertification(CertifierCodename);
+
+			CertifierCodename = string.Empty;
 
 			IsLoading = false;
 		}
@@ -120,9 +150,9 @@ public partial class CertifyViewModel : BaseViewModel
 
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
-			await Task.Delay(1500);
-
 			IsLoading = false;
+
+			_pollingTimer?.Dispose();
 
 			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 		}
