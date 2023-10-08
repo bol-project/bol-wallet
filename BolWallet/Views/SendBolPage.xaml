@@ -8,37 +8,38 @@
     x:DataType="viewModels:SendBolViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
-    <ContentPage.Resources>
-        <StyleSheet>
-            <![CDATA[
+	<ContentPage.Resources>
+		<StyleSheet>
+			<![CDATA[
             .border-style {
                 background-color: lightgray;
             }
             ]]>
-        </StyleSheet>
-        <ResourceDictionary>
+		</StyleSheet>
+		<ResourceDictionary>
 
-            <Style TargetType="controls1:ExtendedTextEdit">
-                <Setter Property="ClearIconVisibility" Value="Never" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
-                <Setter Property="IsErrorIconVisible" Value="False" />
-                <Setter Property="BoxHeight" Value="56" />
-                <Setter Property="FontSize" Value="18" />
-            </Style>
+			<Style TargetType="controls1:ExtendedTextEdit">
+				<Setter Property="ClearIconVisibility" Value="Never" />
+				<Setter Property="HorizontalOptions" Value="Fill" />
+				<Setter Property="IsErrorIconVisible" Value="False" />
+				<Setter Property="BoxHeight" Value="56" />
+				<Setter Property="FontSize" Value="18" />
+			</Style>
 
-            <Color x:Key="FocusedColor">#718792</Color>
+			<Color x:Key="FocusedColor">#718792</Color>
 
-        </ResourceDictionary>
-    </ContentPage.Resources>
-    
-    <ScrollView>
-        <Grid
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<ScrollView>
+	
+		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
-            <Label
+			<Label
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
                 FontSize="32"
@@ -47,40 +48,39 @@
                 SemanticProperties.HeadingLevel="Level1"
                 Text="{Binding SendBolLabel}" />
 
-            <controls1:ExtendedTextEdit 
-                    Grid.Row="1"
-                    LabelText="{Binding FromAddressText}"
-                    Text="{Binding SendBolForm.ComAddress, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+			<Picker 
+			    Grid.Row="1"
+			    Title="From Commercial Address" 
+                ItemsSource="{Binding DisplayList}"
+			    SelectedIndex="{Binding SelectedIndex}" >
+			</Picker>
 
-            <controls1:ExtendedTextEdit 
-                    Grid.Row="2"
-                    LabelText="{Binding RecieverCodenameText}"
-                    Text="{Binding SendBolForm.RecieverCodename, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+			<controls1:ExtendedTextEdit 
+                Grid.Row="2"
+                LabelText="{Binding ReceiverAddressText}"
+                Text="{Binding SendBolForm.ReceiverAddress, Mode=TwoWay}" />
 
-            <controls1:ExtendedTextEdit 
+			<controls1:ExtendedTextEdit 
                     Grid.Row="3"
-                    LabelText="{Binding RecieverAddressText}"
-                    Text="{Binding SendBolForm.RecieverAddress, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+                    LabelText="{Binding ReceiverCodenameText}"
+                    Text="{Binding SendBolForm.ReceiverCodename, Mode=TwoWay}" />
 
-            <controls1:ExtendedTextEdit 
+
+			<controls1:ExtendedTextEdit 
                     Grid.Row="4"
                     LabelText="{Binding AmountText}"
-                    Text="{Binding SendBolForm.Amount, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+                    Text="{Binding SendBolForm.Amount, Mode=TwoWay}" />
 
-            <Label Grid.Row="5" Text="{Binding TestLabel}"/>
+			<Label Grid.Row="5" Text="{Binding ResultLabel}"/>
 
-            <Button
+			<Button
                 Grid.Row="6"
                 Command="{Binding SendBolCommand}"
                 FontAttributes="Bold"
                 FontSize="8"
                 HorizontalOptions="FillAndExpand"
-                Text="{Binding SendText}" />
+                Text="Send" />
 
-        </Grid>
-    </ScrollView>
+		</Grid>
+	</ScrollView>
 </ContentPage>    

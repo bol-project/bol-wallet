@@ -1,7 +1,4 @@
 using CommunityToolkit.Maui.Alerts;
-using Microsoft.Maui.Storage;
-using System.Reflection;
-using static Akavache.Sqlite3.Internal.SQLite3;
 
 namespace BolWallet.ViewModels;
 
