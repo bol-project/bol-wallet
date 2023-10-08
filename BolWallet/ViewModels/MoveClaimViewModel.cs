@@ -30,10 +30,10 @@ public partial class MoveClaimViewModel : BaseViewModel
 	public List<KeyValuePair<string, string>> _commercialBalances;
 
 	[ObservableProperty]
-	public List<string> _displayList;
+	public List<string> _commercialBalancesDisplayList;
 
 	[ObservableProperty]
-	public int _selectedIndex;
+	public int _selectedCommercialAddressIndex;
 
 	public MoveClaimViewModel(INavigationService navigationService,
 		IAddressTransformer addressTransformer,
@@ -69,7 +69,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	{
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
-		DisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
+		CommercialBalancesDisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
 	}
 
 	[RelayCommand]
@@ -77,7 +77,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	{
 		try
 		{
-			MoveClaimForm.ComAddress = CommercialBalances[SelectedIndex].Key;
+			MoveClaimForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
 
 			BolAccount = await _bolService.TransferClaim(
 			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress),

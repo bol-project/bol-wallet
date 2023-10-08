@@ -30,10 +30,10 @@ public partial class SendBolViewModel : BaseViewModel
 	public List<KeyValuePair<string, string>> _commercialBalances;
 
 	[ObservableProperty]
-	public List<string> _displayList;
+	public List<string> _commercialBalancesDisplayList;
 
 	[ObservableProperty]
-	public int _selectedIndex;
+	public int _selectedCommercialAddressIndex;
 
 	private readonly IAddressTransformer _addressTransformer;
 	private readonly ISecureRepository _secureRepository;
@@ -73,7 +73,7 @@ public partial class SendBolViewModel : BaseViewModel
 	{
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
-		DisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
+		CommercialBalancesDisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
 	}
 
 	[RelayCommand]
@@ -81,7 +81,7 @@ public partial class SendBolViewModel : BaseViewModel
 	{
 		try
 		{
-			SendBolForm.ComAddress = CommercialBalances[SelectedIndex].Key;
+			SendBolForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
 
 			BolAccount bolAccount = await _bolService.Transfer(
 			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress),

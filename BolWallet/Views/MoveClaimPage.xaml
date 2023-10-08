@@ -62,8 +62,8 @@
 			<Picker 
                 Grid.Row="3"
                 Title="Commercial Address" 
-                ItemsSource="{Binding DisplayList}"
-                SelectedIndex="{Binding SelectedIndex}" >       
+                ItemsSource="{Binding CommercialBalancesDisplayList}"
+                SelectedIndex="{Binding SelectedCommercialAddressIndex}" >       
 			</Picker>
 
             <controls1:ExtendedTextEdit 
