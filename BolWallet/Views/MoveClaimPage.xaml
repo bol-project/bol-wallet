@@ -35,7 +35,7 @@
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
             <Label
@@ -46,22 +46,36 @@
                 SemanticProperties.HeadingLevel="Level1"
                 Text="{Binding MoveClaimLabel}" />
 
-            <controls1:ExtendedTextEdit 
-                    Grid.Row="1"
-                    LabelText="{Binding ToComAddressText}"
-                    Text="{Binding MoveClaimForm.ComAddress, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+			<Label 
+	            Grid.Row="1"
+                Grid.ColumnSpan="3" 
+	            Text="Total Balance" 
+	            TextColor="Black"/>
+			            <Frame   
+	            Grid.Row="2"
+                Grid.ColumnSpan="3" 
+	            BackgroundColor="WhiteSmoke" 
+	            Padding="10">
+				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
+			</Frame>
+
+			<Picker 
+                Grid.Row="3"
+                Title="Commercial Address" 
+                ItemsSource="{Binding DisplayList}"
+                SelectedIndex="{Binding SelectedIndex}" >       
+			</Picker>
 
             <controls1:ExtendedTextEdit 
-                    Grid.Row="2"
+                    Grid.Row="4"
                     LabelText="{Binding AmountText}"
                     Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
                     TextTransform="Uppercase"/>
 
-            <Label Grid.Row="3" Text="{Binding TestLabel}"/>
+            <Label Grid.Row="5" Text="{Binding ResultLabel}"/>
 
             <Button
-                Grid.Row="4"
+                Grid.Row="6"
                 Command="{Binding MoveClaimCommand}"
                 FontAttributes="Bold"
                 FontSize="8"

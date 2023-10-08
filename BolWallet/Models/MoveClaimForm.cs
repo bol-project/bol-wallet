@@ -1,26 +1,10 @@
 ﻿namespace BolWallet.Models;
 public partial class MoveClaimForm : ObservableObject
 {
-    private string _comAddress;
-    public string ComAddress
-    {
-        get => _comAddress;
-        set
-        {
-            _comAddress = value;
-            OnPropertyChanged();
-        }
-    }
+	[ObservableProperty]
+	public string _comAddress;
 
-    private double _amount;
-    public double Amount
-    {
-        get => _amount;
-        set
-        {
-            _amount = value;
-            OnPropertyChanged();
-        }
-    }
+	[ObservableProperty]
+	private decimal _amount;
 }
 

@@ -27,7 +27,7 @@ public partial class SendBolViewModel : BaseViewModel
 	private BolAccount _bolAccount = new();
 
 	[ObservableProperty]
-	public List<KeyValuePair<string,string>> _commercialBalances;
+	public List<KeyValuePair<string, string>> _commercialBalances;
 
 	[ObservableProperty]
 	public List<string> _displayList;
@@ -61,14 +61,19 @@ public partial class SendBolViewModel : BaseViewModel
 
 			BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
 
-			CommercialBalances = BolAccount.CommercialBalances.ToList();
-
-			DisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
+			GenerateCommercialBalanceDisplayList();
 		}
 		catch (Exception ex)
 		{
 			await Toast.Make(ex.Message).Show();
 		}
+	}
+
+	private void GenerateCommercialBalanceDisplayList()
+	{
+		CommercialBalances = BolAccount.CommercialBalances.ToList();
+
+		DisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
 	}
 
 	[RelayCommand]
@@ -84,6 +89,7 @@ public partial class SendBolViewModel : BaseViewModel
 			  SendBolForm.ReceiverCodename,
 			  new BigInteger(SendBolForm.Amount));
 
+			GenerateCommercialBalanceDisplayList();
 
 			ResultLabel = "From Address: " + SendBolForm.ComAddress +
 						"\nReceiver Codename: " + SendBolForm.ReceiverCodename +
