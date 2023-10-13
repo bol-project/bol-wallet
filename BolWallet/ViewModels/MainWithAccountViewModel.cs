@@ -46,6 +46,12 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	public async Task Initialize()
 	{
+		await UpdateBolAccount();
+	}
+
+	[RelayCommand]
+	private async Task UpdateBolAccount()
+	{
 		try
 		{
 			userData = await _secureRepository.GetAsync<UserData>("userdata");
@@ -53,7 +59,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 			CodeName = userData.Codename;
 			MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 
-			BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
+			BolAccount = await _bolService.GetAccount(userData.Codename);
 
 			IsRegistered = true;
 
@@ -113,7 +119,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task NavigateToCertifyPage()
 	{
-		if(IsRegistered)
+		if (IsRegistered)
 			await NavigationService.NavigateTo<CertifyViewModel>(true);
 		else
 			await Toast.Make("CodeName is not a registered Bol Account.").Show();

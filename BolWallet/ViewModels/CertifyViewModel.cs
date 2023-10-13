@@ -37,25 +37,14 @@ public partial class CertifyViewModel : BaseViewModel
 
 	private UserData userData;
 
-	private Timer _pollingTimer;
-
 	public async Task Initialize()
 	{
 		userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-		if (userData is null) return;
-
-		StartPolling();
+		await UpdateBolAccount();
 	}
 
-	private void StartPolling()
-	{
-		_pollingTimer = new Timer(async (e) =>
-		{
-			await UpdateBolAccount();
-		}, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
-	}
-
+	[RelayCommand]
 	private async Task UpdateBolAccount()
 	{
 		try
@@ -90,6 +79,8 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Delay(100);
 
 			BolAccount bolAccount = await _bolService.SelectMandatoryCertifiers();
+
+			await Toast.Make("Certifiers selected for this certification round").Show();
 		}
 		catch (Exception ex)
 		{
@@ -116,6 +107,8 @@ public partial class CertifyViewModel : BaseViewModel
 			BolAccount bolAccount = await _bolService.RequestCertification(CertifierCodename);
 
 			CertifierCodename = string.Empty;
+
+			await Toast.Make("Certification request sent successfully.").Show();
 
 			IsLoading = false;
 		}
@@ -145,8 +138,6 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
 			IsLoading = false;
-
-			_pollingTimer?.Dispose();
 
 			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 		}
