@@ -111,39 +111,41 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToCertifyPage()
+	private async Task NavigateToCertifyPage()
 	{
 		if(IsRegistered)
-			NavigationService.NavigateTo<CertifyViewModel>(true);
+			await NavigationService.NavigateTo<CertifyViewModel>(true);
+		else
+			await Toast.Make("CodeName is not a registered Bol Account.").Show();
 	}
 
 	[RelayCommand]
-	private void NavigateToUserPage()
+	private async Task NavigateToUserPage()
 	{
-		NavigationService.NavigateTo<UserViewModel>(true);
+		await NavigationService.NavigateTo<UserViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToBolCommunityPage()
+	private async Task NavigateToBolCommunityPage()
 	{
-		NavigationService.NavigateTo<BolCommunityViewModel>(true);
+		await NavigationService.NavigateTo<BolCommunityViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToSendBolPage()
+	private async Task NavigateToSendBolPage()
 	{
-		NavigationService.NavigateTo<SendBolViewModel>(true);
+		await NavigationService.NavigateTo<SendBolViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToMoveClaimPage()
+	private async Task NavigateToMoveClaimPage()
 	{
-		NavigationService.NavigateTo<MoveClaimViewModel>(true);
+		await NavigationService.NavigateTo<MoveClaimViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToRetrieveBolPage()
+	private async Task NavigateToRetrieveBolPage()
 	{
-		NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+		await NavigationService.NavigateTo<RetrieveBolViewModel>(true);
 	}
 }

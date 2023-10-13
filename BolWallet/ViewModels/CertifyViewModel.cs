@@ -62,22 +62,16 @@ public partial class CertifyViewModel : BaseViewModel
 		{
 			BolAccount = await _bolService.GetAccount(userData.Codename);
 
+			if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+			{
+				IsCertified = true;
+				return;
+			}
+
 			if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
 			{
 				Certifications = BolAccount.Certifications + 1;
 				MandatoryCertifiers = BolAccount.MandatoryCertifiers;
-			}
-			else if (BolAccount.AccountStatus == AccountStatus.PendingFees)
-			{
-				IsCertified = true;
-			}
-			else if(BolAccount.AccountStatus == AccountStatus.Open)
-			{
-				userData.AccountStatus = BolAccount.AccountStatus;
-
-				await _secureRepository.SetAsync("userdata", userData);
-
-				await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 			}
 		}
 		catch (Exception ex)
