@@ -4,8 +4,7 @@
              x:Class="BolWallet.Views.CertifyPage"
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
              Title="Certify Your Account"
-			 BackgroundColor="{DynamicResource SecondaryColor}"
-			 NavigationPage.HasBackButton="False">
+			 BackgroundColor="{DynamicResource SecondaryColor}">
 
 	<StackLayout  Spacing="15" Padding="10" >
 		<Label
