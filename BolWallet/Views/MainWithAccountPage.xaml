@@ -7,7 +7,8 @@
     BackgroundColor="{DynamicResource SecondaryColor}"
 	xmlns:Converters="clr-namespace:BolWallet.Converters"
 	xmlns:helpers="clr-namespace:BolWallet.Helpers"
-	Title="Account Main Page">
+	Title="Account Main Page"
+	NavigationPage.HasBackButton="False">
 	
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
