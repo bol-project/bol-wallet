@@ -1,5 +1,5 @@
 ﻿using BolWallet.Controls;
-
+using SkiaSharp.Extended.Iconify;
 namespace BolWallet;
 
 public partial class App : Application
@@ -15,7 +15,10 @@ public partial class App : Application
 		InitializeComponent();
 
 		UserAppTheme = AppTheme.Light;
-
+		
+#if WINDOWS
+        Microsoft.Maui.Handlers.PickerHandler.Mapper.Add(nameof(View.HorizontalOptions), MapHorizontalOptions);
+#endif
 		Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(nameof(ExtendedTextEdit),
 			(handler, view) =>
 			{
@@ -76,4 +79,29 @@ public partial class App : Application
 
 		return window;
 	}
+
+#if WINDOWS
+    private static void MapHorizontalOptions(IViewHandler handler, IView view)
+    {
+	    if (view is not View mauiView)
+	    {
+		    return;
+	    }
+
+	    if (handler.PlatformView is not Microsoft.UI.Xaml.FrameworkElement element)
+	    {
+		    return;
+	    }
+
+	    element.HorizontalAlignment = mauiView.HorizontalOptions.Alignment switch
+	    {
+		    LayoutAlignment.Start  => Microsoft.UI.Xaml.HorizontalAlignment.Left,
+		    LayoutAlignment.Center => Microsoft.UI.Xaml.HorizontalAlignment.Center,
+		    LayoutAlignment.End    => Microsoft.UI.Xaml.HorizontalAlignment.Right,
+		    LayoutAlignment.Fill   => Microsoft.UI.Xaml.HorizontalAlignment.Stretch,
+		    _ => throw new ArgumentOutOfRangeException()
+	    };
+    }
+
+#endif
 }

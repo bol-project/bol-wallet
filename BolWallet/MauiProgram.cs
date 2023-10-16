@@ -3,23 +3,36 @@ using Akavache;
 using Bol.App.Core.Services;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
+using BolWallet.Controls;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using SkiaSharp.Views.Maui.Handlers;
 using Country = BolWallet.Models.Country;
 namespace BolWallet;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
+    public static MauiAppBuilder UseRadialControl(this MauiAppBuilder builder)
+    {
+        builder.ConfigureMauiHandlers(h =>
+        {
+            h.AddHandler<RadialMenu, SKCanvasViewHandler>();
+        });
+
+        return builder;
+    }
+    
+    public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
 
 		builder
 			.UseMauiApp<App>()
-			.UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
+            .UseMauiCommunityToolkit()
+            .UseRadialControl()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -32,7 +45,7 @@ public static class MauiProgram
 
 		// Register Services
 		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
-		services.AddScoped<ISecureRepository>(_ => new SecureRepository(SecureStorage.Default));
+		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
@@ -47,6 +60,8 @@ public static class MauiProgram
 
 		services.AddBolSdk();
 
+		services.AddSingleton<HttpClient>();
+
 		using var sp = services.BuildServiceProvider();
 
 		var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
@@ -60,7 +75,7 @@ public static class MauiProgram
 		// This model will hold the data from the Register flow
 		services.AddSingleton(content);
 
-		services.ConfigureWalletServices(sp);
+		services.ConfigureWalletServices();
 
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 

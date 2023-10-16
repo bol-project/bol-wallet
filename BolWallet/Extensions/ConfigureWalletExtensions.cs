@@ -7,21 +7,29 @@ using Microsoft.Extensions.Options;
 namespace BolWallet.Extensions;
 public static class ConfigureWalletExtensions
 {
-	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services, IServiceProvider sp)
+	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services)
 	{
-		ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
+		services.AddTransient<IContextAccessor, WalletContextAccessor>();
 
-		UserData userData = null;
-		Task.Run(async () => userData = await secureRepository.GetAsync<UserData>("userdata")).Wait();
+		services.AddTransient<IBolService, BolService>();
 
-		if (userData?.BolWallet is not null)
+		services.AddTransient<IOptions<WalletConfiguration>>((sp) =>
 		{
-			services.AddSingleton(typeof(IOptions<WalletConfiguration>), Microsoft.Extensions.Options.Options.Create(new WalletConfiguration { Password = userData.WalletPassword }));
-			services.AddSingleton(typeof(IOptions<Bol.Core.Model.BolWallet>), Microsoft.Extensions.Options.Options.Create(userData.BolWallet));
+			ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
 
-			services.AddSingleton<IContextAccessor, WalletContextAccessor>();
-			services.AddSingleton<IBolService, BolService>();
-		}
+			var userData = secureRepository.Get<UserData>("userdata");
+
+			return Options.Create(new WalletConfiguration { Password = userData?.WalletPassword });
+		});
+
+		services.AddTransient<IOptions<Bol.Core.Model.BolWallet>>((sp) =>
+		{
+			ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
+
+			var userData = secureRepository.Get<UserData>("userdata");
+
+			return Options.Create(userData?.BolWallet);
+		});
 
 		return services;
 	}
