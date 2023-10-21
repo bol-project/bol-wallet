@@ -8,34 +8,32 @@ namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
 {
 	private readonly ISecureRepository _secureRepository;
-	//private readonly IBolService _bolService;
+    //private readonly IBolService _bolService;
 
-	public string AccountText => "Account";
+    private BolAccount _bolAccount = new();
+	public string WellcomeText => "Welcome";
+	public string BalanceText => "Balance";
+    public string AccountText => "Account";
 	public string SendText => "Send";
 	public string RecieveText => "Recieve";
 	public string ClaimText => "Claim";
 	public string MoveClaimText => "Move Claim";
 	public string CommunityText => "Bol Community";
 
-	[ObservableProperty]
-	private BolAccount _bolAccount = new();
+	public string Codename => _bolAccount.CodeName;
+	public string Balance => _bolAccount.ClaimBalance + " BOL";
 
 	[ObservableProperty]
 	private bool _isLoading = false;
 
-	private UserData userData;
 
     public MainWithAccountViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository
         /*IBolService bolService*/) : base(navigationService)
     {
-        userData = new UserData
-        {
-            Codename = "Codename Dummy",
-            Edi = "Edi Dummy"
-        };
         _secureRepository = secureRepository;
+		InitAsync();
         //_bolService = bolService;
     }
     public async Task Initialize()
@@ -96,4 +94,16 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	{
 		NavigationService.NavigateTo<RetrieveBolViewModel>(true);
 	}
+
+    private async Task InitAsync()
+    {
+        string filePath = "TestAccount.json";
+        var stream = await FileSystem.OpenAppPackageFileAsync(filePath);
+
+        if (stream != null)
+        {
+            string str = (new System.IO.StreamReader(stream)).ReadToEnd();
+            _bolAccount = JsonConvert.DeserializeObject<BolAccount>(str);
+        }
+    }
 }

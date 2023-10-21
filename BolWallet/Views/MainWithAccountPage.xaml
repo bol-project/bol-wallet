@@ -15,37 +15,58 @@
             RowSpacing="25"
             ColumnSpacing="8">
 
-			<Label 
-				Grid.Row="0"
+            <Frame
+                Grid.Row="1"
                 Grid.ColumnSpan="3" 
-				Text="Codename" 
-				TextColor="Black"/>
-			<Frame   
-				Grid.Row="1"
-                Grid.ColumnSpan="3" 
-				BackgroundColor="WhiteSmoke" 
-				Padding="10">
-				<Label Text="{Binding BolAccount.CodeName}" TextColor="Black">
-					<Label.GestureRecognizers>
-						<TapGestureRecognizer Tapped="OnTapCopy"/>
-					</Label.GestureRecognizers>
-				</Label>
-			</Frame>
+                CornerRadius="25"
+                BackgroundColor="#582cd4">
+                <StackLayout
+                    VerticalOptions="CenterAndExpand"
+                    Orientation="Vertical">
+                    <Label 
+				        Text="{Binding WellcomeText}"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+				        TextColor="White"/>
+                    <Label 
+                        Text="{Binding Codename}"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+                        FontSize="10"
+                        TextColor="White">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTapCopy"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </Frame>
+ 
+            <Frame
+                Grid.Row="3"
+                Grid.ColumnSpan="3"
+                CornerRadius="45"
+                BackgroundColor="#582cd4">
+                <StackLayout
+                    VerticalOptions="CenterAndExpand"
+                    Orientation="Vertical">
+                    <Label 
+				        Text="{Binding BalanceText}"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        FontAttributes="Bold"
+				        TextColor="Yellow"/>
+                    <Label
+                        Text="{Binding Balance}"
+                        HorizontalOptions="Center"
+                        HorizontalTextAlignment="Center"
+                        FontSize="24"
+                        TextColor="Yellow"/>
+                </StackLayout>
+            </Frame>
 
-			<Label 
-				Grid.Row="2"
-                Grid.ColumnSpan="3" 
-				Text="Total Balance" 
-				TextColor="Black"/>
-			<Frame   
-				Grid.Row="3"
-                Grid.ColumnSpan="3" 
-				BackgroundColor="WhiteSmoke" 
-				Padding="10">
-				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
-			</Frame>
-
-			<Button
+            <Button
                 Grid.Row="4"
                 Grid.ColumnSpan="3"
                 Command="{Binding NavigateToUserPageCommand}"
