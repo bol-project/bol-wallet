@@ -6,4 +6,15 @@ public partial class TransactionsPage : ContentPage
         InitializeComponent();
         BindingContext = transactionsViewModel;
     }
+
+    private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        if(e.SelectedItem != null)
+        {
+            BolTransactionEntryListItem transaction = (BolTransactionEntryListItem)e.SelectedItem;
+            transaction.IsExpanded = !transaction.IsExpanded;
+            ((ListView)sender).SelectedItem = null;
+        }
+        
+    }
 }

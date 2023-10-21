@@ -25,8 +25,8 @@ public partial class TransactionsViewModel : BaseViewModel
     public string ReceiverAddressLabel => "Reciever Address: ";
     public string AmountLabel => "Amount: ";
 
-    private List<BolTransactionEntry> _transactions;
-    public List<BolTransactionEntry> Transactions
+    private List<BolTransactionEntryListItem> _transactions;
+    public List<BolTransactionEntryListItem> Transactions
     {
         get => _transactions;
         set
@@ -56,9 +56,12 @@ public partial class TransactionsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void NavigateToTSettingsPage()
+    private void HideAllTransactionDetails()
     {
-        //NavigationService.NavigateTo<>(true);
+        foreach (var transaction in Transactions) 
+        {
+            transaction.IsExpanded = false;
+        }
     }
 
     private async Task InitAsync()
@@ -70,7 +73,11 @@ public partial class TransactionsViewModel : BaseViewModel
         {
             string str = (new System.IO.StreamReader(stream)).ReadToEnd();
             _bolAccount = JsonConvert.DeserializeObject<BolAccount>(str);
-            Transactions = _bolAccount.Transactions.Values.ToList();
+            var userCodename = _bolAccount.CodeName;
+            foreach(BolTransactionEntry transaction in _bolAccount.Transactions.Values)
+            {
+                Transactions.Add(new BolTransactionEntryListItem(userCodename, transaction));
+            }
         }
     }
 
