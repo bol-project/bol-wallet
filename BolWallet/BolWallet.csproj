@@ -91,8 +91,8 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\AccountPage.xaml">
-          <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-        </MauiXaml>
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
 		<MauiXaml Update="Views\App.xaml">
 			<SubType>Designer</SubType>
 		</MauiXaml>
@@ -141,6 +141,10 @@
 		<Compile Update="Controls\ExtendedComboBox.xaml.cs">
 			<DependentUpon>ExtendedComboBox.xaml</DependentUpon>
 		</Compile>
+    <Compile Update="Views\AccountPage.xaml.cs">
+      <DependentUpon>AccountPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
 		<Compile Update="Views\App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 			<SubType>Code</SubType>
@@ -199,18 +203,6 @@
 	<ItemGroup>
 		<MauiFont Include="Helpers\Icons.cs" />
 	</ItemGroup>
-    <ItemGroup>
-      <None Remove="appsettings.json" />
-      <None Remove="TestAccount.json" />
-      <EmbeddedResource Include="appsettings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="appsettings.Development.json" />
-      <EmbeddedResource Include="appsettings.Development.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <DependentUpon>appsettings.json</DependentUpon>
-      </EmbeddedResource>
-    </ItemGroup>
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
