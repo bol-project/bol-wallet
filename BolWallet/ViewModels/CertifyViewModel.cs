@@ -18,7 +18,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[ObservableProperty]
-	private string _certifierCodename = "";
+	private string _certifierCodename = string.Empty;
 
 	[ObservableProperty]
 	private bool _isLoading = false;
@@ -41,18 +41,31 @@ public partial class CertifyViewModel : BaseViewModel
 	{
 		userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-		if (userData is null) return;
+		await UpdateBolAccount();
+	}
 
-		BolAccount = await _bolService.GetAccount(userData.Codename);
-
-		if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
+	[RelayCommand]
+	private async Task UpdateBolAccount()
+	{
+		try
 		{
-			Certifications = BolAccount.Certifications + 1;
-			MandatoryCertifiers = BolAccount.MandatoryCertifiers;
+			BolAccount = await _bolService.GetAccount(userData.Codename);
+
+			if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+			{
+				IsCertified = true;
+				return;
+			}
+
+			if (BolAccount.AccountStatus == AccountStatus.PendingCertifications)
+			{
+				Certifications = BolAccount.Certifications + 1;
+				MandatoryCertifiers = BolAccount.MandatoryCertifiers;
+			}
 		}
-		else if (BolAccount.AccountStatus == AccountStatus.PendingFees)
+		catch (Exception ex)
 		{
-			IsCertified = true;
+			await Toast.Make(ex.Message).Show();
 		}
 	}
 
@@ -67,7 +80,7 @@ public partial class CertifyViewModel : BaseViewModel
 
 			BolAccount bolAccount = await _bolService.SelectMandatoryCertifiers();
 
-			MandatoryCertifiers = bolAccount.MandatoryCertifiers;
+			await Toast.Make("Certifiers selected for this certification round").Show();
 		}
 		catch (Exception ex)
 		{
@@ -92,6 +105,10 @@ public partial class CertifyViewModel : BaseViewModel
 			await Task.Delay(100);
 
 			BolAccount bolAccount = await _bolService.RequestCertification(CertifierCodename);
+
+			CertifierCodename = string.Empty;
+
+			await Toast.Make("Certification request sent successfully.").Show();
 
 			IsLoading = false;
 		}
@@ -119,8 +136,6 @@ public partial class CertifyViewModel : BaseViewModel
 			userData.AccountStatus = BolAccount.AccountStatus;
 
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
-
-			await Task.Delay(1500);
 
 			IsLoading = false;
 
