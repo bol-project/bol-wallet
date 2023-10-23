@@ -8,8 +8,6 @@ using System.Numerics;
 namespace BolWallet.ViewModels;
 public partial class SendBolViewModel : BaseViewModel
 {
-	private UserData _userData;
-
 	public string SendBolLabel => "Send Bol";
 
 	public string FromAddressText => "From Address:";
@@ -18,7 +16,7 @@ public partial class SendBolViewModel : BaseViewModel
 	public string AmountText => "";
 
 	[ObservableProperty]
-	public string _resultLabel;
+	public string _result;
 
 	[ObservableProperty]
 	private SendBolForm _sendBolForm;
@@ -87,14 +85,16 @@ public partial class SendBolViewModel : BaseViewModel
 			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress),
 			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress),
 			  SendBolForm.ReceiverCodename,
-			  new BigInteger(SendBolForm.Amount));
+			  SendBolForm.ActualAmount);
 
 			GenerateCommercialBalanceDisplayList();
 
-			ResultLabel = "From Address: " + SendBolForm.ComAddress +
+			Result = "From Address: " + SendBolForm.ComAddress +
 						"\nReceiver Codename: " + SendBolForm.ReceiverCodename +
 						"\nReceiver Address: " + SendBolForm.ReceiverAddress +
-						"\nAmount: " + SendBolForm.Amount;
+						"\nAmount: " + SendBolForm.ActualAmount;
+
+			await Toast.Make(Result).Show();
 		}
 		catch (Exception ex)
 		{

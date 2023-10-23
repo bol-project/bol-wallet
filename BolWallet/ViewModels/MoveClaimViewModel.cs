@@ -21,7 +21,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	private MoveClaimForm _moveClaimForm;
 
 	[ObservableProperty]
-	public string _resultLabel;
+	public string _result;
 
 	[ObservableProperty]
 	private BolAccount _bolAccount = new();
@@ -81,12 +81,14 @@ public partial class MoveClaimViewModel : BaseViewModel
 
 			BolAccount = await _bolService.TransferClaim(
 			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress),
-			  new BigInteger(MoveClaimForm.Amount));
+			  MoveClaimForm.ActualAmount);
 
 			GenerateCommercialBalanceDisplayList();
 
-			ResultLabel = "To Address: " + MoveClaimForm.ComAddress +
-						  "\nAmount: " + MoveClaimForm.Amount;
+			Result = "To Address: " + MoveClaimForm.ComAddress +
+						  "\nAmount: " + MoveClaimForm.ActualAmount;
+
+			await Toast.Make(Result).Show();
 		}
 		catch (Exception ex)
 		{

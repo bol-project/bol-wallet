@@ -71,7 +71,7 @@
                     LabelText="{Binding AmountText}"
                     Text="{Binding SendBolForm.Amount, Mode=TwoWay}" />
 
-			<Label Grid.Row="5" Text="{Binding ResultLabel}"/>
+			<Entry Grid.Row="5" Text="{Binding SendBolForm.ActualAmount}" PlaceholderColor="Black" IsEnabled="False" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
 
 			<Button
                 Grid.Row="6"
