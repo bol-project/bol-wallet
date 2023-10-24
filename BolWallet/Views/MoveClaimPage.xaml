@@ -8,37 +8,37 @@
     x:DataType="viewModels:MoveClaimViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
-    <ContentPage.Resources>
-        <StyleSheet>
-            <![CDATA[
+	<ContentPage.Resources>
+		<StyleSheet>
+			<![CDATA[
             .border-style {
                 background-color: lightgray;
             }
             ]]>
-        </StyleSheet>
-        <ResourceDictionary>
+		</StyleSheet>
+		<ResourceDictionary>
 
-            <Style TargetType="controls1:ExtendedTextEdit">
-                <Setter Property="ClearIconVisibility" Value="Never" />
-                <Setter Property="HorizontalOptions" Value="Fill" />
-                <Setter Property="IsErrorIconVisible" Value="False" />
-                <Setter Property="BoxHeight" Value="56" />
-                <Setter Property="FontSize" Value="18" />
-            </Style>
+			<Style TargetType="controls1:ExtendedTextEdit">
+				<Setter Property="ClearIconVisibility" Value="Never" />
+				<Setter Property="HorizontalOptions" Value="Fill" />
+				<Setter Property="IsErrorIconVisible" Value="False" />
+				<Setter Property="BoxHeight" Value="56" />
+				<Setter Property="FontSize" Value="18" />
+			</Style>
 
-            <Color x:Key="FocusedColor">#718792</Color>
+			<Color x:Key="FocusedColor">#718792</Color>
 
-        </ResourceDictionary>
-    </ContentPage.Resources>
+		</ResourceDictionary>
+	</ContentPage.Resources>
 
-    <ScrollView>
-        <Grid
+	<ScrollView>
+		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
-            <Label
+			<Label
                 Grid.Row="0"
                 FontSize="32"
                 HorizontalOptions="Center"
@@ -46,28 +46,53 @@
                 SemanticProperties.HeadingLevel="Level1"
                 Text="{Binding MoveClaimLabel}" />
 
-            <controls1:ExtendedTextEdit 
-                    Grid.Row="1"
-                    LabelText="{Binding ToComAddressText}"
-                    Text="{Binding MoveClaimForm.ComAddress, Mode=TwoWay}" 
-                    TextTransform="Uppercase"/>
+			<Label 
+	            Grid.Row="1"
+                Grid.ColumnSpan="3" 
+	            Text="Total Balance" 
+	            TextColor="Black"/>
+			<Frame   
+	            Grid.Row="2"
+                Grid.ColumnSpan="3" 
+	            BackgroundColor="WhiteSmoke" 
+	            Padding="10">
+				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
+			</Frame>
 
-            <controls1:ExtendedTextEdit 
-                    Grid.Row="2"
-                    LabelText="{Binding AmountText}"
-                    Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
-                    TextTransform="Uppercase"/>
+			<Picker 
+                Grid.Row="3"
+                Title="Commercial Address" 
+                ItemsSource="{Binding CommercialBalancesDisplayList}"
+                SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
+			</Picker>
 
-            <Label Grid.Row="3" Text="{Binding TestLabel}"/>
+			<Entry Placeholder="Amount" 
+				   Keyboard="Numeric"
+				   Grid.Row="4" 
+				   Grid.Column="0"
+				   Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
+				   PlaceholderColor="Black"
+				   BackgroundColor="#EDF2F7"
+				   TextColor="Black"
+				   Margin="0,0,0,10" />
 
-            <Button
-                Grid.Row="4"
+			<Entry Grid.Row="5" 
+				   Keyboard="Numeric"  
+				   Text="{Binding MoveClaimForm.ActualAmount, StringFormat='{0:F8} Bol'}" 
+				   PlaceholderColor="Black" 
+				   IsEnabled="False" 
+				   BackgroundColor="#EDF2F7" 
+				   TextColor="Black" 
+				   Margin="0,0,0,10" />
+
+			<Button
+                Grid.Row="6"
                 Command="{Binding MoveClaimCommand}"
                 FontAttributes="Bold"
                 FontSize="8"
                 HorizontalOptions="FillAndExpand"
                 Text="{Binding MoveText}" />
 
-        </Grid>
-    </ScrollView>
+		</Grid>
+	</ScrollView>
 </ContentPage>    

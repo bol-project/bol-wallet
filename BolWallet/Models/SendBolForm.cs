@@ -1,47 +1,40 @@
-﻿namespace BolWallet.Models;
+﻿using Bol.Core.Model;
+using System.Numerics;
+
+namespace BolWallet.Models;
+
 public partial class SendBolForm : ObservableObject
 {
-    private string _comAddress;
-    public string ComAddress
-    {
-        get => _comAddress;
-        set
-        {
-            _comAddress = value;
-            OnPropertyChanged();
-        }
-    }
+	[ObservableProperty]
+	public string _comAddress;
 
-    private string _recieverCodename;
-    public string RecieverCodename
-    {
-        get => _recieverCodename;
-        set
-        {
-            _recieverCodename = value;
-            OnPropertyChanged();
-        }
-    }
+	[ObservableProperty]
+	public string _receiverCodename;
 
-    private string _recieverAddress;
-    public string RecieverAddress
-    {
-        get => _recieverAddress;
-        set
-        {
-            _recieverAddress = value;
-            OnPropertyChanged();
-        }
-    }
+	[ObservableProperty]
+	public string _receiverAddress;
 
-    private double _amount;
-    public double Amount
-    {
-        get => _amount;
-        set
-        {
-            _amount = value;
-            OnPropertyChanged();
-        }
-    }
+	private string _amount;
+	public string Amount
+	{
+		get => _amount;
+		set
+		{
+			_amount = value;
+			if (decimal.TryParse(_amount, out var decimalValue))
+			{
+				_actualAmount = decimal.Round(decimalValue, 8);
+			}
+			else
+				_actualAmount = 0;
+			OnPropertyChanged();
+			OnPropertyChanged(nameof(ActualAmount));
+		}
+	}
+
+	private decimal _actualAmount;
+	public decimal ActualAmount
+	{
+		get { return _actualAmount; }
+	}
 }
