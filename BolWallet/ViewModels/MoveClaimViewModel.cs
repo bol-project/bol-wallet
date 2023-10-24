@@ -81,12 +81,14 @@ public partial class MoveClaimViewModel : BaseViewModel
 
 			BolAccount = await _bolService.TransferClaim(
 			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress),
-			  MoveClaimForm.ActualAmount);
+			  new BigInteger(MoveClaimForm.ActualAmount * (decimal)Math.Pow(10, 8)));
 
 			GenerateCommercialBalanceDisplayList();
 
 			Result = "To Address: " + MoveClaimForm.ComAddress +
-						  "\nAmount: " + MoveClaimForm.ActualAmount;
+					 "\nAmount: " + MoveClaimForm.ActualAmount;
+
+			MoveClaimForm.Amount = "";
 
 			await Toast.Make(Result).Show();
 		}

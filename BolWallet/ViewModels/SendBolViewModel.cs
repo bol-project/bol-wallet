@@ -85,7 +85,7 @@ public partial class SendBolViewModel : BaseViewModel
 			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress),
 			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress),
 			  SendBolForm.ReceiverCodename,
-			  SendBolForm.ActualAmount);
+			  new BigInteger(SendBolForm.ActualAmount * (decimal)Math.Pow(10, 8)));
 
 			GenerateCommercialBalanceDisplayList();
 
@@ -93,6 +93,8 @@ public partial class SendBolViewModel : BaseViewModel
 						"\nReceiver Codename: " + SendBolForm.ReceiverCodename +
 						"\nReceiver Address: " + SendBolForm.ReceiverAddress +
 						"\nAmount: " + SendBolForm.ActualAmount;
+
+			SendBolForm.Amount = "";
 
 			await Toast.Make(Result).Show();
 		}

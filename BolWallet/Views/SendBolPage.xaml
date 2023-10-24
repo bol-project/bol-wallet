@@ -65,13 +65,24 @@
                     LabelText="{Binding ReceiverCodenameText}"
                     Text="{Binding SendBolForm.ReceiverCodename, Mode=TwoWay}" />
 
+			<Entry Placeholder="Amount" 
+				   Keyboard="Numeric"
+				   Grid.Row="4" 
+				   Grid.Column="0"
+				   Text="{Binding SendBolForm.Amount, Mode=TwoWay}"
+				   PlaceholderColor="Black"
+				   BackgroundColor="#EDF2F7"
+				   TextColor="Black"
+				   Margin="0,0,0,10" />
 
-			<controls1:ExtendedTextEdit 
-                    Grid.Row="4"
-                    LabelText="{Binding AmountText}"
-                    Text="{Binding SendBolForm.Amount, Mode=TwoWay}" />
-
-			<Entry Grid.Row="5" Text="{Binding SendBolForm.ActualAmount}" PlaceholderColor="Black" IsEnabled="False" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+			<Entry Grid.Row="5" 
+				   Keyboard="Numeric"  
+				   Text="{Binding SendBolForm.ActualAmount, StringFormat='{0:F8} Bol'}" 
+				   PlaceholderColor="Black" 
+				   IsEnabled="False" 
+				   BackgroundColor="#EDF2F7" 
+				   TextColor="Black" 
+				   Margin="0,0,0,10" />
 
 			<Button
                 Grid.Row="6"

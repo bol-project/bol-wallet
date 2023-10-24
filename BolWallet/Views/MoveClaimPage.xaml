@@ -66,14 +66,24 @@
                 SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
 			</Picker>
 
-			<controls1:ExtendedTextEdit 
-                    Grid.Row="4"
-                    LabelText="{Binding AmountText}"
-                    Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
-                    TextTransform="Uppercase"/>
+			<Entry Placeholder="Amount" 
+				   Keyboard="Numeric"
+				   Grid.Row="4" 
+				   Grid.Column="0"
+				   Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
+				   PlaceholderColor="Black"
+				   BackgroundColor="#EDF2F7"
+				   TextColor="Black"
+				   Margin="0,0,0,10" />
 
-
-			<Entry Grid.Row="5" Text="{Binding MoveClaimForm.ActualAmount}" PlaceholderColor="Black" IsEnabled="False" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+			<Entry Grid.Row="5" 
+				   Keyboard="Numeric"  
+				   Text="{Binding MoveClaimForm.ActualAmount, StringFormat='{0:F8} Bol'}" 
+				   PlaceholderColor="Black" 
+				   IsEnabled="False" 
+				   BackgroundColor="#EDF2F7" 
+				   TextColor="Black" 
+				   Margin="0,0,0,10" />
 
 			<Button
                 Grid.Row="6"

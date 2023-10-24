@@ -15,15 +15,17 @@ public partial class MoveClaimForm : ObservableObject
 			_amount = value;
 			if (decimal.TryParse(_amount, out var decimalValue))
 			{
-				_actualAmount = new BigInteger(decimalValue * (decimal)Math.Pow(10, 8));
+				_actualAmount = decimal.Round(decimalValue, 8);
 			}
+			else
+				_actualAmount = 0;
 			OnPropertyChanged();
 			OnPropertyChanged(nameof(ActualAmount));
 		}
 	}
 
-	private BigInteger _actualAmount;
-	public BigInteger ActualAmount
+	private decimal _actualAmount;
+	public decimal ActualAmount
 	{
 		get { return _actualAmount; }
 	}
