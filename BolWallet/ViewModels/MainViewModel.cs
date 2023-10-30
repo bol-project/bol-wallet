@@ -1,7 +1,4 @@
 using CommunityToolkit.Maui.Alerts;
-using Microsoft.Maui.Storage;
-using System.Reflection;
-using static Akavache.Sqlite3.Internal.SQLite3;
 
 namespace BolWallet.ViewModels;
 
@@ -29,12 +26,6 @@ public partial class MainViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task ImportYourWallet()
 	{
-		if (await _permissionService.CheckPermissionAsync<Permissions.StorageRead>() != PermissionStatus.Granted)
-		{
-			await _permissionService.DisplayWarningAsync<Permissions.StorageRead>();
-			return;
-		}
-
 		try
 		{
 			var options = new JsonSerializerOptions
@@ -73,6 +64,8 @@ public partial class MainViewModel : BaseViewModel
 			userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
 
 			await _secureRepository.SetAsync("userdata", userData);
+
+			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 		}
 		catch (Exception ex)
 		{

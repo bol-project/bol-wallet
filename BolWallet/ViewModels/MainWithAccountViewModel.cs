@@ -8,10 +8,9 @@ namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
 {
 	private readonly ISecureRepository _secureRepository;
-    //private readonly IBolService _bolService;
+	private readonly IBolService _bolService;
 
-    private BolAccount _bolAccount = new();
-	public string WellcomeText => "Welcome";
+	public string WelcomeText => "Welcome";
 	public string BalanceText => "Balance";
     public string AccountText => "Account";
 	public string SendText => "Send";
@@ -20,44 +19,54 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	public string MoveClaimText => "Move Claim";
 	public string CommunityText => "Bol Community";
 
-	public string Codename => _bolAccount.CodeName;
-	public string Balance => _bolAccount.ClaimBalance + " BOL";
+	[ObservableProperty]
+	private string _codeName = "";
+
+	[ObservableProperty]
+	private string _mainAddress = "";
+
+	[ObservableProperty]
+	private BolAccount _bolAccount = new();
 
 	[ObservableProperty]
 	private bool _isLoading = false;
 
+	[ObservableProperty]
+	private bool _isCertified = false;
 
-    public MainWithAccountViewModel(
-        INavigationService navigationService,
-        ISecureRepository secureRepository
-        /*IBolService bolService*/) : base(navigationService)
-    {
-        _secureRepository = secureRepository;
-		InitAsync();
-        //_bolService = bolService;
-    }
-    public async Task Initialize()
-    {
-        try
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using var stream = assembly.GetManifestResourceStream("BolWallet.bol_account.json");
-            using var reader = new StreamReader(stream);
-            var jsonContent = await reader.ReadToEndAsync();
-            _bolAccount = JsonConvert.DeserializeObject<BolAccount>(jsonContent);
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make(ex.Message).Show();
-        }
-    }
+	[ObservableProperty]
+	private bool _isRegistered = false;
 
-    [RelayCommand]
-	private async Task Claim()
+	public MainWithAccountViewModel(
+		INavigationService navigationService,
+		ISecureRepository secureRepository,
+		IBolService bolService) : base(navigationService)
+	{
+		_secureRepository = secureRepository;
+		_bolService = bolService;
+	}
+
+	public async Task Initialize()
+	{
+		await UpdateBolAccount();
+	}
+
+	[RelayCommand]
+	private async Task UpdateBolAccount()
 	{
 		try
 		{
-			//BolAccount = await _bolService.Claim();
+			userData = await _secureRepository.GetAsync<UserData>("userdata");
+
+			CodeName = userData.Codename;
+			MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
+
+			BolAccount = await _bolService.GetAccount(userData.Codename);
+
+			IsRegistered = true;
+
+			if (BolAccount.AccountStatus == AccountStatus.PendingFees || BolAccount.AccountStatus == AccountStatus.Open)
+				IsCertified = true;
 		}
 		catch (Exception ex)
 		{
@@ -65,45 +74,86 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-	[RelayCommand]
-	private void NavigateToUserPage()
+    [RelayCommand]
+	private async Task Claim()
 	{
-		NavigationService.NavigateTo<AccountViewModel>(true);
+		try
+		{
+			IsLoading = true;
+
+			await Task.Delay(100);
+
+			BolAccount = await _bolService.Claim();
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
 	}
 
 	[RelayCommand]
-	private void NavigateToBolCommunityPage()
+	private async Task Register()
 	{
-		NavigationService.NavigateTo<BolCommunityViewModel>(true);
+		try
+		{
+			IsLoading = true;
+
+			await Task.Delay(100);
+
+			BolAccount = await _bolService.Register();
+
+			await Toast.Make("Your Account is registered now.").Show();
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
 	}
 
 	[RelayCommand]
-	private void NavigateToSendBolPage()
+	private async Task NavigateToCertifyPage()
 	{
-		NavigationService.NavigateTo<SendBolViewModel>(true);
+		if (IsRegistered)
+			await NavigationService.NavigateTo<CertifyViewModel>(true);
+		else
+			await Toast.Make("CodeName is not a registered Bol Account.").Show();
 	}
 
 	[RelayCommand]
-	private void NavigateToMoveClaimPage()
+	private async Task NavigateToTransactionsPage()
 	{
-		NavigationService.NavigateTo<MoveClaimViewModel>(true);
+		await NavigationService.NavigateTo<TransactionsViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToRetrieveBolPage()
+	private async Task NavigateToBolCommunityPage()
 	{
-		NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+		await NavigationService.NavigateTo<BolCommunityViewModel>(true);
 	}
 
-    private async Task InitAsync()
-    {
-        string filePath = "TestAccount.json";
-        var stream = await FileSystem.OpenAppPackageFileAsync(filePath);
+	[RelayCommand]
+	private async Task NavigateToSendBolPage()
+	{
+		await NavigationService.NavigateTo<SendBolViewModel>(true);
+	}
 
-        if (stream != null)
-        {
-            string str = (new System.IO.StreamReader(stream)).ReadToEnd();
-            _bolAccount = JsonConvert.DeserializeObject<BolAccount>(str);
-        }
-    }
+	[RelayCommand]
+	private async Task NavigateToMoveClaimPage()
+	{
+		await NavigationService.NavigateTo<MoveClaimViewModel>(true);
+	}
+
+	[RelayCommand]
+	private async Task NavigateToRetrieveBolPage()
+	{
+		await NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+	}
 }

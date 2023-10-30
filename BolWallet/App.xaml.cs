@@ -15,7 +15,7 @@ public partial class App : Application
 		InitializeComponent();
 
 		UserAppTheme = AppTheme.Light;
-		
+
 #if WINDOWS
         Microsoft.Maui.Handlers.PickerHandler.Mapper.Add(nameof(View.HorizontalOptions), MapHorizontalOptions);
 #endif
@@ -40,33 +40,20 @@ public partial class App : Application
 				handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
 #endif
 			});
-		UserData UserData = null;
-        /*if (UserData?.BolWallet == null)
+
+		SKTextRunLookup.Instance.AddFontAwesome();
+
+		UserData userData = secureRepository.Get<UserData>("userdata");
+
+		if (userData?.BolWallet == null)
 		{
 			MainPage = new NavigationPage(mainPage);
 			return;
-		}*/
-
-        using var scope = serviceProvider.CreateScope();
-
-		ContentPage contentPage = new ContentPage();
-
-        contentPage = scope.ServiceProvider.GetRequiredService<MainWithAccountPage>();
-        MainPage = new NavigationPage(contentPage);
-
-		return;
-
-        if (!UserData.IsRegisteredAccount)
-		{
-			contentPage = scope.ServiceProvider.GetRequiredService<RegistrationPage>();
-			MainPage = new NavigationPage(contentPage);
-			return;
 		}
 
-		if (UserData.AccountStatus != Bol.Core.Model.AccountStatus.Open)
-		{
-			contentPage = scope.ServiceProvider.GetRequiredService<CertifyPage>();
-		}
+		using var scope = serviceProvider.CreateScope();
+
+		ContentPage contentPage = scope.ServiceProvider.GetRequiredService<MainWithAccountPage>();
 
 		MainPage = new NavigationPage(contentPage);
 	}

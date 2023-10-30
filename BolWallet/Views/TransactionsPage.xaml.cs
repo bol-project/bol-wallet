@@ -7,7 +7,13 @@ public partial class TransactionsPage : ContentPage
         BindingContext = transactionsViewModel;
     }
 
-    private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await ((TransactionsViewModel)BindingContext).Initialize();
+	}
+
+	private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
     {
         if(e.SelectedItem != null)
         {
@@ -15,6 +21,5 @@ public partial class TransactionsPage : ContentPage
             transaction.IsExpanded = !transaction.IsExpanded;
             ((ListView)sender).SelectedItem = null;
         }
-        
     }
 }

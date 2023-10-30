@@ -30,7 +30,5 @@ public partial class BolTransactionEntryListItem : ObservableObject
         BolTransactionEntry = bolTransactionEntry;
         IsExpanded = false;
     }
-
-
 }
 

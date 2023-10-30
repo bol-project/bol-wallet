@@ -15,7 +15,6 @@ public static class RegistrationExtensions
 			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
 			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
 			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
-			.BindViewModelToView<RegistrationViewModel, RegistrationPage>()
 			.BindViewModelToView<CertifyViewModel, CertifyPage>()
 
 			.BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
