@@ -131,6 +131,12 @@
                 FontAttributes="Bold"
                 FontSize="8"
                 Text="{Binding MoveClaimText}" />
+
+				<Button IsVisible="{Binding BolAccount.IsCertifier}"
+				Command="{Binding NavigateToCertifierPageCommand}"
+				FontAttributes="Bold"
+				FontSize="8"
+				Text="Certifier" />
 			</StackLayout>
 		</Grid>
 	</ScrollView>
