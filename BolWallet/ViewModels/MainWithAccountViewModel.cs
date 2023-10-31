@@ -11,7 +11,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private readonly IBolService _bolService;
 
 	public string WelcomeText => "Welcome";
-	public string BalanceText => "Balance";
+	public string BalanceText => "Total Balance";
     public string AccountText => "Account";
 	public string SendText => "Send";
 	public string RecieveText => "Recieve";
