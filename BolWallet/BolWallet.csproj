@@ -99,6 +99,9 @@
 		<MauiXaml Update="Views\BolCommunityPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\CertifierPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\CertifyPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

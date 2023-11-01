@@ -24,7 +24,8 @@ public static class RegistrationExtensions
 			.BindViewModelToView<UserViewModel, UserPage>()
             .BindViewModelToView<AccountViewModel, AccountPage>()
 			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()
-            .BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
+			.BindViewModelToView<CertifierViewModel, CertifierPage>()
+			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
 
 		return services;
 	}
