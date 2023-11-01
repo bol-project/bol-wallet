@@ -9,20 +9,13 @@ public partial class BolTransactionEntryListItem : ObservableObject
 
     private string UserCodeName { get; set; }
 
-    private bool _isExpanded;
-    public bool IsExpanded
-    {
-        get => _isExpanded;
-        set
-        {
-            _isExpanded = value;
-            OnPropertyChanged();
-        }
-    }
-    private bool IsRecievingTransaction => UserCodeName == BolTransactionEntry.ReceiverCodeName;
-    public string BolAmount => (IsRecievingTransaction? "+" : "-") + BolTransactionEntry.Amount + " BOL";
+	[ObservableProperty]
+	private bool _isExpanded;
+    
+    private bool IsReceivingTransaction => UserCodeName == BolTransactionEntry.ReceiverCodeName;
+    public string BolAmount => (IsReceivingTransaction ? "+" : "-") + BolTransactionEntry.Amount + " BOL";
 
-    public Color AmountTextColor => IsRecievingTransaction ? Colors.LawnGreen : Colors.Red;  
+    public Color AmountTextColor => IsReceivingTransaction ? Colors.LawnGreen : Colors.Red;  
 
     public BolTransactionEntryListItem(string userCodeName, BolTransactionEntry bolTransactionEntry)
     {

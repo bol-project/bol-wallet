@@ -73,14 +73,14 @@
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
-                                        Text="Reciever Codename: "/>
+                                        Text="Receiver Codename: "/>
                                         <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverCodeName}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
-                                        Text="Reciever Address: "/>
+                                        Text="Receiver Address: "/>
                                         <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverAddress}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
