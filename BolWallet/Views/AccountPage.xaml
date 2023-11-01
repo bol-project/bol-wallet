@@ -1,0 +1,63 @@
+﻿<ContentPage 
+    x:Class="BolWallet.Views.AccountPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:AccountViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}"
+    xmlns:local="clr-namespace:BolWallet.Converters">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Settings"
+            Command="{Binding NavigateToTSettingsPageCommand}"
+            Order="Secondary" 
+            Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                    Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+            ColumnDefinitions="*,*"
+            RowSpacing="25"
+            ColumnSpacing="8">
+
+            <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                FontSize="24"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="{Binding CodenameLabel}" />
+
+            <Label
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                FontSize="16"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level2"
+                Text="{Binding BolLabel}" />
+
+            <Label
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                FontSize="16"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="{Binding EdiLabel}" />
+
+            <Button
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Command="{Binding NavigateToTransactionsPageCommand}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                FontSize="8"
+                Text="{Binding TransactionsButtonLabel}" />
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

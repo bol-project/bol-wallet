@@ -1,0 +1,101 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.TransactionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    xmlns:models="clr-namespace:BolWallet.Models"
+    x:DataType="viewModels:TransactionsViewModel"
+    Title="{Binding TransactionsLabel}"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Hide All"
+            Command="{Binding HideAllTransactionDetailsCommand}"
+            Order="Primary" 
+            Priority="0" />
+    </ContentPage.ToolbarItems>
+    <Grid Padding="30,0">
+        <ListView
+            VerticalOptions="FillAndExpand"
+            SeparatorVisibility="None"
+            VerticalScrollBarVisibility="Never"
+            HorizontalScrollBarVisibility="Never"
+            HasUnevenRows="True"
+            SelectionMode="Single"
+            ItemsSource="{Binding Transactions}"
+            ItemSelected="ListView_ItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:BolTransactionEntryListItem">
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" Padding="0,4" Spacing="0">
+                            <Frame BackgroundColor="#582cd4" Padding="32" >
+                                <StackLayout Orientation="Vertical">
+                                    <Label
+                                    TextColor="White"
+                                    FontSize="8"
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Start"
+                                    Text="{Binding BolTransactionEntry.TransactionHash}"/>
+                                    <Label
+                                        TextColor="{Binding AmountTextColor}"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        HorizontalOptions="End"
+                                        Text="{Binding BolAmount}"/>
+                                </StackLayout>
+                            </Frame>
+                            <Frame CornerRadius="0"
+                            IsVisible="{Binding IsExpanded}"
+                            BackgroundColor="DarkGray">
+                                <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" Spacing="8">
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Transaction Type: "/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.TransactionType}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Sender Codename: "/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderCodeName}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Sender address: "/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderAddress}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Receiver Codename: "/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverCodeName}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Receiver Address: "/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverAddress}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Vertical">
+                                        <Label
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        Text="Amount: "/>
+                                        <Label TextColor="Black" Text="{Binding BolAmount}"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

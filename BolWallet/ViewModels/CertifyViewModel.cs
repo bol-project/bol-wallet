@@ -35,8 +35,6 @@ public partial class CertifyViewModel : BaseViewModel
 	[ObservableProperty]
 	public Dictionary<string, string> _mandatoryCertifiers;
 
-	private UserData userData;
-
 	public async Task Initialize()
 	{
 		userData = await _secureRepository.GetAsync<UserData>("userdata");

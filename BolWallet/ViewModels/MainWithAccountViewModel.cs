@@ -1,6 +1,8 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Newtonsoft.Json;
+using System.Reflection;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -8,7 +10,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private readonly ISecureRepository _secureRepository;
 	private readonly IBolService _bolService;
 
-	public string AccountText => "Account";
+	public string WelcomeText => "Welcome";
+	public string BalanceText => "Total Balance";
+    public string AccountText => "Account";
 	public string SendText => "Send";
 	public string RecieveText => "Recieve";
 	public string ClaimText => "Claim";
@@ -32,8 +36,6 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	[ObservableProperty]
 	private bool _isRegistered = false;
-
-	private UserData userData;
 
 	public MainWithAccountViewModel(
 		INavigationService navigationService,
@@ -72,7 +74,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-	[RelayCommand]
+    [RelayCommand]
 	private async Task Claim()
 	{
 		try
@@ -126,9 +128,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task NavigateToUserPage()
+	private async Task NavigateToTransactionsPage()
 	{
-		await NavigationService.NavigateTo<UserViewModel>(true);
+		await NavigationService.NavigateTo<TransactionsViewModel>(true);
 	}
 
 	[RelayCommand]

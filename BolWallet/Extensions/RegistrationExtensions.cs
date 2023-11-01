@@ -22,7 +22,9 @@ public static class RegistrationExtensions
 			.BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
 			.BindViewModelToView<SendBolViewModel, SendBolPage>()
 			.BindViewModelToView<UserViewModel, UserPage>()
-			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
+            .BindViewModelToView<AccountViewModel, AccountPage>()
+			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()
+            .BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
 
 		return services;
 	}

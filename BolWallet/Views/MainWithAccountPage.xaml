@@ -38,53 +38,55 @@
 					</ImageButton.Source>
 				</ImageButton>
 
-				<Label
-                    Text="Code Name"
-                    FontSize="18"
-                    TextColor="DarkSlateBlue" />
-
-				<Frame BackgroundColor="WhiteSmoke" Padding="10">
-					<Label Text="{Binding CodeName}" TextColor="Black">
-						<Label.GestureRecognizers>
-							<TapGestureRecognizer Tapped="OnTapCopy"/>
-						</Label.GestureRecognizers>
-					</Label>
+				<Frame
+				Grid.Row="1"
+				Grid.ColumnSpan="3" 
+				CornerRadius="25"
+				BackgroundColor="#582cd4">
+					<StackLayout
+								VerticalOptions="CenterAndExpand"
+								Orientation="Vertical">
+						<Label 
+							Text="{Binding WelcomeText}"
+							HorizontalOptions="Center"
+							HorizontalTextAlignment="Center"
+							FontAttributes="Bold"
+							TextColor="White"/>
+						<Label 
+							Text="{Binding CodeName}"
+							HorizontalOptions="Center"
+							HorizontalTextAlignment="Center"
+							FontAttributes="Bold"
+							FontSize="10"
+							TextColor="White">
+							<Label.GestureRecognizers>
+									<TapGestureRecognizer Tapped="OnTapCopy"/>
+								</Label.GestureRecognizers>
+							</Label>
+					</StackLayout>
 				</Frame>
 
-				<Label
-                    Text="Main Address"
-                    FontSize="18"
-                    TextColor="DarkSlateBlue" />
-
-				<Frame BackgroundColor="WhiteSmoke" Padding="10">
-					<Label Text="{Binding MainAddress}" TextColor="Black">
-						<Label.GestureRecognizers>
-							<TapGestureRecognizer Tapped="OnTapCopy"/>
-						</Label.GestureRecognizers>
-					</Label>
-				</Frame>
-
-				<Label
-					Text="Total Balance"
-					FontSize="18"
-					TextColor="DarkSlateBlue" />	
-				<Frame   
-					BackgroundColor="WhiteSmoke" 
-					Padding="10">
-					<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
-				</Frame>
-
-				<Label
-					Text="Account Status"
-					FontSize="18"
-					TextColor="DarkSlateBlue" />
-
-				<Frame BackgroundColor="WhiteSmoke" Padding="10">
-					<Label Text="{Binding BolAccount.AccountStatus}" TextColor="Black">
-						<Label.GestureRecognizers>
-							<TapGestureRecognizer Tapped="OnTapCopy"/>
-						</Label.GestureRecognizers>
-					</Label>
+				<Frame
+				  Grid.Row="3"
+				  Grid.ColumnSpan="3"
+				  CornerRadius="45"
+				  BackgroundColor="#582cd4">
+							<StackLayout
+					  VerticalOptions="CenterAndExpand"
+					  Orientation="Vertical">
+								<Label 
+					Text="{Binding BalanceText}"
+						  HorizontalOptions="Center"
+						  HorizontalTextAlignment="Center"
+						  FontAttributes="Bold"
+					TextColor="Yellow"/>
+								<Label
+						  Text="{Binding BolAccount.TotalBalance}"
+						  HorizontalOptions="Center"
+						  HorizontalTextAlignment="Center"
+						  FontSize="24"
+						  TextColor="Yellow"/>
+							</StackLayout>
 				</Frame>
 
 				<Button
@@ -109,7 +111,8 @@
 				<Button
                 FontAttributes="Bold"
                 FontSize="8"
-                Text="{Binding AccountText}" />
+                Text="Transactions"
+				Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
                 Command="{Binding NavigateToSendBolPageCommand}"

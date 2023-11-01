@@ -15,7 +15,7 @@ public partial class App : Application
 		InitializeComponent();
 
 		UserAppTheme = AppTheme.Light;
-		
+
 #if WINDOWS
         Microsoft.Maui.Handlers.PickerHandler.Mapper.Add(nameof(View.HorizontalOptions), MapHorizontalOptions);
 #endif
@@ -40,7 +40,7 @@ public partial class App : Application
 				handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
 #endif
 			});
-			
+
 		SKTextRunLookup.Instance.AddFontAwesome();
 
 		UserData userData = secureRepository.Get<UserData>("userdata");
