@@ -1,5 +1,4 @@
 using BolWallet.Helpers;
-using BolWallet.Views;
 
 namespace BolWallet.Extensions;
 

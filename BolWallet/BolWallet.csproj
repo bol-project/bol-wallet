@@ -91,8 +91,8 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\AccountPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\App.xaml">
 			<SubType>Designer</SubType>
 		</MauiXaml>
@@ -144,10 +144,6 @@
 		<Compile Update="Controls\ExtendedComboBox.xaml.cs">
 			<DependentUpon>ExtendedComboBox.xaml</DependentUpon>
 		</Compile>
-    <Compile Update="Views\AccountPage.xaml.cs">
-      <DependentUpon>AccountPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
 		<Compile Update="Views\App.xaml.cs">
 			<DependentUpon>App.xaml</DependentUpon>
 			<SubType>Code</SubType>

@@ -28,7 +28,7 @@
 
 				<Label IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
-				<ImageButton IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding UpdateBolAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<ImageButton IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -130,7 +130,7 @@
 				Command="{Binding NavigateToCertifierPageCommand}"
 				FontAttributes="Bold"
 				FontSize="12"
-				Text="Certifier" />
+				Text="Community Operations" />
 			</StackLayout>
 		</Grid>
 	</ScrollView>

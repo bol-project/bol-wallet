@@ -45,11 +45,11 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	public async Task Initialize()
 	{
-		await UpdateBolAccount();
+		await FetchBolAccountData();
 	}
 
 	[RelayCommand]
-	private async Task UpdateBolAccount()
+	private async Task FetchBolAccountData()
 	{
 		try
 		{
