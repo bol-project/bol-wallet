@@ -111,6 +111,9 @@
 		<MauiXaml Update="Views\CreateEdiPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\FinancialTransactionsPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\MainPage.xaml">
 			<SubType>Designer</SubType>
 		</MauiXaml>

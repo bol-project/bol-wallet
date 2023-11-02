@@ -49,15 +49,6 @@
                 HorizontalTextAlignment="Center"
                 Text="{Binding EdiLabel}" />
 
-            <Button
-                Grid.Row="3"
-                Grid.ColumnSpan="2"
-                Command="{Binding NavigateToTransactionsPageCommand}"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                FontSize="8"
-                Text="{Binding TransactionsButtonLabel}" />
-
         </Grid>
     </ScrollView>
 </ContentPage>

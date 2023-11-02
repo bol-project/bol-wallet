@@ -25,10 +25,10 @@
 		
 
 			<StackLayout Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
-				
-				<Label Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
-				<ImageButton  Command="{Binding UpdateBolAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<Label IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+
+				<ImageButton IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding UpdateBolAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -109,33 +109,27 @@
 
 			<StackLayout IsVisible="{Binding IsCertified}" Grid.Row="1" Grid.ColumnSpan="3"  Spacing="15" Padding="20">
 				<Button
+				FontAttributes="Bold"
+				FontSize="12"
+				Text="Account"
+				Command="{Binding NavigateToAccountPageCommand}"/>
+				
+				<Button
                 FontAttributes="Bold"
-                FontSize="8"
-                Text="Transactions"
+                FontSize="12"
+                Text="Transactions History"
 				Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
-                Command="{Binding NavigateToSendBolPageCommand}"
+                Command="{Binding NavigateToFinancialTransactionsPageCommand}"
                 FontAttributes="Bold"
-                FontSize="8"
-                Text="{Binding SendText}" />
-
-				<Button
-                FontAttributes="Bold"
-                FontSize="8"
-                Command="{Binding ClaimCommand}"
-                Text="{Binding ClaimText}" />
-
-				<Button
-                Command="{Binding NavigateToMoveClaimPageCommand}"
-                FontAttributes="Bold"
-                FontSize="8"
-                Text="{Binding MoveClaimText}" />
+                FontSize="12"
+                Text="Financial Transactions" />
 
 				<Button IsVisible="{Binding BolAccount.IsCertifier}"
 				Command="{Binding NavigateToCertifierPageCommand}"
 				FontAttributes="Bold"
-				FontSize="8"
+				FontSize="12"
 				Text="Certifier" />
 			</StackLayout>
 		</Grid>

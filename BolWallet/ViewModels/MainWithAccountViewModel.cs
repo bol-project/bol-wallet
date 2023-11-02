@@ -13,10 +13,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	public string WelcomeText => "Welcome";
 	public string BalanceText => "Total Balance";
     public string AccountText => "Account";
-	public string SendText => "Send";
-	public string RecieveText => "Recieve";
-	public string ClaimText => "Claim";
-	public string MoveClaimText => "Move Claim";
+	public string SendText => "Transfer";
 	public string CommunityText => "Bol Community";
 
 	[ObservableProperty]
@@ -74,27 +71,6 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-    [RelayCommand]
-	private async Task Claim()
-	{
-		try
-		{
-			IsLoading = true;
-
-			await Task.Delay(100);
-
-			BolAccount = await _bolService.Claim();
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-		finally
-		{
-			IsLoading = false;
-		}
-	}
-
 	[RelayCommand]
 	private async Task Register()
 	{
@@ -140,26 +116,21 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task NavigateToSendBolPage()
+	private async Task NavigateToFinancialTransactionsPage()
 	{
-		await NavigationService.NavigateTo<SendBolViewModel>(true);
-	}
-
-	[RelayCommand]
-	private async Task NavigateToMoveClaimPage()
-	{
-		await NavigationService.NavigateTo<MoveClaimViewModel>(true);
-	}
-
-	[RelayCommand]
-	private async Task NavigateToRetrieveBolPage()
-	{
-		await NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+		await NavigationService.NavigateTo<FinancialTransactionsViewModel>(true);
 	}
 
 	[RelayCommand]
 	private async Task NavigateToCertifierPage()
 	{
 		await NavigationService.NavigateTo<CertifierViewModel>(true);
+	}
+
+
+	[RelayCommand]
+	private async Task NavigateToAccountPage()
+	{
+		await NavigationService.NavigateTo<AccountViewModel>(true);
 	}
 }
