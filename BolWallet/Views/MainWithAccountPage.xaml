@@ -8,6 +8,7 @@
 	xmlns:Converters="clr-namespace:BolWallet.Converters"
 	xmlns:helpers="clr-namespace:BolWallet.Helpers"
 	Title="Account Main Page"
+	xmlns:models="clr-namespace:BolWallet.Models"
 	NavigationPage.HasBackButton="False">
 	
 	<ContentPage.Resources>
@@ -88,6 +89,27 @@
 						  TextColor="Yellow"/>
 							</StackLayout>
 				</Frame>
+
+				<Label Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
+
+				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}" HasUnevenRows="True">
+					<ListView.ItemTemplate >
+						<DataTemplate x:DataType="models:BalanceDisplayItem">
+							<ViewCell>
+								<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+									<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+										<Label Text="{Binding BalanceInfo}" 
+                                   HorizontalOptions="Center" 
+                                   HorizontalTextAlignment="Center" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White" />
+									</StackLayout>
+								</Frame>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+
 
 				<Button
 			        IsVisible="{Binding IsRegistered, Converter={StaticResource InverseBooleanConverter}}"

@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace BolWallet.ViewModels;
@@ -15,6 +16,10 @@ public partial class MainWithAccountViewModel : BaseViewModel
     public string AccountText => "Account";
 	public string SendText => "Transfer";
 	public string CommunityText => "Bol Community";
+
+	[ObservableProperty]
+	public List<KeyValuePair<string, string>> _commercialBalances;
+	public ObservableCollection<BalanceDisplayItem> CommercialBalancesDisplayList { get; set; } = new();
 
 	[ObservableProperty]
 	private string _codeName = "";
@@ -46,6 +51,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	public async Task Initialize()
 	{
 		await FetchBolAccountData();
+
+		GenerateCommercialBalanceDisplayList();
 	}
 
 	[RelayCommand]
@@ -68,6 +75,16 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		catch (Exception ex)
 		{
 			await Toast.Make(ex.Message).Show();
+		}
+	}
+
+	private void GenerateCommercialBalanceDisplayList()
+	{
+		CommercialBalances = BolAccount.CommercialBalances.ToList();
+
+		foreach (var commercialBalance in CommercialBalances)
+		{
+			CommercialBalancesDisplayList.Add(new BalanceDisplayItem("Balance: " + commercialBalance.Value + " - " + commercialBalance.Key));
 		}
 	}
 
@@ -134,3 +151,5 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		await NavigationService.NavigateTo<AccountViewModel>(true);
 	}
 }
+
+
