@@ -19,7 +19,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	[ObservableProperty]
 	public List<KeyValuePair<string, string>> _commercialBalances;
-	public ObservableCollection<BalanceDisplayItem> CommercialBalancesDisplayList { get; set; } = new();
+
+	[ObservableProperty]
+	public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
 
 	[ObservableProperty]
 	private string _codeName = "";
@@ -81,6 +83,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private void GenerateCommercialBalanceDisplayList()
 	{
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
+
+		CommercialBalancesDisplayList.Clear();
 
 		foreach (var commercialBalance in CommercialBalances)
 		{

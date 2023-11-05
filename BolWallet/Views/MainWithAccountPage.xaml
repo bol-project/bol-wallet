@@ -38,7 +38,7 @@
 						/>
 					</ImageButton.Source>
 				</ImageButton>
-
+				
 				<Frame
 				Grid.Row="1"
 				Grid.ColumnSpan="3" 
@@ -96,15 +96,17 @@
 					<ListView.ItemTemplate >
 						<DataTemplate x:DataType="models:BalanceDisplayItem">
 							<ViewCell>
-								<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
-									<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
-										<Label Text="{Binding BalanceInfo}" 
-                                   HorizontalOptions="Center" 
-                                   HorizontalTextAlignment="Center" 
-                                   FontAttributes="Bold" 
-                                   TextColor="White" />
-									</StackLayout>
-								</Frame>
+								<Grid>
+									<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+										<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+											<Label Text="{Binding BalanceInfo}" 
+									   HorizontalOptions="Center" 
+									   HorizontalTextAlignment="Center" 
+									   FontAttributes="Bold" 
+									   TextColor="White" />
+										</StackLayout>
+									</Frame>
+								</Grid>
 							</ViewCell>
 						</DataTemplate>
 					</ListView.ItemTemplate>
