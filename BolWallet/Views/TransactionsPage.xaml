@@ -28,22 +28,24 @@
                 <DataTemplate x:DataType="models:BolTransactionEntryListItem">
                     <ViewCell>
                         <StackLayout Orientation="Vertical" VerticalOptions="FillAndExpand" Padding="0,4" Spacing="0">
-                            <Frame BackgroundColor="#582cd4" Padding="32" >
-                                <StackLayout Orientation="Vertical">
-                                    <Label
-                                    TextColor="White"
-                                    FontSize="8"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="Start"
-                                    Text="{Binding BolTransactionEntry.TransactionHash}"/>
-                                    <Label
-                                        TextColor="{Binding AmountTextColor}"
+							<Grid>
+								<Frame BackgroundColor="#582cd4" Padding="32" >
+									<StackLayout Orientation="Vertical">
+										<Label
+                                        TextColor="White"
+                                        FontSize="8"
                                         FontAttributes="Bold"
-                                        FontSize="16"
-                                        HorizontalOptions="End"
-                                        Text="{Binding BolAmount}"/>
-                                </StackLayout>
-                            </Frame>
+                                        HorizontalOptions="Start"
+                                        Text="{Binding BolTransactionEntry.TransactionHash}"/>
+										<Label
+                                            TextColor="{Binding AmountTextColor}"
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            HorizontalOptions="End"
+                                            Text="{Binding BolAmount}"/>
+									</StackLayout>
+								</Frame>
+							</Grid>
                             <Frame CornerRadius="0"
                             IsVisible="{Binding IsExpanded}"
                             BackgroundColor="DarkGray">

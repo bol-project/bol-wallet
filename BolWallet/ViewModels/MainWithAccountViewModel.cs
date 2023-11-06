@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace BolWallet.ViewModels;
@@ -13,11 +14,14 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	public string WelcomeText => "Welcome";
 	public string BalanceText => "Total Balance";
     public string AccountText => "Account";
-	public string SendText => "Send";
-	public string RecieveText => "Recieve";
-	public string ClaimText => "Claim";
-	public string MoveClaimText => "Move Claim";
+	public string SendText => "Transfer";
 	public string CommunityText => "Bol Community";
+
+	[ObservableProperty]
+	public List<KeyValuePair<string, string>> _commercialBalances;
+
+	[ObservableProperty]
+	public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
 
 	[ObservableProperty]
 	private string _codeName = "";
@@ -48,11 +52,13 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 	public async Task Initialize()
 	{
-		await UpdateBolAccount();
+		await FetchBolAccountData();
+
+		GenerateCommercialBalanceDisplayList();
 	}
 
 	[RelayCommand]
-	private async Task UpdateBolAccount()
+	private async Task FetchBolAccountData()
 	{
 		try
 		{
@@ -74,24 +80,15 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-    [RelayCommand]
-	private async Task Claim()
+	private void GenerateCommercialBalanceDisplayList()
 	{
-		try
-		{
-			IsLoading = true;
+		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
-			await Task.Delay(100);
+		CommercialBalancesDisplayList.Clear();
 
-			BolAccount = await _bolService.Claim();
-		}
-		catch (Exception ex)
+		foreach (var commercialBalance in CommercialBalances)
 		{
-			await Toast.Make(ex.Message).Show();
-		}
-		finally
-		{
-			IsLoading = false;
+			CommercialBalancesDisplayList.Add(new BalanceDisplayItem("Balance: " + commercialBalance.Value + " - " + commercialBalance.Key));
 		}
 	}
 
@@ -140,21 +137,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task NavigateToSendBolPage()
+	private async Task NavigateToFinancialTransactionsPage()
 	{
-		await NavigationService.NavigateTo<SendBolViewModel>(true);
-	}
-
-	[RelayCommand]
-	private async Task NavigateToMoveClaimPage()
-	{
-		await NavigationService.NavigateTo<MoveClaimViewModel>(true);
-	}
-
-	[RelayCommand]
-	private async Task NavigateToRetrieveBolPage()
-	{
-		await NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+		await NavigationService.NavigateTo<FinancialTransactionsViewModel>(true);
 	}
 
 	[RelayCommand]
@@ -162,4 +147,13 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	{
 		await NavigationService.NavigateTo<CertifierViewModel>(true);
 	}
+
+
+	[RelayCommand]
+	private async Task NavigateToAccountPage()
+	{
+		await NavigationService.NavigateTo<AccountViewModel>(true);
+	}
 }
+
+

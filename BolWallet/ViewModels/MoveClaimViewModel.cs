@@ -7,11 +7,8 @@ using System.Numerics;
 namespace BolWallet.ViewModels;
 public partial class MoveClaimViewModel : BaseViewModel
 {
-	public string MoveClaimLabel => "Move Claim";
 	public string ToComAddressText => "To my Commercial Address";
 	public string AmountText => "Amount";
-	public string MoveText => "Move";
-
 
 	private readonly IAddressTransformer _addressTransformer;
 	private readonly ISecureRepository _secureRepository;
@@ -69,7 +66,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	{
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
-		CommercialBalancesDisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
+		CommercialBalancesDisplayList = CommercialBalances.Select(i => "Balance: " + i.Value + " - " + i.Key).ToList();
 	}
 
 	[RelayCommand]

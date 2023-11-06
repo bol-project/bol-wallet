@@ -46,7 +46,7 @@ public partial class TransactionsViewModel : BaseViewModel
 
 		BolAccount = await _bolService.GetAccount(userData.Codename);
 
-		foreach (BolTransactionEntry transaction in BolAccount.Transactions.Values)
+		foreach (BolTransactionEntry transaction in BolAccount.Transactions.Reverse().Select(x=>x.Value))
         {
             Transactions.Add(new BolTransactionEntryListItem(userData.Codename, transaction));
         }

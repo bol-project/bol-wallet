@@ -71,7 +71,7 @@ public partial class SendBolViewModel : BaseViewModel
 	{
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
-		CommercialBalancesDisplayList = CommercialBalances.Select(i => i.Key + " - Balance: " + i.Value).ToList();
+		CommercialBalancesDisplayList = CommercialBalances.Select(i => "Balance: " + i.Value + " - " + i.Key).ToList();
 	}
 
 	[RelayCommand]
