@@ -18,7 +18,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	public string CommunityText => "Bol Community";
 
 	[ObservableProperty]
-	public List<KeyValuePair<string, string>> _commercialBalances;
+	public List<KeyValuePair<string, string>> _commercialBalances = new();
 
 	[ObservableProperty]
 	public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
@@ -54,7 +54,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	{
 		await FetchBolAccountData();
 
-		GenerateCommercialBalanceDisplayList();
+		await GenerateCommercialBalanceDisplayList();
 	}
 
 	[RelayCommand]
@@ -80,15 +80,22 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-	private void GenerateCommercialBalanceDisplayList()
+	private async Task GenerateCommercialBalanceDisplayList()
 	{
-		CommercialBalances = BolAccount.CommercialBalances.ToList();
-
-		CommercialBalancesDisplayList.Clear();
-
-		foreach (var commercialBalance in CommercialBalances)
+		try
 		{
-			CommercialBalancesDisplayList.Add(new BalanceDisplayItem("Balance: " + commercialBalance.Value + " - " + commercialBalance.Key));
+			CommercialBalances = BolAccount?.CommercialBalances?.ToList() ?? new();
+
+			CommercialBalancesDisplayList.Clear();
+
+			foreach (var commercialBalance in CommercialBalances)
+			{
+				CommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+			}
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
 		}
 	}
 

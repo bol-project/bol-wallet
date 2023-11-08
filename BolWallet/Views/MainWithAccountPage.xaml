@@ -38,7 +38,7 @@
 						/>
 					</ImageButton.Source>
 				</ImageButton>
-				
+
 				<Frame
 				Grid.Row="1"
 				Grid.ColumnSpan="3" 
@@ -58,39 +58,87 @@
 							HorizontalOptions="Center"
 							HorizontalTextAlignment="Center"
 							FontAttributes="Bold"
-							FontSize="10"
+							FontSize="14"
 							TextColor="White">
 							<Label.GestureRecognizers>
-									<TapGestureRecognizer Tapped="OnTapCopy"/>
-								</Label.GestureRecognizers>
-							</Label>
+								<TapGestureRecognizer Tapped="OnTapCopy"/>
+							</Label.GestureRecognizers>
+						</Label>
 					</StackLayout>
 				</Frame>
 
 				<Frame
-				  Grid.Row="3"
-				  Grid.ColumnSpan="3"
+				  IsVisible="{Binding IsCertified}"
 				  CornerRadius="45"
 				  BackgroundColor="#582cd4">
-							<StackLayout
+					<StackLayout
 					  VerticalOptions="CenterAndExpand"
 					  Orientation="Vertical">
-								<Label 
+						<Label 
 					Text="{Binding BalanceText}"
 						  HorizontalOptions="Center"
 						  HorizontalTextAlignment="Center"
 						  FontAttributes="Bold"
 					TextColor="Yellow"/>
-								<Label
+						<Label
 						  Text="{Binding BolAccount.TotalBalance}"
 						  HorizontalOptions="Center"
 						  HorizontalTextAlignment="Center"
 						  FontSize="24"
 						  TextColor="Yellow"/>
-							</StackLayout>
+					</StackLayout>
 				</Frame>
 
-				<Label Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
+				<Frame
+				  IsVisible="{Binding IsCertified}"
+				  CornerRadius="45"
+				  BackgroundColor="#582cd4">
+					<StackLayout
+							VerticalOptions="CenterAndExpand"
+							Orientation="Vertical">
+						<Label 
+							Text="Claim Balance"
+							HorizontalOptions="Center"
+							HorizontalTextAlignment="Center"
+							FontAttributes="Bold"
+							TextColor="Yellow"/>
+						<Label
+							Text="{Binding BolAccount.ClaimBalance}"
+							HorizontalOptions="Center"
+							HorizontalTextAlignment="Center"
+							FontSize="24"
+							TextColor="Yellow"/>
+					</StackLayout>
+				</Frame>
+
+				<Frame
+				  IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"
+				  CornerRadius="45"
+				  BackgroundColor="#582cd4">
+					<StackLayout
+						VerticalOptions="CenterAndExpand"
+						Orientation="Vertical">
+						<Label 
+						Text="Main Address"
+						HorizontalOptions="Center"
+						HorizontalTextAlignment="Center"
+						FontAttributes="Bold"
+						TextColor="Yellow"/>
+						<Label
+						Text="{Binding MainAddress}"
+						HorizontalOptions="Center"
+						HorizontalTextAlignment="Center"
+						FontSize="14"
+						FontAttributes="Bold"
+						TextColor="Yellow">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnTapCopy"/>
+						</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Label IsVisible="{Binding IsCertified}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
 
 				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}" HasUnevenRows="True">
 					<ListView.ItemTemplate >
@@ -99,11 +147,23 @@
 								<Grid>
 									<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
 										<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
-											<Label Text="{Binding BalanceInfo}" 
-									   HorizontalOptions="Center" 
-									   HorizontalTextAlignment="Center" 
-									   FontAttributes="Bold" 
-									   TextColor="White" />
+											<Label 
+												Text="{Binding Address}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+												<Label.GestureRecognizers>
+													<TapGestureRecognizer Tapped="OnTapCopy"/>
+												</Label.GestureRecognizers>
+											</Label>
+											<Label 
+												Text="{Binding Balance, StringFormat= 'Balance: {0}'}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+											</Label>
 										</StackLayout>
 									</Frame>
 								</Grid>
@@ -111,7 +171,6 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
-
 
 				<Button
 			        IsVisible="{Binding IsRegistered, Converter={StaticResource InverseBooleanConverter}}"
@@ -150,7 +209,7 @@
                 FontSize="12"
                 Text="Financial Transactions" />
 
-				<Button IsVisible="{Binding BolAccount.IsCertifier}"
+				<Button
 				Command="{Binding NavigateToCertifierPageCommand}"
 				FontAttributes="Bold"
 				FontSize="12"

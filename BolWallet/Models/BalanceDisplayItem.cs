@@ -2,11 +2,13 @@
 {
 	public class BalanceDisplayItem : ObservableObject
 	{
-		public string BalanceInfo { get; set; }
+		public string Address { get; set; }
+		public string Balance { get; set; }
 
-		public BalanceDisplayItem(string balanceInfo)
+		public BalanceDisplayItem(string address, string balance)
 		{
-			BalanceInfo = balanceInfo;
+			Address = address;
+			Balance = balance;
 		}
 	}
 }
