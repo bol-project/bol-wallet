@@ -1,6 +1,6 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Cryptography;
-using BolWallet.Extensions;
+using CommunityToolkit.Maui.Alerts;
 using System.Text;
 
 namespace BolWallet.ViewModels;
@@ -34,28 +34,37 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task Submit()
 	{
-		if (string.IsNullOrEmpty(Password))
-			return;
+		try
+		{
+			if (string.IsNullOrEmpty(Password))
+				return;
 
-		IsLoading = true;
+			IsLoading = true;
 
-		byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
+			byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
 
-		string privateKey = _base16Encoder.Encode(hash);
+			string privateKey = _base16Encoder.Encode(hash);
 
-		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+			UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-		var bolWallet = await Task.Run(() => _walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey));
+			var bolWallet = await Task.Run(() => _walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey));
 
-		userData.BolWallet = bolWallet;
-		userData.WalletPassword = Password;
+			userData.BolWallet = bolWallet;
+			userData.WalletPassword = Password;
 
-		await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
+			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
-		await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
+			await Clipboard.SetTextAsync(JsonSerializer.Serialize(bolWallet));
 
-		IsLoading = false;
-
-		await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
 	}
 }

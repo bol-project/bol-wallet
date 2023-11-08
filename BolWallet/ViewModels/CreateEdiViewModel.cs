@@ -1,12 +1,9 @@
-﻿using Bol.App.Core.Services;
-using Bol.Core.Abstractions;
+﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Cryptography;
-using FluentValidation;
-using Microsoft.Maui.Storage;
+using CommunityToolkit.Maui.Alerts;
 using Plugin.AudioRecorder;
 using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 
 namespace BolWallet.ViewModels;
 public partial class CreateEdiViewModel : BaseViewModel
@@ -53,15 +50,13 @@ public partial class CreateEdiViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task PickPhotoAsync(string propertyName)
 	{
-		if (await _permissionService.CheckPermissionAsync<Permissions.StorageRead>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.StorageRead>(); return; }
-
 		var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 		{
 					{ DevicePlatform.iOS, new[] { "com.adobe.pdf","public.image", "public.audio" } },
 					{ DevicePlatform.Android, new[] { "application/pdf", "image/*","audio/*" } },
 					{ DevicePlatform.macOS, new[] { "pdf","public.image", "public.audio" } },
-                    { DevicePlatform.WinUI, new[] { ".pdf",".gif", ".mp3",".png" } },
-        });
+					{ DevicePlatform.WinUI, new[] { ".pdf",".gif", ".mp3",".png" } },
+		});
 
 		var pickResult = await FilePicker.PickAsync(new PickOptions
 		{
@@ -122,34 +117,43 @@ public partial class CreateEdiViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task Submit()
 	{
-		if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
-			 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
-			 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
+		try
 		{
-			return;
+			if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
+				 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
+				 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
+			{
+				return;
+			}
+
+			IsLoading = true;
+
+			UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+
+			encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
+			encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
+			encryptedDigitalMatrix.Nin = userData.Person.Nin;
+			encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
+			encryptedDigitalMatrix.CodeName = userData.Codename;
+
+			var result = await Task.Run(() => _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix));
+
+			userData.Edi = result;
+
+			userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
+
+			await _secureRepository.SetAsync("userdata", userData);
+
+			await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
 		}
-
-		IsLoading = true;
-
-		UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
-
-		encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
-		encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
-		encryptedDigitalMatrix.Nin = userData.Person.Nin;
-		encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
-		encryptedDigitalMatrix.CodeName = userData.Codename;
-
-		var result = await Task.Run(() => _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix));
-
-		userData.Edi = result;
-
-		userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
-
-		await _secureRepository.SetAsync("userdata", userData);
-
-		IsLoading = false;
-
-		await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
 	}
 
 	private PropertyInfo GetPropertyInfo(string propertyName)
