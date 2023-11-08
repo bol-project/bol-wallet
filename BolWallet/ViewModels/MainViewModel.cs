@@ -53,6 +53,11 @@ public partial class MainViewModel : BaseViewModel
 
 			var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync("Enter Your Password", null);
 
+			if(string.IsNullOrEmpty(password))
+			{
+				throw new Exception("Password cannot be empty. Please provide a valid password.");
+			}
+
 			var userData = new UserData
 			{
 				Codename = bolWallet.Name,
