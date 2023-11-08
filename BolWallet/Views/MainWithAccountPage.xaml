@@ -27,9 +27,9 @@
 
 			<StackLayout Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 
-				<Label IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+				<Label IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
-				<ImageButton IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<ImageButton IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -68,7 +68,7 @@
 				</Frame>
 
 				<Frame
-				  IsVisible="{Binding IsCertified}"
+				  IsVisible="{Binding IsAccountOpen}"
 				  CornerRadius="45"
 				  BackgroundColor="#582cd4">
 					<StackLayout
@@ -90,7 +90,7 @@
 				</Frame>
 
 				<Frame
-				  IsVisible="{Binding IsCertified}"
+				  IsVisible="{Binding IsAccountOpen}"
 				  CornerRadius="45"
 				  BackgroundColor="#582cd4">
 					<StackLayout
@@ -112,7 +112,7 @@
 				</Frame>
 
 				<Frame
-				  IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"
+				  IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
 				  CornerRadius="45"
 				  BackgroundColor="#582cd4">
 					<StackLayout
@@ -138,9 +138,9 @@
 					</StackLayout>
 				</Frame>
 
-				<Label IsVisible="{Binding IsCertified}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
+				<Label IsVisible="{Binding IsAccountOpen}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
 
-				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}" HasUnevenRows="True">
+				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}"  IsVisible="{Binding IsAccountOpen}" HasUnevenRows="True">
 					<ListView.ItemTemplate >
 						<DataTemplate x:DataType="models:BalanceDisplayItem">
 							<ViewCell>
@@ -181,7 +181,7 @@
                     Text="Register" />
 
 				<Button
-	                IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}"
+	                IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
                     Command="{Binding NavigateToCertifyPageCommand}"
 					BackgroundColor="DarkSlateBlue"
 					TextColor="White"
@@ -190,7 +190,7 @@
 
 			</StackLayout>
 
-			<StackLayout IsVisible="{Binding IsCertified}" Grid.Row="1" Grid.ColumnSpan="3"  Spacing="15" Padding="20">
+			<StackLayout IsVisible="{Binding IsAccountOpen}" Grid.Row="1" Grid.ColumnSpan="3"  Spacing="15" Padding="20">
 				<Button
 				FontAttributes="Bold"
 				FontSize="12"

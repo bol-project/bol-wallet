@@ -36,7 +36,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private bool _isLoading = false;
 
 	[ObservableProperty]
-	private bool _isCertified = false;
+	private bool _isAccountOpen = false;
 
 	[ObservableProperty]
 	private bool _isRegistered = false;
@@ -71,8 +71,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
 			IsRegistered = true;
 
-			if (BolAccount.AccountStatus == AccountStatus.PendingFees || BolAccount.AccountStatus == AccountStatus.Open)
-				IsCertified = true;
+			if (BolAccount.AccountStatus == AccountStatus.Open)
+				IsAccountOpen = true;
 		}
 		catch (Exception ex)
 		{
