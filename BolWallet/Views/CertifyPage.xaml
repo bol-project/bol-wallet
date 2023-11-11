@@ -11,81 +11,81 @@
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
+	<ScrollView>
+		<StackLayout>
+			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
+				<Label  Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
-	<StackLayout>
-		<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
-			<Label  Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
-
-			<ImageButton  Command="{Binding UpdateBolAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
-				<ImageButton.Source>
-					<FontImageSource 
+				<ImageButton  Command="{Binding UpdateBolAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+					<ImageButton.Source>
+						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
 						Glyph="{x:Static helpers:Icons.Refresh}"
 						Color="Black"
 						/>
-				</ImageButton.Source>
-			</ImageButton>
-			<Label
+					</ImageButton.Source>
+				</ImageButton>
+				<Label
 				Text="Code Name"
 				FontSize="18"
 				TextColor="DarkSlateBlue" />
 
-			<Frame BackgroundColor="WhiteSmoke" Padding="10">
-				<Label Text="{Binding BolAccount.CodeName}" TextColor="Black">
-					<Label.GestureRecognizers>
-						<TapGestureRecognizer Tapped="OnTapCopy"/>
-					</Label.GestureRecognizers>
-				</Label>
-			</Frame>
+				<Frame BackgroundColor="WhiteSmoke" Padding="10">
+					<Label Text="{Binding BolAccount.CodeName}" TextColor="Black">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnTapCopy"/>
+						</Label.GestureRecognizers>
+					</Label>
+				</Frame>
 
-			<Label
+				<Label
 				Text="Account Status"
 				FontSize="18"
 				TextColor="DarkSlateBlue" />
 
-			<Frame BackgroundColor="WhiteSmoke" Padding="10">
-				<Label Text="{Binding BolAccount.AccountStatus}" TextColor="Black">
-					<Label.GestureRecognizers>
-						<TapGestureRecognizer Tapped="OnTapCopy"/>
-					</Label.GestureRecognizers>
-				</Label>
-			</Frame>
+				<Frame BackgroundColor="WhiteSmoke" Padding="10">
+					<Label Text="{Binding BolAccount.AccountStatus}" TextColor="Black">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnTapCopy"/>
+						</Label.GestureRecognizers>
+					</Label>
+				</Frame>
 
-		</StackLayout>
+			</StackLayout>
 
-		<StackLayout Spacing="15" Padding="10" IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}">
+			<StackLayout Spacing="15" Padding="10" IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}">
 
-			<Button 
+				<Button 
 			Text="Select Mandatory Certifiers"
 			BackgroundColor="DarkSlateBlue"
 			TextColor="White"
 			Command="{Binding SelectMandatoryCertifiersCommand}"	/>
 
-			<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
-				<CollectionView.ItemTemplate>
-					<DataTemplate>
-						<StackLayout  Padding="3">
-							<Frame BackgroundColor="WhiteSmoke" Padding="10">
-								<Label Text="{Binding Key}" TextColor="Black">
-									<Label.GestureRecognizers>
-										<TapGestureRecognizer Tapped="OnTapCopy" />
-									</Label.GestureRecognizers>
-								</Label>
-							</Frame>
-						</StackLayout>
-					</DataTemplate>
-				</CollectionView.ItemTemplate>
-			</CollectionView>
+				<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
+					<CollectionView.ItemTemplate>
+						<DataTemplate>
+							<StackLayout  Padding="3">
+								<Frame BackgroundColor="WhiteSmoke" Padding="10">
+									<Label Text="{Binding Key}" TextColor="Black">
+										<Label.GestureRecognizers>
+											<TapGestureRecognizer Tapped="OnTapCopy" />
+										</Label.GestureRecognizers>
+									</Label>
+								</Frame>
+							</StackLayout>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
 
-			<Entry Placeholder="Paste Certifier Codename" Text="{Binding CertifierCodename, Mode=TwoWay}" PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+				<Entry Placeholder="Paste Certifier Codename" Text="{Binding CertifierCodename, Mode=TwoWay}" PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
 
-			<Button 
+				<Button 
 			Text="{Binding Certifications, StringFormat='Request Certification No.{0} out of 2'}"
 			BackgroundColor="DarkSlateBlue"
 			TextColor="White"
 			Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
-		</StackLayout>
-		<Button
+			</StackLayout>
+			<Button
 			HorizontalOptions="Center"
 			IsVisible="{Binding IsCertified}"
 			Text="Pay Certification Fees"
@@ -93,6 +93,6 @@
 			TextColor="White"
 			Command="{Binding PayCertificationFeesCommand}"	/>
 
-	</StackLayout>
-
+		</StackLayout>
+	</ScrollView>
 </ContentPage>
