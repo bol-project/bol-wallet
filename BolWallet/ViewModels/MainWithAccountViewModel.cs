@@ -1,6 +1,9 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -8,12 +11,23 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private readonly ISecureRepository _secureRepository;
 	private readonly IBolService _bolService;
 
-	public string AccountText => "Account";
-	public string SendText => "Send";
-	public string RecieveText => "Recieve";
-	public string ClaimText => "Claim";
-	public string MoveClaimText => "Move Claim";
+	public string WelcomeText => "Welcome";
+	public string BalanceText => "Total Balance";
+    public string AccountText => "Account";
+	public string SendText => "Transfer";
 	public string CommunityText => "Bol Community";
+
+	[ObservableProperty]
+	public List<KeyValuePair<string, string>> _commercialBalances = new();
+
+	[ObservableProperty]
+	public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
+
+	[ObservableProperty]
+	private string _codeName = "";
+
+	[ObservableProperty]
+	private string _mainAddress = "";
 
 	[ObservableProperty]
 	private BolAccount _bolAccount = new();
@@ -21,34 +35,44 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isLoading = false;
 
-	private UserData userData;
+	[ObservableProperty]
+	private bool _isAccountOpen = false;
+
+	[ObservableProperty]
+	private bool _isRegistered = false;
 
 	public MainWithAccountViewModel(
 		INavigationService navigationService,
 		ISecureRepository secureRepository,
 		IBolService bolService) : base(navigationService)
 	{
-		userData = new UserData
-		{
-			Codename = "Codename Dummy",
-			Edi = "Edi Dummy"
-		};
-
 		_secureRepository = secureRepository;
 		_bolService = bolService;
 	}
 
 	public async Task Initialize()
 	{
+		await FetchBolAccountData();
+
+		await GenerateCommercialBalanceDisplayList();
+	}
+
+	[RelayCommand]
+	private async Task FetchBolAccountData()
+	{
 		try
 		{
 			userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-			if (userData is null) return;
+			CodeName = userData.Codename;
+			MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 
-			BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
+			BolAccount = await _bolService.GetAccount(userData.Codename);
 
-			await Clipboard.SetTextAsync(JsonSerializer.Serialize(BolAccount));
+			IsRegistered = true;
+
+			if (BolAccount.AccountStatus == AccountStatus.Open)
+				IsAccountOpen = true;
 		}
 		catch (Exception ex)
 		{
@@ -56,12 +80,18 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-	[RelayCommand]
-	private async Task Claim()
+	private async Task GenerateCommercialBalanceDisplayList()
 	{
 		try
 		{
-			BolAccount = await _bolService.Claim();
+			CommercialBalances = BolAccount?.CommercialBalances?.ToList() ?? new();
+
+			CommercialBalancesDisplayList.Clear();
+
+			foreach (var commercialBalance in CommercialBalances)
+			{
+				CommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -70,32 +100,67 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToUserPage()
+	private async Task Register()
 	{
-		NavigationService.NavigateTo<UserViewModel>(true);
+		try
+		{
+			IsLoading = true;
+
+			await Task.Delay(100);
+
+			BolAccount = await _bolService.Register();
+
+			await Toast.Make("Your Account is registered now.").Show();
+		}
+		catch (Exception ex)
+		{
+			await Toast.Make(ex.Message).Show();
+		}
+		finally
+		{
+			IsLoading = false;
+		}
 	}
 
 	[RelayCommand]
-	private void NavigateToBolCommunityPage()
+	private async Task NavigateToCertifyPage()
 	{
-		NavigationService.NavigateTo<BolCommunityViewModel>(true);
+		if (IsRegistered)
+			await NavigationService.NavigateTo<CertifyViewModel>(true);
+		else
+			await Toast.Make("CodeName is not a registered Bol Account.").Show();
 	}
 
 	[RelayCommand]
-	private void NavigateToSendBolPage()
+	private async Task NavigateToTransactionsPage()
 	{
-		NavigationService.NavigateTo<SendBolViewModel>(true);
+		await NavigationService.NavigateTo<TransactionsViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToMoveClaimPage()
+	private async Task NavigateToBolCommunityPage()
 	{
-		NavigationService.NavigateTo<MoveClaimViewModel>(true);
+		await NavigationService.NavigateTo<BolCommunityViewModel>(true);
 	}
 
 	[RelayCommand]
-	private void NavigateToRetrieveBolPage()
+	private async Task NavigateToFinancialTransactionsPage()
 	{
-		NavigationService.NavigateTo<RetrieveBolViewModel>(true);
+		await NavigationService.NavigateTo<FinancialTransactionsViewModel>(true);
+	}
+
+	[RelayCommand]
+	private async Task NavigateToCertifierPage()
+	{
+		await NavigationService.NavigateTo<CertifierViewModel>(true);
+	}
+
+
+	[RelayCommand]
+	private async Task NavigateToAccountPage()
+	{
+		await NavigationService.NavigateTo<AccountViewModel>(true);
 	}
 }
+
+

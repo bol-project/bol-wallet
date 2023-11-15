@@ -1,5 +1,4 @@
 using BolWallet.Helpers;
-using BolWallet.Views;
 
 namespace BolWallet.Extensions;
 
@@ -15,7 +14,6 @@ public static class RegistrationExtensions
 			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
 			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
 			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
-			.BindViewModelToView<RegistrationViewModel, RegistrationPage>()
 			.BindViewModelToView<CertifyViewModel, CertifyPage>()
 
 			.BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
@@ -23,6 +21,10 @@ public static class RegistrationExtensions
 			.BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
 			.BindViewModelToView<SendBolViewModel, SendBolPage>()
 			.BindViewModelToView<UserViewModel, UserPage>()
+            .BindViewModelToView<AccountViewModel, AccountPage>()
+			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()
+			.BindViewModelToView<CertifierViewModel, CertifierPage>()
+			.BindViewModelToView<FinancialTransactionsViewModel, FinancialTransactionsPage>()
 			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>();
 
 		return services;

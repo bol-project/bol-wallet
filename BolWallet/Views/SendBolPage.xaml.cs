@@ -6,4 +6,10 @@ public partial class SendBolPage : ContentPage
         InitializeComponent();
         BindingContext = sendBolViewModel;
     }
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await ((SendBolViewModel)BindingContext).Initialize();
+	}
 }

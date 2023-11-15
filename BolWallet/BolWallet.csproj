@@ -93,11 +93,17 @@
 		<MauiXaml Update="Controls\ExtendedComboBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\AccountPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\App.xaml">
 			<SubType>Designer</SubType>
 		</MauiXaml>
 		<MauiXaml Update="Views\BolCommunityPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\CertifierPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\CertifyPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -107,6 +113,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\CreateEdiPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\FinancialTransactionsPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\MainPage.xaml">
 			<SubType>Designer</SubType>
@@ -124,9 +133,6 @@
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\UserPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\RegistrationPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>

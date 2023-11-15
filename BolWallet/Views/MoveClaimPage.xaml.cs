@@ -7,5 +7,11 @@
 			InitializeComponent ();
 			BindingContext = moveClaimViewModel;
 		}
+
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing();
+			await ((MoveClaimViewModel)BindingContext).Initialize();
+		}
 	}
 }
