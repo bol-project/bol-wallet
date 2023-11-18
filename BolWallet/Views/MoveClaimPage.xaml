@@ -6,6 +6,7 @@
     xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:MoveClaimViewModel"
+	xmlns:Converters="clr-namespace:BolWallet.Converters"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
 	<ContentPage.Resources>
@@ -28,6 +29,8 @@
 
 			<Color x:Key="FocusedColor">#718792</Color>
 
+			<Converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+			
 		</ResourceDictionary>
 	</ContentPage.Resources>
 
@@ -35,7 +38,7 @@
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
 			<Label
@@ -59,8 +62,21 @@
 				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
 			</Frame>
 
+			<Label 
+				Grid.Row="3"
+				Grid.ColumnSpan="3" 
+				Text="Claim Balance" 
+				TextColor="Black"/>
+			<Frame   
+				Grid.Row="4"
+				Grid.ColumnSpan="3" 
+				BackgroundColor="WhiteSmoke" 
+				Padding="10">
+				<Label Text="{Binding BolAccount.ClaimBalance}" TextColor="Black"/>
+			</Frame>
+
 			<Picker 
-                Grid.Row="3"
+                Grid.Row="5"
                 Title="Commercial Address" 
                 ItemsSource="{Binding CommercialBalancesDisplayList}"
                 SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
@@ -68,7 +84,7 @@
 
 			<Entry Placeholder="Amount" 
 				   Keyboard="Numeric"
-				   Grid.Row="4" 
+				   Grid.Row="6" 
 				   Grid.Column="0"
 				   Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
 				   PlaceholderColor="Black"
@@ -76,9 +92,9 @@
 				   TextColor="Black"
 				   Margin="0,0,0,10" />
 
-			<Entry Grid.Row="5" 
+			<Entry Grid.Row="7" 
 				   Keyboard="Numeric"  
-				   Text="{Binding MoveClaimForm.ActualAmount, StringFormat='{0:F8} Bol'}" 
+				   Text="{Binding MoveClaimForm.ActualAmount, Converter={StaticResource DecimalToStringConverter}}" 
 				   PlaceholderColor="Black" 
 				   IsEnabled="False" 
 				   BackgroundColor="#EDF2F7" 
@@ -86,7 +102,7 @@
 				   Margin="0,0,0,10" />
 
 			<Button
-                Grid.Row="6"
+                Grid.Row="8"
                 Command="{Binding MoveClaimCommand}"
                 FontAttributes="Bold"
                 FontSize="8"

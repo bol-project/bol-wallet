@@ -77,7 +77,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 			MoveClaimForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
 
 			BolAccount = await _bolService.TransferClaim(
-			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress),
+			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress.Trim()),
 			  new BigInteger(MoveClaimForm.ActualAmount * (decimal)Math.Pow(10, 8)));
 
 			GenerateCommercialBalanceDisplayList();
