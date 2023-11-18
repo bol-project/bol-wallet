@@ -6,6 +6,7 @@ using Bol.Core.Model;
 using BolWallet.Controls;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SkiaSharp.Views.Maui.Handlers;
@@ -51,6 +52,8 @@ public static class MauiProgram
 		services.AddSingleton<IPermissionService, PermissionService>();
 
 		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+
 		services.RegisterViewAndViewModelSubsystem();
 
 		// Register RpcEndpoint and Contract

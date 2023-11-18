@@ -170,7 +170,7 @@
 	<ItemGroup>
 		<PackageReference Include="akavache" Version="9.1.20" />
 		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
@@ -178,7 +178,7 @@
 		<PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
 		<PackageReference Include="Neo.VM" Version="2.4.3.1" />
 		<PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
-		<PackageReference Include="SkiaSharp" Version="2.88.5" />
+		<PackageReference Include="SkiaSharp" Version="2.88.6" />
 		<PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.5" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.5" />
