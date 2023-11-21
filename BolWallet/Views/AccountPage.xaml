@@ -10,9 +10,15 @@
 
 	<ContentPage.ToolbarItems>
 		<ToolbarItem 
-            Text="Settings"
-            Order="Secondary" 
-            Priority="0" />
+            Text="Download BolAccount"
+			Order="Secondary"
+            Priority="0" 
+			Command="{Binding DownloadAccountCommand}"/>
+		<ToolbarItem 
+			Text="Download BolWallet"
+			Order="Secondary"
+			Priority="0" 
+			Command="{Binding DownloadBolWalletCommand}"/>
 	</ContentPage.ToolbarItems>
 
 	<ScrollView>
@@ -24,21 +30,11 @@
             HorizontalOptions="Center">
 
 			<StackLayout Spacing="15" Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
-				<ImageButton  Command="{Binding DownloadAccountCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
-					<ImageButton.Source>
-						<FontImageSource 
-					FontFamily="MaterialIconsRegular"
-					Glyph="{x:Static helpers:Icons.Download}"
-					Color="Black"
-					/>
-					</ImageButton.Source>
-				</ImageButton>
 				<Frame
 				Grid.Row="1"
 				Grid.ColumnSpan="3" 
 				CornerRadius="25"
 				BackgroundColor="#582cd4">
-
 					<StackLayout
 							VerticalOptions="CenterAndExpand"
 							Orientation="Vertical">

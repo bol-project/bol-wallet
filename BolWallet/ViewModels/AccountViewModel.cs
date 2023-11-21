@@ -43,19 +43,15 @@ public partial class AccountViewModel : BaseViewModel
 		}
 	}
 
-	[RelayCommand]
-	private async Task DownloadAccountAsync(CancellationToken cancellationToken = default)
+	private async Task DownloadDataAsync<T>(T data, string fileName, CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			string json = JsonConvert.SerializeObject(BolAccount);
-
+			string json = JsonConvert.SerializeObject(data);
 			byte[] jsonData = Encoding.UTF8.GetBytes(json);
 
 			using (var stream = new MemoryStream(jsonData))
 			{
-				string fileName = "BolAccount.json";
-
 				var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
 
 				if (result.IsSuccessful)
@@ -68,5 +64,17 @@ public partial class AccountViewModel : BaseViewModel
 		{
 			await Toast.Make(ex.Message).Show();
 		}
+	}
+
+	[RelayCommand]
+	private async Task DownloadAccountAsync(CancellationToken cancellationToken = default)
+	{
+		await DownloadDataAsync(BolAccount, "BolAccount.json", cancellationToken);
+	}
+
+	[RelayCommand]
+	private async Task DownloadBolWalletAsync(CancellationToken cancellationToken = default)
+	{
+		await DownloadDataAsync(userData.BolWallet, "BolWallet.json", cancellationToken);
 	}
 }
