@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject Breadcrumbs breadcrumbs
+@inject UserViewModel userViewModel
+@inject NavigationManager nav
+@inject IServiceProvider serviceProvider
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h5" Class="ml-3">BolWallet v1.0</MudText>
+        <MudSpacer />
+        @if (breadcrumbs.userData?.BolWallet != null && !breadcrumbs.isAccountOpen)
+        {
+        <MudIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="@(x=> breadcrumbs.NavButtonsClick(NavButtons.Refresh))" Color="Color.Inherit" Edge="Edge.End" />
+        }
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Anchor="Anchor.Start" Variant="@DrawerVariant.Temporary" Elevation="2">
+        <NavMenu/>
+
+    </MudDrawer>
+    <MudMainContent>
+        <MudBreadcrumbs Items="breadcrumbs._items"></MudBreadcrumbs>
+        @Body
+    </MudMainContent>
+</MudLayout> 
+
+@code {
+    bool _drawerOpen = false;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        breadcrumbs.OnUpdate += OnUpdate;
+        breadcrumbs.userData = userViewModel._userData;
+        if (breadcrumbs.userData?.BolWallet != null)
+        {
+            nav.NavigateTo("/index-with-account");
+        }
+    }
+
+    public void Dispose()
+    {
+        breadcrumbs.OnUpdate -= OnUpdate;
+    }
+
+    private async void OnUpdate(object sender, bool a)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+}

@@ -1,69 +1,49 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<PropertyGroup>
-		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-		<OutputType>Exe</OutputType>
-		<RootNamespace>BolWallet</RootNamespace>
-		<UseMaui>true</UseMaui>
-		<SingleProject>true</SingleProject>
-		<ImplicitUsings>enable</ImplicitUsings>
+    <PropertyGroup>
+        <TargetFrameworks>net7.0-ios;net7.0-maccatalyst;net7.0-android33.0</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+        <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+        <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+        <OutputType>Exe</OutputType>
+        <RootNamespace>BolWallet</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnableDefaultCssItems>false</EnableDefaultCssItems>
 
-		<!-- Display name -->
-		<ApplicationTitle>BolWallet</ApplicationTitle>
+        <!-- Display name -->
+        <ApplicationTitle>BolWallet</ApplicationTitle>
 
-		<!-- App Identifier -->
-		<ApplicationId>com.companyname.bolwallet</ApplicationId>
-		<ApplicationIdGuid>c5489447-fb64-49ba-8452-27a8e4dde81e</ApplicationIdGuid>
+        <!-- App Identifier -->
+        <ApplicationId>com.bol.bolwallet</ApplicationId>
+        <ApplicationIdGuid>DD886EC6-851B-43F4-AAD0-E5105E6F399A</ApplicationIdGuid>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+        <!-- Versions -->
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<AssemblyName>$(MSBuildProjectName)_App</AssemblyName>
-	</PropertyGroup>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+        <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+        <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>True</GenerateTestArtifacts>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <PackageCertificateKeyFile>BolWallet_TemporaryKey.pfx</PackageCertificateKeyFile>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+      <AndroidPackageFormat>apk</AndroidPackageFormat>
+    </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-maccatalyst|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-maccatalyst|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
-		<WarningsAsErrors />
-	</PropertyGroup>
-
-	<ItemGroup>
+    <ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
 
@@ -74,111 +54,87 @@
 		<MauiImage Include="Resources\Images\*" />
 
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
 
-		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
+        <!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128" />
 
-	<ItemGroup>
-		<MauiXaml Update="Controls\ExtendedDatePicker.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Controls\ExtendedTextEdit.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Controls\ExtendedComboBox.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\AccountPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\App.xaml">
-			<SubType>Designer</SubType>
-		</MauiXaml>
-		<MauiXaml Update="Views\BolCommunityPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\CertifierPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\CertifyPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\CreateCodenamePage.xaml">
-			<SubType>Designer</SubType>
-		</MauiXaml>
-		<MauiXaml Update="Views\CreateEdiPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\FinancialTransactionsPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\MainPage.xaml">
-			<SubType>Designer</SubType>
-		</MauiXaml>
-		<MauiXaml Update="Views\MainWithAccountPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\MoveClaimPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\RetrieveBolPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\SendBolPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\UserPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-	</ItemGroup>
+		<!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
 
-	<ItemGroup>
-		<Compile Update="Controls\ExtendedDatePicker.xaml.cs">
-			<DependentUpon>ExtendedDatePicker.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Controls\ExtendedTextEdit.xaml.cs">
-			<DependentUpon>ExtendedTextEdit.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Controls\ExtendedComboBox.xaml.cs">
-			<DependentUpon>ExtendedComboBox.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Views\App.xaml.cs">
-			<DependentUpon>App.xaml</DependentUpon>
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Views\BolCommunityPage.xaml.cs">
-			<DependentUpon>BolCommunityPage.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Views\CreateCodenamePage.xaml.cs">
-			<DependentUpon>CreateCodenamePage.xaml</DependentUpon>
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Views\MainPage.xaml.cs">
-			<DependentUpon>MainPage.xaml</DependentUpon>
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Views\MainWithAccountPage.xaml.cs">
-			<DependentUpon>MainWithAccountPage.xaml</DependentUpon>
-		</Compile>
-	</ItemGroup>
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AndroidResource Remove="Controls\**" />
+      <AndroidResource Remove="Converters\**" />
+      <Compile Remove="Controls\**" />
+      <Compile Remove="Converters\**" />
+      <Content Remove="Controls\**" />
+      <Content Remove="Converters\**" />
+      <EmbeddedResource Remove="Controls\**" />
+      <EmbeddedResource Remove="Converters\**" />
+      <MauiXaml Remove="Controls\**" />
+      <MauiXaml Remove="Converters\**" />
+      <None Remove="Controls\**" />
+      <None Remove="Converters\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="ViewModels\RadialControlViewModel.cs" />
+      <Compile Remove="Views\AccountPage.xaml.cs" />
+      <Compile Remove="Views\BolCommunityPage.xaml.cs" />
+      <Compile Remove="Views\CertifierPage.xaml.cs" />
+      <Compile Remove="Views\CertifyPage.xaml.cs" />
+      <Compile Remove="Views\CreateCodenamePage.xaml.cs" />
+      <Compile Remove="Views\CreateEdiPage.xaml.cs" />
+      <Compile Remove="Views\FinancialTransactionsPage.xaml.cs" />
+      <Compile Remove="Views\GenerateWalletWithPasswordPage.xaml.cs" />
+      <Compile Remove="Views\MainPage.xaml.cs" />
+      <Compile Remove="Views\MainWithAccountPage.xaml.cs" />
+      <Compile Remove="Views\MoveClaimPage.xaml.cs" />
+      <Compile Remove="Views\RegistrationPage.xaml.cs" />
+      <Compile Remove="Views\RetrieveBolPage.xaml.cs" />
+      <Compile Remove="Views\SendBolPage.xaml.cs" />
+      <Compile Remove="Views\UserPage.xaml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Remove="Views\AccountPage.xaml" />
+      <MauiXaml Remove="Views\BolCommunityPage.xaml" />
+      <MauiXaml Remove="Views\CertifierPage.xaml" />
+      <MauiXaml Remove="Views\CertifyPage.xaml" />
+      <MauiXaml Remove="Views\CreateCodenamePage.xaml" />
+      <MauiXaml Remove="Views\CreateEdiPage.xaml" />
+      <MauiXaml Remove="Views\FinancialTransactionsPage.xaml" />
+      <MauiXaml Remove="Views\GenerateWalletWithPasswordPage.xaml" />
+      <MauiXaml Remove="Views\MainPage.xaml" />
+      <MauiXaml Remove="Views\MainWithAccountPage.xaml" />
+      <MauiXaml Remove="Views\MoveClaimPage.xaml" />
+      <MauiXaml Remove="Views\RegistrationPage.xaml" />
+      <MauiXaml Remove="Views\RetrieveBolPage.xaml" />
+      <MauiXaml Remove="Views\SendBolPage.xaml" />
+      <MauiXaml Remove="Views\UserPage.xaml" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="akavache" Version="9.1.20" />
 		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
-		<PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
-		<PackageReference Include="Neo.VM" Version="2.4.3.1" />
+		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 		<PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
-		<PackageReference Include="SkiaSharp" Version="2.88.5" />
 		<PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.5" />
-		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.5" />
+		<PackageReference Include="MudBlazor" Version="6.11.1" />
+
 	</ItemGroup>
 
 	<ItemGroup>
@@ -204,7 +160,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" />
 	</ItemGroup>
 
 </Project>

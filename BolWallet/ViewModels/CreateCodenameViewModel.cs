@@ -9,8 +9,8 @@ public partial class CreateCodenameViewModel : BaseViewModel
 {
 	private readonly ICodeNameService _codeNameService;
 	private readonly ISecureRepository _secureRepository;
-
-	public CreateCodenameViewModel(
+    public UserData _userData;
+    public CreateCodenameViewModel(
 		INavigationService navigationService,
 		ICodeNameService codeNameService,
 		RegisterContent content,
@@ -60,13 +60,13 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
 			var result = _codeNameService.Generate(person);
 
-			var userData = new UserData
+            _userData  = new UserData
 			{
 				Codename = result,
 				Person = person
 			};
 
-			await _secureRepository.SetAsync("userdata", userData);
+			await _secureRepository.SetAsync("userdata", _userData);
 
 			Codename = result;
 			CodenameForm.IsInvalidated = false;
@@ -79,21 +79,21 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
 	public async Task Initialize()
 	{
-		var userData = await _secureRepository.GetAsync<UserData>("userdata");
-		if (userData is null) return;
+        _userData = await _secureRepository.GetAsync<UserData>("userdata");
+		if (_userData is null) return;
 
-		CodenameForm.FirstName.Value = userData.Person.FirstName;
-		CodenameForm.MiddleName.Value = userData.Person.MiddleName;
-		CodenameForm.Surname.Value = userData.Person.Surname;
-		CodenameForm.ThirdName.Value = userData.Person.ThirdName;
-		CodenameForm.Gender = userData.Person.Gender;
-		CodenameForm.Combination.Value = userData.Person.Combination;
+		CodenameForm.FirstName.Value = _userData.Person.FirstName;
+		CodenameForm.MiddleName.Value = _userData.Person.MiddleName;
+		CodenameForm.Surname.Value = _userData.Person.Surname;
+		CodenameForm.ThirdName.Value = _userData.Person.ThirdName;
+		CodenameForm.Gender = _userData.Person.Gender;
+		CodenameForm.Combination.Value = _userData.Person.Combination;
 		CodenameForm.SelectedCountry = CodenameForm
 					.Countries
-					.FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-		CodenameForm.NIN.Value = userData.Person.Nin;
-		CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString(CultureInfo.InvariantCulture);
+					.FirstOrDefault(c => c.Alpha3 == _userData.Person.CountryCode);
+		CodenameForm.NIN.Value = _userData.Person.Nin;
+		CodenameForm.Birthdate.Value = _userData.Person.Birthdate.ToString(CultureInfo.InvariantCulture);
 
-		Codename = userData.Codename;
+		Codename = _userData.Codename;
 	}
 }

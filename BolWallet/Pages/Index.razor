@@ -1,0 +1,68 @@
+﻿@page "/"
+@implements IDisposable
+
+@inject Breadcrumbs breadcrumbs
+@inject UserViewModel userViewModel
+@inject MainViewModel mainViewModel
+@inject NavigationManager nav;
+
+
+<MudOverlay @bind-Visible="isVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
+
+<h3 style="margin-left:10px">Welcome to Bol!</h3>
+
+<div style="text-align: center;margin-top:auto; padding-top:5px">
+
+    <img width="250" height="250" src="images/bol_logo1.png">
+
+</div>
+@code {
+    private bool isVisible = true;
+    bool loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isVisible = true;
+        await InvokeAsync(StateHasChanged);
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "#", disabled: true),
+        };
+
+        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.Update();
+        breadcrumbs.OnButtonClick += HandleButton;
+        isVisible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    protected async void HandleButton(object sender, NavButtons args)
+    {
+        if (args == NavButtons.ImportWallet)
+        {
+            await ImportWallet();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        breadcrumbs.OnButtonClick -= HandleButton;
+    }
+
+    private async Task ImportWallet()
+    {
+        await mainViewModel.ImportYourWallet();
+        if (mainViewModel.userData != null && mainViewModel.userData.BolWallet !=null)
+        {
+            breadcrumbs.userData = mainViewModel.userData;
+            breadcrumbs.userData.WalletPassword = mainViewModel.userData.WalletPassword;
+            if (breadcrumbs.userData?.BolWallet == null)
+                nav.NavigateTo("/");
+            else
+                nav.NavigateTo("/index-with-account");
+        }
+    }
+}

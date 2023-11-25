@@ -70,7 +70,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task MoveClaim()
+	public async Task MoveClaim()
 	{
 		try
 		{

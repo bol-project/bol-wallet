@@ -10,8 +10,9 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 	private readonly ISecureRepository _secureRepository;
 	private readonly ISha256Hasher _sha256Hasher;
 	private readonly IBase16Encoder _base16Encoder;
+	public UserData userData;
 
-	public GenerateWalletWithPasswordViewModel(
+    public GenerateWalletWithPasswordViewModel(
 		INavigationService navigationService,
 		IWalletService walletService,
 		ISecureRepository secureRepository,
@@ -32,7 +33,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 	private bool _isLoading = false;
 
 	[RelayCommand]
-	private async Task Submit()
+	public async Task Submit()
 	{
 		try
 		{
@@ -45,7 +46,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
 			string privateKey = _base16Encoder.Encode(hash);
 
-			UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+			userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
 			var bolWallet = await Task.Run(() => _walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey));
 

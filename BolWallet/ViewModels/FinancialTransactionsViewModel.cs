@@ -58,7 +58,7 @@ namespace BolWallet.ViewModels
 		}
 
 		[RelayCommand]
-		private async Task Claim()
+        public async Task Claim()
 		{
 			try
 			{

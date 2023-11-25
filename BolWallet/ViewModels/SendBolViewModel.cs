@@ -75,7 +75,7 @@ public partial class SendBolViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task SendBol()
+	public async Task SendBol()
 	{
 		try
 		{

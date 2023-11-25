@@ -1,0 +1,102 @@
+﻿@page "/create-edi-page"
+
+@inject Breadcrumbs breadcrumbs
+@inject CreateEdiViewModel createEdiViewModel;
+@inject NavigationManager nav;
+
+@using System.ComponentModel.DataAnnotations
+@using System.Linq;
+
+<MudGrid Style="padding:5px">    
+    <Virtualize Items="Edi" Context="edi">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="edi">
+                <MudField Style="width:150px" Label="@edi.Item1" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                    Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                @if (edi.Item1 == "Voice")
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                } else{
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt"  aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+                }
+            </MudStack>
+        </MudItem>
+    </Virtualize>    
+    <MudItem xs="12" sm="12" md="12">
+        <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(id && dl && pas))">Submit</MudButton>
+    </MudItem>
+</MudGrid>
+@code {
+    List<(string, MudBlazor.Color, string, string)> Edi = new()
+    {
+        {new("IdentityCard",Color.Transparent, "Identity Card*", "") },            
+        {new("DrivingLicense",Color.Transparent, "Driving License*", "") },
+        {new("Passport",Color.Transparent, "Passport*", "") },
+        {new("Photo",Color.Transparent, "Photo", "") },
+        {new("NinCertificate",Color.Transparent, "Nin Certificate", "") },
+        {new("BirthCertificate",Color.Transparent, "Birth Certificate", "") },
+        {new("TelephoneBill",Color.Transparent, "Τelephone Bill", "") },
+        {new("Other",Color.Transparent, "Other", "") },
+        {new("Voice",Color.Transparent, "Voice", "") },
+
+    };
+
+    bool id = false, dl = false, pas = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "/", disabled: false),
+            new BreadcrumbItem("Create your Codename", href: "/create-codename-page", disabled: false),
+            new BreadcrumbItem("Create your EDI", href: null, disabled: true),
+        };
+        breadcrumbs.Update();
+    }
+
+    private async void Submit()
+    {
+        await createEdiViewModel.Submit();
+        breadcrumbs.userData = createEdiViewModel.userData;
+        nav.NavigateTo("/generate-wallet-with-password-page");
+    }
+
+    private async void GetFile(string property)
+    {
+        await createEdiViewModel.PickPhotoAsync(property);
+        UpdateFileList(property);
+    }
+
+    private async void GetPhoto(string property)
+    {
+        await createEdiViewModel.TakePhotoAsync(property);
+        UpdateFileList(property);
+    }
+
+    private async void GetAudio(string property)
+    {
+        await createEdiViewModel.RecordAudio();
+        UpdateFileList(property);
+    }
+
+    private async void UpdateFileList(string property)
+    {
+        string file = Path.GetFileName(createEdiViewModel.EdiForm.GetType().GetProperty(property).GetValue(createEdiViewModel.EdiForm, null).ToString());
+        if (!string.IsNullOrEmpty(file))
+        {
+            var index = Edi.FindIndex(x => x.Item1 == property);
+            Edi[index] = new(Edi[index].Item1, Color.Success, Edi[index].Item3, file);
+            if (property == "IdentityCard")
+                id = true;
+            else if (property == "DrivingLicense")
+                dl = true;
+            else if (property == "Passport")
+                pas = true;
+
+            await InvokeAsync(() => StateHasChanged());
+        }
+        //IAsyncRelayCommand<string> cmd =
+        //createEdiViewModel.PickPhotoAsyncCommand.Execute("IdentityCard");
+    }
+}

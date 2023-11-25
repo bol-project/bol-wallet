@@ -1,0 +1,36 @@
+﻿@page "/bol-community-page"
+
+@inject Breadcrumbs breadcrumbs
+@inject IDialogService DialogService
+@inject NavigationManager nav;
+@inject UserViewModel userViewModel
+@inject BolCommunityViewModel bolCommunityViewModel
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="pa-2">
+            <MudText Color="@Color.Error">@bolCommunityViewModel.BolCommunityHeaderText</MudText>
+            <MudList Clickable="true">
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.CertifyText</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.DeleteFakeAccountText</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.DeleteExpiredAccountText</MudListItem>
+
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.VoteText</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.SignMessageText</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">@bolCommunityViewModel.BolIdentityText</MudListItem>
+            </MudList>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "/index-with-account", disabled: false),
+            new BreadcrumbItem("Bol Community", href: null, disabled: true),
+        };
+    }
+}

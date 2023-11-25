@@ -1,0 +1,59 @@
+﻿@inject Breadcrumbs breadcrumbs
+
+<MudNavMenu Class="mud-width-full">
+    @* <MudText Typo="Typo.h6" Class="px-4">Material</MudText>
+    <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Icons</MudText>
+    <MudDivider Class="my-2" /> *@
+    @if (breadcrumbs.userData?.BolWallet == null)
+    {
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/create-codename-page" Icon="@Icons.Material.Filled.AccessAlarm" ForceLoad=true>Let's get started</MudNavLink>
+        <MudNavLink OnClick="@(x=> breadcrumbs.NavButtonsClick(NavButtons.ImportWallet))" Icon="@Icons.Material.Filled.ImportantDevices" IconColor="Color.Success" ForceLoad=true>Import your wallet</MudNavLink>
+    }
+    else
+    {
+        
+        <MudNavLink Href="/index-with-account" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        
+        @if (!breadcrumbs.isRegistered){
+            <!--RegisterCommand-->
+            <MudNavLink OnClick="@(x=> breadcrumbs.NavButtonsClick(NavButtons.Register))" Icon="@Icons.Material.Filled.AppRegistration" IconColor="Color.Success">Register</MudNavLink>
+            <!--NavigateToCertifyPageCommand-->
+            <MudNavLink Href="/certify" Icon="@Icons.Material.Filled.Celebration">Certify</MudNavLink>
+        }
+        else if (!breadcrumbs.isAccountOpen)
+        {
+            <!--NavigateToAccountPageCommand-->
+            <MudNavLink Href="/account-page" Icon="@Icons.Material.Filled.AccountBalance">Account</MudNavLink>
+            <!--NavigateToTransactionsPageCommand-->
+            <MudNavLink Href="/index-with-account" Icon="@Icons.Material.Filled.History">Transactions History</MudNavLink>
+            <!--NavigateToFinancialTransactionsPageCommand-->
+            <MudNavLink Href="/financial-transactions-page" Icon="@Icons.Material.Filled.Transform">Financial Transactions</MudNavLink>
+            <!--NavigateToCertifierPageCommand-->
+            <MudNavLink Href="/certifier-page" Icon="@Icons.Material.Filled.People">Community Operations</MudNavLink>
+            
+            <MudNavLink Href="/send-bol-page" Icon="@Icons.Material.Filled.People">Transfer</MudNavLink>
+            <MudNavLink Href="/move-claim-page" Icon="@Icons.Material.Filled.People">Transfer Claim</MudNavLink>
+
+            <MudNavLink Href="/retrieve-bol-page" Icon="@Icons.Material.Filled.People">Retrive BOL</MudNavLink>
+        }
+
+    }
+</MudNavMenu>
+@code {
+    
+    protected override async Task OnInitializedAsync()
+    {
+        breadcrumbs.OnUpdate += OnUpdate;
+    }
+
+    public void Dispose()
+    {
+        breadcrumbs.OnUpdate -= OnUpdate;
+    }
+
+    private async void OnUpdate(object sender, bool a)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+}

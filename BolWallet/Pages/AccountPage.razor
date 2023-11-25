@@ -1,0 +1,43 @@
+﻿@page "/account-page"
+@inject Breadcrumbs breadcrumbs
+@inject IDialogService DialogService
+@inject NavigationManager nav;
+@inject UserViewModel userViewModel
+@inject AccountViewModel accountViewModel
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="pa-2">
+            <MudList Clickable="true">
+                <MudListItem Icon="@Icons.Material.Filled.Send">Code Name: @accountViewModel.BolAccount.CodeName</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Total Balance: @accountViewModel.BolAccount.TotalBalance</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Claim Balance: @accountViewModel.BolAccount.ClaimBalance</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">EDI: @accountViewModel.BolAccount.Edi</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Account Status: @accountViewModel.BolAccount.AccountStatus</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Account Type: @accountViewModel.BolAccount.AccountType</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Main Address: @accountViewModel.BolAccount.MainAddress</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">BlockChain Address: @accountViewModel.BolAccount.BlockChainAddress</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Social Address: @accountViewModel.BolAccount.SocialAddress</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Voting Address: @accountViewModel.BolAccount.VotingAddress</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Last Certification Height: @accountViewModel.BolAccount.LastCertificationHeight</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Last Certifier Selection Height: @accountViewModel.BolAccount.LastCertifierSelectionHeight</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Registration Height: @accountViewModel.BolAccount.RegistrationHeight</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Last Claim Height: @accountViewModel.BolAccount.LastClaimHeight</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Last Claim: @accountViewModel.BolAccount.LastClaim</MudListItem>
+                <MudListItem Icon="@Icons.Material.Filled.Send">Total Transactions: @accountViewModel.BolAccount.TransactionsCount</MudListItem>
+            </MudList>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await accountViewModel.Initialize();
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "/index-with-account", disabled: false),
+            new BreadcrumbItem("Account", href: null, disabled: true),
+        };
+    }
+}

@@ -1,0 +1,34 @@
+﻿@page "/certifier-page"
+
+@inject Breadcrumbs breadcrumbs
+@inject NavigationManager nav;
+@inject UserViewModel userViewModel
+@inject CertifierViewModel certifierViewModel
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudPaper Class="pa-2">
+            <MudTextField @bind-Value="@certifierViewModel.MainAddressToWhitelist" Label="Paste Main Address To Whitelist" Variant="MudBlazor.Variant.Outlined"></MudTextField>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifierViewModel.Whitelist())">Whitelist</MudButton>
+            <br />
+            <MudTextField @bind-Value="@certifierViewModel.CodeNameToCertify" Label="Paste Codename To Certify" Variant="MudBlazor.Variant.Outlined"></MudTextField>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifierViewModel.Certify())">Certify</MudButton>
+            <br />
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "/index-with-account", disabled: false),
+            new BreadcrumbItem("Community Operations", href: null, disabled: true),
+        };
+
+        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.Update();
+
+    }
+}

@@ -2,16 +2,13 @@
 
 public partial class UserViewModel : BaseViewModel
 {
-    private UserData _userData;
+    public UserData _userData;
 
-    public UserViewModel(INavigationService navigationService) : base(navigationService)
+    public UserViewModel(INavigationService navigationService,
+        IServiceProvider serviceProvider,
+        ISecureRepository secureRepository) : base(navigationService)
     {
-        //Mock User Creation
-        _userData = new UserData
-        {
-            Codename = "Codename Dummy",
-            Edi = "Edi Dummy"
-        };
+        _userData = secureRepository.Get<UserData>("userdata");
     }
 
     [ObservableProperty]

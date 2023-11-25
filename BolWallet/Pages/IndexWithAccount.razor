@@ -1,0 +1,119 @@
+﻿@page "/index-with-account"
+@implements IDisposable
+@inject Breadcrumbs breadcrumbs
+@inject IDialogService DialogService
+@inject NavigationManager nav;
+@inject UserViewModel userViewModel
+@inject MainWithAccountViewModel mainWithAccountViewModel
+@inject RegistrationViewModel registrationViewModel
+
+<MudOverlay @bind-Visible="isVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
+<h3 style="margin-left:10px">Welcome to Bol! @(mainWithAccountViewModel.CodeName)</h3>
+<h4 style="margin-left:10px;font-weight:bold">Your Main Address: @mainWithAccountViewModel.MainAddress</h4>
+<div style="text-align: center;margin-top:auto; padding-top:5px">
+
+    <img width="250" height="250" src="images/bol_logo1.png">
+
+</div>
+@if (breadcrumbs.isAccountOpen)
+{
+    <p>@(mainWithAccountViewModel.BalanceText) : @(mainWithAccountViewModel.BolAccount.TotalBalance)</p>
+    <p>Claim Balance :  @(mainWithAccountViewModel.BolAccount.ClaimBalance)</p>
+    @foreach (BalanceDisplayItem itm in mainWithAccountViewModel.CommercialBalancesDisplayList)
+    {
+        <p>@itm.Address @itm.Balance</p>
+    }
+}
+<br/>
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.AppRegistration" Class="mr-3" /> Register
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <p>Code Name:@(mainWithAccountViewModel.CodeName)</p>
+        <p>EDI:@(registrationViewModel.Edi)</p>
+        <p>Main Address:@mainWithAccountViewModel.MainAddress</p>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="Submit" Class="px-10">Register</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<style>
+    p{
+        margin-top:2px;
+    }
+    
+</style>
+@code {
+
+    bool loading = false, visible=false;
+    private bool isVisible = true;
+
+    private MudBlazor.DialogOptions dialogOptions = new() { FullWidth = true, ClassBackground = "my-custom-class" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        isVisible = true;
+        await InvokeAsync(StateHasChanged);
+        await mainWithAccountViewModel.Initialize();
+
+        breadcrumbs.isRegistered = mainWithAccountViewModel.IsRegistered;
+        breadcrumbs.isAccountOpen = mainWithAccountViewModel.IsAccountOpen;
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "#", disabled: true),
+        };
+
+        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.Update();
+        breadcrumbs.OnButtonClick += HandleButton;
+        if (!breadcrumbs.isRegistered)
+        {
+            await registrationViewModel.Initialize();
+        }
+        isVisible = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    protected async void HandleButton(object sender, NavButtons args)
+    {
+        if(args == NavButtons.Refresh)
+        {
+            await mainWithAccountViewModel.FetchBolAccountData();
+
+        }
+        else if (args == NavButtons.Register)
+        {
+            visible = true;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void Submit() { 
+        await registrationViewModel.Register();
+        if (registrationViewModel.userData != null)
+        {
+            breadcrumbs.userData = registrationViewModel.userData;
+            breadcrumbs.Update();
+            nav.NavigateTo("/CertifyViewModel");
+        }
+        visible = false; 
+    }
+
+    private void Cancel()
+    {
+        visible = false;
+    }
+
+    public void Dispose()
+    {
+        breadcrumbs.OnButtonClick -= HandleButton;
+    }
+}

@@ -43,7 +43,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task UpdateBolAccount()
+	public async Task UpdateBolAccount()
 	{
 		try
 		{
@@ -68,7 +68,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task SelectMandatoryCertifiers()
+	public async Task SelectMandatoryCertifiers()
 	{
 		try
 		{
@@ -91,7 +91,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task RequestCertification()
+    public async Task RequestCertification()
 	{
 		try
 		{
@@ -121,7 +121,7 @@ public partial class CertifyViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task PayCertificationFees()
+    public async Task PayCertificationFees()
 	{
 		try
 		{

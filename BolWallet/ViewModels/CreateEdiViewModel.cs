@@ -16,8 +16,9 @@ public partial class CreateEdiViewModel : BaseViewModel
 	private EncryptedDigitalMatrix encryptedDigitalMatrix;
 
 	AudioRecorderService recorder;
+	public UserData userData;
 
-	public CreateEdiViewModel(
+    public CreateEdiViewModel(
 		INavigationService navigationService,
 		IPermissionService permissionService,
 		IBase16Encoder base16Encoder,
@@ -48,7 +49,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 	private bool _isLoading = false;
 
 	[RelayCommand]
-	private async Task PickPhotoAsync(string propertyName)
+	public async Task PickPhotoAsync(string propertyName)
 	{
 		var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 		{
@@ -70,19 +71,21 @@ public partial class CreateEdiViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task TakePhotoAsync(string propertyName)
+	public async Task TakePhotoAsync(string propertyName)
 	{
 		if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
 
 		FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
+		if (takePictureResult != null)
+		{
+			PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
-
-		PathPerImport(propertyNameInfo, takePictureResult);
+			PathPerImport(propertyNameInfo, takePictureResult);
+		}
 	}
 
 	[RelayCommand]
-	private async Task RecordAudio()
+    public async Task RecordAudio()
 	{
 		if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
 
@@ -115,7 +118,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task Submit()
+	public async Task Submit()
 	{
 		try
 		{
@@ -128,7 +131,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
 			IsLoading = true;
 
-			UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+			userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
 			encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
 			encryptedDigitalMatrix.FirstName = userData.Person.FirstName;

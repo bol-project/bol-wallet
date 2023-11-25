@@ -6,6 +6,7 @@ public partial class MainViewModel : BaseViewModel
 {
 	private readonly IPermissionService _permissionService;
 	private readonly ISecureRepository _secureRepository;
+	public UserData userData;
 
 	public MainViewModel(
 		INavigationService navigationService,
@@ -24,7 +25,7 @@ public partial class MainViewModel : BaseViewModel
 
 
 	[RelayCommand]
-	private async Task ImportYourWallet()
+	public async Task ImportYourWallet()
 	{
 		try
 		{
@@ -47,30 +48,33 @@ public partial class MainViewModel : BaseViewModel
 				PickerTitle = "Import Your Json Wallet"
 			});
 
-			var jsonString = File.ReadAllText(pickResult.FullPath);
-
-			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, options);
-
-			var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync("Enter Your Password", null);
-
-			if(string.IsNullOrEmpty(password))
+			if (pickResult != null)
 			{
-				throw new Exception("Password cannot be empty. Please provide a valid password.");
+				var jsonString = File.ReadAllText(pickResult.FullPath);
+
+				var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, options);
+
+				var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync("Enter Your Password", null);
+
+				if (string.IsNullOrEmpty(password))
+				{
+					throw new Exception("Password cannot be empty. Please provide a valid password.");
+				}
+
+				userData = new UserData
+				{
+					Codename = bolWallet.Name,
+					BolWallet = bolWallet,
+					WalletPassword = password
+				};
+
+				userData.IsRegisteredAccount = true;
+				userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
+
+				await _secureRepository.SetAsync("userdata", userData);
+
+				await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 			}
-
-			var userData = new UserData
-			{
-				Codename = bolWallet.Name,
-				BolWallet = bolWallet,
-				WalletPassword = password
-			};
-
-			userData.IsRegisteredAccount = true;
-			userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
-
-			await _secureRepository.SetAsync("userdata", userData);
-
-			await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
 		}
 		catch (Exception ex)
 		{

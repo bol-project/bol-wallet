@@ -4,7 +4,7 @@ public class BaseViewModel : ObservableObject
 {
     protected readonly INavigationService NavigationService;
 
-	protected UserData userData;
+	public UserData userData;
 
 	protected BaseViewModel(INavigationService navigationService)
     {
