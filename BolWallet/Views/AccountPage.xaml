@@ -4,17 +4,25 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:AccountViewModel"
+	xmlns:helpers="clr-namespace:BolWallet.Helpers"
     BackgroundColor="{DynamicResource SecondaryColor}"
     xmlns:local="clr-namespace:BolWallet.Converters">
 
 	<ContentPage.ToolbarItems>
 		<ToolbarItem 
-            Text="Settings"
-            Order="Secondary" 
-            Priority="0" />
+            Text="Download BolAccount"
+			Order="Secondary"
+            Priority="0" 
+			Command="{Binding DownloadAccountCommand}"/>
+		<ToolbarItem 
+			Text="Download BolWallet"
+			Order="Secondary"
+			Priority="0" 
+			Command="{Binding DownloadBolWalletCommand}"/>
 	</ContentPage.ToolbarItems>
 
 	<ScrollView>
+
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30', 
                       Default='30'}"
@@ -22,13 +30,11 @@
             HorizontalOptions="Center">
 
 			<StackLayout Spacing="15" Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
-
 				<Frame
 				Grid.Row="1"
 				Grid.ColumnSpan="3" 
 				CornerRadius="25"
 				BackgroundColor="#582cd4">
-
 					<StackLayout
 							VerticalOptions="CenterAndExpand"
 							Orientation="Vertical">

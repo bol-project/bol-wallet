@@ -10,35 +10,11 @@
 
 	<StackLayout VerticalOptions="Center"  Spacing="15" Padding="20">
 
-		<Frame
-		  Grid.Row="3"
-		  Grid.ColumnSpan="3"
-		  CornerRadius="45"
-		  BackgroundColor="#582cd4">
-			<StackLayout
-			  VerticalOptions="CenterAndExpand"
-			  Orientation="Vertical">
-				<Label 
-			Text="Total Balance"
-				  HorizontalOptions="Center"
-				  HorizontalTextAlignment="Center"
-				  FontAttributes="Bold"
-			TextColor="Yellow"/>
-				<Label
-				  Text="{Binding BolAccount.TotalBalance}"
-				  HorizontalOptions="Center"
-				  HorizontalTextAlignment="Center"
-				  FontSize="24"
-				  TextColor="Yellow"/>
-			</StackLayout>
-		</Frame>
-
 		<Button
                 Command="{Binding NavigateToTransferPageCommand}"
                 FontAttributes="Bold"
                 FontSize="12"
                 Text="Transfer" />
-
 
 		<Button
                 Command="{Binding NavigateToTransferClaimPageCommand}"
@@ -50,7 +26,7 @@
                 FontAttributes="Bold"
                 FontSize="12"
                 Command="{Binding ClaimCommand}"
-                Text="Claim" />
+                Text="Claim Your Bol" />
 
 	</StackLayout>
 </ContentPage>
