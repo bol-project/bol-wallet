@@ -92,6 +92,20 @@
                                         Text="Amount: "/>
                                         <Label TextColor="Black" Text="{Binding BolAmount}"/>
                                     </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="8">
+                                        <Button
+                                            HorizontalOptions="Start"
+                                            Text="Details"
+                                            CommandParameter="{Binding BolTransactionEntry.TransactionHash}"
+                                            Clicked="OnOpenInBrowserClicked">
+                                        </Button>
+                                        <Button
+                                            HorizontalOptions="EndAndExpand"
+                                            Text="Copy Hash"
+                                            CommandParameter="{Binding BolTransactionEntry.TransactionHash}"
+                                            Clicked="OnCopyButtonClicked">
+                                        </Button>
+                                    </StackLayout>
                                 </StackLayout>
                             </Frame>
                         </StackLayout>
