@@ -58,15 +58,14 @@ public static class MauiProgram
 
 		services.RegisterViewAndViewModelSubsystem();
 
-		string contractHash = GetContractHash();
+        var bolConfig = new BolConfig();
+        builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
 
-		var bolConfig = new BolConfig()
-		{
-			RpcEndpoint = "https://validator-1.demo.bolchain.net:443",
-			Contract = contractHash
-		};
+        string contractHash = GetContractHash(bolConfig.RpcEndpoint);
 
-		services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
+        bolConfig.Contract = contractHash;
+
+        services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
 		services.AddBolSdk();
 
@@ -92,11 +91,11 @@ public static class MauiProgram
 		return builder.Build();
 	}
 
-	private static string GetContractHash()
+	private static string GetContractHash(string url)
 	{
 		var client = new HttpClient();
 
-		var request = new HttpRequestMessage(HttpMethod.Post, "https://validator-1.demo.bolchain.net:443");
+		var request = new HttpRequestMessage(HttpMethod.Post, url);
 
 		var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getbolhash\",\r\n\"params\":[]\r\n}\r\n", null, "application/json");
 		request.Content = stringContent;
