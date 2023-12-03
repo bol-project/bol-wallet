@@ -131,7 +131,8 @@
 				   TextColor="Black"
 				   Margin="0,0,0,10" />
 
-			<Entry Grid.Row="7" 
+			<StackLayout  Grid.Row="7" >
+				<Entry
 				   Keyboard="Numeric"  
 				   Text="{Binding SendBolForm.ActualAmount, Converter={StaticResource DecimalToStringConverter}}" 
 				   PlaceholderColor="Black" 
@@ -139,6 +140,12 @@
 				   BackgroundColor="#EDF2F7" 
 				   TextColor="Black" 
 				   Margin="0,0,0,10" />
+
+				<Label
+					FontSize="10"
+					HorizontalOptions="Start"
+					Text="A fee of 0,0001 bol applies to every transfer." />
+			</StackLayout>
 
 			<Button
                 Grid.Row="8"

@@ -117,6 +117,9 @@ public partial class SendBolViewModel : BaseViewModel
     {
         try
         {
+            if (string.IsNullOrEmpty(SearchCodename))
+                return;
+
             SearchBolAccount = await _bolService.GetAccount(SearchCodename);
 
 			var searchCommercialBalances = SearchBolAccount?.CommercialBalances?.ToList() ?? new(); 
@@ -141,9 +144,9 @@ public partial class SendBolViewModel : BaseViewModel
         {
             SearchBolAccount = await _bolService.GetAccount(SearchCodename);
 
-			SendBolForm.ReceiverAddress = commercialAddress;
+            SendBolForm.ReceiverAddress = commercialAddress;
 
-			SendBolForm.ReceiverCodename = SearchBolAccount.CodeName;
+            SendBolForm.ReceiverCodename = SearchBolAccount.CodeName;
 
             SearchCommercialBalancesDisplayList.Clear();
 
