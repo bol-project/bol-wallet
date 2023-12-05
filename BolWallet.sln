@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34310.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BolWallet", "BolWallet\BolWallet.csproj", "{3EDE9BB0-CFF7-4C79-9F68-B1D6222EEF64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neo-vm", "neo-vm\neo-vm.csproj", "{966D4F1B-9E67-4983-8562-6F2AA7FB5B13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "neo-vm", "neo-vm\neo-vm.csproj", "{3DAD9573-B152-4F65-AEA1-E473A2670B15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{3EDE9BB0-CFF7-4C79-9F68-B1D6222EEF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EDE9BB0-CFF7-4C79-9F68-B1D6222EEF64}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EDE9BB0-CFF7-4C79-9F68-B1D6222EEF64}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{966D4F1B-9E67-4983-8562-6F2AA7FB5B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{966D4F1B-9E67-4983-8562-6F2AA7FB5B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{966D4F1B-9E67-4983-8562-6F2AA7FB5B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{966D4F1B-9E67-4983-8562-6F2AA7FB5B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DAD9573-B152-4F65-AEA1-E473A2670B15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DAD9573-B152-4F65-AEA1-E473A2670B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DAD9573-B152-4F65-AEA1-E473A2670B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DAD9573-B152-4F65-AEA1-E473A2670B15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

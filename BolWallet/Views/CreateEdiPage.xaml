@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage  
+	x:Class="BolWallet.Views.CreateEdiPage"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls1="clr-namespace:BolWallet.Controls"
+    xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:localConverters="clr-namespace:BolWallet.Converters"
+    xmlns:models="clr-namespace:BolWallet.Models"
+    xmlns:helpers="clr-namespace:BolWallet.Helpers"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:Name="This"
+    Title="Create your Edit"
+    x:DataType="viewModels:CreateEdiViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+	<Grid>
+		<StackLayout>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Identity Card" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="IdentityCard" HorizontalOptions="Center">
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="IdentityCard"   HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.IdentityCard}"   HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+				<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Driving License" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="DrivingLicense" HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="DrivingLicense" BackgroundColor="#ffffff" HorizontalOptions="Center">
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.DrivingLicense}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+				<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Passport" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="Passport" HorizontalOptions="Center">
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="Passport" HorizontalOptions="Center">
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.Passport}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+				<Label Text="*Required" Grid.Column="3" HorizontalOptions="Center"  TextColor="Red"></Label>
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Photo" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="Photo"   HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="Photo"  HorizontalOptions="Center"  >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.Photo}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Nin Certificate" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="NinCertificate"  HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="NinCertificate" HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.NinCertificate}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Birth Certificate" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="BirthCertificate" HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="BirthCertificate"    HorizontalOptions="Center"   >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.BirthCertificate}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Telephone Bill" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="TelephoneBill"  HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="TelephoneBill"   HorizontalOptions="Center"  >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.TelephoneBill}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Other" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="Other"  HorizontalOptions="Center" >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding TakePhotoCommand}" CommandParameter="Other"   HorizontalOptions="Center"  >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Photo_camera}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.Other}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Grid Margin="0,0,0,10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="150"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Label Margin="10,0,10,0" TextColor="Black" Text="Voice" FontSize="18" VerticalOptions="Center" />
+				<StackLayout Margin="10,0,0,0" Grid.Column="1" Orientation="Horizontal">
+					<ImageButton   Command="{Binding PickPhotoCommand}" CommandParameter="Voice"   HorizontalOptions="Center"  >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Upload_file}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+					<ImageButton   Command="{Binding RecordAudioCommand}" HorizontalOptions="Center"  >
+						<ImageButton.Source>
+							<FontImageSource 
+							FontFamily="MaterialIconsRegular"
+							Glyph="{x:Static helpers:Icons.Record_voice_over}"
+							Color="Black"
+                         />
+						</ImageButton.Source>
+					</ImageButton>
+				</StackLayout>
+				<Label  Grid.Column="2" TextColor="Black" LineBreakMode="HeadTruncation"  Text="{Binding EdiForm.Voice}"  HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,10,0" />
+			</Grid>
+			<Button   Grid.Column="1" VerticalOptions="EndAndExpand" Text="Submit" BackgroundColor="#063289" Margin="20, 0, 20, 20"  HorizontalOptions="Fill"  Command="{Binding SubmitCommand}"/>
+		</StackLayout>
+		<ActivityIndicator  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsRunning="{Binding IsLoading}" />
+	</Grid>
+</ContentPage>

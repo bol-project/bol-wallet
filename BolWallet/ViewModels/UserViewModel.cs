@@ -2,21 +2,22 @@
 
 public partial class UserViewModel : BaseViewModel
 {
-    public UserData _userData;
-
-    public UserViewModel(INavigationService navigationService,
-        IServiceProvider serviceProvider,
-        ISecureRepository secureRepository) : base(navigationService)
+    public UserViewModel(INavigationService navigationService) : base(navigationService)
     {
-        _userData = secureRepository.Get<UserData>("userdata");
+        //Mock User Creation
+        userData = new UserData
+        {
+            Codename = "Codename Dummy",
+            Edi = "Edi Dummy"
+        };
     }
 
     [ObservableProperty]
     private CodenameForm _codenameForm;
 
-    public string CodenameLabel => "Greetings " + _userData?.Codename + "!";
+    public string CodenameLabel => "Greetings " + userData?.Codename + "!";
 
-    public string EdiLabel => "Edi: " + _userData?.Edi;
+    public string EdiLabel => "Edi: " + userData?.Edi;
     public string Address { get; set; }
     // TODO section
 

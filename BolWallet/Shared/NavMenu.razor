@@ -7,6 +7,7 @@
     @if (breadcrumbs.userData?.BolWallet == null)
     {
         <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <hr/>
         <MudNavLink Href="/create-codename-page" Icon="@Icons.Material.Filled.AccessAlarm" ForceLoad=true>Let's get started</MudNavLink>
         <MudNavLink OnClick="@(x=> breadcrumbs.NavButtonsClick(NavButtons.ImportWallet))" Icon="@Icons.Material.Filled.ImportantDevices" IconColor="Color.Success" ForceLoad=true>Import your wallet</MudNavLink>
     }
@@ -14,12 +15,13 @@
     {
         
         <MudNavLink Href="/index-with-account" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-        
+        <hr/>
         @if (!breadcrumbs.isRegistered){
             <!--RegisterCommand-->
             <MudNavLink OnClick="@(x=> breadcrumbs.NavButtonsClick(NavButtons.Register))" Icon="@Icons.Material.Filled.AppRegistration" IconColor="Color.Success">Register</MudNavLink>
             <!--NavigateToCertifyPageCommand-->
             <MudNavLink Href="/certify" Icon="@Icons.Material.Filled.Celebration">Certify</MudNavLink>
+            <MudNavLink Href="/white-list" Icon="@Icons.Material.Filled.Celebration">White List your Address</MudNavLink>
         }
         else if (!breadcrumbs.isAccountOpen)
         {
@@ -27,13 +29,14 @@
             <MudNavLink Href="/account-page" Icon="@Icons.Material.Filled.AccountBalance">Account</MudNavLink>
             <!--NavigateToTransactionsPageCommand-->
             <MudNavLink Href="/index-with-account" Icon="@Icons.Material.Filled.History">Transactions History</MudNavLink>
-            <!--NavigateToFinancialTransactionsPageCommand-->
-            <MudNavLink Href="/financial-transactions-page" Icon="@Icons.Material.Filled.Transform">Financial Transactions</MudNavLink>
+            
             <!--NavigateToCertifierPageCommand-->
             <MudNavLink Href="/certifier-page" Icon="@Icons.Material.Filled.People">Community Operations</MudNavLink>
-            
+
+            <!--NavigateToFinancialTransactionsPageCommand-->
             <MudNavLink Href="/send-bol-page" Icon="@Icons.Material.Filled.People">Transfer</MudNavLink>
             <MudNavLink Href="/move-claim-page" Icon="@Icons.Material.Filled.People">Transfer Claim</MudNavLink>
+            <MudNavLink Href="/claim-page" Icon="@Icons.Material.Filled.Transform">Financial Transactions</MudNavLink>
 
             <MudNavLink Href="/retrieve-bol-page" Icon="@Icons.Material.Filled.People">Retrive BOL</MudNavLink>
         }

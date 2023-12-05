@@ -75,15 +75,15 @@ public partial class SendBolViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	public async Task SendBol()
+	private async Task SendBol()
 	{
 		try
 		{
 			SendBolForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
 
 			BolAccount bolAccount = await _bolService.Transfer(
-			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress),
-			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress),
+			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress.Trim()),
+			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress.Trim()),
 			  SendBolForm.ReceiverCodename,
 			  new BigInteger(SendBolForm.ActualAmount * (decimal)Math.Pow(10, 8)));
 

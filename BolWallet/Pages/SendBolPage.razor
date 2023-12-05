@@ -1,9 +1,9 @@
 ﻿@page "/send-bol-page"
-
+@inherits MvvmComponentBase<SendBolViewModel>
 @inject Breadcrumbs breadcrumbs
 @inject NavigationManager nav;
 @inject UserViewModel userViewModel
-@inject SendBolViewModel sendBolViewMode
+
 
 <h4>@sendBolViewMode.SendBolLabel</h4>
 <MudGrid>
@@ -32,15 +32,17 @@
 
             <br />
             <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
-                       OnClick="@(async z=> await sendBolViewMode.SendBol())">Send</MudButton>
+                       OnClick="@(async z=> await sendBolViewMode.SendBolCommand.ExecuteAsync(null))">Send</MudButton>
             
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
+    SendBolViewModel sendBolViewMode;
     protected override async Task OnInitializedAsync()
     {
+        sendBolViewMode=ViewModel;
         await sendBolViewMode.Initialize();
         breadcrumbs._items = new List<BreadcrumbItem>
         {
@@ -48,7 +50,7 @@
             new BreadcrumbItem("Transfer", href: null, disabled: true),
         };
 
-        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.userData = userViewModel.userData;
         breadcrumbs.Update();
 
     }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BolWallet.Views.ClaimPage"
+			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+			 x:DataType="viewModels:ClaimViewModel"
+			 BackgroundColor="{DynamicResource SecondaryColor}"
+             Title="Claim Page">
+	<StackLayout VerticalOptions="Center"  Spacing="15" Padding="20">
+
+		<Frame
+		  Grid.Row="3"
+		  Grid.ColumnSpan="3"
+		  CornerRadius="45"
+		  BackgroundColor="#582cd4">
+			<StackLayout
+			  VerticalOptions="CenterAndExpand"
+			  Orientation="Vertical">
+				<Label 
+			Text="Total Balance"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontAttributes="Bold"
+			TextColor="Yellow"/>
+				<Label
+				  Text="{Binding BolAccount.TotalBalance}"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontSize="24"
+				  TextColor="Yellow"/>
+			</StackLayout>
+		</Frame>
+
+		<Frame
+		  Grid.Row="3"
+		  Grid.ColumnSpan="3"
+		  CornerRadius="45"
+		  BackgroundColor="#582cd4">
+			<StackLayout
+			  VerticalOptions="CenterAndExpand"
+			  Orientation="Vertical">
+				<Label 
+			Text="Claim Balance"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontAttributes="Bold"
+			TextColor="Yellow"/>
+				<Label
+				  Text="{Binding BolAccount.ClaimBalance}"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontSize="24"
+				  TextColor="Yellow"/>
+			</StackLayout>
+		</Frame>
+
+		<Button
+            FontAttributes="Bold"
+            FontSize="12"
+            Command="{Binding ClaimCommand}"
+            Text="Claim" />
+
+	</StackLayout>
+</ContentPage>

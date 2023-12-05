@@ -31,7 +31,7 @@ public partial class CertifierViewModel : BaseViewModel
 	private bool _isLoading = false;
 
 	[RelayCommand]
-	public async Task Certify()
+	private async Task Certify()
 	{
 		try
 		{
@@ -59,7 +59,7 @@ public partial class CertifierViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	public async Task Whitelist()
+	private async Task Whitelist()
 	{
 		try
 		{

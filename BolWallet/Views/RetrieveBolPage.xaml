@@ -1,0 +1,42 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.RetrieveBolPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:RetrieveBolViewModel"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+    <ScrollView>
+        <Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                 Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,*"
+            RowSpacing="25">
+
+            <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                FontSize="32"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="{Binding RetrieveBolLabel}" />
+            
+            <Button
+                Grid.Row="1"
+                Clicked="OnClickCopyCodename"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding CodenameText}" />
+
+            <Button
+                Grid.Row="2"
+                Clicked="OnClickCopyAddress"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding CommAddressText}" />
+        </Grid>
+    </ScrollView>
+</ContentPage>    

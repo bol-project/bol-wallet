@@ -16,9 +16,8 @@ public partial class CreateEdiViewModel : BaseViewModel
 	private EncryptedDigitalMatrix encryptedDigitalMatrix;
 
 	AudioRecorderService recorder;
-	public UserData userData;
 
-    public CreateEdiViewModel(
+	public CreateEdiViewModel(
 		INavigationService navigationService,
 		IPermissionService permissionService,
 		IBase16Encoder base16Encoder,
@@ -42,14 +41,14 @@ public partial class CreateEdiViewModel : BaseViewModel
 		encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
 	}
 
-	[ObservableProperty]
+    [ObservableProperty]
 	private EdiForm _ediForm;
 
 	[ObservableProperty]
 	private bool _isLoading = false;
 
 	[RelayCommand]
-	public async Task PickPhotoAsync(string propertyName)
+	private async Task PickPhotoAsync(string propertyName)
 	{
 		var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 		{
@@ -71,21 +70,19 @@ public partial class CreateEdiViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	public async Task TakePhotoAsync(string propertyName)
+	private async Task TakePhotoAsync(string propertyName)
 	{
 		if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
 
 		FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
-		if (takePictureResult != null)
-		{
-			PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-			PathPerImport(propertyNameInfo, takePictureResult);
-		}
+		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+
+		PathPerImport(propertyNameInfo, takePictureResult);
 	}
 
 	[RelayCommand]
-    public async Task RecordAudio()
+	private async Task RecordAudio()
 	{
 		if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
 
@@ -118,7 +115,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	public async Task Submit()
+	private async Task Submit()
 	{
 		try
 		{

@@ -1,0 +1,114 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.MoveClaimPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls1="clr-namespace:BolWallet.Controls"
+    xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:MoveClaimViewModel"
+	xmlns:Converters="clr-namespace:BolWallet.Converters"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+	<ContentPage.Resources>
+		<StyleSheet>
+			<![CDATA[
+            .border-style {
+                background-color: lightgray;
+            }
+            ]]>
+		</StyleSheet>
+		<ResourceDictionary>
+
+			<Style TargetType="controls1:ExtendedTextEdit">
+				<Setter Property="ClearIconVisibility" Value="Never" />
+				<Setter Property="HorizontalOptions" Value="Fill" />
+				<Setter Property="IsErrorIconVisible" Value="False" />
+				<Setter Property="BoxHeight" Value="56" />
+				<Setter Property="FontSize" Value="18" />
+			</Style>
+
+			<Color x:Key="FocusedColor">#718792</Color>
+
+			<Converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+			
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<ScrollView>
+		<Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                 Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowSpacing="25">
+
+			<Label
+                Grid.Row="0"
+                FontSize="32"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="Transfer Claim" />
+
+			<Label 
+	            Grid.Row="1"
+                Grid.ColumnSpan="3" 
+	            Text="Total Balance" 
+	            TextColor="Black"/>
+			<Frame   
+	            Grid.Row="2"
+                Grid.ColumnSpan="3" 
+	            BackgroundColor="WhiteSmoke" 
+	            Padding="10">
+				<Label Text="{Binding BolAccount.TotalBalance}" TextColor="Black"/>
+			</Frame>
+
+			<Label 
+				Grid.Row="3"
+				Grid.ColumnSpan="3" 
+				Text="Claim Balance" 
+				TextColor="Black"/>
+			<Frame   
+				Grid.Row="4"
+				Grid.ColumnSpan="3" 
+				BackgroundColor="WhiteSmoke" 
+				Padding="10">
+				<Label Text="{Binding BolAccount.ClaimBalance}" TextColor="Black"/>
+			</Frame>
+
+			<Picker 
+                Grid.Row="5"
+                Title="Commercial Address" 
+                ItemsSource="{Binding CommercialBalancesDisplayList}"
+                SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
+			</Picker>
+
+			<Entry Placeholder="Amount" 
+				   Keyboard="Numeric"
+				   Grid.Row="6" 
+				   Grid.Column="0"
+				   Text="{Binding MoveClaimForm.Amount, Mode=TwoWay}"
+				   PlaceholderColor="Black"
+				   BackgroundColor="#EDF2F7"
+				   TextColor="Black"
+				   Margin="0,0,0,10" />
+
+			<Entry Grid.Row="7" 
+				   Keyboard="Numeric"  
+				   Text="{Binding MoveClaimForm.ActualAmount, Converter={StaticResource DecimalToStringConverter}}" 
+				   PlaceholderColor="Black" 
+				   IsEnabled="False" 
+				   BackgroundColor="#EDF2F7" 
+				   TextColor="Black" 
+				   Margin="0,0,0,10" />
+
+			<Button
+                Grid.Row="8"
+                Command="{Binding MoveClaimCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="Transfer" />
+
+		</Grid>
+	</ScrollView>
+</ContentPage>    

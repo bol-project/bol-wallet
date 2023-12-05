@@ -6,18 +6,24 @@ public partial class MainViewModel : BaseViewModel
 {
 	private readonly IPermissionService _permissionService;
 	private readonly ISecureRepository _secureRepository;
-	public UserData userData;
 
-	public MainViewModel(
+
+    public MainViewModel(
 		INavigationService navigationService,
 		IPermissionService permissionService,
 		ISecureRepository secureRepository) : base(navigationService)
 	{
 		_permissionService = permissionService;
 		_secureRepository = secureRepository;
-	}
+        
+    }
 
-	[RelayCommand]
+    public async Task Initialize()
+    {
+        userData = await _secureRepository.GetAsync<UserData>("userdata");
+    }
+
+    [RelayCommand]
 	private void NavigateToCodenamePage()
 	{
 		NavigationService.NavigateTo<CreateCodenameViewModel>(true);
@@ -25,7 +31,7 @@ public partial class MainViewModel : BaseViewModel
 
 
 	[RelayCommand]
-	public async Task ImportYourWallet()
+	private async Task ImportYourWallet()
 	{
 		try
 		{
@@ -61,7 +67,7 @@ public partial class MainViewModel : BaseViewModel
 					throw new Exception("Password cannot be empty. Please provide a valid password.");
 				}
 
-				userData = new UserData
+                userData = new UserData
 				{
 					Codename = bolWallet.Name,
 					BolWallet = bolWallet,

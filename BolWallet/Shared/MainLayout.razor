@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @implements IDisposable
+
 @inject Breadcrumbs breadcrumbs
-@inject UserViewModel userViewModel
+@inject MainViewModel mainViewModel;
 @inject NavigationManager nav
 @inject IServiceProvider serviceProvider
 
@@ -38,8 +39,9 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        await mainViewModel.Initialize();
         breadcrumbs.OnUpdate += OnUpdate;
-        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.userData = mainViewModel.userData;
         if (breadcrumbs.userData?.BolWallet != null)
         {
             nav.NavigateTo("/index-with-account");

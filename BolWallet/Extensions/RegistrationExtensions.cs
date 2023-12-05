@@ -11,23 +11,22 @@ public static class RegistrationExtensions
 
 		services
 			.BindViewModelToView<MainViewModel, MainPage>()
-			.BindViewModelToView<CreateCodenameViewModel, MainPage>()
-			.BindViewModelToView<CreateEdiViewModel, MainPage>()
-			.BindViewModelToView<GenerateWalletWithPasswordViewModel, MainPage>()
-			.BindViewModelToView<MainWithAccountViewModel, MainPage>()
-            .BindViewModelToView<RegistrationViewModel, MainPage>()
-            .BindViewModelToView<CertifyViewModel, MainPage>()
-			.BindViewModelToView<AccountViewModel, MainPage>()
-            .BindViewModelToView<BolCommunityViewModel, MainPage>()
-			.BindViewModelToView<CertifierViewModel, MainPage>()
-			.BindViewModelToView<FinancialTransactionsViewModel, MainPage>()
-			.BindViewModelToView<RetrieveBolViewModel, MainPage>()
+			.BindViewModelToView<CreateCodenameViewModel, CreateCodenamePage>()
+			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
+			.BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
+			.BindViewModelToView<CertifyViewModel, CertifyPage>()
 
-			.BindViewModelToView<SendBolViewModel, MainPage>()
-			.BindViewModelToView<UserViewModel, MainPage>()            
-			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()			
-			
-			.BindViewModelToView<MoveClaimViewModel, MainPage>();
+			.BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
+			.BindViewModelToView<MainWithAccountViewModel, MainWithAccountPage>()
+			.BindViewModelToView<RetrieveBolViewModel, RetrieveBolPage>()
+			.BindViewModelToView<SendBolViewModel, SendBolPage>()
+			.BindViewModelToView<UserViewModel, UserPage>()
+            .BindViewModelToView<AccountViewModel, AccountPage>()
+			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()
+			.BindViewModelToView<CertifierViewModel, CertifierPage>()
+			.BindViewModelToView<FinancialTransactionsViewModel, FinancialTransactionsPage>()
+			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>()
+			.BindViewModelToView<ClaimViewModel, ClaimPage>();
 
 		return services;
 	}

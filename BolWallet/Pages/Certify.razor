@@ -4,7 +4,8 @@
 @inject IDialogService DialogService
 @inject NavigationManager nav;
 @inject UserViewModel userViewModel
-@inject CertifyViewModel certifyViewModel
+
+@inherits MvvmComponentBase<CertifyViewModel>
 
 <MudGrid>
     <MudItem xs="12" sm="6">
@@ -13,27 +14,30 @@
             <MudText Color="@Color.Default">Account Status: @certifyViewModel.BolAccount.AccountStatus</MudText>
             @if (!certifyViewModel.IsCertified)
             {
-                if (certifyViewModel.MandatoryCertifiers != null && certifyViewModel.MandatoryCertifiers.Count >0){
-                    foreach (var itm in certifyViewModel.MandatoryCertifiers)
+                if (certifyViewModel.MandatoryCertifiers != null && ViewModel.MandatoryCertifiers.Count > 0)
+                {
+                    foreach (var itm in ViewModel.MandatoryCertifiers)
                     {
                         <MudCheckBox @bind-Checked="@Size_CheckBox1" Size="Size.Small" Color="Color.Primary">itm.Key</MudCheckBox>
                     }
                 }
-                <MudTextField @bind-Value="@certifyViewModel.CertifierCodename" Label="Paste Certifier Codename" Variant="MudBlazor.Variant.Outlined"></MudTextField>
+                <MudTextField @bind-Value="@ViewModel.CertifierCodename" Label="Paste Certifier Codename" Variant="MudBlazor.Variant.Outlined"></MudTextField>
                 <br/>
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.SelectMandatoryCertifiers())">Select Mandatory Certifiers</MudButton>
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.RequestCertification())">Request Certification No.{0} out of 2</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.SelectMandatoryCertifiersCommand.ExecuteAsync(null))">Select Mandatory Certifiers</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.RequestCertificationCommand.ExecuteAsync(null))">Request Certification No.{0} out of 2</MudButton>
             } else
             {
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.PayCertificationFees())">Pay Certification Fees</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await certifyViewModel.PayCertificationFeesCommand.ExecuteAsync(null))">Pay Certification Fees</MudButton>
             }
         </MudPaper>
     </MudItem>
 </MudGrid>
 @code {
     private bool Size_CheckBox1;
+    CertifyViewModel certifyViewModel;
     protected override async Task OnInitializedAsync()
     {
+        certifyViewModel = ViewModel;
         await certifyViewModel.Initialize();
 
 
@@ -43,7 +47,7 @@
             new BreadcrumbItem("Certify", href: null, disabled: true),
         };
 
-        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.userData = userViewModel.userData;
         breadcrumbs.Update();
         breadcrumbs.OnButtonClick += HandleButton;
         
@@ -52,7 +56,7 @@
     {
         if (args == NavButtons.Refresh)
         {
-            await certifyViewModel.UpdateBolAccount();
+            await certifyViewModel.UpdateBolAccountCommand.ExecuteAsync(null);
 
         }
         

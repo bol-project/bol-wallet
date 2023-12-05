@@ -32,7 +32,7 @@
             new BreadcrumbItem("Home", href: "#", disabled: true),
         };
 
-        breadcrumbs.userData = userViewModel._userData;
+        //breadcrumbs.userData = userViewModel._userData;
         breadcrumbs.Update();
         breadcrumbs.OnButtonClick += HandleButton;
         isVisible = false;
@@ -53,8 +53,9 @@
     }
 
     private async Task ImportWallet()
-    {
+    { /*
         await mainViewModel.ImportYourWallet();
+   
         if (mainViewModel.userData != null && mainViewModel.userData.BolWallet !=null)
         {
             breadcrumbs.userData = mainViewModel.userData;
@@ -64,5 +65,6 @@
             else
                 nav.NavigateTo("/index-with-account");
         }
+    */
     }
 }

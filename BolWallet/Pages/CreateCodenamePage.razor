@@ -1,10 +1,9 @@
 ﻿@page "/create-codename-page"
-
+@inherits MvvmComponentBase<CreateCodenameViewModel>
 @inject Breadcrumbs breadcrumbs
 @inject RegisterContent _content;
-@inject CreateCodenameViewModel createCodenameViewModel;
 @inject NavigationManager nav;
-
+@inject CreateEdiViewModel CreateEdiViewModel;
 @using System.ComponentModel.DataAnnotations
 @using System.Linq;
 @using MudBlazor.Utilities
@@ -13,40 +12,39 @@
     <MudGrid>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" OnlyValidateIfDirty="true"
-                          @bind-Value="@codenameForm.FirstName.Value" OnBlur="@(x=> codenameForm.FirstName.Value= codenameForm.FirstName.Value?.Trim().ToUpper())"
+                @bind-Value="@CodenameForm.FirstName.Value" OnBlur="@(x=> CodenameForm.FirstName.Value= CodenameForm.FirstName.Value?.Trim().ToUpper())"
                 Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" OnlyValidateIfDirty="true"
-                          @bind-Value="@codenameForm.Surname.Value" OnBlur="@(x=> codenameForm.Surname.Value= codenameForm.Surname.Value?.Trim().ToUpper())"
+                @bind-Value="@CodenameForm.Surname.Value" OnBlur="@(x=> CodenameForm.Surname.Value= CodenameForm.Surname.Value?.Trim().ToUpper())"
             Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
-        </MudItem>
+        </MudItem> 
         @*------------------------------------*@
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                Margin="@Margin.Dense" Label="Middle Name" @bind-Value="@codenameForm.MiddleName.Value" 
-                OnBlur="@(x=> codenameForm.MiddleName.Value= codenameForm.MiddleName.Value?.Trim().ToUpper())" />
+                Margin="@Margin.Dense" Label="Middle Name" @bind-Value="@CodenameForm.MiddleName.Value" 
+                OnBlur="@(x=> CodenameForm.MiddleName.Value= CodenameForm.MiddleName.Value?.Trim().ToUpper())" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" 
-                Margin="@Margin.Dense" Label="Third Name" @bind-Value="@codenameForm.ThirdName.Value"
-                OnBlur="@(x=> codenameForm.ThirdName.Value= codenameForm.ThirdName.Value?.Trim().ToUpper())" />
+                Margin="@Margin.Dense" Label="Third Name" @bind-Value="@CodenameForm.ThirdName.Value"
+                OnBlur="@(x=> CodenameForm.ThirdName.Value= CodenameForm.ThirdName.Value?.Trim().ToUpper())" />
         </MudItem>
         @*------------------------------------*@
         <MudItem xs="6" sm="6" md="6">
             <MudSelect T="Bol.Core.Model.Gender" Label="Gender" Variant="MudBlazor.Variant.Outlined"
             Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
-             @bind-Value="@codenameForm.Gender" Required="true" RequiredError="Gender is required">
+             @bind-Value="@CodenameForm.Gender" Required="true" RequiredError="Gender is required">
                 @foreach (var g in Genders)
                 {
                     <MudSelectItem T="Bol.Core.Model.Gender" Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
                 }
-                
             </MudSelect>
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             
-            <MudAutocomplete T="Country" Label="Country" @bind-Value="@codenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
                 SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)"  OnBlur="@(x=>StateHasChanged())"
                 Required="true" RequiredError="Country is required" Strict="false">
             </MudAutocomplete>
@@ -57,39 +55,39 @@
             Margin="@Margin.Dense"
             MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
             DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
-        </MudItem>
+        </MudItem> 
         @*------------------------------------*@
         <MudItem xs="12" sm="12" md="12">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@codenameForm.NIN.Value"
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
                 Margin="@Margin.Dense" OnlyValidateIfDirty="true"
-                HelperText="@codenameForm.NIN.HelpMessage" Required="true" RequiredError="@codenameForm.NIN.ErrorMessage"
-                Disabled="@(codenameForm.NIN.IsEnabled)" Validation="@(new Func<string, string>(NINCheck))" />
+                HelperText="@CodenameForm.NIN.HelpMessage" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
+                Disabled="@(CodenameForm.NIN.IsEnabled)" Validation="@(new Func<string, string>(NINCheck))" />
+        </MudItem> 
+        @*------------------------------------*@
+         <MudItem xs="12" sm="12" md="12">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@CodenameForm.Combination.Value"
+            Margin="@Margin.Dense"
+            Required="true" RequiredError="@CodenameForm.Combination.ErrorMessage"/>
         </MudItem>
         @*------------------------------------*@
         <MudItem xs="12" sm="12" md="12">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@codenameForm.Combination.Value"
-            Margin="@Margin.Dense"
-            Required="true" RequiredError="@codenameForm.Combination.ErrorMessage"/>
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameViewModel.Codename"
+                Margin="@Margin.Dense" ReadOnly="true"
+                Required="true" RequiredError="Codename is required" />
         </MudItem>
-        @*------------------------------------*@
-        
-        @if (codenameForm.IsFormFilled)
+
+        @if (CodenameForm?.IsFormFilled??false)
         {
             success = true;
-
-            <MudItem xs="12" sm="12" md="12">
-                <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameViewModel.Codename"
-                    Margin="@Margin.Dense" ReadOnly="true"
-                    Required="true" RequiredError="Codename is required" />
-            </MudItem>
-            
             @if (string.IsNullOrEmpty(createCodenameViewModel.Codename.Trim()))
             {
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="Generate" Class="ml-auto">Generate</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=>createCodenameViewModel.GenerateCommand.Execute(null))" Class="ml-auto">Generate</MudButton>
             } else
             {
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(args=> nav.NavigateTo("/create-edi-page"))" Class="ml-auto">Register</MudButton>
-            }
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> nav.NavigateTo("/create-edi-page"))" Class="ml-auto">Register(BLAZOR)</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> App.Current.MainPage.Navigation.PushAsync(new Views.CreateEdiPage(CreateEdiViewModel)))" Class="ml-auto">Register(XAML)</MudButton>
+            } 
+            
         }
     </MudGrid>
 </MudForm>
@@ -99,72 +97,100 @@
         text-transform: uppercase;
     }
 </style>
-@code {
+@code 
+{
 
-    public CodenameForm codenameForm;
+    CreateCodenameViewModel createCodenameViewModel;
+    CodenameForm CodenameForm ;
     Array Genders;
     int lastYear = DateTime.Now.Year - 1;
     DateTime? BirthDate;
-    IAsyncRelayCommand cmd;
-    bool success;
+    bool success,updating = true;
     string[] errors = { };
     MudForm form;
 
     protected override async Task OnInitializedAsync()
-    {        
-        codenameForm = new(_content);
-        createCodenameViewModel.CodenameForm = codenameForm;
-        cmd = createCodenameViewModel.GenerateCommand;
-        Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
-        BirthDate = codenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(codenameForm.Birthdate.Value);
-        codenameForm.Birthdate.Value = BirthDate?.ToString("yyyy-MM-dd");  
-        breadcrumbs._items = new List<BreadcrumbItem>
+    {
+        try
         {
-            new BreadcrumbItem("Home", href: "/", disabled: false),
-            new BreadcrumbItem("Create your Codename", href: null, disabled: true),
-        };
-        breadcrumbs.Update();
-        if (breadcrumbs.userData != null && breadcrumbs.userData.Person != null)
+            updating = true; 
+            Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
+            createCodenameViewModel = ViewModel;
+            CodenameForm = createCodenameViewModel.CodenameForm;
+            await createCodenameViewModel.Initialize();
+
+        }
+        catch (Exception ex)
         {
-            codenameForm.FirstName.Value = breadcrumbs.userData.Person.FirstName;
-            codenameForm.NIN.Value = breadcrumbs.userData.Person.Nin;
-            codenameForm.Birthdate.Value = breadcrumbs.userData.Person.Birthdate.ToString("yyyy-MM-dd");
-            codenameForm.Surname.Value = breadcrumbs.userData.Person.Surname;
-            codenameForm.MiddleName.Value = breadcrumbs.userData.Person.MiddleName;
-            codenameForm.ThirdName.Value = breadcrumbs.userData.Person.ThirdName;
-            codenameForm.Combination.Value = breadcrumbs.userData.Person.Combination;
-            codenameForm.Gender = breadcrumbs.userData.Person.Gender;
-            createCodenameViewModel.Codename = breadcrumbs.userData.Codename;
-            codenameForm.SelectedCountry = codenameForm.Countries.Where(x => x.Alpha3.Equals(
-                breadcrumbs.userData.Person.CountryCode, StringComparison.InvariantCultureIgnoreCase)).
-                FirstOrDefault();
+
+        } finally {
+
+            BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
+            CodenameForm.Birthdate.Value = BirthDate?.ToString("yyyy-MM-dd");
+
+            breadcrumbs._items = new List<BreadcrumbItem>
+            {
+                new BreadcrumbItem("Home", href: "/", disabled: false),
+                new BreadcrumbItem("Create your Codename", href: null, disabled: true),
+            };
+            breadcrumbs.Update();
+            if (breadcrumbs.userData != null && breadcrumbs.userData.Person != null)
+            {
+                //codenameForm.FirstName.Value = breadcrumbs.userData.Person.FirstName;
+                //codenameForm.NIN.Value = breadcrumbs.userData.Person.Nin;
+                //codenameForm.Birthdate.Value = breadcrumbs.userData.Person.Birthdate.ToString("yyyy-MM-dd");
+                //codenameForm.Surname.Value = breadcrumbs.userData.Person.Surname;
+                //codenameForm.MiddleName.Value = breadcrumbs.userData.Person.MiddleName;
+                //codenameForm.ThirdName.Value = breadcrumbs.userData.Person.ThirdName;
+                //codenameForm.Combination.Value = breadcrumbs.userData.Person.Combination;
+                //codenameForm.Gender = breadcrumbs.userData.Person.Gender;
+                //createCodenameViewModel.Codename = breadcrumbs.userData.Codename;
+
+                if (!string.IsNullOrEmpty(createCodenameViewModel.Codename))
+                    breadcrumbs.userData.Codename = createCodenameViewModel.Codename;
+
+                CodenameForm.SelectedCountry = CodenameForm.Countries.Where(x => x.Alpha3.Equals(
+                    breadcrumbs.userData.Person.CountryCode, StringComparison.InvariantCultureIgnoreCase)).
+                    FirstOrDefault();
+            }
+            
         }
     }
 
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+            updating = false;
+        return base.OnAfterRenderAsync(firstRender);
+    }
+    
     private void OnDateChanged(DateTime? dt)
     {
-        codenameForm.Birthdate.Value = dt?.ToString("yyyy-MM-dd");
+        CodenameForm.Birthdate.Value = dt?.ToString("yyyy-MM-dd");
         BirthDate = dt;
     }
 
     private string NINCheck(string arg)
     {
-
-        if (codenameForm.NIN.HasError)
-            return codenameForm.NIN.ErrorMessage;
+        if (CodenameForm.NIN.HasError)
+            return CodenameForm.NIN.ErrorMessage;
         return null;
     }
 
     private async Task<IEnumerable<Country>> Search(string value)
     {
         if (string.IsNullOrEmpty(value))
-            return codenameForm.Countries;
+            return CodenameForm.Countries;
 
-        return codenameForm.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        return CodenameForm.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
     }
 
     private async Task FieldChanged(FormFieldChangedEventArgs args )
     {
+        if (updating)
+            return;
+
         if (args.Field is MudTextField<string> fd)
         {
             if (!fd.Label.Equals("Codename"))
@@ -172,16 +198,8 @@
         } else
             createCodenameViewModel.Codename = "";
 
+        ///breadcrumbs.userData.Codename=createCodenameViewModel.Codename;
         await InvokeAsync(StateHasChanged);
 
-    }
-    private async void Generate()
-    {
-        await InvokeAsync(async () => {
-            cmd.Execute(null);
-            breadcrumbs.userData = createCodenameViewModel._userData;
-            await Task.Delay(1000); 
-            StateHasChanged();
-        });
     }
 }

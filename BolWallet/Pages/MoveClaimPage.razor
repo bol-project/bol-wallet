@@ -1,9 +1,9 @@
 ﻿@page "/move-claim-page"
-
+@inherits MvvmComponentBase<MoveClaimViewModel>
 @inject Breadcrumbs breadcrumbs
 @inject NavigationManager nav;
 @inject UserViewModel userViewModel
-@inject MoveClaimViewModel moveClaimViewModel
+
 
 <h4>Transfer Claim</h4>
 <MudGrid>
@@ -26,14 +26,17 @@
 
             <br/>
 
-            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await moveClaimViewModel.MoveClaim())">Claim</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async z=> await moveClaimViewModel.MoveClaimCommand.ExecuteAsync(null))">Claim</MudButton>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
 @code {
+    MoveClaimViewModel moveClaimViewModel;
+
     protected override async Task OnInitializedAsync()
     {
+        moveClaimViewModel = ViewModel;
         await moveClaimViewModel.Initialize();
         breadcrumbs._items = new List<BreadcrumbItem>
         {
@@ -41,7 +44,7 @@
             new BreadcrumbItem("Transfer Claim", href: null, disabled: true),
         };
 
-        breadcrumbs.userData = userViewModel._userData;
+        breadcrumbs.userData = moveClaimViewModel.userData;
         breadcrumbs.Update();
 
     }

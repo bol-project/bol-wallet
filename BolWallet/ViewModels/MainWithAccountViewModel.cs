@@ -58,7 +58,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	public async Task FetchBolAccountData()
+	private async Task FetchBolAccountData()
 	{
 		try
 		{

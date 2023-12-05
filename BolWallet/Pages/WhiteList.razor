@@ -1,0 +1,42 @@
+﻿@page "/white-list"
+@inherits MvvmComponentBase<MainWithAccountViewModel>
+@inject Breadcrumbs breadcrumbs
+@inject NavigationManager nav;
+
+
+<style>
+    .mud-main-content
+    {
+        height:500px !important;
+    }
+</style>
+<h3 style="margin-left:10px">Welcome to Bol! @(mainWithAccountViewModel.CodeName)</h3>
+<h4 style="margin-left:10px;font-weight:bold">Your Main Address: @mainWithAccountViewModel.MainAddress</h4>
+<iframe src="@link" height="300">
+
+</iframe>
+
+@code {
+    MainWithAccountViewModel mainWithAccountViewModel;
+    string link = "https://localhost:7201/";
+    protected override async Task OnInitializedAsync()
+    {
+        mainWithAccountViewModel = ViewModel;
+        await InvokeAsync(StateHasChanged);
+        await mainWithAccountViewModel.Initialize();
+
+        breadcrumbs.isRegistered = mainWithAccountViewModel.IsRegistered;
+        breadcrumbs.isAccountOpen = mainWithAccountViewModel.IsAccountOpen;
+        breadcrumbs._items = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem("Home", href: "/index-with-account", disabled: false),
+            new BreadcrumbItem("White List", href: null, disabled: true),
+        };
+
+        breadcrumbs.userData = mainWithAccountViewModel.userData;
+        breadcrumbs.Update();
+        link += mainWithAccountViewModel.MainAddress;
+
+        await InvokeAsync(StateHasChanged);
+    }
+}
