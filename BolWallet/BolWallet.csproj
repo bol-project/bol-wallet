@@ -183,7 +183,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-  		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+  	<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 		<PackageReference Include="Neo.VM" Version="2.4.3.1" />
 		<PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
@@ -217,9 +217,5 @@
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\..\neo-vm\src\neo-vm\neo-vm.csproj" />
 	</ItemGroup>
 </Project>
