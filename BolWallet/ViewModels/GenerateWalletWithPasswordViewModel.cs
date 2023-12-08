@@ -4,6 +4,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using Newtonsoft.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BolWallet.ViewModels;
 public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
@@ -36,14 +37,27 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isLoading = false;
 
+	[ObservableProperty]
+	private string _passwordErrorMessage = "";
+
 	[RelayCommand]
 	private async Task Submit()
 	{
 		try
 		{
 			if (string.IsNullOrEmpty(Password))
+			{
+				await Toast.Make("Please enter a password.").Show();
 				return;
+			}
 
+			if (!IsPasswordStrong(Password))
+			{
+				PasswordErrorMessage = "Password must be at least 8 characters long and contain a mix of uppercase, lowercase, numbers, and special characters.";
+				return;
+			}
+
+			PasswordErrorMessage = ""; 
 			IsLoading = true;
 
 			byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
@@ -73,6 +87,13 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 		{
 			IsLoading = false;
 		}
+	}
+
+	private bool IsPasswordStrong(string password)
+	{
+		const string strongPasswordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$";
+
+		return Regex.IsMatch(password, strongPasswordPattern);
 	}
 
 	[RelayCommand]
