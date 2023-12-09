@@ -19,7 +19,7 @@ public partial class MainViewModel : BaseViewModel
 	[RelayCommand]
 	private void NavigateToCodenamePage()
 	{
-		NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+		App.Current.MainPage.Navigation.PushAsync(new CreateCodenamePage());
 	}
 
 
