@@ -10,6 +10,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using MudBlazor.Services;
 using Newtonsoft.Json.Linq;
 using SkiaSharp.Views.Maui.Handlers;
 using Country = BolWallet.Models.Country;
@@ -42,7 +43,14 @@ public static class MauiProgram
 				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
 			});
 
-		builder.AddConfiguration("BolWallet.appsettings.json");
+        builder.Services.AddMauiBlazorWebView();
+
+		builder.Services.AddMudServices();
+
+#if DEBUG
+        builder.Services.AddBlazorWebViewDeveloperTools();
+#endif
+        builder.AddConfiguration("BolWallet.appsettings.json");
 
 		var services = builder.Services;
 
@@ -53,7 +61,7 @@ public static class MauiProgram
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
 
-		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+        services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
 		services.RegisterViewAndViewModelSubsystem();
