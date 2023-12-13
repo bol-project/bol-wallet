@@ -8,7 +8,7 @@
 
 <MudThemeProvider />
 
-<MudForm @ref="form" @bind-IsValid="@success" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
+<MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
     <MudGrid>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" OnlyValidateIfDirty="true"
@@ -44,7 +44,7 @@
 
             <MudAutocomplete T="Country" Label="Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
                              SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
-                             Required="true" RequiredError="Country is required" Strict="false">
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
             </MudAutocomplete>
 
         </MudItem>
@@ -55,9 +55,9 @@
                            DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
+            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
                           Margin="@Margin.Dense" OnlyValidateIfDirty="true"
-                          HelperText="@CodenameForm.NIN.HelpMessage" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
+                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
                           Disabled="@(CodenameForm.NIN.IsEnabled)" Validation="@(new Func<string, string>(NINCheck))" />
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
@@ -76,7 +76,6 @@
                 <!-- Use a div with text-center class to center the buttons -->
                 @if (CodenameForm?.IsFormFilled ?? false)
                 {
-                    success = true;
                     @if (string.IsNullOrEmpty(createCodenameViewModel.Codename.Trim()))
                     {
                         <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=>createCodenameViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
@@ -102,35 +101,29 @@
 </style>
 @code
 {
+    MudTextField<string> ninTextField;
     CreateCodenameViewModel createCodenameViewModel;
     CodenameForm CodenameForm;
-    Array Genders;
-    int lastYear = DateTime.Now.Year - 1;
-    DateTime? BirthDate;
-    bool success, updating = true;
-    string[] errors = { };
+    Array Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
     MudForm form;
+
+    DateTime? BirthDate;
+
+    int lastYear = DateTime.Now.Year - 1;
+    bool updating = true;
+    string[] errors = { };
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            updating = true;
+        updating = true;
 
-            Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
+        createCodenameViewModel = ViewModel;
 
-            createCodenameViewModel = ViewModel;
+        CodenameForm = createCodenameViewModel.CodenameForm;
 
-            CodenameForm = createCodenameViewModel.CodenameForm;
+        await createCodenameViewModel.Initialize();
 
-            await createCodenameViewModel.Initialize();
-
-            BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
-        }
-        catch (Exception ex)
-        {
-
-        }
+        BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -150,7 +143,7 @@
     {
         if (CodenameForm.NIN.HasError)
             return CodenameForm.NIN.ErrorMessage;
-        return null;
+        return string.Empty;
     }
 
     private async Task<IEnumerable<Country>> Search(string value)
@@ -167,14 +160,11 @@
         if (updating)
             return;
 
-        if (args.Field is MudTextField<string> fd)
-        {
-            if (!fd.Label.Equals("Codename"))
-                createCodenameViewModel.Codename = "";
-        }
-        else
-            createCodenameViewModel.Codename = "";
+        createCodenameViewModel.Codename = "";
 
-        await InvokeAsync(StateHasChanged);
+        if (args.Field is MudAutocomplete<Country>)
+            await ninTextField.Validate();
+
+        await InvokeAsync(() => StateHasChanged());
     }
 }
