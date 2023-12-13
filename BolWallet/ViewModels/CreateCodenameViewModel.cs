@@ -92,7 +92,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
 					.Countries
 					.FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
 		CodenameForm.NIN.Value = userData.Person.Nin;
-		CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString(CultureInfo.InvariantCulture);
+		CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
 
 		Codename = userData.Codename;
 	}

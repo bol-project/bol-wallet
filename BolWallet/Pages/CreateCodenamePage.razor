@@ -124,16 +124,12 @@
             CodenameForm = createCodenameViewModel.CodenameForm;
 
             await createCodenameViewModel.Initialize();
+
+            BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
         }
         catch (Exception ex)
         {
 
-        }
-        finally
-        {
-
-            BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
-            CodenameForm.Birthdate.Value = BirthDate?.ToString("yyyy-MM-dd");
         }
     }
 
