@@ -63,8 +63,6 @@
     private async Task Submit()
     {
         await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
-
-        await App.Current.MainPage.Navigation.PushAsync(new Views.GenerateWalletWithPasswordPage(GenerateWalletWithPasswordViewModel));
     }
 
     private async Task GetFile(string property)
