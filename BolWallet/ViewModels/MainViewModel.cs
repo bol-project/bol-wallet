@@ -17,11 +17,10 @@ public partial class MainViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private void NavigateToCodenamePage()
+	private async Task NavigateToCodenamePage()
 	{
-		App.Current.MainPage.Navigation.PushAsync(new CreateCodenamePage());
-	}
-
+        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+    }
 
 	[RelayCommand]
 	private async Task ImportYourWallet()
