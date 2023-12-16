@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="BolWallet.Views.CreateCodenamePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"

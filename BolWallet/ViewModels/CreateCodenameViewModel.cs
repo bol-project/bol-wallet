@@ -31,10 +31,10 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
 
 	[RelayCommand]
-	private Task Submit()
+	public async Task Submit()
 	{
-		return NavigationService.NavigateTo<CreateEdiViewModel>(true);
-	}
+        await App.Current.MainPage.Navigation.PushAsync(new CreateEdiPage());
+    }
 
 	[RelayCommand]
 	private async Task Generate()

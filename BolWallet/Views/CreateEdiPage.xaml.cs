@@ -4,9 +4,8 @@ namespace BolWallet.Views;
 
 public partial class CreateEdiPage : ContentPage
 {
-	public CreateEdiPage(CreateEdiViewModel ediViewModel)
+	public CreateEdiPage()
 	{
 		InitializeComponent();
-		BindingContext = ediViewModel;
 	}
 }

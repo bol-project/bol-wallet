@@ -19,7 +19,7 @@ public partial class MainViewModel : BaseViewModel
 	[RelayCommand]
 	private async Task NavigateToCodenamePage()
 	{
-        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+        NavigationService.NavigateTo<CreateCodenameViewModel>(true);
     }
 
 	[RelayCommand]
