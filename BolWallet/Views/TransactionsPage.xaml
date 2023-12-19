@@ -62,28 +62,28 @@
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Sender Codename: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderCodeName}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntrySenderCodeName}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Sender address: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderAddress}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntrySenderAddress}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Receiver Codename: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverCodeName}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntryReceiverCodeName}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Receiver Address: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverAddress}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntryReceiverAddress}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
