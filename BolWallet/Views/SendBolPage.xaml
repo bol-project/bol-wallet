@@ -6,6 +6,9 @@
     xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:SendBolViewModel"
+	xmlns:helpers="clr-namespace:BolWallet.Helpers"
+	xmlns:models="clr-namespace:BolWallet.Models"
+	xmlns:Converters="clr-namespace:BolWallet.Converters"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
 	<ContentPage.Resources>
@@ -28,6 +31,8 @@
 
 			<Color x:Key="FocusedColor">#718792</Color>
 
+			<Converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+
 		</ResourceDictionary>
 	</ContentPage.Resources>
 
@@ -36,38 +41,89 @@
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
-			<Label
+			<Entry 
+                Placeholder="Search Codename" 
                 Grid.Row="0"
+				FontSize="12"
+                TextColor="Black" 
+				Text="{Binding SearchCodename}">
+			</Entry>
+			<ImageButton  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+				<ImageButton.Source>
+					<FontImageSource 
+					FontFamily="MaterialIconsRegular"
+					Glyph="{x:Static helpers:Icons.Search}"
+					Color="Black"
+					/>
+				</ImageButton.Source>
+			</ImageButton>
+
+			<ListView Grid.Row="1" ItemsSource="{Binding SearchCommercialBalancesDisplayList, Mode=TwoWay}"  HasUnevenRows="True">
+				<ListView.ItemTemplate >
+					<DataTemplate x:DataType="models:BalanceDisplayItem">
+						<ViewCell>
+							<Grid>
+								<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+									<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+										<Label 
+												Text="{Binding Address}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+												<Label.GestureRecognizers>
+													<TapGestureRecognizer  Tapped="OnTapCommercialAddress"/>
+												</Label.GestureRecognizers>
+										</Label>
+										<Label 
+												Text="{Binding Balance, StringFormat= 'Balance: {0}'}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+										</Label>
+									</StackLayout>
+								</Frame>
+							</Grid>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			
+			<Label
+                Grid.Row="2"
                 Grid.ColumnSpan="2"
                 FontSize="32"
                 HorizontalOptions="Center"
                 HorizontalTextAlignment="Center"
                 SemanticProperties.HeadingLevel="Level1"
-                Text="{Binding SendBolLabel}" />
+                Text="Send Bol" />
 
 			<Picker 
-			    Grid.Row="1"
+			    Grid.Row="3"
 			    Title="From Commercial Address" 
                 ItemsSource="{Binding CommercialBalancesDisplayList}"
 			    SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
 			</Picker>
 
 			<controls1:ExtendedTextEdit 
-                Grid.Row="2"
-                LabelText="{Binding ReceiverAddressText}"
+                Grid.Row="4"
+				FontSize="12"
+                LabelText="Receiver Address:"
                 Text="{Binding SendBolForm.ReceiverAddress, Mode=TwoWay}" />
 
 			<controls1:ExtendedTextEdit 
-                    Grid.Row="3"
-                    LabelText="{Binding ReceiverCodenameText}"
+                    Grid.Row="5"
+                    LabelText="Receiver Codename:"
+					FontSize="10"
                     Text="{Binding SendBolForm.ReceiverCodename, Mode=TwoWay}" />
 
 			<Entry Placeholder="Amount" 
 				   Keyboard="Numeric"
-				   Grid.Row="4" 
+				   Grid.Row="6" 
 				   Grid.Column="0"
 				   Text="{Binding SendBolForm.Amount, Mode=TwoWay}"
 				   PlaceholderColor="Black"
@@ -75,17 +131,24 @@
 				   TextColor="Black"
 				   Margin="0,0,0,10" />
 
-			<Entry Grid.Row="5" 
+			<StackLayout  Grid.Row="7" >
+				<Entry
 				   Keyboard="Numeric"  
-				   Text="{Binding SendBolForm.ActualAmount, StringFormat='{0:F8} Bol'}" 
+				   Text="{Binding SendBolForm.ActualAmount, Converter={StaticResource DecimalToStringConverter}}" 
 				   PlaceholderColor="Black" 
 				   IsEnabled="False" 
 				   BackgroundColor="#EDF2F7" 
 				   TextColor="Black" 
 				   Margin="0,0,0,10" />
 
+				<Label
+					FontSize="10"
+					HorizontalOptions="Start"
+					Text="A fee of 0,0001 bol applies to every transfer." />
+			</StackLayout>
+
 			<Button
-                Grid.Row="6"
+                Grid.Row="8"
                 Command="{Binding SendBolCommand}"
                 FontAttributes="Bold"
                 FontSize="8"

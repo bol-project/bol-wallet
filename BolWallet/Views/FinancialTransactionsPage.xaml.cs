@@ -7,10 +7,4 @@ public partial class FinancialTransactionsPage : ContentPage
 		InitializeComponent();
 		BindingContext = financialTransactionsViewModel;
 	}
-
-	protected override async void OnAppearing()
-	{
-		base.OnAppearing();
-		await ((FinancialTransactionsViewModel)BindingContext).Initialize();
-	}
 }

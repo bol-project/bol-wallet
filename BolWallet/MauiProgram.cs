@@ -6,8 +6,11 @@ using Bol.Core.Model;
 using BolWallet.Controls;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Linq;
 using SkiaSharp.Views.Maui.Handlers;
 using Country = BolWallet.Models.Country;
 namespace BolWallet;
@@ -30,9 +33,9 @@ public static class MauiProgram
 
 		builder
 			.UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .UseRadialControl()
-            .ConfigureFonts(fonts =>
+			.UseMauiCommunityToolkit()
+			.UseRadialControl()
+			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -51,12 +54,18 @@ public static class MauiProgram
 		services.AddSingleton<IPermissionService, PermissionService>();
 
 		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+
 		services.RegisterViewAndViewModelSubsystem();
 
-		// Register RpcEndpoint and Contract
-		var bolConfig = new BolConfig();
-		builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
-		services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
+        var bolConfig = new BolConfig();
+        builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
+
+        string contractHash = GetContractHash(bolConfig.RpcEndpoint);
+
+        bolConfig.Contract = contractHash;
+
+        services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
 		services.AddBolSdk();
 
@@ -80,6 +89,38 @@ public static class MauiProgram
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
 		return builder.Build();
+	}
+
+	private static string GetContractHash(string url)
+	{
+		var client = new HttpClient();
+
+		var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+		var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getbolhash\",\r\n\"params\":[]\r\n}\r\n", null, "application/json");
+		request.Content = stringContent;
+
+		try
+		{
+			using (var response = client.SendAsync(request).Result)
+			{
+				response.EnsureSuccessStatusCode();
+
+				var resultJson = response.Content.ReadAsStringAsync().Result;
+
+				var jsonResponse = JObject.Parse(resultJson);
+
+				var contractHash = jsonResponse["result"].ToString();
+
+				return contractHash;
+			}
+		}
+		catch (Exception ex)
+		{
+			Toast.Make(ex.Message).Show().Wait();
+		}
+
+		return string.Empty;
 	}
 
 	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)

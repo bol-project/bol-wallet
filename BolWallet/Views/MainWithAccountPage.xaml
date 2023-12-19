@@ -196,18 +196,18 @@
 				FontSize="12"
 				Text="Account"
 				Command="{Binding NavigateToAccountPageCommand}"/>
-				
-				<Button
-                FontAttributes="Bold"
-                FontSize="12"
-                Text="Transactions History"
-				Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
-                Command="{Binding NavigateToFinancialTransactionsPageCommand}"
+				Command="{Binding NavigateToFinancialTransactionsPageCommand}"
+				FontAttributes="Bold"
+				FontSize="12"
+				Text="New Transaction" />
+
+				<Button
                 FontAttributes="Bold"
                 FontSize="12"
-                Text="Financial Transactions" />
+                Text="Last 10 Transactions"
+				Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
 				Command="{Binding NavigateToCertifierPageCommand}"

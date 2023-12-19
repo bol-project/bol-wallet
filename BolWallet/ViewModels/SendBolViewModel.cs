@@ -1,18 +1,13 @@
 ﻿using Bol.Address;
 using Bol.Core.Abstractions;
 using Bol.Core.Model;
-using Bol.Core.Services;
 using CommunityToolkit.Maui.Alerts;
+using System.Collections.ObjectModel;
 using System.Numerics;
 
 namespace BolWallet.ViewModels;
 public partial class SendBolViewModel : BaseViewModel
 {
-	public string SendBolLabel => "Send Bol";
-
-	public string FromAddressText => "From Address:";
-	public string ReceiverAddressText => "Receiver Address:";
-	public string ReceiverCodenameText => "Receiver Codename:";
 	public string AmountText => "";
 
 	[ObservableProperty]
@@ -25,13 +20,22 @@ public partial class SendBolViewModel : BaseViewModel
 	private BolAccount _bolAccount = new();
 
 	[ObservableProperty]
+	private BolAccount _searchBolAccount;
+
+    [ObservableProperty]
+    private string _searchCodename;
+
+    [ObservableProperty]
 	public List<KeyValuePair<string, string>> _commercialBalances;
 
 	[ObservableProperty]
 	public List<string> _commercialBalancesDisplayList;
 
-	[ObservableProperty]
-	public int _selectedCommercialAddressIndex;
+    [ObservableProperty]
+    public ObservableCollection<BalanceDisplayItem> _searchCommercialBalancesDisplayList = new();
+
+    [ObservableProperty]
+	public int? _selectedCommercialAddressIndex;
 
 	private readonly IAddressTransformer _addressTransformer;
 	private readonly ISecureRepository _secureRepository;
@@ -49,6 +53,7 @@ public partial class SendBolViewModel : BaseViewModel
 
 		SendBolForm = new SendBolForm();
 	}
+
 	public async Task Initialize()
 	{
 		try
@@ -79,11 +84,14 @@ public partial class SendBolViewModel : BaseViewModel
 	{
 		try
 		{
-			SendBolForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
+			if (!SelectedCommercialAddressIndex.HasValue)
+				throw new Exception("Please choose a commercial address for this transfer.");
+
+			SendBolForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex.Value].Key;
 
 			BolAccount bolAccount = await _bolService.Transfer(
-			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress),
-			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress),
+			  _addressTransformer.ToScriptHash(SendBolForm.ComAddress.Trim()),
+			  _addressTransformer.ToScriptHash(SendBolForm.ReceiverAddress.Trim()),
 			  SendBolForm.ReceiverCodename,
 			  new BigInteger(SendBolForm.ActualAmount * (decimal)Math.Pow(10, 8)));
 
@@ -103,4 +111,50 @@ public partial class SendBolViewModel : BaseViewModel
 			await Toast.Make(ex.Message).Show();
 		}
 	}
+
+    [RelayCommand]
+    private async Task FetchBolAccountData()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SearchCodename))
+                return;
+
+            SearchBolAccount = await _bolService.GetAccount(SearchCodename);
+
+			var searchCommercialBalances = SearchBolAccount?.CommercialBalances?.ToList() ?? new(); 
+
+            CommercialBalancesDisplayList.Clear();
+
+            foreach (var commercialBalance in searchCommercialBalances)
+            {
+                SearchCommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+            }
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+
+    [RelayCommand]
+    private async Task SelectCommercialAddress(string commercialAddress)
+    {
+        try
+        {
+            SearchBolAccount = await _bolService.GetAccount(SearchCodename);
+
+            SendBolForm.ReceiverAddress = commercialAddress;
+
+            SendBolForm.ReceiverCodename = SearchBolAccount.CodeName;
+
+            SearchCommercialBalancesDisplayList.Clear();
+
+            GenerateCommercialBalanceDisplayList();
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
 }
