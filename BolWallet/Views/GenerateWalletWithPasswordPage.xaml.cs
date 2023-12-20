@@ -2,9 +2,8 @@ namespace BolWallet.Views;
 
 public partial class GenerateWalletWithPasswordPage : ContentPage
 {
-	public GenerateWalletWithPasswordPage(GenerateWalletWithPasswordViewModel generateWalletWithPasswordViewModel)
+	public GenerateWalletWithPasswordPage()
 	{
 		InitializeComponent();
-		BindingContext = generateWalletWithPasswordViewModel;
 	}
 }
