@@ -8,7 +8,25 @@
              Title="Certify Your Account"
 			 BackgroundColor="{DynamicResource SecondaryColor}"
 			 NavigationPage.HasBackButton="False">
-
+	
+	<ContentPage.ToolbarItems>
+		<ToolbarItem 
+		Text="Download BolAccount"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadAccountCommand}"/>
+			<ToolbarItem 
+		Text="Download BolWallet"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadBolWalletCommand}"/>
+			<ToolbarItem 
+		Text="Download Edi Files"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadEdiFilesCommand}"/>
+	</ContentPage.ToolbarItems>
+	
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
