@@ -1,0 +1,170 @@
+﻿@page "/create-codename-page"
+
+@inherits MvvmComponentBase<CreateCodenameViewModel>
+
+@inject RegisterContent _content;
+@inject NavigationManager nav;
+@inject CreateEdiViewModel CreateEdiViewModel;
+
+<MudThemeProvider />
+
+<MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
+    <MudGrid>
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" OnlyValidateIfDirty="true"
+                          @bind-Value="@CodenameForm.FirstName.Value" OnBlur="@(x=> CodenameForm.FirstName.Value= CodenameForm.FirstName.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" OnlyValidateIfDirty="true"
+                          @bind-Value="@CodenameForm.Surname.Value" OnBlur="@(x=> CodenameForm.Surname.Value= CodenameForm.Surname.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                          Margin="@Margin.Dense" Label="Middle Name" @bind-Value="@CodenameForm.MiddleName.Value"
+                          OnBlur="@(x=> CodenameForm.MiddleName.Value= CodenameForm.MiddleName.Value?.Trim().ToUpper())" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                          Margin="@Margin.Dense" Label="Third Name" @bind-Value="@CodenameForm.ThirdName.Value"
+                          OnBlur="@(x=> CodenameForm.ThirdName.Value= CodenameForm.ThirdName.Value?.Trim().ToUpper())" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+            <MudSelect T="Bol.Core.Model.Gender" Label="Gender" Variant="MudBlazor.Variant.Outlined"
+                       Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
+                       @bind-Value="@CodenameForm.Gender" Required="true" RequiredError="Gender is required">
+                @foreach (var g in Genders)
+                {
+                    <MudSelectItem T="Bol.Core.Model.Gender" Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+
+            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+            </MudAutocomplete>
+
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
+                           Margin="@Margin.Dense"
+                           MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
+                           DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
+                          Margin="@Margin.Dense" OnlyValidateIfDirty="true"
+                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
+                          Disabled="@(CodenameForm.NIN.IsEnabled)" Validation="@(new Func<string, string>(NINCheck))" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@CodenameForm.Combination.Value"
+                          Margin="@Margin.Dense"
+                          Required="true" RequiredError="@CodenameForm.Combination.ErrorMessage" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameViewModel.Codename"
+                          Margin="@Margin.Dense" ReadOnly="true"
+                          Required="true" RequiredError="Codename is required" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <div class="text-center">
+                <!-- Use a div with text-center class to center the buttons -->
+                @if (CodenameForm?.IsFormFilled ?? false)
+                {
+                    @if (string.IsNullOrEmpty(createCodenameViewModel.Codename.Trim()))
+                    {
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=>createCodenameViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> App.Current.MainPage.Navigation.PushAsync(new Views.CreateEdiPage(CreateEdiViewModel)))">Submit</MudButton>
+                    }
+                }
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+<style>
+    input.mud-input-slot {
+        text-transform: uppercase;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
+@code
+{
+    MudTextField<string> ninTextField;
+    CreateCodenameViewModel createCodenameViewModel;
+    CodenameForm CodenameForm;
+    Array Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
+    MudForm form;
+
+    DateTime? BirthDate;
+
+    int lastYear = DateTime.Now.Year - 1;
+    bool updating = true;
+    string[] errors = { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        updating = true;
+
+        createCodenameViewModel = ViewModel;
+
+        CodenameForm = createCodenameViewModel.CodenameForm;
+
+        await createCodenameViewModel.Initialize();
+
+        BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            updating = false;
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void OnDateChanged(DateTime? dt)
+    {
+        CodenameForm.Birthdate.Value = dt?.ToString("yyyy-MM-dd");
+        BirthDate = dt;
+    }
+
+    private string NINCheck(string arg)
+    {
+        if (CodenameForm.NIN.HasError)
+            return CodenameForm.NIN.ErrorMessage;
+        return string.Empty;
+    }
+
+    private async Task<IEnumerable<Country>> Search(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return CodenameForm.Countries;
+
+        return await Task.Run(() => CodenameForm.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
+
+    }
+
+    private async Task FieldChanged(FormFieldChangedEventArgs args)
+    {
+        if (updating)
+            return;
+
+        createCodenameViewModel.Codename = "";
+
+        if (args.Field is MudAutocomplete<Country>)
+            await ninTextField.Validate();
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+}

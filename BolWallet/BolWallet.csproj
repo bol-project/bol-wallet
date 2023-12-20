@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0-android;net7.0-ios;net7.0-maccatalyst</TargetFrameworks>
@@ -90,6 +90,9 @@
 		<MauiXaml Update="Controls\ExtendedComboBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="MainPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\AccountPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -116,9 +119,6 @@
 		</MauiXaml>
 		<MauiXaml Update="Views\FinancialTransactionsPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\MainPage.xaml">
-			<SubType>Designer</SubType>
 		</MauiXaml>
 		<MauiXaml Update="Views\MainWithAccountPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -158,10 +158,6 @@
 			<DependentUpon>CreateCodenamePage.xaml</DependentUpon>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\MainPage.xaml.cs">
-			<DependentUpon>MainPage.xaml</DependentUpon>
-			<SubType>Code</SubType>
-		</Compile>
 		<Compile Update="Views\MainWithAccountPage.xaml.cs">
 			<DependentUpon>MainWithAccountPage.xaml</DependentUpon>
 		</Compile>
@@ -169,9 +165,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="akavache" Version="9.1.20" />
+		<PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
 		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.1.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
@@ -182,6 +179,7 @@
 		<PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.5" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.5" />
+		<PackageReference Include="MudBlazor" Version="6.11.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -208,6 +206,14 @@
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+	  <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+	  <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+	  <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+	  <None Include="wwwroot\css\open-iconic\README.md" />
 	</ItemGroup>
 
 </Project>

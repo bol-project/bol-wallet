@@ -1,6 +1,8 @@
-﻿namespace BolWallet.ViewModels;
+﻿using Blazing.Mvvm.ComponentModel;
 
-public class BaseViewModel : ObservableObject
+namespace BolWallet.ViewModels;
+
+public class BaseViewModel : ViewModelBase
 {
     protected readonly INavigationService NavigationService;
 
