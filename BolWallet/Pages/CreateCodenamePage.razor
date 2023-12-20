@@ -82,7 +82,7 @@
                     }
                     else
                     {
-                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> App.Current.MainPage.Navigation.PushAsync(new Views.CreateEdiPage(CreateEdiViewModel)))">Submit</MudButton>
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> createCodenameViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
                     }
                 }
             </div>
