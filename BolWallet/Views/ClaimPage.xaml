@@ -54,7 +54,54 @@
 			</StackLayout>
 		</Frame>
 
+		<Frame
+		  Grid.Row="3"
+		  Grid.ColumnSpan="3"
+		  CornerRadius="45"
+		  BackgroundColor="#582cd4">
+				<StackLayout
+			  VerticalOptions="CenterAndExpand"
+			  Orientation="Vertical">
+					<Label 
+			Text="Last Claim"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontAttributes="Bold"
+			TextColor="Yellow"/>
+					<Label
+				  Text="{Binding BolAccount.LastClaim}"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontSize="24"
+				  TextColor="Yellow"/>
+				</StackLayout>
+		</Frame>
+
+		<Frame
+		  Grid.Row="3"
+		  Grid.ColumnSpan="3"
+		  CornerRadius="45"
+		  BackgroundColor="#582cd4">
+			<StackLayout
+			  VerticalOptions="CenterAndExpand"
+			  Orientation="Vertical">
+				<Label 
+			Text="Last Claim Height"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontAttributes="Bold"
+			TextColor="Yellow"/>
+				<Label
+				  Text="{Binding BolAccount.LastClaimHeight}"
+				  HorizontalOptions="Center"
+				  HorizontalTextAlignment="Center"
+				  FontSize="24"
+				  TextColor="Yellow"/>
+			</StackLayout>
+		</Frame>
+
 		<Button
+			IsVisible="{Binding IsClaimClickable}"
             FontAttributes="Bold"
             FontSize="12"
             Command="{Binding ClaimCommand}"
