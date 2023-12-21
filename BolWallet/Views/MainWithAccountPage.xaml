@@ -10,11 +10,11 @@
 	Title="Account Main Page"
 	xmlns:models="clr-namespace:BolWallet.Models"
 	NavigationPage.HasBackButton="False">
-	
+
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
-	
+
 	<ScrollView>
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
@@ -23,8 +23,6 @@
             ColumnDefinitions="*,*,*"
             RowSpacing="25"
             ColumnSpacing="8">
-		
-
 			<StackLayout Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 
 				<Label IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
@@ -41,18 +39,11 @@
 
 				<Frame
 				Grid.Row="1"
-				Grid.ColumnSpan="3" 
 				CornerRadius="25"
 				BackgroundColor="#582cd4">
 					<StackLayout
 								VerticalOptions="CenterAndExpand"
 								Orientation="Vertical">
-						<Label 
-							Text="{Binding WelcomeText}"
-							HorizontalOptions="Center"
-							HorizontalTextAlignment="Center"
-							FontAttributes="Bold"
-							TextColor="White"/>
 						<Label 
 							Text="{Binding CodeName}"
 							HorizontalOptions="Center"
@@ -131,16 +122,52 @@
 						FontSize="14"
 						FontAttributes="Bold"
 						TextColor="Yellow">
-						<Label.GestureRecognizers>
-							<TapGestureRecognizer Tapped="OnTapCopy"/>
-						</Label.GestureRecognizers>
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy"/>
+							</Label.GestureRecognizers>
 						</Label>
 					</StackLayout>
 				</Frame>
+			</StackLayout>
+			<StackLayout IsVisible="{Binding IsAccountOpen}" Grid.Row="1" Grid.ColumnSpan="3"  Spacing="15" Padding="20">
+				<Button
+					FontAttributes="Bold"
+					FontSize="12"
+					Text="Account"
+					Command="{Binding NavigateToAccountPageCommand}"/>
 
+				<Button
+					Command="{Binding NavigateToFinancialTransactionsPageCommand}"
+					FontAttributes="Bold"
+					FontSize="12"
+					Text="New Transaction" />
+
+				<Button
+					FontAttributes="Bold"
+					FontSize="12"
+					Text="Last 10 Transactions"
+					Command="{Binding NavigateToTransactionsPageCommand}"/>
+
+				<Button
+					Command="{Binding NavigateToCertifierPageCommand}"
+					FontAttributes="Bold"
+					FontSize="12"
+					Text="Community Operations" />
+			</StackLayout>
+			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 				<Label IsVisible="{Binding IsAccountOpen}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
 
-				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}"  IsVisible="{Binding IsAccountOpen}" HasUnevenRows="True">
+				<ImageButton IsVisible="{Binding IsAccountOpen}"  Command="{Binding ExpandCommercialAddressCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+					<ImageButton.Source>
+						<FontImageSource 
+				FontFamily="MaterialIconsRegular"
+				Glyph="{x:Static helpers:Icons.Arrow_drop_down_circle}"
+				Color="#582cd4"
+				/>
+					</ImageButton.Source>
+				</ImageButton>
+
+				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}"  IsVisible="{Binding IsCommercialAddressesExpanded}" HasUnevenRows="True">
 					<ListView.ItemTemplate >
 						<DataTemplate x:DataType="models:BalanceDisplayItem">
 							<ViewCell>
@@ -148,21 +175,21 @@
 									<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
 										<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
 											<Label 
-												Text="{Binding Address}" 
-												HorizontalOptions="Center" 
-												HorizontalTextAlignment="Center" 
-												FontAttributes="Bold" 
-												TextColor="White" >
+											Text="{Binding Address}" 
+											HorizontalOptions="Center" 
+											HorizontalTextAlignment="Center" 
+											FontAttributes="Bold" 
+											TextColor="White" >
 												<Label.GestureRecognizers>
 													<TapGestureRecognizer Tapped="OnTapCopy"/>
 												</Label.GestureRecognizers>
 											</Label>
 											<Label 
-												Text="{Binding Balance, StringFormat= 'Balance: {0}'}" 
-												HorizontalOptions="Center" 
-												HorizontalTextAlignment="Center" 
-												FontAttributes="Bold" 
-												TextColor="White" >
+											Text="{Binding Balance, StringFormat= 'Balance: {0}'}" 
+											HorizontalOptions="Center" 
+											HorizontalTextAlignment="Center" 
+											FontAttributes="Bold" 
+											TextColor="White" >
 											</Label>
 										</StackLayout>
 									</Frame>
@@ -171,44 +198,17 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
-				
+
 				<Label IsVisible="{Binding IsNotRegistered}"
-					Text="Your wallet is now set up. Please register your main address by clicking 'Register'. Continue to refresh until you are directed to the certification page."/>
-				
-				<Button
-			        IsVisible="{Binding IsNotRegistered}"
-                    Command="{Binding RegisterCommand}"
-					BackgroundColor="DarkSlateBlue"
-					TextColor="White"
-                    HorizontalOptions="FillAndExpand"
-                    Text="Register" />
-
-			</StackLayout>
-
-			<StackLayout IsVisible="{Binding IsAccountOpen}" Grid.Row="1" Grid.ColumnSpan="3"  Spacing="15" Padding="20">
-				<Button
-				FontAttributes="Bold"
-				FontSize="12"
-				Text="Account"
-				Command="{Binding NavigateToAccountPageCommand}"/>
+				Text="Your wallet is now set up. Please register your main address by clicking 'Register'. Continue to refresh until you are directed to the certification page."/>
 
 				<Button
-				Command="{Binding NavigateToFinancialTransactionsPageCommand}"
-				FontAttributes="Bold"
-				FontSize="12"
-				Text="New Transaction" />
-
-				<Button
-                FontAttributes="Bold"
-                FontSize="12"
-                Text="Last 10 Transactions"
-				Command="{Binding NavigateToTransactionsPageCommand}"/>
-
-				<Button
-				Command="{Binding NavigateToCertifierPageCommand}"
-				FontAttributes="Bold"
-				FontSize="12"
-				Text="Community Operations" />
+				IsVisible="{Binding IsNotRegistered}"
+				Command="{Binding RegisterCommand}"
+							BackgroundColor="DarkSlateBlue"
+							TextColor="White"
+				HorizontalOptions="FillAndExpand"
+				Text="Register" />
 			</StackLayout>
 		</Grid>
 	</ScrollView>

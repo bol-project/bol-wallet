@@ -39,7 +39,10 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isNotRegistered = true;
 
-	public MainWithAccountViewModel(
+    [ObservableProperty]
+    private bool _isCommercialAddressesExpanded = false;
+
+    public MainWithAccountViewModel(
 		INavigationService navigationService,
 		ISecureRepository secureRepository,
 		IBolService bolService) : base(navigationService)
@@ -122,7 +125,13 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		}
 	}
 
-	[RelayCommand]
+    [RelayCommand]
+    private void ExpandCommercialAddress()
+    {
+       IsCommercialAddressesExpanded = !IsCommercialAddressesExpanded;
+    }
+
+    [RelayCommand]
 	private async Task NavigateToTransactionsPage()
 	{
 		await NavigationService.NavigateTo<TransactionsViewModel>(true);
