@@ -46,6 +46,9 @@ public partial class MainViewModel : BaseViewModel
 				PickerTitle = "Import Your Json Wallet"
 			});
 
+			if (pickResult == null)
+				return;
+
 			var jsonString = File.ReadAllText(pickResult.FullPath);
 
 			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, options);

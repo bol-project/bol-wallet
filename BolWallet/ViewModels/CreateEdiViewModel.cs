@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Maui.Storage;
 using Plugin.AudioRecorder;
 using System.Reflection;
 
@@ -13,9 +14,10 @@ public partial class CreateEdiViewModel : BaseViewModel
 	private readonly ISecureRepository _secureRepository;
 	private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
 	private readonly IMediaPicker _mediaPicker;
-	private EncryptedDigitalMatrix encryptedDigitalMatrix;
+    private EncryptedDigitalMatrix encryptedDigitalMatrix;
+	public EdiFiles ediFiles;
 
-	AudioRecorderService recorder;
+    AudioRecorderService recorder;
 
 	public CreateEdiViewModel(
 		INavigationService navigationService,
@@ -31,15 +33,15 @@ public partial class CreateEdiViewModel : BaseViewModel
 		_secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
 		_encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
 		_mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
-
-		EdiForm = new EdiForm();
+        EdiForm = new EdiForm();
 		recorder = new AudioRecorderService
 		{
 			AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
 			TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
 		};
 		encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
-	}
+        ediFiles = new EdiFiles() { };
+    }
 
 	[ObservableProperty]
 	private EdiForm _ediForm;
@@ -66,7 +68,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
 		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-		PathPerImport(propertyNameInfo, pickResult);
+		await PathPerImport(propertyNameInfo, pickResult);
 	}
 
 	[RelayCommand]
@@ -78,7 +80,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
 		PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-		PathPerImport(propertyNameInfo, takePictureResult);
+		await PathPerImport(propertyNameInfo, takePictureResult);
 	}
 
 	[RelayCommand]
@@ -94,27 +96,10 @@ public partial class CreateEdiViewModel : BaseViewModel
 
 		PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(EdiForm.Voice));
 
-		PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
+		await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
 	}
 
-	private void PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
-	{
-		if (fileResult == null) return;
-
-		var fileBytes = File.ReadAllBytes(fileResult.FullPath);
-
-		var encodedFileBytes = _base16Encoder.Encode(fileBytes);
-
-		propertyNameInfo.SetValue(EdiForm, fileResult.FullPath);
-
-		encryptedDigitalMatrix.Hashes.GetType()
-									 .GetProperty(propertyNameInfo.Name)
-									 .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
-
-		OnPropertyChanged(nameof(EdiForm));
-	}
-
-	[RelayCommand]
+    [RelayCommand]
 	private async Task Submit()
 	{
 		try
@@ -156,8 +141,69 @@ public partial class CreateEdiViewModel : BaseViewModel
 		}
 	}
 
-	private PropertyInfo GetPropertyInfo(string propertyName)
-	{
-		return this.EdiForm.GetType().GetProperty(propertyName);
-	}
+    private async Task PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
+    {
+        if (fileResult == null) return;
+
+        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+
+        var ediFileItem = new EdiFileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
+
+        SetFileHash(propertyNameInfo, fileResult, fileBytes);
+
+        ediFiles.GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(ediFiles, ediFileItem);
+
+        OnPropertyChanged(nameof(EdiForm));
+
+        await _secureRepository.SetAsync<EdiFiles>("ediFiles", ediFiles);
+    }
+
+    private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
+    {
+        var encodedFileBytes = _base16Encoder.Encode(fileBytes);
+
+        propertyNameInfo.SetValue(EdiForm, fileResult.FileName);
+
+        encryptedDigitalMatrix.Hashes.GetType()
+                                     .GetProperty(propertyNameInfo.Name)
+                                     .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
+    }
+
+    public async Task Initialize()
+    {
+        var savedEdiFiles = await _secureRepository.GetAsync<EdiFiles>("ediFiles");
+
+        if (savedEdiFiles is null) return;
+
+		ediFiles = savedEdiFiles;
+
+        foreach (var propertyInfo in ediFiles.GetType().GetProperties())
+        {
+            PropertyInfo propertyNameInfo = GetPropertyInfo(propertyInfo.Name);
+
+            var ediFileItem = (EdiFileItem)propertyInfo.GetValue(ediFiles, null);
+
+            if (ediFileItem?.Content != null)
+            {
+                propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
+
+                encryptedDigitalMatrix.Hashes.GetType()
+                             .GetProperty(propertyNameInfo.Name)
+                             .SetValue(encryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
+
+                ediFiles.GetType()
+                        .GetProperty(propertyNameInfo.Name)
+                        .SetValue(ediFiles, ediFileItem);
+            }
+        }
+
+        OnPropertyChanged(nameof(EdiForm));
+    }
+
+    private PropertyInfo GetPropertyInfo(string propertyName)
+    {
+        return this.EdiForm.GetType().GetProperty(propertyName);
+    }
 }

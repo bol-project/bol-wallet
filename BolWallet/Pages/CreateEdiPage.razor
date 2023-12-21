@@ -1,4 +1,5 @@
 ﻿@page "/create-edi-page"
+@using System.Reflection
 
 @inherits MvvmComponentBase<CreateEdiViewModel>
 @inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
@@ -53,11 +54,16 @@
 
     bool identityImported = false, drivingLicenceImported = false, passportImported = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         createEdiViewModel = ViewModel;
 
-        base.OnInitialized();
+        await createEdiViewModel.Initialize();
+
+        foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
+        {
+            await UpdateIdentificationDocumentsList(propertyInfo.Name);
+        }
     }
 
     private async Task Submit()
@@ -92,14 +98,14 @@
 
         if (propertyValue != null)
         {
-            string filePath = propertyValue.ToString();
-            if (!string.IsNullOrEmpty(filePath))
+            string fileName = propertyValue.ToString();
+            if (!string.IsNullOrEmpty(fileName))
             {
                 var index = IdentificationDocuments.FindIndex(x => x.Item1 == property);
 
-                filePath = filePath.Length <= 20 ? filePath : filePath.Substring(0, 20) + "...";
+                fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
 
-                IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, filePath);
+                IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
 
                 if (property == "IdentityCard")
                     identityImported = true;
