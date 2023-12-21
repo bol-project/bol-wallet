@@ -171,22 +171,17 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
-
+				
+				<Label IsVisible="{Binding IsNotRegistered}"
+					Text="Your wallet is now set up. Please register your main address by clicking 'Register'. Continue to refresh until you are directed to the certification page."/>
+				
 				<Button
-			        IsVisible="{Binding IsRegistered, Converter={StaticResource InverseBooleanConverter}}"
+			        IsVisible="{Binding IsNotRegistered}"
                     Command="{Binding RegisterCommand}"
 					BackgroundColor="DarkSlateBlue"
 					TextColor="White"
                     HorizontalOptions="FillAndExpand"
                     Text="Register" />
-
-				<Button
-	                IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
-                    Command="{Binding NavigateToCertifyPageCommand}"
-					BackgroundColor="DarkSlateBlue"
-					TextColor="White"
-                    Text="Certify" />       
-
 
 			</StackLayout>
 

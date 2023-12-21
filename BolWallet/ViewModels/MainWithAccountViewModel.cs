@@ -1,9 +1,7 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
-using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -39,7 +37,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	private bool _isAccountOpen = false;
 
 	[ObservableProperty]
-	private bool _isRegistered = false;
+	private bool _isNotRegistered = true;
 
 	public MainWithAccountViewModel(
 		INavigationService navigationService,
@@ -57,30 +55,32 @@ public partial class MainWithAccountViewModel : BaseViewModel
 		await GenerateCommercialBalanceDisplayList();
 	}
 
-	[RelayCommand]
-	private async Task FetchBolAccountData()
-	{
-		try
-		{
-			userData = await _secureRepository.GetAsync<UserData>("userdata");
+    [RelayCommand]
+    private async Task FetchBolAccountData()
+    {
+        try
+        {
+            userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-			CodeName = userData.Codename;
-			MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
+            CodeName = userData.Codename;
+            MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 
-			BolAccount = await _bolService.GetAccount(userData.Codename);
+            BolAccount = await _bolService.GetAccount(userData.Codename);
 
-			IsRegistered = true;
+            IsNotRegistered = false;
 
-			if (BolAccount.AccountStatus == AccountStatus.Open)
-				IsAccountOpen = true;
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-	}
+            if (BolAccount.AccountStatus == AccountStatus.Open)
+                IsAccountOpen = true;
+            else
+                await NavigationService.NavigateTo<CertifyViewModel>(true);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
 
-	private async Task GenerateCommercialBalanceDisplayList()
+    private async Task GenerateCommercialBalanceDisplayList()
 	{
 		try
 		{
@@ -123,15 +123,6 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	}
 
 	[RelayCommand]
-	private async Task NavigateToCertifyPage()
-	{
-		if (IsRegistered)
-			await NavigationService.NavigateTo<CertifyViewModel>(true);
-		else
-			await Toast.Make("CodeName is not a registered Bol Account.").Show();
-	}
-
-	[RelayCommand]
 	private async Task NavigateToTransactionsPage()
 	{
 		await NavigationService.NavigateTo<TransactionsViewModel>(true);
@@ -154,7 +145,6 @@ public partial class MainWithAccountViewModel : BaseViewModel
 	{
 		await NavigationService.NavigateTo<CertifierViewModel>(true);
 	}
-
 
 	[RelayCommand]
 	private async Task NavigateToAccountPage()
