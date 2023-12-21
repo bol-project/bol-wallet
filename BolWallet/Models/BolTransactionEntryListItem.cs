@@ -7,6 +7,14 @@ public partial class BolTransactionEntryListItem : ObservableObject
 {
     public BolTransactionEntry BolTransactionEntry { get; set; }
 
+    public string BolTransactionEntrySenderCodeName => string.IsNullOrEmpty(BolTransactionEntry.SenderCodeName) ? "-" : BolTransactionEntry.SenderCodeName;
+
+    public string BolTransactionEntrySenderAddress => string.IsNullOrEmpty(BolTransactionEntry.SenderAddress) ? "-" : BolTransactionEntry.SenderAddress;
+
+    public string BolTransactionEntryReceiverCodeName => string.IsNullOrEmpty(BolTransactionEntry.ReceiverCodeName) ? "-" : BolTransactionEntry.ReceiverCodeName;
+
+    public string BolTransactionEntryReceiverAddress => string.IsNullOrEmpty(BolTransactionEntry.ReceiverAddress) ? "-" : BolTransactionEntry.ReceiverAddress;
+
     private string UserCodeName { get; set; }
 
 	[ObservableProperty]
