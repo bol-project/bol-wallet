@@ -163,7 +163,11 @@
         createCodenameViewModel.Codename = "";
 
         if (args.Field is MudAutocomplete<Country>)
-            await ninTextField.Validate();
+        {
+            await ninTextField.Clear();
+
+            ninTextField.ResetValidation();
+        }
 
         await InvokeAsync(() => StateHasChanged());
     }
