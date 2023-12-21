@@ -24,7 +24,5 @@ public class EdiFiles
 
     public EdiFileItem TelephoneBill { get; set; }
 
-    public EdiFileItem TextInfo { get; set; }
-
     public EdiFileItem Other { get; set; }
 }

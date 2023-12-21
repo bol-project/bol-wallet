@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Maui.Storage;
 using Plugin.AudioRecorder;
 using System.Reflection;
 
@@ -14,7 +15,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 	private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
 	private readonly IMediaPicker _mediaPicker;
     private EncryptedDigitalMatrix encryptedDigitalMatrix;
-	private EdiFiles ediFiles;
+	public EdiFiles ediFiles;
 
     AudioRecorderService recorder;
 
@@ -98,31 +99,6 @@ public partial class CreateEdiViewModel : BaseViewModel
 		await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
 	}
 
-    private async Task PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
-    {
-        if (fileResult == null) return;
-
-        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
-
-        var encodedFileBytes = _base16Encoder.Encode(fileBytes);
-
-        propertyNameInfo.SetValue(EdiForm, fileResult.FullPath);
-
-        encryptedDigitalMatrix.Hashes.GetType()
-                                     .GetProperty(propertyNameInfo.Name)
-                                     .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
-
-        var ediFileItem = new EdiFileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
-
-        ediFiles.GetType()
-                .GetProperty(propertyNameInfo.Name)
-                .SetValue(ediFiles, ediFileItem);
-
-        OnPropertyChanged(nameof(EdiForm));
-
-        await _secureRepository.SetAsync<EdiFiles>("ediFiles", ediFiles);
-    }
-
     [RelayCommand]
 	private async Task Submit()
 	{
@@ -165,8 +141,69 @@ public partial class CreateEdiViewModel : BaseViewModel
 		}
 	}
 
-	private PropertyInfo GetPropertyInfo(string propertyName)
-	{
-		return this.EdiForm.GetType().GetProperty(propertyName);
-	}
+    private async Task PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
+    {
+        if (fileResult == null) return;
+
+        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+
+        var ediFileItem = new EdiFileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
+
+        SetFileHash(propertyNameInfo, fileResult, fileBytes);
+
+        ediFiles.GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(ediFiles, ediFileItem);
+
+        OnPropertyChanged(nameof(EdiForm));
+
+        await _secureRepository.SetAsync<EdiFiles>("ediFiles", ediFiles);
+    }
+
+    private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
+    {
+        var encodedFileBytes = _base16Encoder.Encode(fileBytes);
+
+        propertyNameInfo.SetValue(EdiForm, fileResult.FileName);
+
+        encryptedDigitalMatrix.Hashes.GetType()
+                                     .GetProperty(propertyNameInfo.Name)
+                                     .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
+    }
+
+    public async Task Initialize()
+    {
+        var savedEdiFiles = await _secureRepository.GetAsync<EdiFiles>("ediFiles");
+
+        if (savedEdiFiles is null) return;
+
+		ediFiles = savedEdiFiles;
+
+        foreach (var propertyInfo in ediFiles.GetType().GetProperties())
+        {
+            PropertyInfo propertyNameInfo = GetPropertyInfo(propertyInfo.Name);
+
+            var ediFileItem = (EdiFileItem)propertyInfo.GetValue(ediFiles, null);
+
+            if (ediFileItem?.Content != null)
+            {
+                propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
+
+                encryptedDigitalMatrix.Hashes.GetType()
+                             .GetProperty(propertyNameInfo.Name)
+                             .SetValue(encryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
+
+                ediFiles.GetType()
+                        .GetProperty(propertyNameInfo.Name)
+                        .SetValue(ediFiles, ediFileItem);
+            }
+        }
+
+        OnPropertyChanged(nameof(EdiForm));
+    }
+
+    private PropertyInfo GetPropertyInfo(string propertyName)
+    {
+        return this.EdiForm.GetType().GetProperty(propertyName);
+    }
 }
