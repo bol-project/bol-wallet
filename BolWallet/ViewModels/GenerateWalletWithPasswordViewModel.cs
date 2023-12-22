@@ -57,8 +57,6 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
             await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
-            await Clipboard.SetTextAsync(System.Text.Json.JsonSerializer.Serialize(bolWallet));
-
             await DownloadWalletAsync(bolWallet);
 
             await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
