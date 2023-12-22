@@ -27,11 +27,6 @@ public partial class MainViewModel : BaseViewModel
 	{
 		try
 		{
-			var options = new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true,
-			};
-
 			var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 			{
 			   { DevicePlatform.iOS, new[] { "public.json" } },
@@ -51,7 +46,7 @@ public partial class MainViewModel : BaseViewModel
 
 			var jsonString = File.ReadAllText(pickResult.FullPath);
 
-			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, options);
+			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, Constants.WalletJsonSerializerDefaultOptions);
 
 			var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync("Enter Your Password", null);
 
