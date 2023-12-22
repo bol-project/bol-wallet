@@ -2,9 +2,7 @@
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
-using Newtonsoft.Json;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace BolWallet.ViewModels;
 public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
@@ -76,20 +74,18 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     {
         try
         {
-            string json = JsonConvert.SerializeObject(bolWallet);
+            var json = JsonSerializer.Serialize(bolWallet, Constants.WalletJsonSerializerDefaultOptions);
 
             byte[] jsonData = Encoding.UTF8.GetBytes(json);
 
-            using (var stream = new MemoryStream(jsonData))
+            using var stream = new MemoryStream(jsonData);
+            string fileName = "BolWallet.json";
+
+            var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
+
+            if (result.IsSuccessful)
             {
-                string fileName = "BolWallet.json";
-
-                var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
-
-                if (result.IsSuccessful)
-                {
-                    await Toast.Make($"File '{fileName}' saved successfully!").Show();
-                }
+                await Toast.Make($"File '{fileName}' saved successfully!").Show();
             }
         }
         catch (Exception ex)
