@@ -84,12 +84,12 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
             if (result.IsSuccessful)
             {
-                await Toast.Make($"File '{fileName}' saved successfully!").Show();
+                await Toast.Make($"File '{fileName}' saved successfully!").Show(cancellationToken);
             }
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(cancellationToken);
         }
     }
 }
