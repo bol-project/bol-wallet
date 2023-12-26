@@ -74,23 +74,22 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     {
         try
         {
-            var json = JsonSerializer.Serialize(bolWallet, Constants.WalletJsonSerializerDefaultOptions);
-
-            byte[] jsonData = Encoding.UTF8.GetBytes(json);
-
-            using var stream = new MemoryStream(jsonData);
+            using var stream = new MemoryStream();
+            
+            JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
+            
             string fileName = "BolWallet.json";
 
             var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
 
             if (result.IsSuccessful)
             {
-                await Toast.Make($"File '{fileName}' saved successfully!").Show();
+                await Toast.Make($"File '{fileName}' saved successfully!").Show(cancellationToken);
             }
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(cancellationToken);
         }
     }
 }
