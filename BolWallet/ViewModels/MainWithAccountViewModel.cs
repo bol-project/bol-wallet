@@ -130,7 +130,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     {
         try
         {
-            Uri uri = new Uri("https://certifier.demo.bolchain.net/");
+            Uri uri = new Uri($"https://certifier.demo.bolchain.net/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
         }
         catch (Exception ex)
