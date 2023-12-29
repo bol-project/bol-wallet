@@ -9,6 +9,7 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
+<MudText Typo="Typo.h6">To proceed with the verification process, please provide at least Identification Card or Passport</MudText>
 
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
@@ -30,7 +31,7 @@
     </Virtualize>
     <MudItem xs="12" sm="12" md="12">
         <div class="text-center">
-            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(identityImported && drivingLicenceImported && passportImported))">Submit</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(identityImported || passportImported))">Submit</MudButton>
         </div>
     </MudItem>
 </MudGrid>
@@ -44,9 +45,9 @@
 
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
-        {new("IdentityCard",Color.Transparent, "Identity Card*", "") },
-        {new("DrivingLicense",Color.Transparent, "Driving License*", "") },
-        {new("Passport",Color.Transparent, "Passport*", "") },
+        {new("IdentityCard",Color.Transparent, "Identity Card", "") },
+        {new("Passport",Color.Transparent, "Passport", "") },
+        {new("DrivingLicense",Color.Transparent, "Driving License", "") },
         {new("Photo",Color.Transparent, "Photo", "") },
         {new("NinCertificate",Color.Transparent, "Nin Certificate", "") },
         {new("BirthCertificate",Color.Transparent, "Birth Certificate", "") },
@@ -56,7 +57,7 @@
 
     };
 
-    bool identityImported = false, drivingLicenceImported = false, passportImported = false;
+    bool identityImported = false, passportImported = false;
     private bool isProgressBarVisible = false;
 
     protected override async Task OnInitializedAsync()
@@ -122,8 +123,6 @@
 
                 if (property == "IdentityCard")
                     identityImported = true;
-                else if (property == "DrivingLicense")
-                    drivingLicenceImported = true;
                 else if (property == "Passport")
                     passportImported = true;
 
