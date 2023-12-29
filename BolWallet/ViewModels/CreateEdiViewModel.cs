@@ -104,8 +104,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 	{
 		try
 		{
-			if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.DrivingLicense) ||
-				 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) ||
+            if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) &&
 				 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
 			{
 				return;
