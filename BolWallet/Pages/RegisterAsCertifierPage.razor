@@ -1,0 +1,55 @@
+﻿@page "/register-as-certifier"
+
+@inject NavigationManager nav;
+@inject RegisterContent _content;
+@inject IBolService bolService;
+
+<MudThemeProvider />
+
+<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+<EditForm Model="@registerAsCertifierForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudSelect T="string" Label="Countries" Required="true" For="@(() => registerAsCertifierForm.Countries)" HelperText="Supported Countries as Certifier" MultiSelection="true" @bind-Value="registerAsCertifierForm.Countries">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Name">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudTextField Immediate=true Label="Fee" Required="true" HelperText="Fee as Certifier" Class="mt-3"
+                                  @bind-Value="registerAsCertifierForm.Fee" For="@(() => registerAsCertifierForm.Fee)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    RegisterAsCertifierForm registerAsCertifierForm = new RegisterAsCertifierForm();
+
+    private bool isProgressBarVisible = false;
+
+    private string value { get; set; }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            var account = await bolService.RegisterAsCertifier(registerAsCertifierForm.Countries.Split(",").ToList(), new BigInteger(registerAsCertifierForm.Fee));
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+}

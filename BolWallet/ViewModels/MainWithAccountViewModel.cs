@@ -166,7 +166,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToCertifierPage()
     {
-        await NavigationService.NavigateTo<CertifierViewModel>(true);
+        await NavigationService.NavigateTo<BolCommunityViewModel>(true);
     }
 
     [RelayCommand]

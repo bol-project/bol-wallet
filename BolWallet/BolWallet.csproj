@@ -126,6 +126,9 @@
 		<MauiXaml Update="Views\MoveClaimPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\RegisterAsCertifierPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\RetrieveBolPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

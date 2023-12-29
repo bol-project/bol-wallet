@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BolWallet.Pages;
 
 namespace BolWallet.ViewModels;
 public partial class BolCommunityViewModel : BaseViewModel
@@ -18,5 +14,23 @@ public partial class BolCommunityViewModel : BaseViewModel
     public BolCommunityViewModel(INavigationService navigationService) : base(navigationService)
     {
 
+    }
+
+    [RelayCommand]
+    private async Task NavigateToGetCertificationsPage()
+    {
+        await NavigationService.NavigateTo<CertifyViewModel>(true);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToWhitelistAndCertifyPage()
+    {
+        await NavigationService.NavigateTo<CertifierViewModel>(true);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToRegisterAsCertifierPage()
+    {
+        await App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage());
     }
 }
