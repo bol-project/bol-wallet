@@ -167,7 +167,8 @@
 					</ImageButton.Source>
 				</ImageButton>
 
-				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}"  IsVisible="{Binding IsCommercialAddressesExpanded}" HasUnevenRows="True">
+				<Frame  IsVisible="{Binding IsCommercialAddressesExpanded }" BorderColor="White">
+				<ListView ItemsSource="{Binding CommercialBalancesDisplayList}"  HasUnevenRows="True">
 					<ListView.ItemTemplate >
 						<DataTemplate x:DataType="models:BalanceDisplayItem">
 							<ViewCell>
@@ -198,6 +199,7 @@
 						</DataTemplate>
 					</ListView.ItemTemplate>
 				</ListView>
+				</Frame>
 
 				<Label IsVisible="{Binding IsNotRegistered}"
 					Text="1. Your wallet is now set up. Please whitelist your Main Address first. Once this is complete, you can move on to the next step to Register."/>
