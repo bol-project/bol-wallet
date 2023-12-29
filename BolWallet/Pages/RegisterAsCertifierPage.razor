@@ -9,12 +9,20 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
+
 <EditForm Model="@registerAsCertifierForm" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <MudGrid>
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
+                    <MudText Typo="Typo.h6">Registration Steps:</MudText>
+                    <MudText>1) For certifier registration, must have at least 4 certifications.</MudText>
+                    <MudText>2) Select the countries for which you will offer your certification services.</MudText>
+                    <MudText>3) Set the fee you will charge for your services.</MudText>
+                    <MudText>4) Add 1000 bol as collateral to the first commercial address.</MudText>
+                    <MudText>5) Please note that there is a maximum fee limit that you can set for your certification services.</MudText>
+
                     <MudSelect T="string" Label="Countries" Required="true" For="@(() => registerAsCertifierForm.Countries)" HelperText="Supported Countries as Certifier" MultiSelection="true" @bind-Value="registerAsCertifierForm.Countries">
                         @foreach (var country in _content.Countries)
                         {
