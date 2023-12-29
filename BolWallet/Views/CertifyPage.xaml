@@ -6,9 +6,8 @@
 			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
 			 xmlns:Converters="clr-namespace:BolWallet.Converters"
              Title="Certify Your Account"
-			 BackgroundColor="{DynamicResource SecondaryColor}"
-			 NavigationPage.HasBackButton="False">
-	
+			 BackgroundColor="{DynamicResource SecondaryColor}" >
+
 	<ContentPage.ToolbarItems>
 		<ToolbarItem 
 		Text="Download BolAccount"
