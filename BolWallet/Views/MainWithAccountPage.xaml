@@ -15,7 +15,8 @@
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
 
-	<ScrollView>
+	<RefreshView Command="{Binding FetchBolAccountDataCommand}" IsRefreshing="{Binding IsLoading}">
+		<ScrollView>
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
@@ -23,7 +24,10 @@
             ColumnDefinitions="*,*,*"
             RowSpacing="25"
             ColumnSpacing="8">
-			<StackLayout Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{OnPlatform False, WinUI=True}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+					<ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
+			</StackLayout>
+			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 
 				<Label IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
@@ -154,7 +158,7 @@
 					FontSize="12"
 					Text="Community Operations" />
 			</StackLayout>
-			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 				<Label IsVisible="{Binding IsAccountOpen}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
 
 				<ImageButton IsVisible="{Binding IsAccountOpen}"  Command="{Binding ExpandCommercialAddressCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
@@ -225,4 +229,5 @@
 			</StackLayout>
 		</Grid>
 	</ScrollView>
+	</RefreshView>
 </ContentPage>

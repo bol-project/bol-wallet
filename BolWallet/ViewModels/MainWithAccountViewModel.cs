@@ -63,12 +63,16 @@ public partial class MainWithAccountViewModel : BaseViewModel
     {
         try
         {
+            IsLoading = true;
+
+            await Task.Delay(10);
+
             userData = await _secureRepository.GetAsync<UserData>("userdata");
 
             CodeName = userData.Codename;
             MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 
-            BolAccount = await _bolService.GetAccount(userData.Codename);
+            await Task.Run(async () => BolAccount = await _bolService.GetAccount(userData.Codename));
 
             IsNotRegistered = false;
 
@@ -80,6 +84,10 @@ public partial class MainWithAccountViewModel : BaseViewModel
         catch (Exception ex)
         {
             await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

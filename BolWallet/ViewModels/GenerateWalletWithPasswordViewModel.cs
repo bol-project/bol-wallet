@@ -64,8 +64,6 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         finally
         {
             IsLoading = false;
-
-            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
         }
     }
 
