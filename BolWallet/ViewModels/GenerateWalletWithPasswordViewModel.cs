@@ -56,8 +56,6 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
             await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
             await DownloadWalletAsync(bolWallet);
-
-            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
         }
         catch (Exception ex)
         {
