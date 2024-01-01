@@ -51,6 +51,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         _bolService = bolService;
     }
 
+    [RelayCommand]
     public async Task Initialize()
     {
         await FetchBolAccountData();
