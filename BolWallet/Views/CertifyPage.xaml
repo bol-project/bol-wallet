@@ -4,10 +4,28 @@
              x:Class="BolWallet.Views.CertifyPage"
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
 			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
-			xmlns:Converters="clr-namespace:BolWallet.Converters"
+			 xmlns:Converters="clr-namespace:BolWallet.Converters"
              Title="Certify Your Account"
-			 BackgroundColor="{DynamicResource SecondaryColor}">
+			 BackgroundColor="{DynamicResource SecondaryColor}" >
 
+	<ContentPage.ToolbarItems>
+		<ToolbarItem 
+		Text="Download BolAccount"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadAccountCommand}"/>
+			<ToolbarItem 
+		Text="Download BolWallet"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadBolWalletCommand}"/>
+			<ToolbarItem 
+		Text="Download Edi Files"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadEdiFilesCommand}"/>
+	</ContentPage.ToolbarItems>
+	
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
@@ -52,7 +70,7 @@
 				</Frame>
 
 			</StackLayout>
-
+			
 			<StackLayout Spacing="15" Padding="10" IsVisible="{Binding IsCertified, Converter={StaticResource InverseBooleanConverter}}">
 
 				<Button 
@@ -60,6 +78,12 @@
 			BackgroundColor="DarkSlateBlue"
 			TextColor="White"
 			Command="{Binding SelectMandatoryCertifiersCommand}"	/>
+
+				<Label HorizontalOptions="Start" Text="1. Click 'Select Mandatory Certifiers' to choose the mandatory certifiers for this certification round."/>
+				<Label HorizontalOptions="Start" Text="2. Click 'Refresh' until the certifiers appear below."/>
+				<Label HorizontalOptions="Start" Text="3. Copy and paste the codename of one of the certifiers into the 'Paste Certifier Codename' field to proceed."/>
+				<Label HorizontalOptions="Start" Text="4. Repeat this process twice to obtain the second certification as well."/>
+				<Label HorizontalOptions="Start" Text="5. Once you have obtained the second certification, you will be required to pay the certification fees to activate your account."/>
 
 				<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
 					<CollectionView.ItemTemplate>
@@ -85,6 +109,8 @@
 			TextColor="White"
 			Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
 			</StackLayout>
+	
+			
 			<Button
 			HorizontalOptions="Center"
 			IsVisible="{Binding IsCertified}"

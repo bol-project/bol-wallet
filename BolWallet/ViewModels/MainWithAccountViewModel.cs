@@ -1,166 +1,188 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
-using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
 {
-	private readonly ISecureRepository _secureRepository;
-	private readonly IBolService _bolService;
+    private readonly ISecureRepository _secureRepository;
+    private readonly IBolService _bolService;
 
-	public string WelcomeText => "Welcome";
-	public string BalanceText => "Total Balance";
+    public string WelcomeText => "Welcome";
+    public string BalanceText => "Total Balance";
     public string AccountText => "Account";
-	public string SendText => "Transfer";
-	public string CommunityText => "Bol Community";
+    public string SendText => "Transfer";
+    public string CommunityText => "Bol Community";
 
-	[ObservableProperty]
-	public List<KeyValuePair<string, string>> _commercialBalances = new();
+    [ObservableProperty]
+    public List<KeyValuePair<string, string>> _commercialBalances = new();
 
-	[ObservableProperty]
-	public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
+    [ObservableProperty]
+    public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
 
-	[ObservableProperty]
-	private string _codeName = "";
+    [ObservableProperty]
+    private string _codeName = "";
 
-	[ObservableProperty]
-	private string _mainAddress = "";
+    [ObservableProperty]
+    private string _mainAddress = "";
 
-	[ObservableProperty]
-	private BolAccount _bolAccount = new();
+    [ObservableProperty]
+    private BolAccount _bolAccount = new();
 
-	[ObservableProperty]
-	private bool _isLoading = false;
+    [ObservableProperty]
+    private bool _isLoading = false;
 
-	[ObservableProperty]
-	private bool _isAccountOpen = false;
+    [ObservableProperty]
+    private bool _isAccountOpen = false;
 
-	[ObservableProperty]
-	private bool _isRegistered = false;
+    [ObservableProperty]
+    private bool _isNotRegistered = true;
 
-	public MainWithAccountViewModel(
-		INavigationService navigationService,
-		ISecureRepository secureRepository,
-		IBolService bolService) : base(navigationService)
-	{
-		_secureRepository = secureRepository;
-		_bolService = bolService;
-	}
+    [ObservableProperty]
+    private bool _isCommercialAddressesExpanded = false;
 
-	public async Task Initialize()
-	{
-		await FetchBolAccountData();
+    public MainWithAccountViewModel(
+        INavigationService navigationService,
+        ISecureRepository secureRepository,
+        IBolService bolService) : base(navigationService)
+    {
+        _secureRepository = secureRepository;
+        _bolService = bolService;
+    }
 
-		await GenerateCommercialBalanceDisplayList();
-	}
+    [RelayCommand]
+    public async Task Initialize()
+    {
+        await FetchBolAccountData();
 
-	[RelayCommand]
-	private async Task FetchBolAccountData()
-	{
-		try
-		{
-			userData = await _secureRepository.GetAsync<UserData>("userdata");
+        await GenerateCommercialBalanceDisplayList();
+    }
 
-			CodeName = userData.Codename;
-			MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
+    [RelayCommand]
+    private async Task FetchBolAccountData()
+    {
+        try
+        {
+            IsLoading = true;
 
-			BolAccount = await _bolService.GetAccount(userData.Codename);
+            await Task.Delay(10);
 
-			IsRegistered = true;
+            userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-			if (BolAccount.AccountStatus == AccountStatus.Open)
-				IsAccountOpen = true;
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-	}
+            CodeName = userData.Codename;
+            MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
 
-	private async Task GenerateCommercialBalanceDisplayList()
-	{
-		try
-		{
-			CommercialBalances = BolAccount?.CommercialBalances?.ToList() ?? new();
+            await Task.Run(async () => BolAccount = await _bolService.GetAccount(userData.Codename));
 
-			CommercialBalancesDisplayList.Clear();
+            IsNotRegistered = false;
 
-			foreach (var commercialBalance in CommercialBalances)
-			{
-				CommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
-			}
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-	}
+            if (BolAccount.AccountStatus == AccountStatus.Open)
+                IsAccountOpen = true;
+            else
+                await NavigationService.NavigateTo<CertifyViewModel>(true);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
 
-	[RelayCommand]
-	private async Task Register()
-	{
-		try
-		{
-			IsLoading = true;
+    private async Task GenerateCommercialBalanceDisplayList()
+    {
+        try
+        {
+            CommercialBalances = BolAccount?.CommercialBalances?.ToList() ?? new();
 
-			await Task.Delay(100);
+            CommercialBalancesDisplayList.Clear();
 
-			BolAccount = await _bolService.Register();
+            foreach (var commercialBalance in CommercialBalances)
+            {
+                CommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+            }
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
 
-			await Toast.Make("Your Account is registered now.").Show();
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-		finally
-		{
-			IsLoading = false;
-		}
-	}
+    [RelayCommand]
+    private async Task Register()
+    {
+        try
+        {
+            IsLoading = true;
 
-	[RelayCommand]
-	private async Task NavigateToCertifyPage()
-	{
-		if (IsRegistered)
-			await NavigationService.NavigateTo<CertifyViewModel>(true);
-		else
-			await Toast.Make("CodeName is not a registered Bol Account.").Show();
-	}
+            await Task.Delay(100);
 
-	[RelayCommand]
-	private async Task NavigateToTransactionsPage()
-	{
-		await NavigationService.NavigateTo<TransactionsViewModel>(true);
-	}
+            BolAccount = await _bolService.Register();
 
-	[RelayCommand]
-	private async Task NavigateToBolCommunityPage()
-	{
-		await NavigationService.NavigateTo<BolCommunityViewModel>(true);
-	}
+            await Toast.Make("Your Account is registered now.").Show();
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
 
-	[RelayCommand]
-	private async Task NavigateToFinancialTransactionsPage()
-	{
-		await NavigationService.NavigateTo<FinancialTransactionsViewModel>(true);
-	}
+    [RelayCommand]
+    private async Task Whitelist()
+    {
+        try
+        {
+            Uri uri = new Uri($"https://certifier.demo.bolchain.net/{MainAddress}");
+            await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
 
-	[RelayCommand]
-	private async Task NavigateToCertifierPage()
-	{
-		await NavigationService.NavigateTo<CertifierViewModel>(true);
-	}
+    [RelayCommand]
+    private void ExpandCommercialAddress()
+    {
+        IsCommercialAddressesExpanded = !IsCommercialAddressesExpanded;
+    }
 
+    [RelayCommand]
+    private async Task NavigateToTransactionsPage()
+    {
+        await NavigationService.NavigateTo<TransactionsViewModel>(true);
+    }
 
-	[RelayCommand]
-	private async Task NavigateToAccountPage()
-	{
-		await NavigationService.NavigateTo<AccountViewModel>(true);
-	}
+    [RelayCommand]
+    private async Task NavigateToBolCommunityPage()
+    {
+        await NavigationService.NavigateTo<BolCommunityViewModel>(true);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToFinancialTransactionsPage()
+    {
+        await NavigationService.NavigateTo<FinancialTransactionsViewModel>(true);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCertifierPage()
+    {
+        await NavigationService.NavigateTo<BolCommunityViewModel>(true);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToAccountPage()
+    {
+        await NavigationService.NavigateTo<AccountViewModel>(true);
+    }
 }
 
 

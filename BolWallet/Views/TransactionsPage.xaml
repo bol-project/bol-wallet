@@ -62,28 +62,28 @@
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Sender Codename: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderCodeName}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntrySenderCodeName}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Sender address: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.SenderAddress}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntrySenderAddress}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Receiver Codename: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverCodeName}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntryReceiverCodeName}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
                                         TextColor="Black"
                                         FontAttributes="Bold"
                                         Text="Receiver Address: "/>
-                                        <Label TextColor="Black" Text="{Binding BolTransactionEntry.ReceiverAddress}"/>
+                                        <Label TextColor="Black" Text="{Binding BolTransactionEntryReceiverAddress}"/>
                                     </StackLayout>
                                     <StackLayout Orientation="Vertical">
                                         <Label
@@ -91,6 +91,20 @@
                                         FontAttributes="Bold"
                                         Text="Amount: "/>
                                         <Label TextColor="Black" Text="{Binding BolAmount}"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="8">
+                                        <Button
+                                            HorizontalOptions="Start"
+                                            Text="Details"
+                                            CommandParameter="{Binding BolTransactionEntry.TransactionHash}"
+                                            Clicked="OnOpenInBrowserClicked">
+                                        </Button>
+                                        <Button
+                                            HorizontalOptions="EndAndExpand"
+                                            Text="Copy Hash"
+                                            CommandParameter="{Binding BolTransactionEntry.TransactionHash}"
+                                            Clicked="OnCopyButtonClicked">
+                                        </Button>
                                     </StackLayout>
                                 </StackLayout>
                             </Frame>

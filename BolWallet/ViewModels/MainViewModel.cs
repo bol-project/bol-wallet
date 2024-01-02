@@ -1,3 +1,6 @@
+using System.Text;
+using Bol.Address.Abstractions;
+using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
@@ -6,33 +9,33 @@ public partial class MainViewModel : BaseViewModel
 {
 	private readonly IPermissionService _permissionService;
 	private readonly ISecureRepository _secureRepository;
+    private readonly IExportKeyFactory _exportKeyFactory;
+    private readonly ISha256Hasher _sha256;
 
 	public MainViewModel(
 		INavigationService navigationService,
 		IPermissionService permissionService,
-		ISecureRepository secureRepository) : base(navigationService)
+		ISecureRepository secureRepository, 
+        IExportKeyFactory exportKeyFactory, 
+        ISha256Hasher sha256) : base(navigationService)
 	{
 		_permissionService = permissionService;
 		_secureRepository = secureRepository;
-	}
+        _exportKeyFactory = exportKeyFactory;
+        _sha256 = sha256;
+    }
 
 	[RelayCommand]
-	private void NavigateToCodenamePage()
+	private async Task NavigateToCodenamePage()
 	{
-		NavigationService.NavigateTo<CreateCodenameViewModel>(true);
-	}
-
+        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+    }
 
 	[RelayCommand]
 	private async Task ImportYourWallet()
 	{
 		try
 		{
-			var options = new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true,
-			};
-
 			var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
 			{
 			   { DevicePlatform.iOS, new[] { "public.json" } },
@@ -47,9 +50,12 @@ public partial class MainViewModel : BaseViewModel
 				PickerTitle = "Import Your Json Wallet"
 			});
 
+			if (pickResult == null)
+				return;
+
 			var jsonString = File.ReadAllText(pickResult.FullPath);
 
-			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, options);
+			var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString, Constants.WalletJsonSerializerDefaultOptions);
 
 			var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync("Enter Your Password", null);
 
@@ -57,6 +63,15 @@ public partial class MainViewModel : BaseViewModel
 			{
 				throw new Exception("Password cannot be empty. Please provide a valid password.");
 			}
+            
+            var codeNameAccount = bolWallet.accounts.Single(account => account.Label == "codename");
+            var codeNameKey = await Task.Run(() => _exportKeyFactory.GetDecryptedPrivateKey(codeNameAccount.Key, password, bolWallet.Scrypt.N, bolWallet.Scrypt.R, bolWallet.Scrypt.P));
+            var expectedCodeNameKey = _sha256.Hash(Encoding.ASCII.GetBytes(bolWallet.Name));
+
+            if (!codeNameKey.SequenceEqual(expectedCodeNameKey))
+            {
+                throw new Exception("Incorrect Password. Please provide a valid password.");
+            }
 
 			var userData = new UserData
 			{

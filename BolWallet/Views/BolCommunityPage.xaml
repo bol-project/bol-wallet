@@ -13,61 +13,28 @@
             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
-            <Label
+			<Button
                 Grid.Row="0"
-                FontSize="32"
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="{Binding BolCommunityHeaderText}" />
+                FontSize="12"
+                HorizontalOptions="FillAndExpand"
+                Text="Get Certifications" 
+				Command="{Binding NavigateToGetCertificationsPageCommand}"
+				/>
 
             <Button
+				Command="{Binding NavigateToWhitelistAndCertifyPageCommand}"
                 Grid.Row="1"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
+                FontSize="12"
                 HorizontalOptions="FillAndExpand"
-                Text="{Binding CertifyText}" />
+                Text="Whitelist and Certify" />
 
-            <Button
+			<Button
                 Grid.Row="2"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
+                FontSize="12"
                 HorizontalOptions="FillAndExpand"
-                Text="{Binding DeleteFakeAccountText}" />
+				Command="{Binding NavigateToRegisterAsCertifierPageCommand}"
+                Text="Register As Certifier" />
 
-            <Button
-                Grid.Row="3"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
-                HorizontalOptions="FillAndExpand"
-                Text="{Binding DeleteExpiredAccountText}" />
-
-            <Button
-                Grid.Row="4"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
-                HorizontalOptions="FillAndExpand"
-                Text="{Binding VoteText}" />
-
-            <Button
-                Grid.Row="5"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
-                HorizontalOptions="FillAndExpand"
-                Text="{Binding SignMessageText}" />
-
-            <Button
-                Grid.Row="6"
-                Clicked="OnClickTodo"
-                FontAttributes="Bold"
-                FontSize="8"
-                HorizontalOptions="FillAndExpand"
-                Text="{Binding BolIdentityText}" />
-        </Grid>
+		</Grid>
     </ScrollView>
 </ContentPage>

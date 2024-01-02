@@ -29,7 +29,7 @@
                 HeightRequest="310"
                 HorizontalOptions="Center"
                 SemanticProperties.Description="Welcome to Bol"
-                Source="bol_logo"
+                Source="bol_logo.png"
                 WidthRequest="250" />
 
             <Button

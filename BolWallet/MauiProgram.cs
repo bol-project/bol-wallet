@@ -10,6 +10,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using MudBlazor.Services;
 using Newtonsoft.Json.Linq;
 using SkiaSharp.Views.Maui.Handlers;
 using Country = BolWallet.Models.Country;
@@ -42,7 +43,14 @@ public static class MauiProgram
 				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
 			});
 
-		builder.AddConfiguration("BolWallet.appsettings.json");
+        builder.Services.AddMauiBlazorWebView();
+
+		builder.Services.AddMudServices();
+
+#if DEBUG
+        builder.Services.AddBlazorWebViewDeveloperTools();
+#endif
+        builder.AddConfiguration("BolWallet.appsettings.json");
 
 		var services = builder.Services;
 
@@ -53,7 +61,7 @@ public static class MauiProgram
 		services.AddScoped<ICountriesService, CountriesService>();
 		services.AddSingleton<IPermissionService, PermissionService>();
 
-		services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+        services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
 		services.RegisterViewAndViewModelSubsystem();
@@ -71,18 +79,17 @@ public static class MauiProgram
 
 		services.AddSingleton<HttpClient>();
 
-		using var sp = services.BuildServiceProvider();
-
-		var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
-		var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
-		var content = new RegisterContent
-		{
-			Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
-			NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
-		};
-
 		// This model will hold the data from the Register flow
-		services.AddSingleton(content);
+		services.AddSingleton(sp =>
+		{
+            var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
+            var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
+            return new RegisterContent
+            {
+                Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
+                NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
+            };
+        });
 
 		services.ConfigureWalletServices();
 

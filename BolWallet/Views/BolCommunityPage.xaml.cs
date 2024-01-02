@@ -8,9 +8,4 @@ public partial class BolCommunityPage : ContentPage
         InitializeComponent();
         BindingContext = bolCommunityViewModel;
     }
-
-    private void OnClickTodo(object sender, EventArgs e)
-    {
-        Toast.Make("TODO").Show();
-    }
 }

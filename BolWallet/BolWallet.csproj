@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+		<TargetFramework>net8.0-maccatalyst</TargetFramework>
+<!--		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>-->
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
@@ -56,7 +57,6 @@
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 		<WarningsAsErrors />
-		<CreatePackage>false</CreatePackage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
@@ -66,13 +66,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 		<WarningsAsErrors />
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-	  <CreatePackage>false</CreatePackage>
-	</PropertyGroup>
+    
 	<ItemGroup>
 		<!-- App Icon -->
-		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />-->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128" />
@@ -96,6 +93,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Controls\ExtendedComboBox.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="MainPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\AccountPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
@@ -124,14 +124,14 @@
 		<MauiXaml Update="Views\FinancialTransactionsPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Views\MainPage.xaml">
-			<SubType>Designer</SubType>
-		</MauiXaml>
 		<MauiXaml Update="Views\MainWithAccountPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\MoveClaimPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\RegisterAsCertifierPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\RetrieveBolPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -165,10 +165,6 @@
 			<DependentUpon>CreateCodenamePage.xaml</DependentUpon>
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\MainPage.xaml.cs">
-			<DependentUpon>MainPage.xaml</DependentUpon>
-			<SubType>Code</SubType>
-		</Compile>
 		<Compile Update="Views\MainWithAccountPage.xaml.cs">
 			<DependentUpon>MainWithAccountPage.xaml</DependentUpon>
 		</Compile>
@@ -176,21 +172,21 @@
 
 	<ItemGroup>
 		<PackageReference Include="akavache" Version="9.1.20" />
-		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.9" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+		<PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
+		<PackageReference Include="BolChain.Core" Version="0.0.1-alpha.11" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-  		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)"/>
+        <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
 		<PackageReference Include="Neo.VM" Version="2.4.3.1" />
 		<PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
 		<PackageReference Include="SkiaSharp" Version="2.88.6" />
 		<PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.6" />
+		<PackageReference Include="MudBlazor" Version="6.11.1" />
 	</ItemGroup>
 
 <!--	<ItemGroup>
@@ -200,22 +196,24 @@
 	</ItemGroup>-->
 
 	<ItemGroup>
-		<None Remove="appsettings.json" />
-		<EmbeddedResource Include="appsettings.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</EmbeddedResource>
-		<None Remove="appsettings.Development.json" />
-		<EmbeddedResource Include="appsettings.Development.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</EmbeddedResource>
-	</ItemGroup>
-
-	<ItemGroup>
 		<MauiFont Include="Helpers\Icons.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiIcon Include="Resources\AppIcon\appicon.svg" />
+	  <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+	  <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+	  <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+	  <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+	  <None Include="wwwroot\css\open-iconic\README.md" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="appsettings.json" />
+	  <EmbeddedResource Include="appsettings.json" />
+	  <Content Remove="appsettings.Development.json" />
+	  <EmbeddedResource Include="appsettings.Development.json" />
+	<Content Remove="TestAccount.json" />
+	  <EmbeddedResource Include="TestAccount.json" />
+	</ItemGroup>
+
 </Project>

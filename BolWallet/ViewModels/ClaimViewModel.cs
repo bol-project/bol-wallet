@@ -11,7 +11,10 @@ public partial class ClaimViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isLoading = false;
 
-	[ObservableProperty]
+    [ObservableProperty]
+    private bool _isClaimClickable = true;
+
+    [ObservableProperty]
 	private BolAccount _bolAccount = new();
 
 	public ClaimViewModel(
@@ -57,6 +60,8 @@ public partial class ClaimViewModel : BaseViewModel
 		finally
 		{
 			IsLoading = false;
+
+			IsClaimClickable = false;
 		}
 	}
 }

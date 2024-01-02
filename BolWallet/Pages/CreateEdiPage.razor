@@ -1,0 +1,133 @@
+﻿@page "/create-edi-page"
+@using System.Reflection
+
+@inherits MvvmComponentBase<CreateEdiViewModel>
+@inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
+
+<MudThemeProvider />
+
+<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+<MudText Typo="Typo.h6">To proceed with the verification process, please provide at least Identification Card or Passport</MudText>
+
+<MudGrid Style="padding:5px">
+    <Virtualize Items="IdentificationDocuments" Context="edi">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="edi">
+                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    @if (edi.Item1 == "Voice")
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+                    }
+            </MudStack>
+        </MudItem>
+    </Virtualize>
+    <MudItem xs="12" sm="12" md="12">
+        <div class="text-center">
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(identityImported || passportImported))">Submit</MudButton>
+        </div>
+    </MudItem>
+</MudGrid>
+<style>
+    .text-center {
+        text-align: center;
+    }
+</style>
+@code {
+    CreateEdiViewModel createEdiViewModel;
+
+    List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
+    {
+        {new("IdentityCard",Color.Transparent, "Identity Card", "") },
+        {new("Passport",Color.Transparent, "Passport", "") },
+        {new("DrivingLicense",Color.Transparent, "Driving License", "") },
+        {new("Photo",Color.Transparent, "Photo", "") },
+        {new("NinCertificate",Color.Transparent, "Nin Certificate", "") },
+        {new("BirthCertificate",Color.Transparent, "Birth Certificate", "") },
+        {new("TelephoneBill",Color.Transparent, "Τelephone Bill", "") },
+        {new("Other",Color.Transparent, "Other", "") },
+        {new("Voice",Color.Transparent, "Voice", "") },
+
+    };
+
+    bool identityImported = false, passportImported = false;
+    private bool isProgressBarVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        createEdiViewModel = ViewModel;
+
+        await createEdiViewModel.Initialize();
+
+        foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
+        {
+            await UpdateIdentificationDocumentsList(propertyInfo.Name);
+        }
+    }
+
+    private async Task Submit()
+    {
+        isProgressBarVisible = true;
+
+        await InvokeAsync(() => StateHasChanged());
+
+        await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
+
+        isProgressBarVisible = false;
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task GetFile(string property)
+    {
+        await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task GetPhoto(string property)
+    {
+        await createEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task GetAudio(string property)
+    {
+        await createEdiViewModel.RecordAudioCommand.ExecuteAsync(null);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task UpdateIdentificationDocumentsList(string property)
+    {
+        var propertyValue = createEdiViewModel.EdiForm.GetType().GetProperty(property).GetValue(createEdiViewModel.EdiForm, null);
+
+        if (propertyValue != null)
+        {
+            string fileName = propertyValue.ToString();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var index = IdentificationDocuments.FindIndex(x => x.Item1 == property);
+
+                fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
+
+                IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
+
+                if (property == "IdentityCard")
+                    identityImported = true;
+                else if (property == "Passport")
+                    passportImported = true;
+
+                await InvokeAsync(() => StateHasChanged());
+            }
+        }
+    }
+}
