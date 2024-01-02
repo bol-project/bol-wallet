@@ -15,7 +15,7 @@
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
 
-	<RefreshView Command="{Binding FetchBolAccountDataCommand}" IsRefreshing="{Binding IsLoading}">
+	<RefreshView Command="{Binding InitializeCommand}" IsRefreshing="{Binding IsLoading}">
 		<ScrollView>
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
