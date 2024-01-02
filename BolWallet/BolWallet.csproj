@@ -190,11 +190,11 @@
 		<PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" PrivateAssets="all" />
 	</ItemGroup>
 
-<!--	<ItemGroup>
+	<ItemGroup>
 		<None Update="Platforms\iOS\Entitlements.plist">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>-->
+	</ItemGroup>
 
 	<ItemGroup>
 		<MauiFont Include="Helpers\Icons.cs" />
