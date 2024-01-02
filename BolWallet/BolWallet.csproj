@@ -187,6 +187,7 @@
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.6" />
 		<PackageReference Include="MudBlazor" Version="6.11.1" />
+		<PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" PrivateAssets="all" />
 	</ItemGroup>
 
 <!--	<ItemGroup>
