@@ -25,7 +25,7 @@
                 }
                 else if (edi.Item1 == "Citizeships")
                 {
-                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Countries" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
+                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Countries" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
                             Your registration to the BOL community will correspond with the country you selected in Step 1." MultiSelection="true">
                         @foreach (var country in _content.Countries)
                         {
@@ -64,8 +64,10 @@
         text-align: center;
     }
 </style>
-@code {
+    @code {
     CreateEdiViewModel createEdiViewModel;
+
+    List<string> SelectedCitizeships = new() { };
 
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new() {};
 
@@ -98,8 +100,21 @@
         }
     }
 
-    private void SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
+    private async Task SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
     {
+        SelectedCitizeships = selectedCountries.ToList();
+
+        if (SelectedCitizeships.Count > 3)
+        {
+            SelectedCitizeships.RemoveAt(SelectedCitizeships.Count - 1);
+
+            await Toast.Make("Maximum of 3 citizenships can be selected.").Show();
+
+            createEdiViewModel.EdiForm.Countries = string.Join(",", SelectedCitizeships);
+
+            return;
+        }
+
         CitizeshipsDocuments.Clear(); 
 
         foreach (var country in selectedCountries)
