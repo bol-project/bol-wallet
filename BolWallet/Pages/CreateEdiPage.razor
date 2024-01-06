@@ -2,6 +2,7 @@
 @using System.Reflection
 
 @inherits MvvmComponentBase<CreateEdiViewModel>
+@inject RegisterContent _content;
 @inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
 
 <MudThemeProvider />
@@ -9,23 +10,46 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
-<MudText Typo="Typo.h6">To proceed with the verification process, please provide at least Identification Card or Passport</MudText>
+<MudText Typo="Typo.h6" Class="m-5">To proceed with the verification process, please provide at least Identification Card or Passport.</MudText>
 
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
             <MudStack Row="true" @key="edi">
-                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                @if (edi.Item1 == "Voice")
+                {
+                    <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    @if (edi.Item1 == "Voice")
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
-                    }
-                    else
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
-                    }
+                    <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                }
+                else if (edi.Item1 == "Citizeships")
+                {
+                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Countries" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
+                            Your registration to the BOL community will correspond with the country you selected in Step 1." MultiSelection="true">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Name">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+                }
+            </MudStack>
+        </MudItem>
+    </Virtualize>
+    <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="citizeshipDocument">
+                <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args => GetFile(citizeshipDocument.Item1))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args => GetPhoto(citizeshipDocument.Item1))" />
             </MudStack>
         </MudItem>
     </Virtualize>
@@ -43,6 +67,8 @@
 @code {
     CreateEdiViewModel createEdiViewModel;
 
+    List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new() {};
+
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
         {new("IdentityCard",Color.Transparent, "Identity Card", "") },
@@ -54,7 +80,7 @@
         {new("TelephoneBill",Color.Transparent, "Τelephone Bill", "") },
         {new("Other",Color.Transparent, "Other", "") },
         {new("Voice",Color.Transparent, "Voice", "") },
-
+        {new("Citizeships",Color.Transparent, "Citizeships", "") },
     };
 
     bool identityImported = false, passportImported = false;
@@ -69,6 +95,16 @@
         foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
         {
             await UpdateIdentificationDocumentsList(propertyInfo.Name);
+        }
+    }
+
+    private void SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
+    {
+        CitizeshipsDocuments.Clear(); 
+
+        foreach (var country in selectedCountries)
+        {
+            CitizeshipsDocuments.Add(new(country, Color.Transparent, country, ""));
         }
     }
 
