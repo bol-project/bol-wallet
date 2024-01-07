@@ -1,5 +1,4 @@
 ﻿@page "/create-edi-page"
-@using System.Reflection
 
 @inherits MvvmComponentBase<CreateEdiViewModel>
 @inject RegisterContent _content;
@@ -16,12 +15,16 @@
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
             <MudStack Row="true" @key="edi">
+             
                 @if (edi.Item1 == "Voice")
                 {
                     <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                    @if (DeviceInfo.Platform != DevicePlatform.WinUI)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                    }
                 }
                 else if (edi.Item1 == "Citizeships")
                 {
