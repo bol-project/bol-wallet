@@ -15,7 +15,7 @@ public partial class UserViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    private CodenameForm _codenameForm;
+    private IndividualCodenameForm _individualCodenameForm;
 
     public string CodenameLabel => "Greetings " + _userData?.Codename + "!";
 

@@ -20,11 +20,11 @@ public partial class CreateCodenameViewModel : BaseViewModel
 	{
 		_codeNameService = codeNameService;
 		_secureRepository = secureRepository;
-		CodenameForm = new CodenameForm(content);
+		IndividualCodenameForm = new IndividualCodenameForm(content);
 	}
 
 	[ObservableProperty]
-	private CodenameForm _codenameForm;
+	private IndividualCodenameForm _individualCodenameForm;
 
 	[ObservableProperty]
 	private string _codename = " ";
@@ -41,22 +41,22 @@ public partial class CreateCodenameViewModel : BaseViewModel
 	{
 		try
 		{
-			if (!CodenameForm.IsFormFilled)
+			if (!IndividualCodenameForm.IsFormFilled)
 			{
 				return;
 			}
 
 			var person = new NaturalPerson
 			{
-				FirstName = CodenameForm.FirstName.Value,
-				MiddleName = CodenameForm.MiddleName.Value,
-				Surname = CodenameForm.Surname.Value,
-				ThirdName = CodenameForm.ThirdName.Value,
-				Gender = CodenameForm.Gender,
-				Combination = CodenameForm.Combination.Value,
-				Nin = CodenameForm.NIN.Value,
-				Birthdate = DateTime.Parse(CodenameForm.Birthdate.Value),
-				CountryCode = CodenameForm.SelectedCountry.Alpha3
+				FirstName = IndividualCodenameForm.FirstName.Value,
+				MiddleName = IndividualCodenameForm.MiddleName.Value,
+				Surname = IndividualCodenameForm.Surname.Value,
+				ThirdName = IndividualCodenameForm.ThirdName.Value,
+				Gender = IndividualCodenameForm.Gender,
+				Combination = IndividualCodenameForm.Combination.Value,
+				Nin = IndividualCodenameForm.NIN.Value,
+				Birthdate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value),
+				CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
 			};
 
 			var result = _codeNameService.Generate(person);
@@ -76,7 +76,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
 			await _secureRepository.SetAsync("userdata", userData);
 
 			Codename = result;
-			CodenameForm.IsInvalidated = false;
+            IndividualCodenameForm.IsInvalidated = false;
 		}
 		catch (Exception ex)
 		{
@@ -89,17 +89,17 @@ public partial class CreateCodenameViewModel : BaseViewModel
 		var userData = await _secureRepository.GetAsync<UserData>("userdata");
 		if (userData is null) return;
 
-		CodenameForm.FirstName.Value = userData.Person.FirstName;
-		CodenameForm.MiddleName.Value = userData.Person.MiddleName;
-		CodenameForm.Surname.Value = userData.Person.Surname;
-		CodenameForm.ThirdName.Value = userData.Person.ThirdName;
-		CodenameForm.Gender = userData.Person.Gender;
-		CodenameForm.Combination.Value = userData.Person.Combination;
-		CodenameForm.SelectedCountry = CodenameForm
-					.Countries
+        IndividualCodenameForm.FirstName.Value = userData.Person.FirstName;
+        IndividualCodenameForm.MiddleName.Value = userData.Person.MiddleName;
+        IndividualCodenameForm.Surname.Value = userData.Person.Surname;
+        IndividualCodenameForm.ThirdName.Value = userData.Person.ThirdName;
+        IndividualCodenameForm.Gender = userData.Person.Gender;
+        IndividualCodenameForm.Combination.Value = userData.Person.Combination;
+        IndividualCodenameForm.SelectedCountry = IndividualCodenameForm
+                    .Countries
 					.FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-		CodenameForm.NIN.Value = userData.Person.Nin;
-		CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
+        IndividualCodenameForm.NIN.Value = userData.Person.Nin;
+        IndividualCodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
 
 		Codename = userData.Codename;
 	}
