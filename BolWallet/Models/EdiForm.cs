@@ -13,6 +13,6 @@ namespace BolWallet.Models
 		public string TelephoneBill { get; set; }
 		public string Other { get; set; }
 		public string Voice { get; set; }
-        public string Countries { get; set; }
+        public string Citizenships { get; set; }
     }
 }

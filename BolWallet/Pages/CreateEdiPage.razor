@@ -28,7 +28,7 @@
                 }
                 else if (edi.Item1 == "Citizeships")
                 {
-                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Countries" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
+                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Citizenships" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
                             Your registration to the BOL community will correspond with the country you selected in Step 1." MultiSelection="true">
                         @foreach (var country in _content.Countries)
                         {
@@ -113,7 +113,7 @@
 
             await Toast.Make("Maximum of 3 citizenships can be selected.").Show();
 
-            createEdiViewModel.EdiForm.Countries = string.Join(",", SelectedCitizeships);
+            createEdiViewModel.EdiForm.Citizenships = string.Join(",", SelectedCitizeships);
 
             return;
         }
@@ -132,11 +132,31 @@
 
         await InvokeAsync(() => StateHasChanged());
 
+        ProcessCitizenshipsCodes();
+
         await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
 
         isProgressBarVisible = false;
 
         await InvokeAsync(() => StateHasChanged());
+    }
+
+    private void ProcessCitizenshipsCodes()
+    {
+        if (createEdiViewModel.EdiForm.Citizenships is not null)
+        {
+            List<string> countryCodes = new();
+
+            foreach (var countryName in createEdiViewModel.EdiForm.Citizenships.Split(",").ToList())
+            {
+                Country selectedCountry = _content.Countries.FirstOrDefault(c => c.Name == countryName.Trim());
+
+                countryCodes.Add(selectedCountry.Alpha3);
+            }
+
+            if (countryCodes.Count > 0)
+                createEdiViewModel.encryptedDigitalMatrix.CountryCodes = countryCodes;
+        }
     }
 
     private async Task GetFile(string property)
