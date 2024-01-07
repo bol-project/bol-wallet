@@ -117,7 +117,10 @@
     <MauiXaml Update="Views\ClaimPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Views\CreateCodenamePage.xaml">
+    <MauiXaml Update="Views\CreateCodenameCompanyPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
+    <MauiXaml Update="Views\CreateCodenameIndividualPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
     <MauiXaml Update="Views\CreateEdiPage.xaml">
@@ -163,8 +166,12 @@
     <Compile Update="Views\BolCommunityPage.xaml.cs">
       <DependentUpon>BolCommunityPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\CreateCodenamePage.xaml.cs">
-      <DependentUpon>CreateCodenamePage.xaml</DependentUpon>
+    <Compile Update="Views\CreateCodenameCompanyPage.xaml.cs">
+      <DependentUpon>CreateCodenameCompanyPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\CreateCodenameIndividualPage.xaml.cs">
+      <DependentUpon>CreateCodenameIndividualPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainWithAccountPage.xaml.cs">

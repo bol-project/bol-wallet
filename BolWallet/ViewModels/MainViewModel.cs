@@ -26,12 +26,18 @@ public partial class MainViewModel : BaseViewModel
     }
 
 	[RelayCommand]
-	private async Task NavigateToCodenamePage()
+	private async Task NavigateToCodenameCompanyPage()
 	{
-        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+        await NavigationService.NavigateTo<CreateCodenameCompanyViewModel>(true);
     }
 
-	[RelayCommand]
+    [RelayCommand]
+    private async Task NavigateToCodenameIndividualPage()
+    {
+        await NavigationService.NavigateTo<CreateCodenameIndividualViewModel>(true);
+    }
+
+    [RelayCommand]
 	private async Task ImportYourWallet()
 	{
 		try

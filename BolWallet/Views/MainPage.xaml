@@ -14,7 +14,7 @@
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
             <Label
@@ -34,13 +34,20 @@
 
             <Button
                 Grid.Row="2"
-                Command="{Binding NavigateToCodenamePageCommand}"
+                Command="{Binding NavigateToCodenameIndividualPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                Text="Let's get started" />
+                Text="Let's get started - Individual" />
 
-			<Button
-             Grid.Row="3"
+            <Button
+                Grid.Row="3"
+                Command="{Binding NavigateToCodenameCompanyPageCommand}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Text="Let's get started - Company" />
+
+            <Button
+             Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"
              FontAttributes="Bold"
              HorizontalOptions="Center"
