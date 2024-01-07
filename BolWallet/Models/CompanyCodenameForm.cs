@@ -12,8 +12,10 @@ public partial class CompanyCodenameForm : ObservableObject
         _content = content;
     }
 
+    public List<Country> Countries => _content.Countries;
+
     [Required]
-    public Bol.Core.Model.Country Country { get; set; }
+    public Country Country { get; set; }
 
     [Required]
     public OrgType OrgType { get; set; }
@@ -29,4 +31,30 @@ public partial class CompanyCodenameForm : ObservableObject
 
     [Required]
     public int ExtraDigit { get; set; }
+
+    public bool IsFormFilled =>
+        Country is not null &&
+        //OrgType condition if applied &&
+        Title is not null &&
+        VatNumber is not null &&
+        IncorporationDate <= DateTime.Today &&
+        ExtraDigit > -1;
+
+    private bool _isInvalidated = true;
+    public bool IsInvalidated
+    {
+        get => _isInvalidated;
+        set
+        {
+            _isInvalidated = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private void Invalidate()
+    {
+        IsInvalidated = true;
+        OnPropertyChanged(nameof(IsFormFilled));
+        OnPropertyChanged(nameof(IsInvalidated));
+    }
 }
