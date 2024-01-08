@@ -1,34 +1,32 @@
 ﻿using Bol.Core.Abstractions;
-using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
 
 namespace BolWallet.ViewModels;
 
 public partial class CreateCodenameViewModel : BaseViewModel
 {
-	protected readonly ICodeNameService _codeNameService;
+    protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
 
-	public CreateCodenameViewModel(
-		INavigationService navigationService,
-		ICodeNameService codeNameService,
-		RegisterContent content,
-		ISecureRepository secureRepository)
-		: base(navigationService)
-	{
-		_codeNameService = codeNameService;
-		_secureRepository = secureRepository;
-	}
+    public CreateCodenameViewModel(
+        INavigationService navigationService,
+        ICodeNameService codeNameService,
+        RegisterContent content,
+        ISecureRepository secureRepository)
+        : base(navigationService)
+    {
+        _codeNameService = codeNameService;
+        _secureRepository = secureRepository;
+    }
 
-	[ObservableProperty]
+    [ObservableProperty]
     protected string _codename = " ";
 
 
-	[RelayCommand]
-	public async Task Submit()
-	{
+    [RelayCommand]
+    public async Task Submit()
+    {
         await App.Current.MainPage.Navigation.PushAsync(new CreateEdiPage());
     }
 

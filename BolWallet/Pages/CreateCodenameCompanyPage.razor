@@ -29,7 +29,7 @@
 
         <MudItem xs="6" sm="6" md="6">
 
-            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CompanyCodenameForm.Country" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CompanyCodenameForm.CompanyCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
                              SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
                              Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
             </MudAutocomplete>
