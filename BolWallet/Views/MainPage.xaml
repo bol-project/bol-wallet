@@ -37,21 +37,24 @@
                 Command="{Binding NavigateToCodenameIndividualPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                Text="Let's get started - Individual" />
+                WidthRequest="200"
+                Text="New Individual Wallet" />
 
             <Button
                 Grid.Row="3"
                 Command="{Binding NavigateToCodenameCompanyPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                Text="Let's get started - Company" />
+                WidthRequest="200"
+                Text="New Company Wallet" />
 
             <Button
              Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"
              FontAttributes="Bold"
              HorizontalOptions="Center"
-             Text="Import Your Wallet" />
-		</Grid>
-	</ScrollView>
+             WidthRequest="200"
+             Text="Import Existing Wallet" />
+        </Grid>
+    </ScrollView>
 </ContentPage>

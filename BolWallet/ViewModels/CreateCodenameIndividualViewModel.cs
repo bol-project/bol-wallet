@@ -1,9 +1,6 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
-using Bol.Core.Services;
 using CommunityToolkit.Maui.Alerts;
-using Newtonsoft.Json.Linq;
-using System.Globalization;
 
 namespace BolWallet.ViewModels;
 
@@ -54,7 +51,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
             var userData = new UserData
             {
                 Codename = result,
-                Person = person
+                Person = person,
+                IsIndividualRegistration = true
             };
 
             await _secureRepository.SetAsync("userdata", userData);
@@ -71,7 +69,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
     public async Task Initialize()
     {
         var userData = await _secureRepository.GetAsync<UserData>("userdata");
-        if (userData is null) return;
+        if (userData?.Person is null) return;
 
         IndividualCodenameForm.FirstName.Value = userData.Person.FirstName;
         IndividualCodenameForm.MiddleName.Value = userData.Person.MiddleName;

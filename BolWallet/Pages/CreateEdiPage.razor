@@ -1,7 +1,7 @@
 ﻿@page "/create-edi-page"
-@using System.Reflection
 
 @inherits MvvmComponentBase<CreateEdiViewModel>
+@inject RegisterContent _content;
 @inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
 
 <MudThemeProvider />
@@ -9,23 +9,50 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
-<MudText Typo="Typo.h6">To proceed with the verification process, please provide at least Identification Card or Passport</MudText>
+<MudText Typo="Typo.h6" Class="m-5">To proceed with the verification process, please provide at least Identification Card or Passport.</MudText>
 
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
             <MudStack Row="true" @key="edi">
-                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+             
+                @if (edi.Item1 == "Voice")
+                {
+                    <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    @if (edi.Item1 == "Voice")
+                    @if (DeviceInfo.Platform != DevicePlatform.WinUI)
                     {
                         <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
                     }
-                    else
-                    {
-                        <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
-                    }
+                }
+                else if (edi.Item1 == "Citizeships")
+                {
+                    <MudSelect T="string" Label="Citizeships" aria-label="@edi.Item1" @bind-Value="createEdiViewModel.EdiForm.Citizenships" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" HelperText="Please select any additional citizenships you may have, up to a maximum of three, and provide the corresponding documentation for verification.
+                            Your registration to the BOL community will correspond with the country you selected in Step 1." MultiSelection="true">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Name">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+                }
+            </MudStack>
+        </MudItem>
+    </Virtualize>
+    <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="citizeshipDocument">
+                <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args => GetFile(citizeshipDocument.Item1))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args => GetPhoto(citizeshipDocument.Item1))" />
             </MudStack>
         </MudItem>
     </Virtualize>
@@ -40,8 +67,12 @@
         text-align: center;
     }
 </style>
-@code {
+    @code {
     CreateEdiViewModel createEdiViewModel;
+
+    List<string> SelectedCitizeships = new() { };
+
+    List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new() {};
 
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
@@ -54,7 +85,7 @@
         {new("TelephoneBill",Color.Transparent, "Τelephone Bill", "") },
         {new("Other",Color.Transparent, "Other", "") },
         {new("Voice",Color.Transparent, "Voice", "") },
-
+        {new("Citizeships",Color.Transparent, "Citizeships", "") },
     };
 
     bool identityImported = false, passportImported = false;
@@ -72,17 +103,60 @@
         }
     }
 
+    private async Task SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
+    {
+        SelectedCitizeships = selectedCountries.ToList();
+
+        if (SelectedCitizeships.Count > 3)
+        {
+            SelectedCitizeships.RemoveAt(SelectedCitizeships.Count - 1);
+
+            await Toast.Make("Maximum of 3 citizenships can be selected.").Show();
+
+            createEdiViewModel.EdiForm.Citizenships = string.Join(",", SelectedCitizeships);
+
+            return;
+        }
+
+        CitizeshipsDocuments.Clear(); 
+
+        foreach (var country in selectedCountries)
+        {
+            CitizeshipsDocuments.Add(new($"{country} Citizenship - Verification Document", Color.Transparent, $"{country} Citizenship - Verification Document", ""));
+        }
+    }
+
     private async Task Submit()
     {
         isProgressBarVisible = true;
 
         await InvokeAsync(() => StateHasChanged());
 
+        ProcessCitizenshipsCodes();
+
         await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
 
         isProgressBarVisible = false;
 
         await InvokeAsync(() => StateHasChanged());
+    }
+
+    private void ProcessCitizenshipsCodes()
+    {
+        if (createEdiViewModel.EdiForm.Citizenships is not null)
+        {
+            List<string> countryCodes = new();
+
+            foreach (var countryName in createEdiViewModel.EdiForm.Citizenships.Split(",").ToList())
+            {
+                Country selectedCountry = _content.Countries.FirstOrDefault(c => c.Name == countryName.Trim());
+
+                countryCodes.Add(selectedCountry.Alpha3);
+            }
+
+            if (countryCodes.Count > 0)
+                createEdiViewModel.encryptedDigitalMatrix.CountryCodes = countryCodes;
+        }
     }
 
     private async Task GetFile(string property)

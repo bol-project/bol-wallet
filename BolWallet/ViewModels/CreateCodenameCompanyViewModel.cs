@@ -1,8 +1,6 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
-using Newtonsoft.Json.Linq;
-using System.Globalization;
 
 namespace BolWallet.ViewModels;
 
@@ -33,9 +31,9 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
             {
                 Country = new Bol.Core.Model.Country
                 {
-                    Name = CompanyCodenameForm.Country.Name,
-                    Alpha3 = CompanyCodenameForm.Country.Alpha3,
-                    Region = CompanyCodenameForm.Country.Region
+                    Name = CompanyCodenameForm.CompanyCountry.Name,
+                    Alpha3 = CompanyCodenameForm.CompanyCountry.Alpha3,
+                    Region = CompanyCodenameForm.CompanyCountry.Region
                 },
                 OrgType = CompanyCodenameForm.OrgType,
                 Title = CompanyCodenameForm.Title,
@@ -52,18 +50,15 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 return;
             }
 
-            /*
-            
             var userData = new UserData
             {
                 Codename = result,
-                Person = person
+                Company = company,
+                IsIndividualRegistration = false
             };
-            
 
             await _secureRepository.SetAsync("userdata", userData);
 
-            */
             Codename = result;
             CompanyCodenameForm.IsInvalidated = false;
         }
@@ -75,23 +70,23 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
 
     public async Task Initialize()
     {
-        /*
         var userData = await _secureRepository.GetAsync<UserData>("userdata");
-        if (userData is null) return;
+        if (userData?.Company is null) return;
 
-        IndividualCodenameForm.FirstName.Value = userData.Person.FirstName;
-        IndividualCodenameForm.MiddleName.Value = userData.Person.MiddleName;
-        IndividualCodenameForm.Surname.Value = userData.Person.Surname;
-        IndividualCodenameForm.ThirdName.Value = userData.Person.ThirdName;
-        IndividualCodenameForm.Gender = userData.Person.Gender;
-        IndividualCodenameForm.Combination.Value = userData.Person.Combination;
-        IndividualCodenameForm.SelectedCountry = IndividualCodenameForm
-                    .Countries
-                    .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-        IndividualCodenameForm.NIN.Value = userData.Person.Nin;
-        IndividualCodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
+        var country = new Models.Country
+        {
+            Name = userData.Company.Country.Name,
+            Alpha3 = userData.Company.Country.Alpha3,
+            Region = userData.Company.Country.Region
+        };
+
+        CompanyCodenameForm.CompanyCountry = country;
+        CompanyCodenameForm.OrgType = userData.Company.OrgType;
+        CompanyCodenameForm.Title = userData.Company.Title;
+        CompanyCodenameForm.VatNumber = userData.Company.VatNumber;
+        CompanyCodenameForm.IncorporationDate = userData.Company.IncorporationDate;
+        CompanyCodenameForm.ExtraDigit = userData.Company.ExtraDigit;
 
         Codename = userData.Codename;
-        */
     }
 }

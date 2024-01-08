@@ -1,4 +1,6 @@
-﻿namespace BolWallet.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BolWallet.Models
 {
 	public partial class EdiForm : ObservableObject
 	{
@@ -11,5 +13,6 @@
 		public string TelephoneBill { get; set; }
 		public string Other { get; set; }
 		public string Voice { get; set; }
-	}
+        public string Citizenships { get; set; }
+    }
 }

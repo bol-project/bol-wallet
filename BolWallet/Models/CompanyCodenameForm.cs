@@ -15,7 +15,7 @@ public partial class CompanyCodenameForm : ObservableObject
     public List<Country> Countries => _content.Countries;
 
     [Required]
-    public Country Country { get; set; }
+    public Country CompanyCountry { get; set; }
 
     [Required]
     public OrgType OrgType { get; set; }
@@ -33,7 +33,7 @@ public partial class CompanyCodenameForm : ObservableObject
     public int ExtraDigit { get; set; }
 
     public bool IsFormFilled =>
-        Country is not null &&
+        CompanyCountry is not null &&
         //OrgType condition if applied &&
         Title is not null &&
         VatNumber is not null &&

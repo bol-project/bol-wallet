@@ -35,55 +35,55 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
     <CodesignProvision>iOS Team Provisioning Profile: com.companyname.bolwallet</CodesignProvision>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
-    <WarningsAsErrors/>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>
     <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128"/>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
 
     <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128"/>
+    <MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128" />
 
     <!-- Images -->
-    <MauiImage Include="Resources\Images\*"/>
+    <MauiImage Include="Resources\Images\*" />
 
     <!-- Custom Fonts -->
-    <MauiFont Include="Resources\Fonts\*"/>
+    <MauiFont Include="Resources\Fonts\*" />
 
     <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)"/>
+    <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -180,23 +180,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="akavache" Version="9.1.20"/>
-    <PackageReference Include="Blazing.Mvvm" Version="1.4.0"/>
-    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.11"/>
-    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1"/>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2"/>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
-    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)"/>
-    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0"/>
-    <PackageReference Include="Neo.VM" Version="2.4.3.1"/>
-    <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0"/>
-    <PackageReference Include="SkiaSharp" Version="2.88.6"/>
-    <PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0"/>
-    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6"/>
-    <PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.6"/>
-    <PackageReference Include="MudBlazor" Version="6.11.1"/>
-    <PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" PrivateAssets="all"/>
+    <PackageReference Include="akavache" Version="9.1.20" />
+    <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
+    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.12" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+    <PackageReference Include="Neo.VM" Version="2.4.3.1" />
+    <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.Extended.Iconify.FontAwesome" Version="5.0.0" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.Views.Maui.Core" Version="2.88.6" />
+    <PackageReference Include="MudBlazor" Version="6.12.0" />
+    <PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -206,24 +206,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <MauiFont Include="Helpers\Icons.cs"/>
+    <MauiFont Include="Helpers\Icons.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map"/>
-    <None Include="wwwroot\css\open-iconic\FONT-LICENSE"/>
-    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg"/>
-    <None Include="wwwroot\css\open-iconic\ICON-LICENSE"/>
-    <None Include="wwwroot\css\open-iconic\README.md"/>
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="appsettings.json"/>
-    <EmbeddedResource Include="appsettings.json"/>
-    <Content Remove="appsettings.Development.json"/>
-    <EmbeddedResource Include="appsettings.Development.json"/>
-    <Content Remove="TestAccount.json"/>
-    <EmbeddedResource Include="TestAccount.json"/>
+    <Content Remove="appsettings.json" />
+    <EmbeddedResource Include="appsettings.json" />
+    <Content Remove="appsettings.Development.json" />
+    <EmbeddedResource Include="appsettings.Development.json" />
+    <Content Remove="TestAccount.json" />
   </ItemGroup>
 
 </Project>
