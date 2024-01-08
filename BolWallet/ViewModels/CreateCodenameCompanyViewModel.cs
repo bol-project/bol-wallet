@@ -53,7 +53,8 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
             var userData = new UserData
             {
                 Codename = result,
-                Company = company
+                Company = company,
+                IsIndividualRegistration = false
             };
 
             await _secureRepository.SetAsync("userdata", userData);
