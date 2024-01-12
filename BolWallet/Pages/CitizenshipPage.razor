@@ -1,0 +1,60 @@
+﻿@page "/citizenship"
+
+@inject RegisterContent _content;
+
+<MudThemeProvider />
+
+<EditForm Model="@citizenshipsForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudSelect style="margin-bottom: 20px;" T="Country" Label="Birth Country" Required="true" For="@(() => citizenshipsForm.CountryOfBirth)" HelperText="Choose the country where you were born." @bind-Value="citizenshipsForm.CountryOfBirth">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="Country" Value="country">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect style="margin-bottom: 20px;" T="string" Label="Citizenships" Required="true" For="@(() => citizenshipsForm.Citizenships)" HelperText="Choose up to three citizenships from the options provided." MultiSelection="true" @bind-Value="citizenshipsForm.Citizenships">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Name">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    CitizenshipsForm citizenshipsForm = new CitizenshipsForm();
+
+    private async Task<IEnumerable<Country>> Search(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return _content.Countries;
+
+        return await Task.Run(() => _content.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
+
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+}

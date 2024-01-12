@@ -111,6 +111,9 @@
     <MauiXaml Update="Views\CertifyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\CitizenshipPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\ClaimPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
