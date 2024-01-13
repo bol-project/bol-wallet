@@ -1,6 +1,8 @@
 ﻿@page "/citizenship"
 
 @inject RegisterContent _content;
+@inject INavigationService navigationService;
+@inject ISecureRepository secureRepository;
 
 <MudThemeProvider />
 
@@ -57,7 +59,16 @@
     {
         try
         {
+            var citizenshipsForm = context.Model as CitizenshipsForm;
 
+            UserData userData = new UserData
+            {
+                Citizenships = citizenshipsForm.Citizenships.Split(",").Select(c => c.Trim()).ToArray()
+            };
+
+            await secureRepository.SetAsync("userdata", userData);
+
+            await navigationService.NavigateTo<CreateCodenameViewModel>(true);
         }
         catch (Exception ex)
         {
