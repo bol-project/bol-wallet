@@ -61,9 +61,16 @@
         {
             var citizenshipsForm = context.Model as CitizenshipsForm;
 
+            List<Country> citizenships = new List<Country>();
+
+            foreach (var citizenshipName in citizenshipsForm.Citizenships.Split(",").Select(c => c.Trim()))
+            {
+                citizenships.Add(_content.Countries.FirstOrDefault(c => c.Name == citizenshipName));
+            }
+
             UserData userData = new UserData
             {
-                Citizenships = citizenshipsForm.Citizenships.Split(",").Select(c => c.Trim()).ToArray()
+                Citizenships = citizenships
             };
 
             await secureRepository.SetAsync("userdata", userData);
