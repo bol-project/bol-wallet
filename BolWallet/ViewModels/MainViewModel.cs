@@ -85,9 +85,6 @@ public partial class MainViewModel : BaseViewModel
 
             var userData = new UserData { Codename = bolWallet.Name, BolWallet = bolWallet, WalletPassword = password };
 
-            userData.IsRegisteredAccount = true;
-            userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
-
             await _secureRepository.SetAsync("userdata", userData);
 
             await NavigationService.NavigateTo<MainWithAccountViewModel>(true);

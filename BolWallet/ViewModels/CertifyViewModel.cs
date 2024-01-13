@@ -138,8 +138,6 @@ public partial class CertifyViewModel : BaseViewModel
 
 			BolAccount bolAccount = await _bolService.PayCertificationFees();
 
-			userData.AccountStatus = BolAccount.AccountStatus;
-
 			await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
 			IsLoading = false;
