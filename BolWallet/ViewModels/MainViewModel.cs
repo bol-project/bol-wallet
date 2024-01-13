@@ -40,7 +40,7 @@ public partial class MainViewModel : BaseViewModel
 			{
 			   { DevicePlatform.iOS, new[] { "public.json" } },
 			   { DevicePlatform.Android, new[] { "application/json" } },
-			   { DevicePlatform.macOS, new[] { "json" } },
+			   { DevicePlatform.MacCatalyst, new[] { "json" } },
 			   { DevicePlatform.WinUI, new[] { ".json", "application/json" } }
 			});
 
