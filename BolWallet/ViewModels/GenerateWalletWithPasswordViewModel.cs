@@ -48,7 +48,8 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
             UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-            var bolWallet = await Task.Run(() => _walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey));
+            var bolWallet = await Task.Run(async () =>
+                await _walletService.CreateWallet(Password, userData.Codename, userData.Edi, privateKey));
 
             userData.BolWallet = bolWallet;
             userData.WalletPassword = Password;
