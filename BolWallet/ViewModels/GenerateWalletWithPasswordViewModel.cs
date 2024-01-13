@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Storage;
 using System.Text;
 
 namespace BolWallet.ViewModels;
+
 public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 {
     private readonly IWalletService _walletService;
@@ -19,7 +20,8 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         ISecureRepository secureRepository,
         ISha256Hasher sha256Hasher,
         IBase16Encoder base16Encoder,
-        IFileSaver fileSaver) : base(navigationService)
+        IFileSaver fileSaver)
+        : base(navigationService)
     {
         _walletService = walletService;
         _secureRepository = secureRepository;
@@ -28,12 +30,9 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         _fileSaver = fileSaver;
     }
 
-    [ObservableProperty]
-    private string _password = "";
+    [ObservableProperty] private string _password = "";
 
-
-    [ObservableProperty]
-    private bool _isLoading = false;
+    [ObservableProperty] private bool _isLoading = false;
 
     [RelayCommand]
     private async Task Submit()
@@ -69,14 +68,16 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task DownloadWalletAsync(Bol.Core.Model.BolWallet bolWallet, CancellationToken cancellationToken = default)
+    private async Task DownloadWalletAsync(
+        Bol.Core.Model.BolWallet bolWallet,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             using var stream = new MemoryStream();
-            
+
             JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
-            
+
             string fileName = "BolWallet.json";
 
             var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
