@@ -192,20 +192,22 @@ public partial class CreateEdiViewModel : BaseViewModel
 
             var ediFileItem = (EdiFileItem)propertyInfo.GetValue(ediFiles, null);
 
-            if (ediFileItem?.Content != null)
+            if (ediFileItem?.Content == null)
             {
-                propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
-
-                encryptedDigitalMatrix.Hashes
-                    .GetType()
-                    .GetProperty(propertyNameInfo.Name)
-                    .SetValue(encryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
-
-                ediFiles
-                    .GetType()
-                    .GetProperty(propertyNameInfo.Name)
-                    .SetValue(ediFiles, ediFileItem);
+                continue;
             }
+
+            propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
+
+            encryptedDigitalMatrix.Hashes
+                .GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(encryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
+
+            ediFiles
+                .GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(ediFiles, ediFileItem);
         }
 
         OnPropertyChanged(nameof(EdiForm));
