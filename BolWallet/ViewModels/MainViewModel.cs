@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Bol.Address.Abstractions;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;

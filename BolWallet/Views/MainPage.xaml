@@ -34,7 +34,7 @@
 
             <Button
                 Grid.Row="2"
-                Command="{Binding NavigateToCodenamePageCommand}"
+                Command="{Binding NavigateToCitizenshipPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 Text="Let's get started" />
