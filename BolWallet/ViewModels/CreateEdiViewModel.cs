@@ -29,11 +29,11 @@ public partial class CreateEdiViewModel : BaseViewModel
         IMediaPicker mediaPicker)
         : base(navigationService)
     {
-        _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
-        _base16Encoder = base16Encoder ?? throw new ArgumentNullException(nameof(base16Encoder));
-        _secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
-        _encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
-        _mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
+        _permissionService = permissionService;
+        _base16Encoder = base16Encoder;
+        _secureRepository = secureRepository;
+        _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
+        _mediaPicker = mediaPicker;
         EdiForm = new EdiForm();
         recorder = new AudioRecorderService
         {
