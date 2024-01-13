@@ -123,6 +123,9 @@
     <MauiXaml Update="Views\CreateEdiPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\EcryptedCitizenshipPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\FinancialTransactionsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

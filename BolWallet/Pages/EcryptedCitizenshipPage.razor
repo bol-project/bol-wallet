@@ -1,0 +1,83 @@
+﻿@page "/encrypted-citizenship"
+
+@inject RegisterContent _content;
+@inject ISecureRepository secureRepository;
+@inject INavigationService navigationService;
+
+<MudThemeProvider />
+
+<MudGrid >
+    <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+        <Virtualize Items="EncryptedCitizenshipForms" Context="encryptedCitizenshipForm">
+            <MudCard>
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">@encryptedCitizenshipForm.CountryName</MudText>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" @bind-Value="@encryptedCitizenshipForm.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
+                                      Margin="@Margin.Dense" Required="true" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" OnlyValidateIfDirty="true"
+                                      @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
+                                      Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" OnlyValidateIfDirty="true"
+                                      @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
+                                      Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                      Margin="@Margin.Dense" Label="Middle Name" @bind-Value="@encryptedCitizenshipForm.SecondName"
+                                      OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                      Margin="@Margin.Dense" Label="Third Name" @bind-Value="@encryptedCitizenshipForm.ThirdName"
+                                      OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudDatePicker Label="Birth Date(yyyy-MM-dd)" @bind-Value="@encryptedCitizenshipForm.BirthDate" Editable="true" Variant="MudBlazor.Variant.Outlined"
+                                       Margin="@Margin.Dense"
+                                       MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
+                                       Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@encryptedCitizenshipForm.Nin"
+                                      Margin="@Margin.Dense" OnlyValidateIfDirty="true" HelperText="@NinHelperText"
+                                      Immediate="true" Required="true"
+                                      Validation="@(new Func<string, string>(NINCheck))" />
+                    </MudItem>
+                </MudCardContent>
+            </MudCard>
+        </Virtualize>
+    </MudItem>
+</MudGrid>
+
+    @code {
+    string NinHelperText = string.Empty;
+
+    List<EncryptedCitizenshipForm> EncryptedCitizenshipForms = new List<EncryptedCitizenshipForm>();
+
+    int lastYear = DateTime.Now.Year - 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserData userData = await secureRepository.GetAsync<UserData>("userdata");
+
+        foreach (var citizenship in userData.Citizenships)
+        {
+            EncryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
+            {
+                CountryName = citizenship.Name,
+                CountryCode = citizenship.Alpha3
+            });
+        }
+    }
+
+    private string NINCheck(string arg)
+    {
+        return string.Empty;
+    }
+
+}
