@@ -8,6 +8,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
+    private readonly IDeviceDisplay _deviceDisplay;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -45,10 +46,13 @@ public partial class MainWithAccountViewModel : BaseViewModel
     public MainWithAccountViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
-        IBolService bolService) : base(navigationService)
+        IBolService bolService,
+        IDeviceDisplay deviceDisplay)
+        : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
+        _deviceDisplay = deviceDisplay;
     }
 
     [RelayCommand]
@@ -64,6 +68,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     {
         try
         {
+            _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
 
             await Task.Delay(10);
@@ -88,6 +93,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         }
         finally
         {
+            _deviceDisplay.KeepScreenOn = false;
             IsLoading = false;
         }
     }
