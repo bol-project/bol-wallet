@@ -39,6 +39,9 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isLoading = false;
 
+    [ObservableProperty]
+    private string _walletCreationProgress = "Please keep the application open...";
+
     [RelayCommand]
     private async Task Submit()
     {
