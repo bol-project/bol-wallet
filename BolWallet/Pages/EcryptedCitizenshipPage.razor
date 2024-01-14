@@ -50,6 +50,17 @@
                                           ErrorText="@NinErrorMessages[encryptedCitizenshipForm.CountryCode]"
                                           OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
                         </MudItem>
+                        <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
+                        <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudStack Row="true">
+                                    <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
+                                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1"/>
+                            </MudStack>
+                        </MudItem>
+                    </Virtualize>
                     </MudCardContent>
                 </MudCard>
             </Virtualize>
@@ -57,6 +68,13 @@
     </MudGrid>
 
     @code {
+    List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
+      {
+          {new ("IdentityCard",Color.Transparent, "Identity Card", "") },
+          {new ("Passport",Color.Transparent, "Passport", "") },
+          { new("ProofOfNin", Color.Transparent, "Driving License", "") }
+      };
+
     Dictionary<string, string> NinErrorMessages = new Dictionary<string, string>();
 
     List<EncryptedCitizenshipForm> EncryptedCitizenshipForms = new List<EncryptedCitizenshipForm>();
