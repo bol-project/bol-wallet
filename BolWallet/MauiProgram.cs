@@ -64,6 +64,8 @@ public static class MauiProgram
         services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
+        services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
+
 		services.RegisterViewAndViewModelSubsystem();
 
         var bolConfig = new BolConfig();
