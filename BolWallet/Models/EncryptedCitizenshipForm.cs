@@ -18,4 +18,13 @@ public class EncryptedCitizenshipForm
     public string ThirdName { get; set; }
     [Required]
     public DateTime BirthDate { get; set; }
+    public CitizenshipHashTable CitizenshipHashes { get; set; }
+}
+
+public class CitizenshipHashTable
+{
+    public string IdentityCard { get; set; }
+    public string Passport { get; set; }
+    public string ProofOfNin { get; set; }
+    public string BirthCertificate { get; set; }
 }

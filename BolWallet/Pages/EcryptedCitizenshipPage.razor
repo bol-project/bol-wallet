@@ -3,6 +3,9 @@
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
 @inject INavigationService navigationService;
+@inject IMediaPicker mediaPicker;
+@inject IPermissionService permissionService;
+@inject IBase16Encoder base16Encoder
 
 <MudThemeProvider />
 
@@ -56,8 +59,8 @@
                                 <MudStack Row="true">
                                     <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                                               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
-                                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" />
-                                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1"/>
+                                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
                             </MudStack>
                         </MudItem>
                     </Virtualize>
@@ -70,9 +73,10 @@
     @code {
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
       {
-          {new ("IdentityCard",Color.Transparent, "Identity Card", "") },
-          {new ("Passport",Color.Transparent, "Passport", "") },
-          { new("ProofOfNin", Color.Transparent, "Driving License", "") }
+          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
       };
 
     Dictionary<string, string> NinErrorMessages = new Dictionary<string, string>();
@@ -88,12 +92,75 @@
         foreach (var citizenship in userData.Citizenships)
         {
             EncryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
-                {
-                    CountryName = citizenship.Name,
-                    CountryCode = citizenship.Alpha3
-                });
+            {
+                CountryName = citizenship.Name,
+                CountryCode = citizenship.Alpha3,
+                CitizenshipHashes = new CitizenshipHashTable()
+            });
 
             NinErrorMessages.Add(citizenship.Alpha3, string.Empty);
+        }
+    }
+
+    private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>> {
+        { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
+        { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
+        { DevicePlatform.macOS, new[] { "pdf", "public.image", "public.audio" } },
+        { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
+        });
+
+        var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = customFileType,
+                PickerTitle = "Pick a file"
+            });
+
+        encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
+
+        await UpdateIdentificationDocumentsList(property, pickResult.FileName);
+    }
+
+    private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        if (await permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted)
+        {
+            await permissionService.DisplayWarningAsync<Permissions.Camera>();
+            return;
+        }
+
+        FileResult takePictureResult = await mediaPicker.CapturePhotoAsync();
+
+        encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
+
+        await UpdateIdentificationDocumentsList(property, takePictureResult.FileName);
+    }
+
+    private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        if (fileResult != null)
+        {
+            var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+            var encodedFileBytes = base16Encoder.Encode(fileBytes);
+
+            encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, encodedFileBytes);
+        }
+
+        return encryptedCitizenshipForm;
+    }
+
+    private async Task UpdateIdentificationDocumentsList(string property, string fileName)
+    {
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var index = CitizeshipsDocuments.FindIndex(x => x.Item1 == property);
+
+            fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
+
+            CitizeshipsDocuments[index] = new(CitizeshipsDocuments[index].Item1, Color.Success, CitizeshipsDocuments[index].Item3, fileName);
+
+            await InvokeAsync(() => StateHasChanged());
         }
     }
 
