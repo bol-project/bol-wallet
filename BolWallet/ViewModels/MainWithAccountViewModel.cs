@@ -32,6 +32,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private BolAccount _bolAccount = new();
 
     [ObservableProperty]
+    private bool _isRefreshing = false;
+    
+    [ObservableProperty]
     private bool _isLoading = false;
 
     [ObservableProperty]
@@ -78,9 +81,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-
-            await Task.Delay(10);
-
+            
             userData = await _secureRepository.GetAsync<UserData>("userdata");
 
             CodeName = userData.Codename;

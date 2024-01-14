@@ -25,6 +25,7 @@
             RowSpacing="25"
             ColumnSpacing="8">
 			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{OnPlatform False, WinUI=True}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+	<RefreshView Command="{Binding InitializeCommand}" IsRefreshing="{Binding IsRefreshing}">
 					<ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
 			</StackLayout>
 			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
