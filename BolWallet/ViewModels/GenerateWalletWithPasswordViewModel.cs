@@ -64,6 +64,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         finally
         {
             IsLoading = false;
+            GC.Collect();
         }
     }
 

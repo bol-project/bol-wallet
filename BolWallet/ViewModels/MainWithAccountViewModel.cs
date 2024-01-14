@@ -58,9 +58,17 @@ public partial class MainWithAccountViewModel : BaseViewModel
     [RelayCommand]
     public async Task Initialize()
     {
-        await FetchBolAccountData();
+        try
+        {
+            await FetchBolAccountData();
 
-        await GenerateCommercialBalanceDisplayList();
+            await GenerateCommercialBalanceDisplayList();
+        }
+        finally
+        {
+            IsRefreshing = false;
+            GC.Collect();
+        }
     }
 
     [RelayCommand]
