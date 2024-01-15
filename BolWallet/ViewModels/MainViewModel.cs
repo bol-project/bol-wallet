@@ -27,9 +27,9 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task NavigateToCodenamePage()
+    private async Task NavigateToCitizenshipPage()
     {
-        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+        await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
     }
 
     [RelayCommand]

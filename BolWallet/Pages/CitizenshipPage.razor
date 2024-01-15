@@ -12,13 +12,6 @@
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
-                    <MudSelect style="margin-bottom: 20px;" T="Country" Label="Birth Country" Required="true" For="@(() => citizenshipsForm.CountryOfBirth)" HelperText="Choose the country where you were born." @bind-Value="citizenshipsForm.CountryOfBirth">
-                        @foreach (var country in _content.Countries)
-                        {
-                            <MudSelectItem T="Country" Value="country">@country.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-
                     <MudSelect style="margin-bottom: 20px;" T="string" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" Label="Citizenships" Required="true" For="@(() => citizenshipsForm.Citizenships)" HelperText="Choose up to three citizenships from the options provided." MultiSelection="true" @bind-Value="citizenshipsForm.Citizenships">
                         @foreach (var country in _content.Countries)
                         {
@@ -39,7 +32,18 @@
 @code {
     CitizenshipsForm citizenshipsForm = new CitizenshipsForm();
 
+    UserData userData;
+
     List<string> SelectedCitizeships = new() { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        userData = await secureRepository.GetAsync<UserData>("userdata");
+        if (userData?.Citizenships is null) return;
+
+        SelectedCitizeships = userData.Citizenships.Select(c => c.Name).ToList();
+        citizenshipsForm.Citizenships = string.Join(",", SelectedCitizeships);
+    }
 
     private async Task SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
     {
@@ -68,10 +72,7 @@
                 citizenships.Add(_content.Countries.FirstOrDefault(c => c.Name == citizenshipName));
             }
 
-            UserData userData = new UserData
-            {
-                Citizenships = citizenships
-            };
+            userData.Citizenships = citizenships;
 
             await secureRepository.SetAsync("userdata", userData);
 

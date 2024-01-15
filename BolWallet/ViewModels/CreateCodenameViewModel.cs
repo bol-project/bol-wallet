@@ -33,7 +33,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     [RelayCommand]
     public async Task Submit()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new CreateEdiPage());
+        await App.Current.MainPage.Navigation.PushAsync(new EcryptedCitizenshipPage());
     }
 
     [RelayCommand]
@@ -69,11 +69,8 @@ public partial class CreateCodenameViewModel : BaseViewModel
                 return;
             }
 
-            userData = new UserData
-            {
-                Codename = result,
-                Person = person
-            };
+            userData.Codename = result;
+            userData.Person = person;
 
             await _secureRepository.SetAsync("userdata", userData);
 
