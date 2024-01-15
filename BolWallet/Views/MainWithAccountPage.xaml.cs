@@ -3,17 +3,23 @@
 namespace BolWallet.Views;
 public partial class MainWithAccountPage : ContentPage
 {
+    private readonly MainWithAccountViewModel _mainWithAccountViewModel;
     public MainWithAccountPage(MainWithAccountViewModel mainWithAccountViewModel)
     {
+        _mainWithAccountViewModel = mainWithAccountViewModel;
         InitializeComponent();
-        BindingContext = mainWithAccountViewModel;
+        BindingContext = _mainWithAccountViewModel;
     }
 
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
-		await ((MainWithAccountViewModel)BindingContext).Initialize();
-	}
+        await Dispatcher.DispatchAsync(async () =>
+        {
+            await Task.Delay(10);
+            _mainWithAccountViewModel.IsRefreshing = true;
+        });
+    }
 
 	private void OnTapCopy(object sender, EventArgs e)
 	{
