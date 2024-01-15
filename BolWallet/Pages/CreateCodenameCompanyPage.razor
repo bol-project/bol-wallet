@@ -12,19 +12,14 @@
     <MudGrid>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Company Title" OnlyValidateIfDirty="true"
-                          @bind-Value="@CompanyCodenameForm.Title" OnBlur="@(x=> CompanyCodenameForm.Title= CompanyCodenameForm.Title?.Trim().ToUpper())"
-                          Margin="@Margin.Dense" Required="true" RequiredError="Company title is required!" />
+                          @bind-Value="@CompanyCodenameForm.Title.Value" OnBlur="@(x=> CompanyCodenameForm.Title.Value = CompanyCodenameForm.Title.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" Validation="@CompanyCodenameForm.Title.IsReady" RequiredError="@CompanyCodenameForm.Title.ErrorMessage" />
         </MudItem>
 
         <MudItem xs="6" sm="6" md="6">
-            <MudSelect T="Bol.Core.Model.OrgType" Label="Company Type" Variant="MudBlazor.Variant.Outlined"
-                       Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
-                       @bind-Value="@CompanyCodenameForm.OrgType" Required="true" RequiredError="OrgType is required">
-                @foreach (var ot in OrgTypes)
-                {
-                    <MudSelectItem T="Bol.Core.Model.OrgType" Value="@(Enum.Parse<Bol.Core.Model.OrgType>(ot.ToString()))" />
-                }
-            </MudSelect>
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="VAT" OnlyValidateIfDirty="true"
+                          @bind-Value="@CompanyCodenameForm.VatNumber" OnBlur="@(x=> CompanyCodenameForm.VatNumber= CompanyCodenameForm.VatNumber?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" RequiredError="Vat is required!" />
         </MudItem>
 
         <MudItem xs="6" sm="6" md="6">
@@ -37,22 +32,27 @@
         </MudItem>
 
         <MudItem xs="6" sm="6" md="6">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="VAT" OnlyValidateIfDirty="true"
-                          @bind-Value="@CompanyCodenameForm.VatNumber" OnBlur="@(x=> CompanyCodenameForm.VatNumber= CompanyCodenameForm.VatNumber?.Trim().ToUpper())"
-                          Margin="@Margin.Dense" Required="true" RequiredError="Vat is required!" />
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Extra Digit" OnlyValidateIfDirty="true"
+                          @bind-Value="@CompanyCodenameForm.ExtraDigit.Value" MaxLength="1" OnBlur="@(x=> CompanyCodenameForm.ExtraDigit.Value = CompanyCodenameForm.ExtraDigit.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" Validation="@CompanyCodenameForm.ExtraDigit.IsReady" RequiredError="@CompanyCodenameForm.ExtraDigit.ErrorMessage" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudSelect T="Bol.Core.Model.OrgType" Label="Company Type" Variant="MudBlazor.Variant.Outlined"
+                       Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
+                       @bind-Value="@CompanyCodenameForm.OrgType" Required="true" RequiredError="OrgType is required">
+                @foreach (Bol.Core.Model.OrgType ot in OrgTypes)
+                {
+                    <MudSelectItem T="Bol.Core.Model.OrgType" Value="@(Enum.Parse<Bol.Core.Model.OrgType>(ot.ToString()))">@CreateCodenameCompanyViewModel.EnumDisplayedName(ot)</MudSelectItem>
+                }
+            </MudSelect>
         </MudItem>
 
         <MudItem xs="12" sm="12" md="12">
             <MudDatePicker Label="Incorporation Date(yyyy-MM-dd)" Editable="true" Date="@IncorporationDate" Variant="MudBlazor.Variant.Outlined"
                            Margin="@Margin.Dense"
-                           MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
+                           MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today"
                            DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Incorporation Date(yyyy-MM-dd)" />
-        </MudItem>
-
-        <MudItem xs="6" sm="6" md="6">
-            <MudTextField T="int" Variant="MudBlazor.Variant.Outlined" Label="Extra Digit" OnlyValidateIfDirty="true"
-                          @bind-Value="@CompanyCodenameForm.ExtraDigit"
-                          Margin="@Margin.Dense" Required="true" RequiredError="Extra digit is required!" />
         </MudItem>
 
         <MudItem xs="12" sm="12" md="12">
@@ -112,7 +112,7 @@
 
         await createCodenameCompanyViewModel.Initialize();
 
-        IncorporationDate = CompanyCodenameForm.IncorporationDate == new DateTime() ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CompanyCodenameForm.IncorporationDate);
+        IncorporationDate = CompanyCodenameForm.IncorporationDate.Value == null ? DateTime.Today : Convert.ToDateTime(CompanyCodenameForm.IncorporationDate.Value);
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -124,7 +124,7 @@
 
     private void OnDateChanged(DateTime? dt)
     {
-        CompanyCodenameForm.IncorporationDate = dt == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CompanyCodenameForm.IncorporationDate);
+        CompanyCodenameForm.IncorporationDate.Value = dt?.ToString("yyyy-MM-dd");
         IncorporationDate = dt;
     }
 

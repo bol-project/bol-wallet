@@ -36,10 +36,10 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                     Region = CompanyCodenameForm.CompanyCountry.Region
                 },
                 OrgType = CompanyCodenameForm.OrgType,
-                Title = CompanyCodenameForm.Title,
+                Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber,
-                IncorporationDate = CompanyCodenameForm.IncorporationDate,
-                ExtraDigit = CompanyCodenameForm.ExtraDigit
+                IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
+                ExtraDigit = CompanyCodenameForm.ExtraDigit.Value.Length //CompanyCodenameForm.ExtraDigit.Value || Change Here When ExtraDigit is string
             };
 
             var result = _codeNameService.Generate(company);
@@ -68,6 +68,17 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         }
     }
 
+    public static string EnumDisplayedName(Bol.Core.Model.OrgType orgType)
+    {
+        return orgType switch
+        {
+            OrgType.C => "Corporaration (Company)",
+            OrgType.G => "Government Institution",
+            OrgType.S => "Social Institution",
+            _ => orgType.ToString(),
+        };
+    }
+
     public async Task Initialize()
     {
         var userData = await _secureRepository.GetAsync<UserData>("userdata");
@@ -82,10 +93,10 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
 
         CompanyCodenameForm.CompanyCountry = country;
         CompanyCodenameForm.OrgType = userData.Company.OrgType;
-        CompanyCodenameForm.Title = userData.Company.Title;
+        CompanyCodenameForm.Title.Value = userData.Company.Title;
         CompanyCodenameForm.VatNumber = userData.Company.VatNumber;
-        CompanyCodenameForm.IncorporationDate = userData.Company.IncorporationDate;
-        CompanyCodenameForm.ExtraDigit = userData.Company.ExtraDigit;
+        CompanyCodenameForm.IncorporationDate.Value = userData.Company.IncorporationDate.ToString("yyyy-MM-dd");
+        CompanyCodenameForm.ExtraDigit.Value = "A"; // userData.Company.ExtraDigit; || Change Here When ExtraDigit is string
 
         Codename = userData.Codename;
     }
