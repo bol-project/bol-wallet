@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Bol.Core.Model;
 
 namespace BolWallet.Models;
 public class EncryptedCitizenshipForm
@@ -19,12 +20,4 @@ public class EncryptedCitizenshipForm
     [Required]
     public DateTime BirthDate { get; set; }
     public CitizenshipHashTable CitizenshipHashes { get; set; }
-}
-
-public class CitizenshipHashTable
-{
-    public string IdentityCard { get; set; }
-    public string Passport { get; set; }
-    public string ProofOfNin { get; set; }
-    public string BirthCertificate { get; set; }
 }
