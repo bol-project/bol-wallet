@@ -12,17 +12,19 @@ public class EdiFiles
 
     public EdiFileItem Passport { get; set; }
 
-    public EdiFileItem DrivingLicense { get; set; }
-
-    public EdiFileItem Photo { get; set; }
-
-    public EdiFileItem Voice { get; set; }
-
-    public EdiFileItem NinCertificate { get; set; }
+    public EdiFileItem ProofOfNin { get; set; }
 
     public EdiFileItem BirthCertificate { get; set; }
 
-    public EdiFileItem TelephoneBill { get; set; }
+    public EdiFileItem DrivingLicense { get; set; }
 
-    public EdiFileItem Other { get; set; }
+    public EdiFileItem OtherIdentity { get; set; }
+
+    public EdiFileItem FacePhoto { get; set; }
+
+    public EdiFileItem PersonalVoice { get; set; }
+
+    public EdiFileItem ProofOfCommunication { get; set; }
+
+    public EdiFileItem ProofOfResidence { get; set; }
 }

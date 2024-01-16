@@ -34,7 +34,8 @@ public partial class CreateEdiViewModel : BaseViewModel
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
         _mediaPicker = mediaPicker;
-        EdiForm = new EdiForm();
+        encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new GenericHashTable() };
+        GenericHashTableForm = new GenericHashTableForm();
         recorder = new AudioRecorderService
         {
             AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
@@ -43,7 +44,7 @@ public partial class CreateEdiViewModel : BaseViewModel
         ediFiles = new EdiFiles() { };
     }
 
-    [ObservableProperty] private EdiForm _ediForm;
+    [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
     [ObservableProperty] private bool _isLoading = false;
 
@@ -99,7 +100,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         string audiofilePath = await audioRecordTask;
 
-        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(EdiForm.Voice));
+        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
 
         await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
     }
@@ -109,17 +110,18 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         try
         {
-            if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) &&
-                 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
-            {
-                return;
-            }
-
             IsLoading = true;
 
             UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-            userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
+            encryptedDigitalMatrix.CodeName = userData.Codename;
+
+            encryptedDigitalMatrix.Hashes.IdentityCard = userData.CitizenshipMatrices[0].CitizenshipHashes.IdentityCard;
+            encryptedDigitalMatrix.Hashes.Passport = userData.CitizenshipMatrices[0].CitizenshipHashes.Passport;
+            encryptedDigitalMatrix.Hashes.ProofOfNin = userData.CitizenshipMatrices[0].CitizenshipHashes.ProofOfNin;
+            encryptedDigitalMatrix.Hashes.BirthCertificate = userData.CitizenshipMatrices[0].CitizenshipHashes.BirthCertificate;
+
+            var result = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(encryptedDigitalMatrix));
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -150,7 +152,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             .GetProperty(propertyNameInfo.Name)
             .SetValue(ediFiles, ediFileItem);
 
-        OnPropertyChanged(nameof(EdiForm));
+        OnPropertyChanged(nameof(GenericHashTableForm));
 
         await _secureRepository.SetAsync<EdiFiles>("ediFiles", ediFiles);
     }
@@ -159,7 +161,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         var encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
-        propertyNameInfo.SetValue(EdiForm, fileResult.FileName);
+        propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
 
         encryptedDigitalMatrix.Hashes
             .GetType()
@@ -186,7 +188,7 @@ public partial class CreateEdiViewModel : BaseViewModel
                 continue;
             }
 
-            propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
+            propertyNameInfo.SetValue(GenericHashTableForm, ediFileItem.FileName);
 
             encryptedDigitalMatrix.Hashes
                 .GetType()
@@ -199,11 +201,11 @@ public partial class CreateEdiViewModel : BaseViewModel
                 .SetValue(ediFiles, ediFileItem);
         }
 
-        OnPropertyChanged(nameof(EdiForm));
+        OnPropertyChanged(nameof(GenericHashTableForm));
     }
 
     private PropertyInfo GetPropertyInfo(string propertyName)
     {
-        return this.EdiForm.GetType().GetProperty(propertyName);
+        return this.GenericHashTableForm.GetType().GetProperty(propertyName);
     }
 }
