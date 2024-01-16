@@ -1,4 +1,5 @@
 ﻿@page "/encrypted-citizenship"
+@using Bol.Core.Model
 
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
@@ -46,6 +47,7 @@
                                 <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => encryptedCitizenshipForm.Nin)" Label="NIN" @bind-Value="@encryptedCitizenshipForm.Nin"
                                               Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].InternationalName"
                                               Immediate="true" Required="true"
+                                              RequiredError="NIN is required!"
                                               Error="@(!string.IsNullOrEmpty(NinErrorMessages[encryptedCitizenshipForm.CountryCode]))"
                                               ErrorText="@NinErrorMessages[encryptedCitizenshipForm.CountryCode]"
                                               OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
@@ -75,6 +77,8 @@
     </MudGrid>
 
     @code {
+    UserData userData;
+
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
       {
           {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card", "") },
@@ -91,7 +95,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserData userData = await secureRepository.GetAsync<UserData>("userdata");
+        userData = await secureRepository.GetAsync<UserData>("userdata");
+
+        userData.CitizenshipMatrices ??= new List<EncryptedCitizenship>();
 
         foreach (var citizenship in userData.Citizenships)
         {
@@ -188,6 +194,34 @@
 
     private async Task OnValidSubmit(EditContext context)
     {
+        EncryptedCitizenshipForm encryptedCitizenshipForm = context.Model as EncryptedCitizenshipForm;
 
+
+        if ((!string.IsNullOrEmpty(encryptedCitizenshipForm.CitizenshipHashes.IdentityCard) ||
+             !string.IsNullOrEmpty(encryptedCitizenshipForm.CitizenshipHashes.Passport) ||
+             !string.IsNullOrEmpty(encryptedCitizenshipForm.CitizenshipHashes.ProofOfNin) ||
+             !string.IsNullOrEmpty(encryptedCitizenshipForm.CitizenshipHashes.BirthCertificate)))
+        {
+            userData.CitizenshipMatrices.Add(new EncryptedCitizenship()
+            {
+                CountryCode = encryptedCitizenshipForm.CountryCode,
+                BirthCountryCode = encryptedCitizenshipForm.BirthCountryCode,
+                Nin = encryptedCitizenshipForm.Nin,
+                SurName = encryptedCitizenshipForm.SurName,
+                FirstName = encryptedCitizenshipForm.FirstName,
+                SecondName = encryptedCitizenshipForm.SecondName,
+                ThirdName = encryptedCitizenshipForm.ThirdName,
+                BirthDate = encryptedCitizenshipForm.BirthDate,
+                CitizenshipHashes = encryptedCitizenshipForm.CitizenshipHashes
+            });
+
+            await secureRepository.SetAsync("userdata", userData);
+
+            await navigationService.NavigateTo<CreateEdiViewModel>(true);
+        }
+        else
+        {
+            await Toast.Make($"Please provide at least one verification document for {encryptedCitizenshipForm.CountryName} Citizenship").Show();
+        }
     }
 }
