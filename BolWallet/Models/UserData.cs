@@ -11,4 +11,5 @@ public class UserData
     public List<EncryptedCitizenship> CitizenshipMatrices { get; set; }
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
     public string WalletPassword { get; set; }
+    public bool IsCertifier { get; set; }
 }
