@@ -2,7 +2,6 @@
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
 
 namespace BolWallet.ViewModels;
 
@@ -33,7 +32,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     [RelayCommand]
     public async Task Submit()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new EcryptedCitizenshipPage());
+        await NavigationService.NavigateTo<CreateEdiViewModel>(true);
     }
 
     [RelayCommand]
@@ -46,7 +45,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
                 return;
             }
 
-            UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
+            userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
             var person = new NaturalPerson
             {
@@ -60,6 +59,8 @@ public partial class CreateCodenameViewModel : BaseViewModel
                 Birthdate = DateTime.Parse(CodenameForm.Birthdate.Value),
                 CountryCode = CodenameForm.SelectedCountry.Alpha3
             };
+
+            userData.BirthCountryCode = CodenameForm.CountryOfBirth.Alpha3;
 
             var result = _codeNameService.Generate(person);
 
@@ -85,7 +86,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
     public async Task Initialize()
     {
-        var userData = await _secureRepository.GetAsync<UserData>("userdata");
+        userData = await _secureRepository.GetAsync<UserData>("userdata");
         if (userData?.Person is null) return;
 
         CodenameForm.FirstName.Value = userData.Person.FirstName;
@@ -99,6 +100,9 @@ public partial class CreateCodenameViewModel : BaseViewModel
                     .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
         CodenameForm.NIN.Value = userData.Person.Nin;
         CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
+        CodenameForm.CountryOfBirth = CodenameForm
+                    .Countries
+                    .FirstOrDefault(c => c.Alpha3 == userData.BirthCountryCode);
 
         Codename = userData.Codename;
     }

@@ -6,7 +6,7 @@ public class BaseViewModel : ViewModelBase
 {
     protected readonly INavigationService NavigationService;
 
-	protected UserData userData;
+	public UserData userData;
 
 	protected BaseViewModel(INavigationService navigationService)
     {

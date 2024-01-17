@@ -7,6 +7,7 @@ public class UserData
     public string Codename { get; set; }
     public List<Country> Citizenships { get; set; }
     public string Edi { get; set; }
+    public string BirthCountryCode { get; set; }
     public GenericHashTable GenericHashTable { get; set; }
     public List<EncryptedCitizenship> CitizenshipMatrices { get; set; }
     public Bol.Core.Model.BolWallet BolWallet { get; set; }

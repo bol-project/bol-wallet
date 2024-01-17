@@ -41,18 +41,22 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
-
-            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
-                             SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+            <MudAutocomplete T="Country" Label="Registration Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@SearchRegistrationCountries" Immediate=true HelperText="Country Selection for Bol Community Registration." ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
                              Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
             </MudAutocomplete>
-
         </MudItem>
-        <MudItem xs="12" sm="12" md="12">
+        <MudItem xs="6" sm="6" md="6">
             <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
                            Margin="@Margin.Dense"
                            MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
                            DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
+            <MudAutocomplete T="Country" Label="Birth Country" @bind-Value="@CodenameForm.CountryOfBirth" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@Search" HelperText="Choose the country where you were born." ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+            </MudAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
             <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
@@ -152,6 +156,15 @@
             return CodenameForm.Countries;
 
         return await Task.Run(() => CodenameForm.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
+
+    }
+
+    private async Task<IEnumerable<Country>> SearchRegistrationCountries(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return createCodenameViewModel.userData.Citizenships;
+
+        return await Task.Run(() => createCodenameViewModel.userData.Citizenships.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
 
     }
 

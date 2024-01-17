@@ -108,6 +108,17 @@ public partial class CodenameForm
         }
     }
 
+    private Country _countryOfBirth;
+    public Country CountryOfBirth
+    {
+        get => _countryOfBirth;
+        set
+        {
+            SetProperty(ref _countryOfBirth, value);
+            Invalidate();
+        }
+    }
+
     public bool IsFormFilled =>
         FirstName.IsReady &&
         Surname.IsReady &&
