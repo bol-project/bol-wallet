@@ -29,6 +29,12 @@ public partial class AccountViewModel : BaseViewModel
     [ObservableProperty]
     private BolAccount _bolAccount;
 
+    [ObservableProperty]
+    private List<KeyValuePair<string,string>> _certifiers;
+
+    [ObservableProperty]
+    private List<string> _certificationRequests;
+    
     public async Task Initialize(CancellationToken cancellationToken = default)
     {
         try
@@ -37,7 +43,8 @@ public partial class AccountViewModel : BaseViewModel
 
             BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
 
-
+            Certifiers = BolAccount.Certifiers.ToList();
+            CertificationRequests = BolAccount.CertificationRequests.Keys.ToList();
         }
         catch (Exception ex)
         {
