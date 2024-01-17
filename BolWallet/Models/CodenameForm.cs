@@ -127,6 +127,7 @@ public partial class CodenameForm
         Birthdate.IsReady &&
         Combination.IsReady &&
         NIN.IsReady &&
+        CountryOfBirth is not null &&
         SelectedCountry is not null;
 
     private bool _isInvalidated = true;
