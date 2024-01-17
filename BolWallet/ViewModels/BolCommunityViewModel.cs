@@ -59,7 +59,14 @@ public partial class BolCommunityViewModel : BaseViewModel
     [RelayCommand]
     private async Task UnRegisterAsCertifier(CancellationToken token)
     {
-        await _bolService.UnRegisterAsCertifier(token);
-        await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+        try
+        {
+            await _bolService.UnRegisterAsCertifier(token);
+            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
     }
 }
