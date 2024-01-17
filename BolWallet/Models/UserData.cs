@@ -9,7 +9,7 @@ public class UserData
     public string Edi { get; set; }
     public string BirthCountryCode { get; set; }
     public GenericHashTable GenericHashTable { get; set; }
-    public List<EncryptedCitizenship> CitizenshipMatrices { get; set; }
+    public List<EncryptedCitizenshipForm> EncryptedCitizenshipForms { get; set; } = new List<EncryptedCitizenshipForm>();
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
     public string WalletPassword { get; set; }
 }

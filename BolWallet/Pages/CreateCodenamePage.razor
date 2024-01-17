@@ -110,7 +110,7 @@
         if (country is null)
             return;
 
-        var encryptedCitizenship = createCodenameViewModel.userData.CitizenshipMatrices.FirstOrDefault(c => c.CountryCode == country.Alpha3);
+        var encryptedCitizenship = createCodenameViewModel.userData.EncryptedCitizenshipForms.FirstOrDefault(c => c.CountryCode == country.Alpha3);
 
         if (encryptedCitizenship is null)
             return;

@@ -25,4 +25,6 @@ public class EncryptedCitizenshipForm
     public string ThirdName { get; set; }
 
     public CitizenshipHashTable CitizenshipHashes { get; set; }
+
+    public bool IsSubmitted { get; set; }
 }
