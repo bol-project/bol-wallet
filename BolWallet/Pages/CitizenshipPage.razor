@@ -38,7 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        userData = await secureRepository.GetAsync<UserData>("userdata");
+        userData = await secureRepository.GetAsync<UserData>("userdata") ?? new UserData();
         if (userData?.Citizenships is null) return;
 
         SelectedCitizeships = userData.Citizenships.Select(c => c.Name).ToList();
@@ -76,7 +76,7 @@
 
             await secureRepository.SetAsync("userdata", userData);
 
-            await navigationService.NavigateTo<CreateCodenameViewModel>(true);
+            await App.Current.MainPage.Navigation.PushAsync(new Views.EcryptedCitizenshipPage());
         }
         catch (Exception ex)
         {
