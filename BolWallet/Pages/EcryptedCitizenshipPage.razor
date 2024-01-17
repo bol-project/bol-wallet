@@ -105,8 +105,6 @@
                 {
                     CountryName = citizenship.Name,
                     CountryCode = citizenship.Alpha3,
-                    BirthCountryCode = userData.Person.CountryCode,
-                    BirthDate = userData.Person.Birthdate,
                     CitizenshipHashes = new CitizenshipHashTable()
                 });
 
@@ -124,10 +122,13 @@
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = customFileType,
-                PickerTitle = "Pick a file"
-            });
+        {
+            FileTypes = customFileType,
+            PickerTitle = "Pick a file"
+        });
+
+        if (pickResult is null)
+            return;
 
         encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
 
@@ -143,6 +144,9 @@
         }
 
         FileResult takePictureResult = await mediaPicker.CapturePhotoAsync();
+
+        if (takePictureResult is null)
+            return;
 
         encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
 
@@ -205,19 +209,17 @@
             userData.CitizenshipMatrices.Add(new EncryptedCitizenship()
             {
                 CountryCode = encryptedCitizenshipForm.CountryCode,
-                BirthCountryCode = encryptedCitizenshipForm.BirthCountryCode,
                 Nin = encryptedCitizenshipForm.Nin,
                 SurName = encryptedCitizenshipForm.SurName,
                 FirstName = encryptedCitizenshipForm.FirstName,
                 SecondName = encryptedCitizenshipForm.SecondName,
                 ThirdName = encryptedCitizenshipForm.ThirdName,
-                BirthDate = encryptedCitizenshipForm.BirthDate,
                 CitizenshipHashes = encryptedCitizenshipForm.CitizenshipHashes
             });
 
             await secureRepository.SetAsync("userdata", userData);
 
-            await navigationService.NavigateTo<CreateEdiViewModel>(true);
+            await navigationService.NavigateTo<CreateCodenameViewModel>(true);
         }
         else
         {
