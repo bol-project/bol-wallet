@@ -33,6 +33,7 @@
                 Grid.Row="1"
                 FontSize="12"
                 HorizontalOptions="FillAndExpand"
+                IsEnabled="{Binding IsCertifier}"
                 Text="Whitelist and Certify" />
 
 			<Button
