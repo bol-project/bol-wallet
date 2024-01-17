@@ -10,71 +10,69 @@
 
 <MudThemeProvider />
 
-<MudGrid>
-    <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-        <Virtualize Items="EncryptedCitizenshipForms" Context="encryptedCitizenshipForm">
-            <MudExpansionPanels MultiExpansion="true">
-                <EditForm Model="@encryptedCitizenshipForm" OnValidSubmit="OnValidSubmit">
-                    <DataAnnotationsValidator />
-                    <MudExpansionPanel Text="@encryptedCitizenshipForm.CountryName">
-                        <MudCard>
-                            <MudCardContent>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" @bind-Value="@encryptedCitizenshipForm.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
-                                                  Margin="@Margin.Dense" Required="true" />
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
-                                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
-                                                  Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
-                                                  @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
-                                                  Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName"
-                                                  OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName"
-                                                  OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="12">
-                                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => encryptedCitizenshipForm.Nin)" Label="NIN" @bind-Value="@encryptedCitizenshipForm.Nin"
-                                                  Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].InternationalName"
-                                                  Immediate="true" Required="true"
-                                                  RequiredError="NIN is required!"
-                                                  Error="@(!string.IsNullOrEmpty(NinErrorMessages[encryptedCitizenshipForm.CountryCode]))"
-                                                  ErrorText="@NinErrorMessages[encryptedCitizenshipForm.CountryCode]"
-                                                  OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
-                                </MudItem>
-                                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
-                                <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
-                                    <MudItem xs="12" sm="12" md="12">
-                                        <MudStack Row="true">
-                                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
-                                                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                                                <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                                            </MudStack>
-                                        </MudItem>
-                                    </Virtualize>
-                                </MudCardContent>
-                                <MudCardActions>
-                                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
-                                </MudCardActions>
-                            </MudCard>
-                        </MudExpansionPanel>
-                    </EditForm>
-                </MudExpansionPanels>
-            </Virtualize>
-        </MudItem>
-    </MudGrid>
+
+<EditForm Model="@encryptedCitizenshipForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudText Style="text-align: center;" Typo="Typo.h6">@encryptedCitizenshipForm.CountryName</MudText>
+            <MudCardContent>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" @bind-Value="@encryptedCitizenshipForm.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
+                                  Margin="@Margin.Dense" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
+                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
+                                  Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
+                                  @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
+                                  Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
+                </MudItem>
+                @if (!string.IsNullOrEmpty(encryptedCitizenshipForm.CountryCode))
+                {
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => encryptedCitizenshipForm.Nin)" Label="NIN" @bind-Value="@encryptedCitizenshipForm.Nin"
+                                      Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].InternationalName"
+                                      Immediate="true" Required="true"
+                                      RequiredError="NIN is required!"
+                                      Error="@(!string.IsNullOrEmpty(NinErrorMessages[encryptedCitizenshipForm.CountryCode]))"
+                                      ErrorText="@NinErrorMessages[encryptedCitizenshipForm.CountryCode]"
+                                      OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
+                    </MudItem>
+                }
+                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
+                <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudStack Row="true">
+                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
+                            <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                        </MudStack>
+                    </MudItem>
+                </Virtualize>
+            </MudCardContent>
+            <MudCardActions >
+                <MudItem Style="text-align: center;" xs="12">
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+                </MudItem>
+            </MudCardActions>
+        </MudCard>
+    </EditForm>
+   
 
     @code {
     UserData userData;
@@ -89,7 +87,7 @@
 
     Dictionary<string, string> NinErrorMessages = new Dictionary<string, string>();
 
-    List<EncryptedCitizenshipForm> EncryptedCitizenshipForms = new List<EncryptedCitizenshipForm>();
+    EncryptedCitizenshipForm encryptedCitizenshipForm = new EncryptedCitizenshipForm();
 
     int lastYear = DateTime.Now.Year - 1;
 
@@ -97,19 +95,29 @@
     {
         userData = await secureRepository.GetAsync<UserData>("userdata");
 
-        userData.CitizenshipMatrices ??= new List<EncryptedCitizenship>();
-
-        foreach (var citizenship in userData.Citizenships)
+        CitizeshipsDocuments = new()
         {
-            EncryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
-                {
-                    CountryName = citizenship.Name,
-                    CountryCode = citizenship.Alpha3,
-                    CitizenshipHashes = new CitizenshipHashTable()
-                });
+            {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card", "") },
+            {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+            {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+            {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+        };
 
-            NinErrorMessages.Add(citizenship.Alpha3, string.Empty);
+        foreach (var encryptedCitizenshipForm in userData.EncryptedCitizenshipForms)
+        {
+            if (!encryptedCitizenshipForm.IsSubmitted)
+            {
+                this.encryptedCitizenshipForm = encryptedCitizenshipForm;
+
+                encryptedCitizenshipForm.IsSubmitted = false;
+
+                NinErrorMessages.Add(encryptedCitizenshipForm.CountryCode, string.Empty);
+
+                return;
+            }
         }
+
+       await navigationService.NavigateTo<CreateCodenameViewModel>(true);
     }
 
     private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -198,32 +206,27 @@
 
     private async Task OnValidSubmit(EditContext context)
     {
-        EncryptedCitizenshipForm encryptedCitizenshipForm = context.Model as EncryptedCitizenshipForm;
+        EncryptedCitizenshipForm form = context.Model as EncryptedCitizenshipForm;
 
-
-        if ((encryptedCitizenshipForm.CitizenshipHashes.IdentityCard != Bol.Core.Constants.HASH_ZEROS ||
-             encryptedCitizenshipForm.CitizenshipHashes.Passport != Bol.Core.Constants.HASH_ZEROS ||
-             encryptedCitizenshipForm.CitizenshipHashes.ProofOfNin != Bol.Core.Constants.HASH_ZEROS ||
-             encryptedCitizenshipForm.CitizenshipHashes.BirthCertificate != Bol.Core.Constants.HASH_ZEROS))
+        if (!(form.CitizenshipHashes.IdentityCard == Bol.Core.Constants.HASH_ZEROS &&
+              form.CitizenshipHashes.Passport == Bol.Core.Constants.HASH_ZEROS &&
+              form.CitizenshipHashes.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
+              form.CitizenshipHashes.BirthCertificate == Bol.Core.Constants.HASH_ZEROS))
         {
-            userData.CitizenshipMatrices.Add(new EncryptedCitizenship()
+            var associatedForm = userData.EncryptedCitizenshipForms.FirstOrDefault(f => f.CountryCode == form.CountryCode);
+                                         
+            if (associatedForm != null)
             {
-                CountryCode = encryptedCitizenshipForm.CountryCode,
-                Nin = encryptedCitizenshipForm.Nin,
-                SurName = encryptedCitizenshipForm.SurName,
-                FirstName = encryptedCitizenshipForm.FirstName,
-                SecondName = encryptedCitizenshipForm.SecondName,
-                ThirdName = encryptedCitizenshipForm.ThirdName,
-                CitizenshipHashes = encryptedCitizenshipForm.CitizenshipHashes
-            });
+                associatedForm.IsSubmitted = true;
+            }
 
             await secureRepository.SetAsync("userdata", userData);
 
-            await navigationService.NavigateTo<CreateCodenameViewModel>(true);
+            await OnInitializedAsync();
         }
         else
         {
-            await Toast.Make($"Please provide at least one verification document for {encryptedCitizenshipForm.CountryName} Citizenship").Show();
+            await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
         }
     }
 }
