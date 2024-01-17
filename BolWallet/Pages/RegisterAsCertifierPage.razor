@@ -3,6 +3,7 @@
 @inject NavigationManager nav;
 @inject RegisterContent _content;
 @inject IBolService bolService;
+@inject INavigationService NavigationService
 
 <MudThemeProvider />
 
@@ -69,6 +70,7 @@
             }
 
             var account = await bolService.RegisterAsCertifier(supportedCountries, new BigInteger(registerAsCertifierForm.Fee));
+            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
         }
         catch (Exception ex)
         {
