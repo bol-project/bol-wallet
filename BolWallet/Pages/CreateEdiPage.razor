@@ -9,8 +9,6 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
-<MudText Typo="Typo.h6">To proceed with the verification process, please provide at least Identification Card or Passport</MudText>
-
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
