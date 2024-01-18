@@ -74,11 +74,18 @@
 
                 citizenships.Add(citizenshipCountry);
 
+                var savedEncryptedCitizenshipForm = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryName == citizenshipName);
+
                 encryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
                 {
                     CountryName = citizenshipCountry.Name,
                     CountryCode = citizenshipCountry.Alpha3,
-                    CitizenshipHashes = new Bol.Core.Model.CitizenshipHashTable()
+                    CitizenshipHashes = savedEncryptedCitizenshipForm?.CitizenshipHashes ??  new Bol.Core.Model.CitizenshipHashTable(),
+                    FirstName = savedEncryptedCitizenshipForm?.FirstName,
+                    SecondName = savedEncryptedCitizenshipForm?.SecondName,
+                    ThirdName = savedEncryptedCitizenshipForm?.ThirdName,
+                    SurName = savedEncryptedCitizenshipForm?.SurName,
+                    Nin = savedEncryptedCitizenshipForm?.Nin ?? string.Empty
                 });
             }
 

@@ -113,6 +113,12 @@
 
                 NinErrorMessages.Add(encryptedCitizenshipForm.CountryCode, string.Empty);
 
+                foreach (var propertyInfo in encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperties())
+                {
+                    if ((string)propertyInfo.GetValue(encryptedCitizenshipForm.CitizenshipHashes) != Bol.Core.Constants.HASH_ZEROS)
+                        await UpdateIdentificationDocumentsList(propertyInfo.Name, "Uploaded");
+                }
+
                 return;
             }
         }
@@ -194,7 +200,7 @@
         string pattern = @"^[A-F0-9]+$";
         Regex regex = new Regex(pattern);
 
-        if (!(regex.IsMatch(encryptedCitizenshipForm.Nin) && _content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits == encryptedCitizenshipForm.Nin?.Length))
+        if (!(regex.IsMatch(encryptedCitizenshipForm?.Nin) && _content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits == encryptedCitizenshipForm.Nin?.Length))
         {
             errorMessage = $"National Identification Number (NIN) does not match length for country {encryptedCitizenshipForm.CountryCode}. Only capital letters (A-F) and numbers accepted";
         }
@@ -208,13 +214,10 @@
     {
         EncryptedCitizenshipForm form = context.Model as EncryptedCitizenshipForm;
 
-        if (!(form.CitizenshipHashes.IdentityCard == Bol.Core.Constants.HASH_ZEROS &&
-              form.CitizenshipHashes.Passport == Bol.Core.Constants.HASH_ZEROS &&
-              form.CitizenshipHashes.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
-              form.CitizenshipHashes.BirthCertificate == Bol.Core.Constants.HASH_ZEROS))
+        if (HasNonZeroHashes(form.CitizenshipHashes))
         {
             var associatedForm = userData.EncryptedCitizenshipForms.FirstOrDefault(f => f.CountryCode == form.CountryCode);
-                                         
+
             if (associatedForm != null)
             {
                 associatedForm.IsSubmitted = true;
@@ -228,5 +231,13 @@
         {
             await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
         }
+    }
+
+    private bool HasNonZeroHashes(CitizenshipHashTable citizenshipHashTable)
+    {
+        return !(citizenshipHashTable.IdentityCard == Bol.Core.Constants.HASH_ZEROS &&
+                 citizenshipHashTable.Passport == Bol.Core.Constants.HASH_ZEROS &&
+                 citizenshipHashTable.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
+                 citizenshipHashTable.BirthCertificate == Bol.Core.Constants.HASH_ZEROS);
     }
 }
