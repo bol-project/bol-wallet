@@ -37,6 +37,12 @@
                           OnBlur="@(x=> CodenameForm.ThirdName.Value= CodenameForm.ThirdName.Value?.Trim().ToUpper())" />
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
+            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
+                          Margin="@Margin.Dense" OnlyValidateIfDirty="true"
+                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
+                          Disabled="true" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
             <MudSelect T="Bol.Core.Model.Gender" Label="Gender" Variant="MudBlazor.Variant.Outlined"
                        Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
                        @bind-Value="@CodenameForm.Gender" Required="true" RequiredError="Gender is required">
@@ -59,12 +65,6 @@
             </MudAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
-            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
-                          Margin="@Margin.Dense" OnlyValidateIfDirty="true"
-                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
-                          Disabled="true" />
-        </MudItem>
-        <MudItem xs="12" sm="12" md="12">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@CodenameForm.Combination.Value"
                           Margin="@Margin.Dense"
                           Required="true" RequiredError="@CodenameForm.Combination.ErrorMessage" />
@@ -74,7 +74,6 @@
                           Margin="@Margin.Dense" ReadOnly="true"
                           Required="true" RequiredError="Codename is required" />
         </MudItem>
-
         <MudItem xs="12">
             <div class="text-center">
                 <!-- Use a div with text-center class to center the buttons -->

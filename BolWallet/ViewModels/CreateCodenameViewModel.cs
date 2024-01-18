@@ -89,22 +89,12 @@ public partial class CreateCodenameViewModel : BaseViewModel
         userData = await _secureRepository.GetAsync<UserData>("userdata");
         if (userData?.Person is null) return;
 
-        CodenameForm.FirstName.Value = userData.Person.FirstName;
-        CodenameForm.MiddleName.Value = userData.Person.MiddleName;
-        CodenameForm.Surname.Value = userData.Person.Surname;
-        CodenameForm.ThirdName.Value = userData.Person.ThirdName;
         CodenameForm.Gender = userData.Person.Gender;
         CodenameForm.Combination.Value = userData.Person.Combination;
-        CodenameForm.SelectedCountry = CodenameForm
-                    .Countries
-                    .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-        CodenameForm.NIN.Value = userData.Person.Nin;
         CodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
         CodenameForm.CountryOfBirth = CodenameForm
                     .Countries
                     .FirstOrDefault(c => c.Alpha3 == userData.BirthCountryCode);
-
-        Codename = userData.Codename;
     }
 
 
