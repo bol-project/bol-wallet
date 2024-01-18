@@ -48,7 +48,7 @@ public partial class AccountViewModel : BaseViewModel
     [RelayCommand]
     private async Task DownloadEdiFilesAsync(CancellationToken cancellationToken = default)
     {
-        var ediFiles = await this._secureRepository.GetAsync<EdiFiles>("ediFiles");
+        var ediFiles = await this._secureRepository.GetAsync<GenericHashTableFiles>("ediFiles");
 
         if (ediFiles is null)
             return;
@@ -66,7 +66,7 @@ public partial class AccountViewModel : BaseViewModel
         }
     }
 
-    private async Task<byte[]> CreateZipFile(EdiFiles ediFiles, CancellationToken cancellationToken = default)
+    private async Task<byte[]> CreateZipFile(GenericHashTableFiles ediFiles, CancellationToken cancellationToken = default)
     {
 
 
@@ -76,7 +76,7 @@ public partial class AccountViewModel : BaseViewModel
             {
                 foreach (PropertyInfo property in ediFiles.GetType().GetProperties())
                 {
-                    var ediFileItem = property.GetValue(ediFiles) as EdiFileItem;
+                    var ediFileItem = property.GetValue(ediFiles) as GenericHashTableFileItem;
                     if (ediFileItem?.Content != null)
                     {
                         var zipEntry = archive.CreateEntry(ediFileItem.FileName, CompressionLevel.Optimal);
