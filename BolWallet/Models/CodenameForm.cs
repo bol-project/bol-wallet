@@ -108,6 +108,17 @@ public partial class CodenameForm
         }
     }
 
+    private Country _countryOfBirth;
+    public Country CountryOfBirth
+    {
+        get => _countryOfBirth;
+        set
+        {
+            SetProperty(ref _countryOfBirth, value);
+            Invalidate();
+        }
+    }
+
     public bool IsFormFilled =>
         FirstName.IsReady &&
         Surname.IsReady &&
@@ -116,6 +127,7 @@ public partial class CodenameForm
         Birthdate.IsReady &&
         Combination.IsReady &&
         NIN.IsReady &&
+        CountryOfBirth is not null &&
         SelectedCountry is not null;
 
     private bool _isInvalidated = true;

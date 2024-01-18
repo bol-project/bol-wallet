@@ -38,7 +38,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        userData = await secureRepository.GetAsync<UserData>("userdata");
+        userData = await secureRepository.GetAsync<UserData>("userdata") ?? new UserData();
         if (userData?.Citizenships is null) return;
 
         SelectedCitizeships = userData.Citizenships.Select(c => c.Name).ToList();
@@ -66,17 +66,35 @@
             var citizenshipsForm = context.Model as CitizenshipsForm;
 
             List<Country> citizenships = new List<Country>();
+            List<EncryptedCitizenshipForm> encryptedCitizenshipForms = new List<EncryptedCitizenshipForm>();
 
             foreach (var citizenshipName in citizenshipsForm.Citizenships.Split(",").Select(c => c.Trim()))
             {
-                citizenships.Add(_content.Countries.FirstOrDefault(c => c.Name == citizenshipName));
+                BolWallet.Models.Country citizenshipCountry = _content.Countries.FirstOrDefault(c => c.Name == citizenshipName);
+
+                citizenships.Add(citizenshipCountry);
+
+                var savedEncryptedCitizenshipForm = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryName == citizenshipName);
+
+                encryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
+                {
+                    CountryName = citizenshipCountry.Name,
+                    CountryCode = citizenshipCountry.Alpha3,
+                    CitizenshipHashes = savedEncryptedCitizenshipForm?.CitizenshipHashes ??  new Bol.Core.Model.CitizenshipHashTable(),
+                    FirstName = savedEncryptedCitizenshipForm?.FirstName,
+                    SecondName = savedEncryptedCitizenshipForm?.SecondName,
+                    ThirdName = savedEncryptedCitizenshipForm?.ThirdName,
+                    SurName = savedEncryptedCitizenshipForm?.SurName,
+                    Nin = savedEncryptedCitizenshipForm?.Nin ?? string.Empty
+                });
             }
 
             userData.Citizenships = citizenships;
+            userData.EncryptedCitizenshipForms = encryptedCitizenshipForms;
 
             await secureRepository.SetAsync("userdata", userData);
 
-            await navigationService.NavigateTo<CreateCodenameViewModel>(true);
+            await App.Current.MainPage.Navigation.PushAsync(new Views.EcryptedCitizenshipPage());
         }
         catch (Exception ex)
         {
