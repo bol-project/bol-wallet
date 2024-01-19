@@ -131,7 +131,7 @@
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>> {
         { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
         { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-        { DevicePlatform.macOS, new[] { "pdf", "public.image", "public.audio" } },
+        { DevicePlatform.MacCatalyst, new[] { "pdf", "png", "jpeg", "jpg", "public.image", "public.audio" } },
         { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
         });
 
