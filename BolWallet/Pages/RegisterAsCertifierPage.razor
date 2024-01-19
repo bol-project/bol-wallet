@@ -3,6 +3,7 @@
 @inject NavigationManager nav;
 @inject RegisterContent _content;
 @inject IBolService bolService;
+@inject INavigationService NavigationService
 
 <MudThemeProvider />
 
@@ -53,7 +54,23 @@
     {
         try
         {
-            var account = await bolService.RegisterAsCertifier(registerAsCertifierForm.Countries.Split(",").ToList(), new BigInteger(registerAsCertifierForm.Fee));
+            List<Bol.Core.Model.Country> supportedCountries = new();
+            List<string> selectedCountries = registerAsCertifierForm.Countries.Split(",").ToList();
+
+            foreach (var countryName in selectedCountries)
+            {
+                Country selectedCountry = _content.Countries.FirstOrDefault(c => c.Name == countryName.Trim());
+
+                supportedCountries.Add(new Bol.Core.Model.Country
+                {
+                    Name = selectedCountry.Name,
+                    Alpha3 = selectedCountry.Alpha3,
+                    Region = selectedCountry.Region
+                });
+            }
+
+            var account = await bolService.RegisterAsCertifier(supportedCountries, new BigInteger(registerAsCertifierForm.Fee));
+            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
         }
         catch (Exception ex)
         {

@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Bol.Address.Abstractions;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
@@ -27,9 +27,9 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task NavigateToCodenamePage()
+    private async Task NavigateToCitizenshipPage()
     {
-        await NavigationService.NavigateTo<CreateCodenameViewModel>(true);
+        await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
     }
 
     [RelayCommand]
@@ -84,9 +84,6 @@ public partial class MainViewModel : BaseViewModel
             }
 
             var userData = new UserData { Codename = bolWallet.Name, BolWallet = bolWallet, WalletPassword = password };
-
-            userData.IsRegisteredAccount = true;
-            userData.AccountStatus = Bol.Core.Model.AccountStatus.Open;
 
             await _secureRepository.SetAsync("userdata", userData);
 

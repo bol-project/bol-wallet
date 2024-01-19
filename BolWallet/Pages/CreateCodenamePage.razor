@@ -10,27 +10,39 @@
 
 <MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
     <MudGrid>
+        <MudItem xs="12" sm="12" md="12">
+            <MudAutocomplete T="Country" Label="Registration Country" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@SearchRegistrationCountries" Value="registrationCountry" ValueChanged="@OnCountrySelected" on Immediate=true HelperText="Country Selection for Bol Community Registration." ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+            </MudAutocomplete>
+        </MudItem>
         <MudItem xs="6" sm="6" md="6">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" OnlyValidateIfDirty="true"
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Disabled="true" Label="First Name" OnlyValidateIfDirty="true"
                           @bind-Value="@CodenameForm.FirstName.Value" OnBlur="@(x=> CodenameForm.FirstName.Value= CodenameForm.FirstName.Value?.Trim().ToUpper())"
                           Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" OnlyValidateIfDirty="true"
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"  Label="Surname" OnlyValidateIfDirty="true"
                           @bind-Value="@CodenameForm.Surname.Value" OnBlur="@(x=> CodenameForm.Surname.Value= CodenameForm.Surname.Value?.Trim().ToUpper())"
-                          Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+                          Margin="@Margin.Dense" Required="true" Disabled="true" RequiredError="Surname is required!" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                          Margin="@Margin.Dense" Label="Middle Name" @bind-Value="@CodenameForm.MiddleName.Value"
+                          Margin="@Margin.Dense" Label="Middle Name" Disabled="true" @bind-Value="@CodenameForm.MiddleName.Value"
                           OnBlur="@(x=> CodenameForm.MiddleName.Value= CodenameForm.MiddleName.Value?.Trim().ToUpper())" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                          Margin="@Margin.Dense" Label="Third Name" @bind-Value="@CodenameForm.ThirdName.Value"
+                          Margin="@Margin.Dense" Label="Third Name" Disabled="true" @bind-Value="@CodenameForm.ThirdName.Value"
                           OnBlur="@(x=> CodenameForm.ThirdName.Value= CodenameForm.ThirdName.Value?.Trim().ToUpper())" />
         </MudItem>
-        <MudItem xs="6" sm="6" md="6">
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
+                          Margin="@Margin.Dense" OnlyValidateIfDirty="true"
+                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
+                          Disabled="true" />
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12">
             <MudSelect T="Bol.Core.Model.Gender" Label="Gender" Variant="MudBlazor.Variant.Outlined"
                        Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
                        @bind-Value="@CodenameForm.Gender" Required="true" RequiredError="Gender is required">
@@ -40,14 +52,6 @@
                 }
             </MudSelect>
         </MudItem>
-        <MudItem xs="6" sm="6" md="6">
-
-            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CodenameForm.SelectedCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
-                             SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
-                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
-            </MudAutocomplete>
-
-        </MudItem>
         <MudItem xs="12" sm="12" md="12">
             <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
                            Margin="@Margin.Dense"
@@ -55,10 +59,10 @@
                            DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
-            <MudTextField @ref="ninTextField" T="string" Variant="MudBlazor.Variant.Outlined" Label="NIN" @bind-Value="@CodenameForm.NIN.Value"
-                          Margin="@Margin.Dense" OnlyValidateIfDirty="true"
-                          HelperText="@CodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@CodenameForm.NIN.ErrorMessage"
-                          Disabled="@(CodenameForm.NIN.IsEnabled)" Validation="@(new Func<string, string>(NINCheck))" />
+            <MudAutocomplete T="Country" Label="Birth Country" @bind-Value="@CodenameForm.CountryOfBirth" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@Search" HelperText="Choose the country where you were born." ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+            </MudAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="12" md="12">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@CodenameForm.Combination.Value"
@@ -70,7 +74,6 @@
                           Margin="@Margin.Dense" ReadOnly="true"
                           Required="true" RequiredError="Codename is required" />
         </MudItem>
-
         <MudItem xs="12">
             <div class="text-center">
                 <!-- Use a div with text-center class to center the buttons -->
@@ -101,11 +104,33 @@
 </style>
 @code
 {
+    private void OnCountrySelected(Country country)
+    {
+        if (country is null)
+            return;
+
+        var encryptedCitizenship = createCodenameViewModel.userData.EncryptedCitizenshipForms.FirstOrDefault(c => c.CountryCode == country.Alpha3);
+
+        if (encryptedCitizenship is null)
+            return;
+
+        CodenameForm.FirstName.Value = encryptedCitizenship.FirstName;
+        CodenameForm.Surname.Value = encryptedCitizenship.SurName;
+        CodenameForm.MiddleName.Value = encryptedCitizenship.SecondName;
+        CodenameForm.ThirdName.Value = encryptedCitizenship.ThirdName;
+        CodenameForm.FirstName.Value = encryptedCitizenship.FirstName;
+        CodenameForm.NIN.Value = encryptedCitizenship.Nin;
+        CodenameForm.SelectedCountry = country;
+
+        registrationCountry = country;
+    }
+
     MudTextField<string> ninTextField;
     CreateCodenameViewModel createCodenameViewModel;
     CodenameForm CodenameForm;
     Array Genders = Enum.GetValues(typeof(Bol.Core.Model.Gender));
     MudForm form;
+    Country registrationCountry;
 
     DateTime? BirthDate;
 
@@ -122,6 +147,10 @@
         CodenameForm = createCodenameViewModel.CodenameForm;
 
         await createCodenameViewModel.Initialize();
+
+        registrationCountry = CodenameForm.SelectedCountry;
+
+        OnCountrySelected(registrationCountry);
 
         BirthDate = CodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(CodenameForm.Birthdate.Value);
     }
@@ -155,19 +184,20 @@
 
     }
 
+    private async Task<IEnumerable<Country>> SearchRegistrationCountries(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return createCodenameViewModel.userData.Citizenships;
+
+        return await Task.Run(() => createCodenameViewModel.userData.Citizenships.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
+    }
+
     private async Task FieldChanged(FormFieldChangedEventArgs args)
     {
         if (updating)
             return;
 
         createCodenameViewModel.Codename = "";
-
-        if (args.Field is MudAutocomplete<Country>)
-        {
-            await ninTextField.Clear();
-
-            ninTextField.ResetValidation();
-        }
 
         await InvokeAsync(() => StateHasChanged());
     }

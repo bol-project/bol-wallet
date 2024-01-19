@@ -29,6 +29,12 @@ public partial class AccountViewModel : BaseViewModel
     [ObservableProperty]
     private BolAccount _bolAccount;
 
+    [ObservableProperty]
+    private List<KeyValuePair<string,string>> _certifiers;
+
+    [ObservableProperty]
+    private List<string> _certificationRequests;
+    
     public async Task Initialize(CancellationToken cancellationToken = default)
     {
         try
@@ -37,7 +43,8 @@ public partial class AccountViewModel : BaseViewModel
 
             BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename));
 
-
+            Certifiers = BolAccount.Certifiers.ToList();
+            CertificationRequests = BolAccount.CertificationRequests.Keys.ToList();
         }
         catch (Exception ex)
         {
@@ -48,7 +55,7 @@ public partial class AccountViewModel : BaseViewModel
     [RelayCommand]
     private async Task DownloadEdiFilesAsync(CancellationToken cancellationToken = default)
     {
-        var ediFiles = await this._secureRepository.GetAsync<EdiFiles>("ediFiles");
+        var ediFiles = await this._secureRepository.GetAsync<GenericHashTableFiles>("ediFiles");
 
         if (ediFiles is null)
             return;
@@ -66,7 +73,7 @@ public partial class AccountViewModel : BaseViewModel
         }
     }
 
-    private async Task<byte[]> CreateZipFile(EdiFiles ediFiles, CancellationToken cancellationToken = default)
+    private async Task<byte[]> CreateZipFile(GenericHashTableFiles ediFiles, CancellationToken cancellationToken = default)
     {
 
 
@@ -76,7 +83,7 @@ public partial class AccountViewModel : BaseViewModel
             {
                 foreach (PropertyInfo property in ediFiles.GetType().GetProperties())
                 {
-                    var ediFileItem = property.GetValue(ediFiles) as EdiFileItem;
+                    var ediFileItem = property.GetValue(ediFiles) as GenericHashTableFileItem;
                     if (ediFileItem?.Content != null)
                     {
                         var zipEntry = archive.CreateEntry(ediFileItem.FileName, CompressionLevel.Optimal);

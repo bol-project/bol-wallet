@@ -8,4 +8,10 @@ public partial class BolCommunityPage : ContentPage
         InitializeComponent();
         BindingContext = bolCommunityViewModel;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await ((BolCommunityViewModel)BindingContext).Initialize();
+    }
 }
