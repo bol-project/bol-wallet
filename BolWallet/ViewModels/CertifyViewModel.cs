@@ -160,10 +160,16 @@ public partial class CertifyViewModel : BaseViewModel
     {
         var userdata = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix))
+        if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix) &&
+            string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrixCompany))
             return;
 
-        List<FileItem> files = _fileDownloadService.CollectIndividualFilesForDownload(userdata);
+        List<FileItem> files;
+
+        if (userdata.IsIndividualRegistration)
+            files = _fileDownloadService.CollectIndividualFilesForDownload(userdata);
+        else
+            files = _fileDownloadService.CollectCompanyFilesForDownload(userdata);
 
         var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
 

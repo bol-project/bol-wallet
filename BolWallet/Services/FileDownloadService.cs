@@ -74,6 +74,39 @@ public class FileDownloadService : IFileDownloadService
         return files;
     }
 
+    public List<FileItem> CollectCompanyFilesForDownload(UserData userdata)
+    {
+        List<FileItem> files = new List<FileItem>();
+
+        foreach (PropertyInfo property in userdata.CompanyHashFiles.GetType().GetProperties())
+        {
+            var ediFileItem = property.GetValue(userdata.CompanyHashFiles) as FileItem;
+
+            if (ediFileItem?.Content != null)
+            {
+                files.Add(new FileItem()
+                {
+                    FileName = ediFileItem.FileName,
+                    Content = ediFileItem.Content
+                });
+            }
+        }
+
+        files.Add(new FileItem()
+        {
+            FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrixCompany)}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrixCompany)
+        });
+
+        files.Add(new FileItem()
+        {
+            FileName = $"{nameof(userdata.EncryptedDigitalMatrixCompany)}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrixCompany)
+        });
+
+        return files;
+    }
+
     public async Task SaveZipFileAsync(byte[] ediZipFiles, CancellationToken cancellationToken)
     {
         using (var stream = new MemoryStream(ediZipFiles))
