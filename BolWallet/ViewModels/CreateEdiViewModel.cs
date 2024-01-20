@@ -147,7 +147,11 @@ public partial class CreateEdiViewModel : BaseViewModel
 
             var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
 
+            extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
+
             userData.Edi = edi;
+            userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
+            userData.EncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(edm);
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -180,7 +184,9 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(GenericHashTableForm));
 
-        await _secureRepository.SetAsync<GenericHashTableFiles>("ediFiles", ediFiles);
+        userData.GenericHashTableFiles = ediFiles;
+
+        await _secureRepository.SetAsync("userdata", userData);
     }
 
     private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
@@ -197,11 +203,11 @@ public partial class CreateEdiViewModel : BaseViewModel
 
     public async Task Initialize()
     {
-        var savedEdiFiles = await _secureRepository.GetAsync<GenericHashTableFiles>("ediFiles");
+        userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (savedEdiFiles is null) return;
+        if (userData?.GenericHashTableFiles is null) return;
 
-        ediFiles = savedEdiFiles;
+        ediFiles = userData.GenericHashTableFiles;
 
         foreach (var propertyInfo in ediFiles.GetType().GetProperties())
         {
