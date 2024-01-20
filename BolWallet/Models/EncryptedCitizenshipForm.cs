@@ -26,5 +26,18 @@ public class EncryptedCitizenshipForm
 
     public CitizenshipHashTable CitizenshipHashes { get; set; }
 
+    public CitizenshipHashTableFileNames CitizenshipHashTableFileNames { get; set; }
+
     public bool IsSubmitted { get; set; }
+}
+
+public class CitizenshipHashTableFileNames
+{
+    public string IdentityCard { get; set; }
+
+    public string Passport { get; set; }
+
+    public string ProofOfNin { get; set; }
+
+    public string BirthCertificate { get; set; }
 }

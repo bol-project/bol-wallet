@@ -123,7 +123,7 @@
             }
         }
 
-       await navigationService.NavigateTo<CreateCodenameViewModel>(true);
+        await navigationService.NavigateTo<CreateCodenameViewModel>(true);
     }
 
     private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -175,6 +175,7 @@
             var encodedFileBytes = base16Encoder.Encode(fileBytes);
 
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, encodedFileBytes);
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, fileResult.FileName);
         }
 
         return encryptedCitizenshipForm;
