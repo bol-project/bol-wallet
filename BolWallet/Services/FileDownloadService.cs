@@ -20,7 +20,7 @@ public class FileDownloadService : IFileDownloadService
         _base16Encoder = base16Encoder;
     }
 
-    public List<FileItem> CollectFilesForDownload(UserData userdata)
+    public List<FileItem> CollectIndividualFilesForDownload(UserData userdata)
     {
         List<FileItem> files = new List<FileItem>();
 
