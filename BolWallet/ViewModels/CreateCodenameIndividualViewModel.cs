@@ -48,8 +48,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
 
             if (IsCodenameExists(result))
             {
-                Toast.Make("The codename already exists. Please create a different codename.").Show().Wait();
-                return;
+                throw new Exception("The codename already exists. Please create a different codename.");
             }
 
             userData.Codename = result;
