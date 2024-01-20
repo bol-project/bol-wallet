@@ -17,14 +17,14 @@
             </MudAutocomplete>
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" OnlyValidateIfDirty="true"
+                          @bind-Value="@IndividualCodenameForm.Surname.Value" OnBlur="@(x=> IndividualCodenameForm.Surname.Value= IndividualCodenameForm.Surname.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" Disabled="true" RequiredError="Surname is required!" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Disabled="true" Label="First Name" OnlyValidateIfDirty="true"
                           @bind-Value="@IndividualCodenameForm.FirstName.Value" OnBlur="@(x=> IndividualCodenameForm.FirstName.Value= IndividualCodenameForm.FirstName.Value?.Trim().ToUpper())"
                           Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
-        </MudItem>
-        <MudItem xs="6" sm="6" md="6">
-            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"  Label="Surname" OnlyValidateIfDirty="true"
-                          @bind-Value="@IndividualCodenameForm.Surname.Value" OnBlur="@(x=> IndividualCodenameForm.Surname.Value= IndividualCodenameForm.Surname.Value?.Trim().ToUpper())"
-                          Margin="@Margin.Dense" Required="true" Disabled="true" RequiredError="Surname is required!" />
         </MudItem>
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"

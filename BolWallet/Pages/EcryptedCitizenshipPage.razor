@@ -21,14 +21,14 @@
                                   Margin="@Margin.Dense" Required="true" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
-                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
-                                  Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
-                </MudItem>
-                <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
                                   @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
                                   Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
+                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
+                                  Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
