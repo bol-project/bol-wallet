@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Storage;
 using System.Text;
 
 namespace BolWallet.ViewModels;
+
 public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 {
     private readonly IWalletService _walletService;
@@ -12,6 +13,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     private readonly ISha256Hasher _sha256Hasher;
     private readonly IBase16Encoder _base16Encoder;
     private readonly IFileSaver _fileSaver;
+    private readonly IDeviceDisplay _deviceDisplay;
 
     public GenerateWalletWithPasswordViewModel(
         INavigationService navigationService,
@@ -19,31 +21,37 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         ISecureRepository secureRepository,
         ISha256Hasher sha256Hasher,
         IBase16Encoder base16Encoder,
-        IFileSaver fileSaver) : base(navigationService)
+        IFileSaver fileSaver,
+        IDeviceDisplay deviceDisplay)
+        : base(navigationService)
     {
         _walletService = walletService;
         _secureRepository = secureRepository;
         _sha256Hasher = sha256Hasher;
         _base16Encoder = base16Encoder;
         _fileSaver = fileSaver;
+        _deviceDisplay = deviceDisplay;
     }
 
     [ObservableProperty]
     private string _password = "";
 
-
     [ObservableProperty]
     private bool _isLoading = false;
+
+    [ObservableProperty]
+    private string _walletCreationProgress = "Please keep the application open...";
 
     [RelayCommand]
     private async Task Submit()
     {
         try
         {
+            _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-
+            
             byte[] hash = _sha256Hasher.Hash(Encoding.UTF8.GetBytes(Password));
-
+            
             string privateKey = _base16Encoder.Encode(hash);
 
             UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
@@ -68,31 +76,28 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         }
         finally
         {
+            _deviceDisplay.KeepScreenOn = false;
             IsLoading = false;
+            GC.Collect();
         }
     }
 
     [RelayCommand]
-    private async Task DownloadWalletAsync(Bol.Core.Model.BolWallet bolWallet, CancellationToken cancellationToken = default)
+    private async Task DownloadWalletAsync(
+        Bol.Core.Model.BolWallet bolWallet,
+        CancellationToken cancellationToken = default)
     {
-        try
+        using var stream = new MemoryStream();
+
+        JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
+
+        string fileName = "BolWallet.json";
+
+        var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
+
+        if (result.IsSuccessful)
         {
-            using var stream = new MemoryStream();
-
-            JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
-
-            string fileName = "BolWallet.json";
-
-            var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
-
-            if (result.IsSuccessful)
-            {
-                await Toast.Make($"File '{fileName}' saved successfully!").Show(cancellationToken);
-            }
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make(ex.Message).Show(cancellationToken);
+            await Toast.Make($"File '{fileName}' saved successfully!").Show(cancellationToken);
         }
     }
 }

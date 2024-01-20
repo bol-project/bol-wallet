@@ -7,6 +7,7 @@ using Plugin.AudioRecorder;
 using System.Reflection;
 
 namespace BolWallet.ViewModels;
+
 public partial class CreateEdiViewModel : BaseViewModel
 {
     private readonly IPermissionService _permissionService;
@@ -14,8 +15,8 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
     private readonly IMediaPicker _mediaPicker;
-
-    public EdiFiles ediFiles;
+    private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
+    public GenericHashTableFiles ediFiles;
 
     AudioRecorderService recorder;
 
@@ -25,44 +26,42 @@ public partial class CreateEdiViewModel : BaseViewModel
         IBase16Encoder base16Encoder,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker) : base(navigationService)
-
+        IMediaPicker mediaPicker)
+        : base(navigationService)
     {
-        _permissionService = permissionService ?? throw new ArgumentNullException(nameof(permissionService));
-        _base16Encoder = base16Encoder ?? throw new ArgumentNullException(nameof(base16Encoder));
-        _secureRepository = secureRepository ?? throw new ArgumentNullException(nameof(secureRepository));
-        _encryptedDigitalIdentityService = encryptedDigitalIdentityService ?? throw new ArgumentNullException(nameof(encryptedDigitalIdentityService));
-        _mediaPicker = mediaPicker ?? throw new ArgumentNullException(nameof(mediaPicker));
-        EdiForm = new EdiForm();
+        _permissionService = permissionService;
+        _base16Encoder = base16Encoder;
+        _secureRepository = secureRepository;
+        _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
+        _mediaPicker = mediaPicker;
+        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
+        GenericHashTableForm = new GenericHashTableForm();
         recorder = new AudioRecorderService
         {
             AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
             TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
         };
-        ediFiles = new EdiFiles() { };
+        ediFiles = new GenericHashTableFiles() { };
     }
 
-    [ObservableProperty]
-    private EdiForm _ediForm;
+    [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
-    [ObservableProperty]
-    private bool _isLoading = false;
+    [ObservableProperty] private bool _isLoading = false;
 
     [RelayCommand]
     private async Task PickPhotoAsync(string propertyName)
     {
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
-                    { DevicePlatform.iOS, new[] { "com.adobe.pdf","public.image", "public.audio" } },
-                    { DevicePlatform.Android, new[] { "application/pdf", "image/*","audio/*" } },
-                    { DevicePlatform.macOS, new[] { "pdf","public.image", "public.audio" } },
-                    { DevicePlatform.WinUI, new[] { ".pdf",".gif", ".mp3",".png" } },
+            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
+            { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
+            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image", "public.audio" } },
+            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
         {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
+            FileTypes = customFileType, PickerTitle = "Pick a file"
         });
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
@@ -73,7 +72,11 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Camera>(); return; }
+        if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted)
+        {
+            await _permissionService.DisplayWarningAsync<Permissions.Camera>();
+            return;
+        }
 
         FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
@@ -85,7 +88,11 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task RecordAudio()
     {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted) { await _permissionService.DisplayWarningAsync<Permissions.Speech>(); return; }
+        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted)
+        {
+            await _permissionService.DisplayWarningAsync<Permissions.Speech>();
+            return;
+        }
 
         if (recorder.IsRecording) await recorder.StopRecording();
 
@@ -93,7 +100,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         string audiofilePath = await audioRecordTask;
 
-        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(EdiForm.Voice));
+        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
 
         await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
     }
@@ -103,6 +110,49 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         try
         {
+            IsLoading = true;
+
+            userData = await this._secureRepository.GetAsync<UserData>("userdata");
+
+            extendedEncryptedDigitalMatrix.CodeName = userData.Codename;
+
+            var encryptedCitizenshipForRegistration = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryCode.Trim() == userData.Person.CountryCode.Trim());
+
+            extendedEncryptedDigitalMatrix.Hashes.IdentityCard = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCard;
+            extendedEncryptedDigitalMatrix.Hashes.Passport = encryptedCitizenshipForRegistration.CitizenshipHashes.Passport;
+            extendedEncryptedDigitalMatrix.Hashes.ProofOfNin = encryptedCitizenshipForRegistration.CitizenshipHashes.ProofOfNin;
+            extendedEncryptedDigitalMatrix.Hashes.BirthCertificate = encryptedCitizenshipForRegistration.CitizenshipHashes.BirthCertificate;
+
+            List<EncryptedCitizenship> encryptedCitizenships = new List<EncryptedCitizenship>();
+
+            foreach (var form in userData.EncryptedCitizenshipForms)
+            {
+                encryptedCitizenships.Add(new EncryptedCitizenship
+                {
+                    CountryCode = form.CountryCode,
+                    Nin = form.Nin,
+                    SurName = form.SurName,
+                    FirstName = form.FirstName,
+                    SecondName = form.SecondName,
+                    ThirdName = form.ThirdName,
+                    CitizenshipHashes = form.CitizenshipHashes,
+                    BirthCountryCode = userData.BirthCountryCode,
+                    BirthDate = userData.Person.Birthdate
+                });
+            }
+
+            extendedEncryptedDigitalMatrix.CitizenshipMatrices = encryptedCitizenships.ToArray();
+
+            var edm = await Task.Run(() => _encryptedDigitalIdentityService.GenerateMatrix(extendedEncryptedDigitalMatrix));
+
+            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
+
+            extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
+
+            userData.Edi = edi;
+            userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
+            userData.EncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(edm);
+
             await _secureRepository.SetAsync("userdata", userData);
 
             await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
@@ -123,55 +173,71 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         var fileBytes = File.ReadAllBytes(fileResult.FullPath);
 
-        var ediFileItem = new EdiFileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
+        var ediFileItem = new GenericHashTableFileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
 
         SetFileHash(propertyNameInfo, fileResult, fileBytes);
 
-        ediFiles.GetType()
-                .GetProperty(propertyNameInfo.Name)
-                .SetValue(ediFiles, ediFileItem);
+        ediFiles
+            .GetType()
+            .GetProperty(propertyNameInfo.Name)
+            .SetValue(ediFiles, ediFileItem);
 
-        OnPropertyChanged(nameof(EdiForm));
+        OnPropertyChanged(nameof(GenericHashTableForm));
 
-        await _secureRepository.SetAsync<EdiFiles>("ediFiles", ediFiles);
+        userData.GenericHashTableFiles = ediFiles;
+
+        await _secureRepository.SetAsync("userdata", userData);
     }
 
     private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
     {
         var encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
-        propertyNameInfo.SetValue(EdiForm, fileResult.FileName);
+        propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
+
+        extendedEncryptedDigitalMatrix.Hashes
+            .GetType()
+            .GetProperty(propertyNameInfo.Name)
+            .SetValue(extendedEncryptedDigitalMatrix.Hashes, encodedFileBytes);
     }
 
     public async Task Initialize()
     {
-        var savedEdiFiles = await _secureRepository.GetAsync<EdiFiles>("ediFiles");
+        userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (savedEdiFiles is null) return;
+        if (userData?.GenericHashTableFiles is null) return;
 
-        ediFiles = savedEdiFiles;
+        ediFiles = userData.GenericHashTableFiles;
 
         foreach (var propertyInfo in ediFiles.GetType().GetProperties())
         {
             PropertyInfo propertyNameInfo = GetPropertyInfo(propertyInfo.Name);
 
-            var ediFileItem = (EdiFileItem)propertyInfo.GetValue(ediFiles, null);
+            var ediFileItem = (GenericHashTableFileItem)propertyInfo.GetValue(ediFiles, null);
 
-            if (ediFileItem?.Content != null)
+            if (ediFileItem?.Content == null)
             {
-                propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
-
-                ediFiles.GetType()
-                        .GetProperty(propertyNameInfo.Name)
-                        .SetValue(ediFiles, ediFileItem);
+                continue;
             }
+
+            propertyNameInfo.SetValue(GenericHashTableForm, ediFileItem.FileName);
+
+            extendedEncryptedDigitalMatrix.Hashes
+                .GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
+
+            ediFiles
+                .GetType()
+                .GetProperty(propertyNameInfo.Name)
+                .SetValue(ediFiles, ediFileItem);
         }
 
-        OnPropertyChanged(nameof(EdiForm));
+        OnPropertyChanged(nameof(GenericHashTableForm));
     }
 
     private PropertyInfo GetPropertyInfo(string propertyName)
     {
-        return this.EdiForm.GetType().GetProperty(propertyName);
+        return this.GenericHashTableForm.GetType().GetProperty(propertyName);
     }
 }

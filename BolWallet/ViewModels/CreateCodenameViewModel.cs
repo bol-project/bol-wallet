@@ -24,13 +24,20 @@ public partial class CreateCodenameViewModel : BaseViewModel
     protected string _codename = " ";
 
 
+
     [RelayCommand]
     public async Task Submit()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new CreateEdiPage());
+        await NavigationService.NavigateTo<CreateEdiViewModel>(true);
     }
 
     protected static bool IsCodenameExists(string codename)
+
+		Codename = userData.Codename;
+	}
+
+
+    private static bool IsCodenameExists(string codename)
     {
         var client = new HttpClient();
 

@@ -3,9 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0-android;</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('macos'))">$(TargetFrameworks);net8.0-maccatalyst</TargetFrameworks>
-    <!--		Uncomment to also build the iOS app-->
-    <!--		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('macos'))">$(TargetFrameworks);net8.0-maccatalyst;net8.0-ios</TargetFrameworks>-->
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('macos'))">$(TargetFrameworks);net8.0-maccatalyst;net8.0-ios</TargetFrameworks>
     <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
     <!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
     <OutputType>Exe</OutputType>
@@ -18,7 +16,7 @@
     <ApplicationTitle>BolWallet</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>com.companyname.bolwallet</ApplicationId>
+    <ApplicationId>org.1bol.bolwallet</ApplicationId>
     <ApplicationIdGuid>c5489447-fb64-49ba-8452-27a8e4dde81e</ApplicationIdGuid>
 
     <!-- Versions -->
@@ -31,7 +29,6 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-    <AssemblyName>$(MSBuildProjectName)_App</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
@@ -40,9 +37,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
     <WarningsAsErrors />
-    <CodesignProvision>iOS Team Provisioning Profile: com.companyname.bolwallet</CodesignProvision>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
+    <CreatePackage>false</CreatePackage>
+    <CodesignProvision>Automatic</CodesignProvision>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
@@ -59,6 +57,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
     <WarningsAsErrors />
+    <CreatePackage>false</CreatePackage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
@@ -114,6 +113,9 @@
     <MauiXaml Update="Views\CertifyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\CitizenshipPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\ClaimPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -124,6 +126,9 @@
       <SubType>Designer</SubType>
     </MauiXaml>
     <MauiXaml Update="Views\CreateEdiPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\EcryptedCitizenshipPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\FinancialTransactionsPage.xaml">
