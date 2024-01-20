@@ -81,7 +81,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
 
     public async Task Initialize()
     {
-        var userData = await _secureRepository.GetAsync<UserData>("userdata");
+        userData = await _secureRepository.GetAsync<UserData>("userdata");
         if (userData?.Company is null) return;
 
         var country = new Models.Country
@@ -96,7 +96,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         CompanyCodenameForm.Title.Value = userData.Company.Title;
         CompanyCodenameForm.VatNumber = userData.Company.VatNumber;
         CompanyCodenameForm.IncorporationDate.Value = userData.Company.IncorporationDate.ToString("yyyy-MM-dd");
-        CompanyCodenameForm.ExtraDigit.Value = "A"; // userData.Company.ExtraDigit; || Change Here When ExtraDigit is string
+        CompanyCodenameForm.ExtraDigit.Value = userData.Company.Combination;
 
         Codename = userData.Codename;
     }
