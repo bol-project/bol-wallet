@@ -1,6 +1,14 @@
-# BoLWallet Publishing Guide
+# BoLWallet Mac Catalyst Publishing Guide
 
-## maccatalyst publishing
+- [BoLWallet Mac Catalyst Publishing Guide](#bolwallet-mac-catalyst-publishing-guide)
+  - [Publish a .NET MAUI app for Mac Catalyst](#publish-a-net-maui-app-for-mac-catalyst)
+  - [Verifying app bundle and installer package work](#verifying-app-bundle-and-installer-package-work)
+  - [Notarization of installer package](#notarization-of-installer-package)
+  - [Notarization ticket stapling](#notarization-ticket-stapling)
+  - [Notarization validation](#notarization-validation)
+  - [Resources](#resources)
+
+## Publish a .NET MAUI app for Mac Catalyst
 
 `maccatalyst` supports both `x64` and `arm64` platforms.
 
@@ -12,7 +20,7 @@ Default publishing based on project settings for `Release` configuration and the
 
 If `publish-maccatalyst-x64.sh` or `publish-maccatalyst-arm64.sh` are used to generate an app bundler and installer package that targets the specific CPU architecture, then the files will be generated under `./../../bin/Release/net8.0-maccatalyst/maccatalyst-x64` and `./../../bin/Release/net8.0-maccatalyst/maccatalyst-arm64` respectively.
 
-## Verifying app bundler and installer package work
+## Verifying app bundle and installer package work
 
 Running the installer package will verify the app installs and runs as expected.
 
@@ -20,7 +28,7 @@ However, **while the installer package will work on other Macs**, the build mach
 
 For the app to appear as expected, copy the installer package outside the `bin` folder, for example in `~/Downloads` and then delete the `bin` folder.
 
-## Notarization
+## Notarization of installer package
 
 `xcrun notary submit` is used to notarize the installer package. Since this requires setting AppStore Connect credentials, the `notary-store-creds.sh` script can be used to store a keychain profile with the required credentials under the profile name `bolwallet-notarytool-password`.
 
@@ -32,7 +40,7 @@ Alternatively, `notary-submit-package-and-wait.sh` can be used to both submit th
 
 After notarization has been completed, `notary-log.sh` can be used to check on the notarization result, passing the submision id as an argument. It's recommended to check the log even if notarization completed successfully.
 
-## Stapling the notarization ticket to the app
+## Notarization ticket stapling
 
 After a successful notarization, a staple ticket is generated which can be used to staple the installer package.
 
@@ -42,6 +50,11 @@ However, attaching the ticket to the installer package allows the Gatekeeper to 
 
 To attach the ticket use `notary-staple-ticket.sh` passing the installer package file path as an argument. This requires internet connectivity since the stapler retrieves the ticket online and then attached it to the installer package.
 
-## Validate notarization
+## Notarization validation
 
 As an optional step, the installer package notarization can be validated using the `notary-validate.sh` script, passing the installer package file path as an argument.
+
+## Resources
+
+- [Publish a Mac Catalyst app outside the App Store](https://learn.microsoft.com/en-us/dotnet/maui/mac-catalyst/deployment/publish-outside-app-store?view=net-maui-8.0)
+- [Customizing the notarization workflow](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution/customizing_the_notarization_workflow)
