@@ -15,7 +15,6 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
     private readonly IMediaPicker _mediaPicker;
 
-    public EncryptedDigitalMatrix encryptedDigitalMatrix;
     public EdiFiles ediFiles;
 
     AudioRecorderService recorder;
@@ -40,7 +39,6 @@ public partial class CreateEdiViewModel : BaseViewModel
             AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
             TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
         };
-        encryptedDigitalMatrix = new EncryptedDigitalMatrix() { Hashes = new HashTable() };
         ediFiles = new EdiFiles() { };
     }
 
@@ -105,28 +103,6 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         try
         {
-            if ((string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.IdentityCard) &&
-                 string.IsNullOrEmpty(encryptedDigitalMatrix.Hashes.Passport)))
-            {
-                return;
-            }
-
-            IsLoading = true;
-
-            UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
-
-            encryptedDigitalMatrix.BirthDate = userData.Person.Birthdate;
-            encryptedDigitalMatrix.FirstName = userData.Person.FirstName;
-            encryptedDigitalMatrix.Nin = userData.Person.Nin;
-            encryptedDigitalMatrix.BirthCountryCode = userData.Person.CountryCode;
-            encryptedDigitalMatrix.CodeName = userData.Codename;
-
-            var result = await Task.Run(() => _encryptedDigitalIdentityService.Generate(encryptedDigitalMatrix));
-
-            userData.Edi = result;
-
-            userData.EncryptedDigitalMatrix = encryptedDigitalMatrix;
-
             await _secureRepository.SetAsync("userdata", userData);
 
             await NavigationService.NavigateTo<GenerateWalletWithPasswordViewModel>(true);
@@ -165,10 +141,6 @@ public partial class CreateEdiViewModel : BaseViewModel
         var encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
         propertyNameInfo.SetValue(EdiForm, fileResult.FileName);
-
-        encryptedDigitalMatrix.Hashes.GetType()
-                                     .GetProperty(propertyNameInfo.Name)
-                                     .SetValue(encryptedDigitalMatrix.Hashes, encodedFileBytes);
     }
 
     public async Task Initialize()
@@ -188,10 +160,6 @@ public partial class CreateEdiViewModel : BaseViewModel
             if (ediFileItem?.Content != null)
             {
                 propertyNameInfo.SetValue(EdiForm, ediFileItem.FileName);
-
-                encryptedDigitalMatrix.Hashes.GetType()
-                             .GetProperty(propertyNameInfo.Name)
-                             .SetValue(encryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
 
                 ediFiles.GetType()
                         .GetProperty(propertyNameInfo.Name)

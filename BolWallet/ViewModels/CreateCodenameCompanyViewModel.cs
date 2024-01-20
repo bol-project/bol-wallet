@@ -39,7 +39,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber,
                 IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
-                ExtraDigit = CompanyCodenameForm.ExtraDigit.Value.Length //CompanyCodenameForm.ExtraDigit.Value || Change Here When ExtraDigit is string
+                Combination = CompanyCodenameForm.ExtraDigit.Value
             };
 
             var result = _codeNameService.Generate(company);
