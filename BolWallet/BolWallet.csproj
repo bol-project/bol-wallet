@@ -231,4 +231,12 @@
     <Content Remove="TestAccount.json" />
   </ItemGroup>
 
+  <!-- Disable code signature verification, follow the link below for more details -->
+  <!-- https://learn.microsoft.com/en-us/dotnet/maui/mac-catalyst/deployment/publish-outside-app-store?view=net-maui-8.0#disable-code-signature-verification -->
+  <Target Name="_SkipCodesignVerify" BeforeTargets="_CodesignVerify" AfterTargets="_CodesignAppBundle">  
+    <PropertyGroup>    
+      <_RequireCodeSigning>false</_RequireCodeSigning>  
+    </PropertyGroup>
+  </Target>
+
 </Project>
