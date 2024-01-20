@@ -28,7 +28,10 @@ public partial class CreateCodenameViewModel : BaseViewModel
     [RelayCommand]
     public async Task Submit()
     {
-        await NavigationService.NavigateTo<CreateEdiViewModel>(true);
+        if (userData.IsIndividualRegistration)
+            await NavigationService.NavigateTo<CreateEdiViewModel>(true);
+        else
+            await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
     protected static bool IsCodenameExists(string codename)
