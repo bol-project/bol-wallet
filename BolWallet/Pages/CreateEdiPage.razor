@@ -29,7 +29,7 @@
     </Virtualize>
     <MudItem xs="12" sm="12" md="12">
         <div class="text-center">
-            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary">Submit</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isPersonalVoiceSumbitted && isFacePhotoSumbitted))">Submit</MudButton>
         </div>
     </MudItem>
 </MudGrid>
@@ -43,15 +43,17 @@
 
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
+        {new("FacePhoto",Color.Transparent, "Face Photo*", "") },
+        {new("PersonalVoice",Color.Transparent, "Personal Voice*", "") },
         {new("DrivingLicense",Color.Transparent, "Driving License", "") },
         {new("OtherIdentity",Color.Transparent, "Other Identity", "") },
-        {new("FacePhoto",Color.Transparent, "Face Photo", "") },
         {new("ProofOfCommunication",Color.Transparent, "Proof Of Communication", "") },
         {new("ProofOfResidence",Color.Transparent, "Proof Of Residence", "") },
-        {new("PersonalVoice",Color.Transparent, "Personal Voice", "") },
     };
 
     private bool isProgressBarVisible = false;
+
+    bool isPersonalVoiceSumbitted = false, isFacePhotoSumbitted = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -113,6 +115,11 @@
                 fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
 
                 IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
+
+                if (property == nameof(GenericHashTableForm.PersonalVoice))
+                    isPersonalVoiceSumbitted = true;
+                else if (property == nameof(GenericHashTableForm.FacePhoto))
+                    isFacePhotoSumbitted = true;
 
                 await InvokeAsync(() => StateHasChanged());
             }

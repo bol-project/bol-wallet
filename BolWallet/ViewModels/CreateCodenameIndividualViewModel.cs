@@ -54,6 +54,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
 
             userData.Codename = result;
             userData.Person = person;
+            userData.IsIndividualRegistration = true;
 
             await _secureRepository.SetAsync("userdata", userData);
 
