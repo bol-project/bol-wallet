@@ -66,7 +66,9 @@ public static class MauiProgram
 
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
 
-		services.RegisterViewAndViewModelSubsystem();
+        services.AddSingleton<IFileDownloadService, FileDownloadService>();
+
+        services.RegisterViewAndViewModelSubsystem();
 
         var bolConfig = new BolConfig();
         builder.Configuration.GetSection("BolSettings").Bind(bolConfig);

@@ -62,6 +62,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
     <WarningsAsErrors />
+    <MtouchLink>SdkOnly</MtouchLink> 
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>true</EnablePackageSigning>
+    <UseHardenedRuntime>true</UseHardenedRuntime>
+    <CodesignKey>Developer ID Application</CodesignKey>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+    <CodesignProvision>Distribution outside AppStore - Developer ID</CodesignProvision>
+    <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
@@ -222,5 +230,13 @@
     <EmbeddedResource Include="appsettings.Development.json" />
     <Content Remove="TestAccount.json" />
   </ItemGroup>
+
+  <!-- Disable code signature verification, follow the link below for more details -->
+  <!-- https://learn.microsoft.com/en-us/dotnet/maui/mac-catalyst/deployment/publish-outside-app-store?view=net-maui-8.0#disable-code-signature-verification -->
+  <Target Name="_SkipCodesignVerify" BeforeTargets="_CodesignVerify" AfterTargets="_CodesignAppBundle">  
+    <PropertyGroup>    
+      <_RequireCodeSigning>false</_RequireCodeSigning>  
+    </PropertyGroup>
+  </Target>
 
 </Project>

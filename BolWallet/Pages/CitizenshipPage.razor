@@ -80,7 +80,8 @@
                 {
                     CountryName = citizenshipCountry.Name,
                     CountryCode = citizenshipCountry.Alpha3,
-                    CitizenshipHashes = savedEncryptedCitizenshipForm?.CitizenshipHashes ??  new Bol.Core.Model.CitizenshipHashTable(),
+                    CitizenshipHashes = savedEncryptedCitizenshipForm?.CitizenshipHashes ?? new Bol.Core.Model.CitizenshipHashTable(),
+                    CitizenshipHashTableFileNames = savedEncryptedCitizenshipForm?.CitizenshipHashTableFileNames ?? new CitizenshipHashTableFileNames(),
                     FirstName = savedEncryptedCitizenshipForm?.FirstName,
                     SecondName = savedEncryptedCitizenshipForm?.SecondName,
                     ThirdName = savedEncryptedCitizenshipForm?.ThirdName,

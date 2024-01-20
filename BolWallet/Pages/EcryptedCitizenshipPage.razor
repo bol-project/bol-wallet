@@ -123,7 +123,7 @@
             }
         }
 
-       await navigationService.NavigateTo<CreateCodenameViewModel>(true);
+        await navigationService.NavigateTo<CreateCodenameViewModel>(true);
     }
 
     private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -175,6 +175,7 @@
             var encodedFileBytes = base16Encoder.Encode(fileBytes);
 
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, encodedFileBytes);
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, fileResult.FileName);
         }
 
         return encryptedCitizenshipForm;
@@ -212,24 +213,35 @@
 
     private async Task OnValidSubmit(EditContext context)
     {
-        EncryptedCitizenshipForm form = context.Model as EncryptedCitizenshipForm;
-
-        if (HasNonZeroHashes(form.CitizenshipHashes))
+        try
         {
-            var associatedForm = userData.EncryptedCitizenshipForms.FirstOrDefault(f => f.CountryCode == form.CountryCode);
+            EncryptedCitizenshipForm form = context.Model as EncryptedCitizenshipForm;
 
-            if (associatedForm != null)
+            if (HasNonZeroHashes(form.CitizenshipHashes))
             {
-                associatedForm.IsSubmitted = true;
+                var associatedForm = userData.EncryptedCitizenshipForms.FirstOrDefault(f => f.CountryCode == form.CountryCode);
+
+                if (associatedForm != null)
+                {
+                    associatedForm.FirstName = form.FirstName;
+                    associatedForm.SecondName = form.SecondName;
+                    associatedForm.ThirdName = form.ThirdName;
+                    associatedForm.Nin = form.Nin;
+                    associatedForm.IsSubmitted = true;
+                }
+
+                await secureRepository.SetAsync("userdata", userData);
+
+                await OnInitializedAsync();
             }
-
-            await secureRepository.SetAsync("userdata", userData);
-
-            await OnInitializedAsync();
+            else
+            {
+                await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+            await Toast.Make(ex.Message).Show();
         }
     }
 

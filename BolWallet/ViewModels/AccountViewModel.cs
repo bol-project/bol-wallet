@@ -13,17 +13,17 @@ public partial class AccountViewModel : BaseViewModel
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
-    private readonly IFileSaver _fileSaver;
+    private readonly IFileDownloadService _fileDownloadService;
 
     public AccountViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
-        IFileSaver fileSaver) : base(navigationService)
+        IFileDownloadService fileDownloadService) : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
-        _fileSaver = fileSaver;
+        _fileDownloadService = fileDownloadService;
     }
 
     [ObservableProperty]
@@ -48,87 +48,37 @@ public partial class AccountViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(cancellationToken);
         }
     }
 
     [RelayCommand]
     private async Task DownloadEdiFilesAsync(CancellationToken cancellationToken = default)
     {
-        var ediFiles = await this._secureRepository.GetAsync<GenericHashTableFiles>("ediFiles");
+        var userdata = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (ediFiles is null)
+        if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix))
+        {
+            await Toast.Make("Encrypted Digital Matrix not found in the device.").Show(cancellationToken);
             return;
-
-        var ediZipFiles = await CreateZipFile(ediFiles);
-
-        using (var stream = new MemoryStream(ediZipFiles))
-        {
-            var result = await _fileSaver.SaveAsync("edi-images.zip", stream, cancellationToken);
-
-            if (result.IsSuccessful)
-            {
-                await Toast.Make($"File 'edi-images.zip' saved successfully!").Show();
-            }
         }
-    }
 
-    private async Task<byte[]> CreateZipFile(GenericHashTableFiles ediFiles, CancellationToken cancellationToken = default)
-    {
+        List<GenericHashTableFileItem> files = _fileDownloadService.CollectFilesForDownload(userdata);
 
+        var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
 
-        using (var memoryStream = new MemoryStream())
-        {
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-            {
-                foreach (PropertyInfo property in ediFiles.GetType().GetProperties())
-                {
-                    var ediFileItem = property.GetValue(ediFiles) as GenericHashTableFileItem;
-                    if (ediFileItem?.Content != null)
-                    {
-                        var zipEntry = archive.CreateEntry(ediFileItem.FileName, CompressionLevel.Optimal);
-                        using (var entryStream = zipEntry.Open())
-                            await entryStream.WriteAsync(ediFileItem.Content, 0, ediFileItem.Content.Length);
-                    }
-                }
-            }
-
-            return memoryStream.ToArray();
-        }
-    }
-
-    private async Task DownloadDataAsync<T>(T data, string fileName, CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            string json = JsonConvert.SerializeObject(data);
-            byte[] jsonData = Encoding.UTF8.GetBytes(json);
-
-            using (var stream = new MemoryStream(jsonData))
-            {
-                var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
-
-                if (result.IsSuccessful)
-                {
-                    await Toast.Make($"File '{fileName}' saved successfully!").Show();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make(ex.Message).Show();
-        }
+        await _fileDownloadService.SaveZipFileAsync(ediZipFiles, cancellationToken);
     }
 
     [RelayCommand]
     private async Task DownloadAccountAsync(CancellationToken cancellationToken = default)
     {
-        await DownloadDataAsync(BolAccount, "BolAccount.json", cancellationToken);
+        await _fileDownloadService.DownloadDataAsync(BolAccount, "BolAccount.json", cancellationToken);
     }
 
     [RelayCommand]
     private async Task DownloadBolWalletAsync(CancellationToken cancellationToken = default)
     {
-        await DownloadDataAsync(userData.BolWallet, "BolWallet.json", cancellationToken);
+        await _fileDownloadService.DownloadDataAsync(userData.BolWallet, "BolWallet.json", cancellationToken);
     }
 }
