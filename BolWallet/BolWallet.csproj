@@ -62,6 +62,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
     <WarningsAsErrors />
+    <MtouchLink>SdkOnly</MtouchLink> 
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>true</EnablePackageSigning>
+    <UseHardenedRuntime>true</UseHardenedRuntime>
+    <CodesignKey>Developer ID Application</CodesignKey>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+    <CodesignProvision>Distribution outside AppStore - Developer ID</CodesignProvision>
+    <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
