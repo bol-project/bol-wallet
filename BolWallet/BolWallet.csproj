@@ -125,6 +125,9 @@
     <MauiXaml Update="Views\CreateCodenameIndividualPage.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
+    <MauiXaml Update="Views\CreateEdiCompanyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\CreateEdiPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

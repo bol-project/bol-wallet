@@ -16,7 +16,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
     private readonly IMediaPicker _mediaPicker;
     private ExtendedEncryptedDigitalMatrixCompany extendedEncryptedDigitalMatrix;
-    public GenericHashTableFiles ediFiles;
+    public CompanyHashFiles ediFiles;
 
     AudioRecorderService recorder;
 
@@ -34,17 +34,21 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
         _mediaPicker = mediaPicker;
-        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrixCompany { Hashes = new CompanyHashTable() };
-        GenericHashTableForm = new GenericHashTableForm();
+        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrixCompany
+        {
+            Incorporation = new CompanyIncorporation(),
+            Hashes = new CompanyHashTable()
+        };
+        _companyHashTableForm = new CompanyHashTableForm();
         recorder = new AudioRecorderService
         {
             AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
             TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
         };
-        ediFiles = new GenericHashTableFiles() { };
+        ediFiles = new CompanyHashFiles() { };
     }
 
-    [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
+    [ObservableProperty] private CompanyHashTableForm _companyHashTableForm;
 
     [ObservableProperty] private bool _isLoading = false;
 
@@ -87,26 +91,6 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task RecordAudio()
-    {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted)
-        {
-            await _permissionService.DisplayWarningAsync<Permissions.Speech>();
-            return;
-        }
-
-        if (recorder.IsRecording) await recorder.StopRecording();
-
-        Task<string> audioRecordTask = await recorder.StartRecording();
-
-        string audiofilePath = await audioRecordTask;
-
-        PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
-
-        await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
-    }
-
-    [RelayCommand]
     private async Task Submit()
     {
         try
@@ -116,43 +100,19 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
             extendedEncryptedDigitalMatrix.CodeName = userData.Codename;
-
-            var encryptedCitizenshipForRegistration = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryCode.Trim() == userData.Person.CountryCode.Trim());
-
-            extendedEncryptedDigitalMatrix.Hashes.IdentityCard = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCard;
-            extendedEncryptedDigitalMatrix.Hashes.Passport = encryptedCitizenshipForRegistration.CitizenshipHashes.Passport;
-            extendedEncryptedDigitalMatrix.Hashes.ProofOfNin = encryptedCitizenshipForRegistration.CitizenshipHashes.ProofOfNin;
-            extendedEncryptedDigitalMatrix.Hashes.BirthCertificate = encryptedCitizenshipForRegistration.CitizenshipHashes.BirthCertificate;
-
-            List<EncryptedCitizenship> encryptedCitizenships = new List<EncryptedCitizenship>();
-
-            foreach (var form in userData.EncryptedCitizenshipForms)
-            {
-                encryptedCitizenships.Add(new EncryptedCitizenship
-                {
-                    CountryCode = form.CountryCode,
-                    Nin = form.Nin,
-                    SurName = form.SurName,
-                    FirstName = form.FirstName,
-                    SecondName = form.SecondName,
-                    ThirdName = form.ThirdName,
-                    CitizenshipHashes = form.CitizenshipHashes,
-                    BirthCountryCode = userData.BirthCountryCode,
-                    BirthDate = userData.Person.Birthdate
-                });
-            }
-
-            extendedEncryptedDigitalMatrix.CitizenshipMatrices = encryptedCitizenships.ToArray();
+            extendedEncryptedDigitalMatrix.Incorporation.Title = userData.Company.Title;
+            extendedEncryptedDigitalMatrix.Incorporation.VatNumber = userData.Company.VatNumber;
+            extendedEncryptedDigitalMatrix.Incorporation.IncorporationDate = userData.Company.IncorporationDate;
 
             var edm = await Task.Run(() => _encryptedDigitalIdentityService.GenerateMatrix(extendedEncryptedDigitalMatrix));
 
-            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
+            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateCompanyEDI(edm));
 
-            extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
+            extendedEncryptedDigitalMatrix.IncorporationHash = edm.IncorporationHash;
 
             userData.Edi = edi;
-            userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
-            userData.EncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(edm);
+            userData.ExtendedEncryptedDigitalMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
+            userData.EncryptedDigitalMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(edm);
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -183,9 +143,9 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
             .GetProperty(propertyNameInfo.Name)
             .SetValue(ediFiles, ediFileItem);
 
-        OnPropertyChanged(nameof(GenericHashTableForm));
+        OnPropertyChanged(nameof(CompanyHashTableForm));
 
-        userData.GenericHashTableFiles = ediFiles;
+        userData.CompanyHashFiles = ediFiles;
 
         await _secureRepository.SetAsync("userdata", userData);
     }
@@ -194,7 +154,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     {
         var encodedFileBytes = _base16Encoder.Encode(fileBytes);
 
-        propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
+        propertyNameInfo.SetValue(CompanyHashTableForm, fileResult.FileName);
 
         extendedEncryptedDigitalMatrix.Hashes
             .GetType()
@@ -206,9 +166,9 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     {
         userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (userData?.GenericHashTableFiles is null) return;
+        if (userData?.CompanyHashFiles is null) return;
 
-        ediFiles = userData.GenericHashTableFiles;
+        ediFiles = userData.CompanyHashFiles;
 
         foreach (var propertyInfo in ediFiles.GetType().GetProperties())
         {
@@ -221,7 +181,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
                 continue;
             }
 
-            propertyNameInfo.SetValue(GenericHashTableForm, ediFileItem.FileName);
+            propertyNameInfo.SetValue(CompanyHashTableForm, ediFileItem.FileName);
 
             extendedEncryptedDigitalMatrix.Hashes
                 .GetType()
@@ -239,6 +199,6 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
 
     private PropertyInfo GetPropertyInfo(string propertyName)
     {
-        return this.GenericHashTableForm.GetType().GetProperty(propertyName);
+        return this.CompanyHashTableForm.GetType().GetProperty(propertyName);
     }
 }

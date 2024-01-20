@@ -1,0 +1,109 @@
+﻿@page "/create-edi-company-page"
+@using System.Reflection
+
+@inherits MvvmComponentBase<CreateCompanyEdiViewModel>
+@inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
+
+<MudThemeProvider />
+
+<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+<MudGrid Style="padding:5px">
+    <Virtualize Items="IdentificationDocuments" Context="edi">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="edi">
+                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+            </MudStack>
+        </MudItem>
+    </Virtualize>
+    <MudItem xs="12" sm="12" md="12">
+        <div class="text-center">
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary">Submit</MudButton>
+        </div>
+    </MudItem>
+</MudGrid>
+<style>
+    .text-center {
+        text-align: center;
+    }
+</style>
+@code {
+    CreateCompanyEdiViewModel createCompanyEdiViewModel;
+
+    List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
+    {
+        {new("IncorporationCertificate",Color.Transparent, "Incorporation Certificate", "") },
+        {new("MemorandumAndArticlesOfAssociation",Color.Transparent, "Memorandum And Articles Of Association", "") },
+        {new("RepresentationCertificate",Color.Transparent, "Representation Certificate", "") },
+        {new("TaxRegistrationCertificate",Color.Transparent, "Tax Registration Certificate", "") },
+        {new("ChambersRecords",Color.Transparent, "Chambers Records", "") },
+        {new("RegisterOfShareholders",Color.Transparent, "Register Of Shareholders", "") },
+        {new("ProofOfVatNumber",Color.Transparent, "Proof Of Vat Number", "") },
+        {new("ProofOfAddress",Color.Transparent, "Proof Of Address", "") },
+    };
+
+    private bool isProgressBarVisible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        createCompanyEdiViewModel = ViewModel;
+
+        await createCompanyEdiViewModel.Initialize();
+
+        foreach (PropertyInfo propertyInfo in createCompanyEdiViewModel.ediFiles.GetType().GetProperties())
+        {
+            await UpdateIdentificationDocumentsList(propertyInfo.Name);
+        }
+    }
+
+    private async Task Submit()
+    {
+        isProgressBarVisible = true;
+
+        await InvokeAsync(() => StateHasChanged());
+
+        await createCompanyEdiViewModel.SubmitCommand.ExecuteAsync(null);
+
+        isProgressBarVisible = false;
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task GetFile(string property)
+    {
+        await createCompanyEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task GetPhoto(string property)
+    {
+        await createCompanyEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task UpdateIdentificationDocumentsList(string property)
+    {
+        var propertyValue = createCompanyEdiViewModel.CompanyHashTableForm.GetType().GetProperty(property).GetValue(createCompanyEdiViewModel.CompanyHashTableForm, null);
+
+        if (propertyValue != null)
+        {
+            string fileName = propertyValue.ToString();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var index = IdentificationDocuments.FindIndex(x => x.Item1 == property);
+
+                fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
+
+                IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
+
+                await InvokeAsync(() => StateHasChanged());
+            }
+        }
+    }
+}

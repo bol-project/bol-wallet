@@ -12,8 +12,11 @@ public class UserData
     public List<EncryptedCitizenshipForm> EncryptedCitizenshipForms { get; set; } = new List<EncryptedCitizenshipForm>();
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
     public GenericHashTableFiles GenericHashTableFiles { get; set; }
+    public CompanyHashFiles CompanyHashFiles { get; set; }
     public string ExtendedEncryptedDigitalMatrix { get; set; }
     public string EncryptedDigitalMatrix { get; set; }
+    public string ExtendedEncryptedDigitalMatrixCompany { get; set; }
+    public string EncryptedDigitalMatrixCompany { get; set; }
     public string WalletPassword { get; set; }
     public bool IsCertifier { get; set; }
     public bool IsIndividualRegistration { get; set; }

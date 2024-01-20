@@ -20,3 +20,15 @@ public class GenericHashTableFiles
 
     public FileItem ProofOfResidence { get; set; }
 }
+
+public class CompanyHashFiles
+{
+    public FileItem IncorporationCertificate { get; set; }
+    public FileItem MemorandumAndArticlesOfAssociation { get; set; }
+    public FileItem RepresentationCertificate { get; set; }
+    public FileItem TaxRegistrationCertificate { get; set; }
+    public FileItem ChambersRecords { get; set; }
+    public FileItem RegisterOfShareholders { get; set; }
+    public FileItem ProofOfVatNumber { get; set; }
+    public FileItem ProofOfAddress { get; set; }
+}
