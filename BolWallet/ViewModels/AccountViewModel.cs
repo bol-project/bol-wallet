@@ -60,7 +60,7 @@ public partial class AccountViewModel : BaseViewModel
         if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix))
             return;
 
-        List<GenericHashTableFileItem> files = _fileDownloadService.CollectFilesForDownload(userdata);
+        List<FileItem> files = _fileDownloadService.CollectFilesForDownload(userdata);
 
         var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
 

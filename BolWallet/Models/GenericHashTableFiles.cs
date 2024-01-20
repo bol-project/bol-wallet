@@ -1,6 +1,6 @@
 ﻿namespace BolWallet.Models;
 
-public class GenericHashTableFileItem
+public class FileItem
 {
     public byte[] Content { get; set; }
     public string FileName { get; set; }
@@ -8,15 +8,15 @@ public class GenericHashTableFileItem
 
 public class GenericHashTableFiles
 {
-    public GenericHashTableFileItem DrivingLicense { get; set; }
+    public FileItem DrivingLicense { get; set; }
 
-    public GenericHashTableFileItem OtherIdentity { get; set; }
+    public FileItem OtherIdentity { get; set; }
 
-    public GenericHashTableFileItem FacePhoto { get; set; }
+    public FileItem FacePhoto { get; set; }
 
-    public GenericHashTableFileItem PersonalVoice { get; set; }
+    public FileItem PersonalVoice { get; set; }
 
-    public GenericHashTableFileItem ProofOfCommunication { get; set; }
+    public FileItem ProofOfCommunication { get; set; }
 
-    public GenericHashTableFileItem ProofOfResidence { get; set; }
+    public FileItem ProofOfResidence { get; set; }
 }

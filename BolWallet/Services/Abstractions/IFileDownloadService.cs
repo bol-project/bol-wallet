@@ -6,8 +6,8 @@ namespace BolWallet.Services.Abstractions;
 
 public interface IFileDownloadService
 {
-    Task<byte[]> CreateZipFileAsync(IEnumerable<GenericHashTableFileItem> files, CancellationToken cancellationToken = default);
-    List<GenericHashTableFileItem> CollectFilesForDownload(UserData userdata);
+    Task<byte[]> CreateZipFileAsync(IEnumerable<FileItem> files, CancellationToken cancellationToken = default);
+    List<FileItem> CollectFilesForDownload(UserData userdata);
     Task SaveZipFileAsync(byte[] ediZipFiles, CancellationToken cancellationToken);
     Task DownloadDataAsync<T>(T data, string fileName, CancellationToken cancellationToken = default);
 }

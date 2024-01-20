@@ -8,19 +8,19 @@ using System.Reflection;
 
 namespace BolWallet.ViewModels;
 
-public partial class CreateEdiViewModel : BaseViewModel
+public partial class CreateCompanyEdiViewModel : BaseViewModel
 {
     private readonly IPermissionService _permissionService;
     private readonly IBase16Encoder _base16Encoder;
     private readonly ISecureRepository _secureRepository;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
     private readonly IMediaPicker _mediaPicker;
-    private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
+    private ExtendedEncryptedDigitalMatrixCompany extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
 
     AudioRecorderService recorder;
 
-    public CreateEdiViewModel(
+    public CreateCompanyEdiViewModel(
         INavigationService navigationService,
         IPermissionService permissionService,
         IBase16Encoder base16Encoder,
@@ -34,7 +34,7 @@ public partial class CreateEdiViewModel : BaseViewModel
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
         _mediaPicker = mediaPicker;
-        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
+        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrixCompany { Hashes = new CompanyHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
         recorder = new AudioRecorderService
         {
@@ -61,7 +61,8 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
         {
-            FileTypes = customFileType, PickerTitle = "Pick a file"
+            FileTypes = customFileType,
+            PickerTitle = "Pick a file"
         });
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
