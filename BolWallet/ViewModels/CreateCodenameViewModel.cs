@@ -32,12 +32,6 @@ public partial class CreateCodenameViewModel : BaseViewModel
     }
 
     protected static bool IsCodenameExists(string codename)
-
-		Codename = userData.Codename;
-	}
-
-
-    private static bool IsCodenameExists(string codename)
     {
         var client = new HttpClient();
 

@@ -27,6 +27,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 return;
             }
 
+            userData = await this._secureRepository.GetAsync<UserData>("userdata");
+
             var person = new NaturalPerson
             {
                 FirstName = IndividualCodenameForm.FirstName.Value,
@@ -40,6 +42,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
             };
 
+            userData.BirthCountryCode = IndividualCodenameForm.CountryOfBirth.Alpha3;
+
             var result = _codeNameService.Generate(person);
 
             if (IsCodenameExists(result))
@@ -48,12 +52,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 return;
             }
 
-            var userData = new UserData
-            {
-                Codename = result,
-                Person = person,
-                IsIndividualRegistration = true
-            };
+            userData.Codename = result;
+            userData.Person = person;
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -68,22 +68,15 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
 
     public async Task Initialize()
     {
-        var userData = await _secureRepository.GetAsync<UserData>("userdata");
+        userData = await _secureRepository.GetAsync<UserData>("userdata");
         if (userData?.Person is null) return;
 
-        IndividualCodenameForm.FirstName.Value = userData.Person.FirstName;
-        IndividualCodenameForm.MiddleName.Value = userData.Person.MiddleName;
-        IndividualCodenameForm.Surname.Value = userData.Person.Surname;
-        IndividualCodenameForm.ThirdName.Value = userData.Person.ThirdName;
         IndividualCodenameForm.Gender = userData.Person.Gender;
         IndividualCodenameForm.Combination.Value = userData.Person.Combination;
-        IndividualCodenameForm.SelectedCountry = IndividualCodenameForm
-                    .Countries
-                    .FirstOrDefault(c => c.Alpha3 == userData.Person.CountryCode);
-        IndividualCodenameForm.NIN.Value = userData.Person.Nin;
         IndividualCodenameForm.Birthdate.Value = userData.Person.Birthdate.ToString("yyyy-MM-dd");
-
-        Codename = userData.Codename;
+        IndividualCodenameForm.CountryOfBirth = IndividualCodenameForm
+                    .Countries
+                    .FirstOrDefault(c => c.Alpha3 == userData.BirthCountryCode);
     }
 }
 
