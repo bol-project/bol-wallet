@@ -58,7 +58,10 @@ public partial class AccountViewModel : BaseViewModel
         var userdata = await this._secureRepository.GetAsync<UserData>("userdata");
 
         if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix))
+        {
+            await Toast.Make("Encrypted Digital Matrix not found in the device.").Show(cancellationToken);
             return;
+        }
 
         List<GenericHashTableFileItem> files = _fileDownloadService.CollectFilesForDownload(userdata);
 
