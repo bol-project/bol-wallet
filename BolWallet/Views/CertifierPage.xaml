@@ -5,7 +5,7 @@
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
 			 x:DataType="viewModels:CertifierViewModel"
 			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
-             Title="CertifierPage"
+             Title="Certifier Page"
 			 BackgroundColor="{DynamicResource SecondaryColor}">
 	<StackLayout Spacing="15" Padding="10" VerticalOptions="Center">
 		

@@ -16,8 +16,7 @@ public partial class CompanyCodenameForm : ObservableObject
 
         Title.PropertyChanged += (sender, args) => Invalidate();
         IncorporationDate.PropertyChanged += (sender, args) => Invalidate();
-        ExtraDigit.PropertyChanged += (sender, args) => Invalidate();
-
+        Combination.PropertyChanged += (sender, args) => Invalidate();
     }
 
     public List<Country> Countries => _content.Countries;
@@ -42,7 +41,8 @@ public partial class CompanyCodenameForm : ObservableObject
         ErrorMessage = "Title must contain two or more words",
         IsValid = value => OneOrMoreSpaces.IsMatch(value),
         Value = "",
-        IsMandatory = true
+        IsMandatory = true,
+        HelpMessage = "Title must contain two or more words."
     };
 
     public string _vatNumber;
@@ -65,15 +65,17 @@ public partial class CompanyCodenameForm : ObservableObject
             var date = DateTime.Parse(value);
             return date.CompareTo(DateTime.Today) <= 0;
         },
-        IsMandatory = true
+        IsMandatory = true,
+        HelpMessage = "Incorporation Date cannot be in the future."
     };
 
-    public BaseProperty ExtraDigit { get; set; } = new()
+    public BaseProperty Combination { get; set; } = new()
     {
         ErrorMessage = "Extra Digit should be a capital letter or a digit",
         IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
         Value = "",
-        IsMandatory = true
+        IsMandatory = true,
+        HelpMessage = "Extra Digit should be a capital letter or a digit."
     };
 
     public bool IsFormFilled =>
@@ -81,7 +83,7 @@ public partial class CompanyCodenameForm : ObservableObject
         Title.IsReady &&
         VatNumber is not null &&
         IncorporationDate.IsReady &&
-        ExtraDigit.IsReady;
+        Combination.IsReady;
 
     private bool _isInvalidated = true;
     public bool IsInvalidated

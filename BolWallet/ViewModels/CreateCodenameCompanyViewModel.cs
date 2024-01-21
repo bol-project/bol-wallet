@@ -39,7 +39,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber,
                 IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
-                Combination = CompanyCodenameForm.ExtraDigit.Value
+                Combination = CompanyCodenameForm.Combination.Value
             };
 
             var result = _codeNameService.Generate(company);
@@ -50,12 +50,8 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 return;
             }
 
-            var userData = new UserData
-            {
-                Codename = result,
-                Company = company,
-                IsIndividualRegistration = false
-            };
+            userData.Codename = result;
+            userData.Company = company;
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -96,7 +92,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         CompanyCodenameForm.Title.Value = userData.Company.Title;
         CompanyCodenameForm.VatNumber = userData.Company.VatNumber;
         CompanyCodenameForm.IncorporationDate.Value = userData.Company.IncorporationDate.ToString("yyyy-MM-dd");
-        CompanyCodenameForm.ExtraDigit.Value = userData.Company.Combination;
+        CompanyCodenameForm.Combination.Value = userData.Company.Combination;
 
         Codename = userData.Codename;
     }
