@@ -59,7 +59,10 @@ public partial class AccountViewModel : BaseViewModel
 
         if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix) &&
             string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrixCompany))
+        {
+            await Toast.Make("Encrypted Digital Matrix not found in the device.").Show(cancellationToken);
             return;
+        }
 
         List<FileItem> files;
 
