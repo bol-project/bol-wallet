@@ -58,7 +58,6 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
             await _secureRepository.SetAsync("userdata", userData);
 
             Codename = result;
-            IndividualCodenameForm.IsInvalidated = false;
         }
         catch (Exception ex)
         {
