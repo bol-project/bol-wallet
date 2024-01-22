@@ -37,7 +37,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 },
                 OrgType = CompanyCodenameForm.OrgType,
                 Title = CompanyCodenameForm.Title.Value,
-                VatNumber = CompanyCodenameForm.VatNumber,
+                VatNumber = CompanyCodenameForm.VatNumber.Value,
                 IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
                 Combination = CompanyCodenameForm.Combination.Value
             };
@@ -90,7 +90,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         CompanyCodenameForm.CompanyCountry = country;
         CompanyCodenameForm.OrgType = userData.Company.OrgType;
         CompanyCodenameForm.Title.Value = userData.Company.Title;
-        CompanyCodenameForm.VatNumber = userData.Company.VatNumber;
+        CompanyCodenameForm.VatNumber.Value = userData.Company.VatNumber;
         CompanyCodenameForm.IncorporationDate.Value = userData.Company.IncorporationDate.ToString("yyyy-MM-dd");
         CompanyCodenameForm.Combination.Value = userData.Company.Combination;
 

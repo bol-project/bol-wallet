@@ -17,6 +17,7 @@ public partial class CompanyCodenameForm : ObservableObject
         Title.PropertyChanged += (sender, args) => Invalidate();
         IncorporationDate.PropertyChanged += (sender, args) => Invalidate();
         Combination.PropertyChanged += (sender, args) => Invalidate();
+        VatNumber.PropertyChanged += (sender, args) => Invalidate();
     }
 
     public List<Country> Countries => _content.Countries;
@@ -42,20 +43,18 @@ public partial class CompanyCodenameForm : ObservableObject
         IsValid = value => OneOrMoreSpaces.IsMatch(value),
         Value = "",
         IsMandatory = true,
-        HelpMessage = "Title must contain two or more words."
+        HelpMessage = "Title must contain two or more words"
     };
 
-    public string _vatNumber;
-    [Required]
-    public string VatNumber
+
+    public BaseProperty VatNumber { get; set; } = new()
     {
-        get => _vatNumber;
-        set
-        {
-            SetProperty(ref _vatNumber, value);
-            Invalidate();
-        }
-    }
+        ErrorMessage = "VAT needs to be at least 5 characters",
+        IsValid = value => value.Length >= 5,
+        IsMandatory = true,
+        HelpMessage = "VAT needs to be at least 5 characters"
+    };
+    
 
     public BaseProperty IncorporationDate { get; set; } = new()
     {
@@ -75,13 +74,13 @@ public partial class CompanyCodenameForm : ObservableObject
         IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
         Value = "",
         IsMandatory = true,
-        HelpMessage = "Extra Digit should be a capital letter or a digit."
+        HelpMessage = "Extra Digit should be a capital letter or a digit"
     };
 
     public bool IsFormFilled =>
         CompanyCountry is not null &&
         Title.IsReady &&
-        VatNumber is not null &&
+        VatNumber.IsReady &&
         IncorporationDate.IsReady &&
         Combination.IsReady;
 

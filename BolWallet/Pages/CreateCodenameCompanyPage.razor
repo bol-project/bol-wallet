@@ -19,8 +19,8 @@
 
         <MudItem xs="6" sm="6" md="6">
             <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="VAT" OnlyValidateIfDirty="true"
-                          HelperText="VAT needs to be at least 5 characters"
-                          @bind-Value="@CompanyCodenameForm.VatNumber" Immediate="true" OnBlur="@(x=> CompanyCodenameForm.VatNumber= CompanyCodenameForm.VatNumber?.Trim().ToUpper())"
+                          HelperText="@CompanyCodenameForm.VatNumber.HelpMessage"
+                          @bind-Value="@CompanyCodenameForm.VatNumber.Value" Immediate="true" OnBlur="@(x=> CompanyCodenameForm.VatNumber.Value= CompanyCodenameForm.VatNumber.Value?.Trim().ToUpper())"
                           Margin="@Margin.Dense" Required="true" RequiredError="Vat is required!" />
         </MudItem>
 
