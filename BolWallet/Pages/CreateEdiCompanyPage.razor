@@ -9,6 +9,7 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
+<MudText Typo="Typo.h6" Class="m-5">To proceed with the verification process, please provide the Incorporation Certificate along with either the Representation Certificate Card, Tax Registration Certificate, or Chambers Records.</MudText>
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
@@ -22,7 +23,7 @@
     </Virtualize>
     <MudItem xs="12" sm="12" md="12">
         <div class="text-center">
-            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary">Submit</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isIncorporationCertificateSumbitted && (isRepresentationCertificateSumbitted || isTaxRegistrationCertificateSumbitted || isChambersRecordsSumbitted)))">Submit</MudButton>
         </div>
     </MudItem>
 </MudGrid>
@@ -36,17 +37,23 @@
 
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
-        {new("IncorporationCertificate",Color.Transparent, "Incorporation Certificate", "") },
-        {new("MemorandumAndArticlesOfAssociation",Color.Transparent, "Memorandum And Articles Of Association", "") },
+        {new("IncorporationCertificate",Color.Transparent, "Incorporation Certificate*", "") },
         {new("RepresentationCertificate",Color.Transparent, "Representation Certificate", "") },
         {new("TaxRegistrationCertificate",Color.Transparent, "Tax Registration Certificate", "") },
         {new("ChambersRecords",Color.Transparent, "Chambers Records", "") },
         {new("RegisterOfShareholders",Color.Transparent, "Register Of Shareholders", "") },
+        {new("MemorandumAndArticlesOfAssociation",Color.Transparent, "Memorandum And Articles Of Association", "") },
         {new("ProofOfVatNumber",Color.Transparent, "Proof Of Vat Number", "") },
         {new("ProofOfAddress",Color.Transparent, "Proof Of Address", "") },
     };
 
     private bool isProgressBarVisible = false;
+
+    bool isIncorporationCertificateSumbitted = false, 
+    isRepresentationCertificateSumbitted = false,
+    isTaxRegistrationCertificateSumbitted = false,
+    isChambersRecordsSumbitted = false;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,6 +108,15 @@
                 fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
 
                 IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
+
+                if (property == nameof(CompanyHashFiles.IncorporationCertificate))
+                    isIncorporationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.RepresentationCertificate))
+                    isRepresentationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.TaxRegistrationCertificate))
+                    isTaxRegistrationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.ChambersRecords))
+                    isChambersRecordsSumbitted = true;
 
                 await InvokeAsync(() => StateHasChanged());
             }
