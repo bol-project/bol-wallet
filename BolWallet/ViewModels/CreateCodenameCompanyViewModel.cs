@@ -94,7 +94,5 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         CompanyCodenameForm.VatNumber.Value = userData.Company.VatNumber;
         CompanyCodenameForm.IncorporationDate.Value = userData.Company.IncorporationDate.ToString("yyyy-MM-dd");
         CompanyCodenameForm.Combination.Value = userData.Company.Combination;
-
-        Codename = userData.Codename;
     }
 }
