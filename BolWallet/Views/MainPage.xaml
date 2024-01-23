@@ -14,7 +14,7 @@
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
             <Label
@@ -34,17 +34,27 @@
 
             <Button
                 Grid.Row="2"
-                Command="{Binding NavigateToCitizenshipPageCommand}"
+                Command="{Binding NavigateToCodenameIndividualPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                Text="Let's get started" />
+                WidthRequest="200"
+                Text="New Individual Wallet" />
 
-			<Button
-             Grid.Row="3"
+            <Button
+                Grid.Row="3"
+                Command="{Binding NavigateToCodenameCompanyPageCommand}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                WidthRequest="200"
+                Text="New Company Wallet" />
+
+            <Button
+             Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"
              FontAttributes="Bold"
              HorizontalOptions="Center"
-             Text="Import Your Wallet" />
-		</Grid>
-	</ScrollView>
+             WidthRequest="200"
+             Text="Import Existing Wallet" />
+        </Grid>
+    </ScrollView>
 </ContentPage>

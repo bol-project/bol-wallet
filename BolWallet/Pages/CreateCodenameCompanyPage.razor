@@ -1,0 +1,153 @@
+﻿@page "/create-company-codename-page"
+
+@inherits MvvmComponentBase<CreateCodenameCompanyViewModel>
+
+@inject RegisterContent _content;
+@inject NavigationManager nav;
+@inject CreateEdiViewModel CreateEdiViewModel;
+
+<MudThemeProvider />
+
+<MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
+    <MudGrid>
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Company Title" OnlyValidateIfDirty="true"
+                          @bind-Value="@CompanyCodenameForm.Title.Value" Immediate="true" OnBlur="@(x=> CompanyCodenameForm.Title.Value = CompanyCodenameForm.Title.Value?.Trim().ToUpper())"
+                          HelperText="@CompanyCodenameForm.Title.HelpMessage"
+                          Margin="@Margin.Dense" Required="true" ErrorText="@CompanyCodenameForm.Title.ErrorMessage" Validation="@CompanyCodenameForm.Title.IsReady" RequiredError="@CompanyCodenameForm.Title.ErrorMessage" />
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="VAT" OnlyValidateIfDirty="true"
+                          HelperText="@CompanyCodenameForm.VatNumber.HelpMessage"
+                          @bind-Value="@CompanyCodenameForm.VatNumber.Value" Immediate="true" OnBlur="@(x=> CompanyCodenameForm.VatNumber.Value= CompanyCodenameForm.VatNumber.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" RequiredError="Vat is required!" />
+        </MudItem>
+
+        <MudItem xs="6" sm="6" md="6">
+
+            <MudAutocomplete T="Country" Label="Country" @bind-Value="@CompanyCodenameForm.CompanyCountry" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                             SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" Immediate="true" OnBlur="@(x=>StateHasChanged())"
+                             Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+            </MudAutocomplete>
+
+        </MudItem>
+
+
+        <MudItem xs="6" sm="6" md="6">
+            <MudSelect T="Bol.Core.Model.OrgType" Label="Company Type" Variant="MudBlazor.Variant.Outlined"
+                       Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
+                       @bind-Value="@CompanyCodenameForm.OrgType" Immediate="true" Required="true" RequiredError="OrgType is required">
+                @foreach (Bol.Core.Model.OrgType ot in OrgTypes)
+                {
+                    <MudSelectItem T="Bol.Core.Model.OrgType" Value="@(Enum.Parse<Bol.Core.Model.OrgType>(ot.ToString()))">@CreateCodenameCompanyViewModel.EnumDisplayedName(ot)</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudDatePicker Label="Incorporation Date(yyyy-MM-dd)" Editable="true" Date="@IncorporationDate" Variant="MudBlazor.Variant.Outlined"
+                           Margin="@Margin.Dense"
+                           HelperText="VAT must contains at least 5 characters"
+                           MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today" Immediate="true"
+                           DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Incorporation Date(yyyy-MM-dd)" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Immediate="true" Label="Extra Digit" OnlyValidateIfDirty="true"
+                          @bind-Value="@CompanyCodenameForm.Combination.Value" HelperText="Extra Digit to create codename" MaxLength="1" OnBlur="@(x=> CompanyCodenameForm.Combination.Value = CompanyCodenameForm.Combination.Value?.Trim().ToUpper())"
+                          Margin="@Margin.Dense" Required="true" Validation="@CompanyCodenameForm.Combination.IsReady" RequiredError="@CompanyCodenameForm.Combination.ErrorMessage" />
+        </MudItem>
+
+        <MudItem xs="12" sm="12" md="12">
+            <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameCompanyViewModel.Codename"
+                          Margin="@Margin.Dense" ReadOnly="true"
+                          Required="true" RequiredError="Codename is required" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <div class="text-center">
+                <!-- Use a div with text-center class to center the buttons -->
+                @if (CompanyCodenameForm?.IsFormFilled ?? false)
+                {
+                    @if (string.IsNullOrEmpty(createCodenameCompanyViewModel.Codename.Trim()))
+                    {
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=>createCodenameCompanyViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> createCodenameCompanyViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
+                    }
+                }
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+<style>
+    input.mud-input-slot {
+        text-transform: uppercase;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
+@code
+{
+    CreateCodenameCompanyViewModel createCodenameCompanyViewModel;
+    CompanyCodenameForm CompanyCodenameForm;
+    Array OrgTypes = Enum.GetValues(typeof(Bol.Core.Model.OrgType));
+    MudForm form;
+
+    DateTime? IncorporationDate;
+
+    int lastYear = DateTime.Now.Year - 1;
+    bool updating = true;
+    string[] errors = { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        updating = true;
+
+        createCodenameCompanyViewModel = ViewModel;
+
+        CompanyCodenameForm = createCodenameCompanyViewModel.CompanyCodenameForm;
+
+        await createCodenameCompanyViewModel.Initialize();
+
+        IncorporationDate = CompanyCodenameForm.IncorporationDate.Value == null ? DateTime.Today : Convert.ToDateTime(CompanyCodenameForm.IncorporationDate.Value);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            updating = false;
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void OnDateChanged(DateTime? dt)
+    {
+        CompanyCodenameForm.IncorporationDate.Value = dt?.ToString("yyyy-MM-dd");
+        IncorporationDate = dt;
+    }
+
+    private async Task<IEnumerable<Country>> Search(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return CompanyCodenameForm.Countries;
+
+        return await Task.Run(() => CompanyCodenameForm.Countries.Where(x => x.Name.StartsWith(value, StringComparison.InvariantCultureIgnoreCase)).ToList());
+
+    }
+
+    private async Task FieldChanged(FormFieldChangedEventArgs args)
+    {
+        if (updating)
+            return;
+
+        createCodenameCompanyViewModel.Codename = "";
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+}

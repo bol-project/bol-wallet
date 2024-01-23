@@ -26,8 +26,14 @@ public partial class MainViewModel : BaseViewModel
         _sha256 = sha256;
     }
 
+	[RelayCommand]
+	private async Task NavigateToCodenameCompanyPage()
+	{
+        await NavigationService.NavigateTo<CreateCodenameCompanyViewModel>(true);
+    }
+
     [RelayCommand]
-    private async Task NavigateToCitizenshipPage()
+    private async Task NavigateToCodenameIndividualPage()
     {
         await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
     }

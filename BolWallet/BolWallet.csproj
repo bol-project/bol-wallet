@@ -127,8 +127,14 @@
     <MauiXaml Update="Views\ClaimPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Views\CreateCodenamePage.xaml">
+    <MauiXaml Update="Views\CreateCodenameCompanyPage.xaml">
       <SubType>Designer</SubType>
+    </MauiXaml>
+    <MauiXaml Update="Views\CreateCodenameIndividualPage.xaml">
+      <SubType>Designer</SubType>
+    </MauiXaml>
+    <MauiXaml Update="Views\CreateEdiCompanyPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\CreateEdiPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -176,8 +182,12 @@
     <Compile Update="Views\BolCommunityPage.xaml.cs">
       <DependentUpon>BolCommunityPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\CreateCodenamePage.xaml.cs">
-      <DependentUpon>CreateCodenamePage.xaml</DependentUpon>
+    <Compile Update="Views\CreateCodenameCompanyPage.xaml.cs">
+      <DependentUpon>CreateCodenameCompanyPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\CreateCodenameIndividualPage.xaml.cs">
+      <DependentUpon>CreateCodenameIndividualPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MainWithAccountPage.xaml.cs">
@@ -188,7 +198,7 @@
   <ItemGroup>
     <PackageReference Include="akavache" Version="9.1.20" />
     <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
-    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.18" />
+    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.19" />
     <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace BolWallet.Models;
 
 [INotifyPropertyChanged]
-public partial class CodenameForm
+public partial class IndividualCodenameForm
 {
     private static readonly Regex OneOrMoreCapitalLetters = new ("^[A-Z]+$");
     private static readonly Regex ZeroOrMoreCapitalLetters = new ("^[A-Z]*$");
@@ -12,7 +12,7 @@ public partial class CodenameForm
 
     private readonly RegisterContent _content;
 
-    public CodenameForm(RegisterContent content)
+    public IndividualCodenameForm(RegisterContent content)
     {
         _content = content;
 

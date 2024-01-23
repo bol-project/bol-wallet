@@ -20,17 +20,17 @@ public class FileDownloadService : IFileDownloadService
         _base16Encoder = base16Encoder;
     }
 
-    public List<GenericHashTableFileItem> CollectFilesForDownload(UserData userdata)
+    public List<FileItem> CollectIndividualFilesForDownload(UserData userdata)
     {
-        List<GenericHashTableFileItem> files = new List<GenericHashTableFileItem>();
+        List<FileItem> files = new List<FileItem>();
 
         foreach (PropertyInfo property in userdata.GenericHashTableFiles.GetType().GetProperties())
         {
-            var ediFileItem = property.GetValue(userdata.GenericHashTableFiles) as GenericHashTableFileItem;
+            var ediFileItem = property.GetValue(userdata.GenericHashTableFiles) as FileItem;
 
             if (ediFileItem?.Content != null)
             {
-                files.Add(new GenericHashTableFileItem()
+                files.Add(new FileItem()
                 {
                     FileName = ediFileItem.FileName,
                     Content = ediFileItem.Content
@@ -50,7 +50,7 @@ public class FileDownloadService : IFileDownloadService
 
                 if (ediFileItem != Bol.Core.Constants.HASH_ZEROS)
                 {
-                    files.Add(new GenericHashTableFileItem()
+                    files.Add(new FileItem()
                     {
                         FileName = fileName,
                         Content = _base16Encoder.Decode(ediFileItem)
@@ -59,16 +59,49 @@ public class FileDownloadService : IFileDownloadService
             }
         }
 
-        files.Add(new GenericHashTableFileItem()
+        files.Add(new FileItem()
         {
             FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrix)}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrix)
         });
 
-        files.Add(new GenericHashTableFileItem()
+        files.Add(new FileItem()
         {
             FileName = $"{nameof(userdata.EncryptedDigitalMatrix)}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrix)
+        });
+
+        return files;
+    }
+
+    public List<FileItem> CollectCompanyFilesForDownload(UserData userdata)
+    {
+        List<FileItem> files = new List<FileItem>();
+
+        foreach (PropertyInfo property in userdata.CompanyHashFiles.GetType().GetProperties())
+        {
+            var ediFileItem = property.GetValue(userdata.CompanyHashFiles) as FileItem;
+
+            if (ediFileItem?.Content != null)
+            {
+                files.Add(new FileItem()
+                {
+                    FileName = ediFileItem.FileName,
+                    Content = ediFileItem.Content
+                });
+            }
+        }
+
+        files.Add(new FileItem()
+        {
+            FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrixCompany)}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrixCompany)
+        });
+
+        files.Add(new FileItem()
+        {
+            FileName = $"{nameof(userdata.EncryptedDigitalMatrixCompany)}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrixCompany)
         });
 
         return files;
@@ -87,7 +120,7 @@ public class FileDownloadService : IFileDownloadService
         }
     }
 
-    public async Task<byte[]> CreateZipFileAsync(IEnumerable<GenericHashTableFileItem> files, CancellationToken cancellationToken = default)
+    public async Task<byte[]> CreateZipFileAsync(IEnumerable<FileItem> files, CancellationToken cancellationToken = default)
     {
         using (var memoryStream = new MemoryStream())
         {

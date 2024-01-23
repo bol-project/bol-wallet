@@ -1,7 +1,7 @@
-﻿@page "/create-edi-page"
+﻿@page "/create-edi-company-page"
 @using System.Reflection
 
-@inherits MvvmComponentBase<CreateEdiViewModel>
+@inherits MvvmComponentBase<CreateCompanyEdiViewModel>
 @inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
 
 <MudThemeProvider />
@@ -9,6 +9,7 @@
 <MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
+<MudText Typo="Typo.h6" Class="m-5">To proceed with the verification process, please provide the Incorporation Certificate along with either the Representation Certificate Card, Tax Registration Certificate, or Chambers Records.</MudText>
 <MudGrid Style="padding:5px">
     <Virtualize Items="IdentificationDocuments" Context="edi">
         <MudItem xs="12" sm="12" md="12">
@@ -16,20 +17,13 @@
                 <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    @if (edi.Item1 == "PersonalVoice")
-                {
-                    <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
-                }
-                else
-                {
                     <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
-                }
             </MudStack>
         </MudItem>
     </Virtualize>
     <MudItem xs="12" sm="12" md="12">
         <div class="text-center">
-            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isPersonalVoiceSumbitted && isFacePhotoSumbitted))">Submit</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isIncorporationCertificateSumbitted && (isRepresentationCertificateSumbitted || isTaxRegistrationCertificateSumbitted || isChambersRecordsSumbitted)))">Submit</MudButton>
         </div>
     </MudItem>
 </MudGrid>
@@ -39,29 +33,35 @@
     }
 </style>
 @code {
-    CreateEdiViewModel createEdiViewModel;
+    CreateCompanyEdiViewModel createCompanyEdiViewModel;
 
     List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
     {
-        {new("FacePhoto",Color.Transparent, "Face Photo*", "") },
-        {new("PersonalVoice",Color.Transparent, "Personal Voice*", "") },
-        {new("DrivingLicense",Color.Transparent, "Driving License", "") },
-        {new("OtherIdentity",Color.Transparent, "Other Identity", "") },
-        {new("ProofOfCommunication",Color.Transparent, "Proof Of Communication", "") },
-        {new("ProofOfResidence",Color.Transparent, "Proof Of Residence", "") },
+        {new("IncorporationCertificate",Color.Transparent, "Incorporation Certificate*", "") },
+        {new("RepresentationCertificate",Color.Transparent, "Representation Certificate", "") },
+        {new("TaxRegistrationCertificate",Color.Transparent, "Tax Registration Certificate", "") },
+        {new("ChambersRecords",Color.Transparent, "Chambers Records", "") },
+        {new("RegisterOfShareholders",Color.Transparent, "Register Of Shareholders", "") },
+        {new("MemorandumAndArticlesOfAssociation",Color.Transparent, "Memorandum And Articles Of Association", "") },
+        {new("ProofOfVatNumber",Color.Transparent, "Proof Of Vat Number", "") },
+        {new("ProofOfAddress",Color.Transparent, "Proof Of Address", "") },
     };
 
     private bool isProgressBarVisible = false;
 
-    bool isPersonalVoiceSumbitted = false, isFacePhotoSumbitted = false;
+    bool isIncorporationCertificateSumbitted = false, 
+    isRepresentationCertificateSumbitted = false,
+    isTaxRegistrationCertificateSumbitted = false,
+    isChambersRecordsSumbitted = false;
+
 
     protected override async Task OnInitializedAsync()
     {
-        createEdiViewModel = ViewModel;
+        createCompanyEdiViewModel = ViewModel;
 
-        await createEdiViewModel.Initialize();
+        await createCompanyEdiViewModel.Initialize();
 
-        foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
+        foreach (PropertyInfo propertyInfo in createCompanyEdiViewModel.ediFiles.GetType().GetProperties())
         {
             await UpdateIdentificationDocumentsList(propertyInfo.Name);
         }
@@ -73,7 +73,7 @@
 
         await InvokeAsync(() => StateHasChanged());
 
-        await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
+        await createCompanyEdiViewModel.SubmitCommand.ExecuteAsync(null);
 
         isProgressBarVisible = false;
 
@@ -82,28 +82,21 @@
 
     private async Task GetFile(string property)
     {
-        await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+        await createCompanyEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }
 
     private async Task GetPhoto(string property)
     {
-        await createEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
-
-        await UpdateIdentificationDocumentsList(property);
-    }
-
-    private async Task GetAudio(string property)
-    {
-        await createEdiViewModel.RecordAudioCommand.ExecuteAsync(null);
+        await createCompanyEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }
 
     private async Task UpdateIdentificationDocumentsList(string property)
     {
-        var propertyValue = createEdiViewModel.GenericHashTableForm.GetType().GetProperty(property).GetValue(createEdiViewModel.GenericHashTableForm, null);
+        var propertyValue = createCompanyEdiViewModel.CompanyHashTableForm.GetType().GetProperty(property).GetValue(createCompanyEdiViewModel.CompanyHashTableForm, null);
 
         if (propertyValue != null)
         {
@@ -116,10 +109,14 @@
 
                 IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
 
-                if (property == nameof(GenericHashTableForm.PersonalVoice))
-                    isPersonalVoiceSumbitted = true;
-                else if (property == nameof(GenericHashTableForm.FacePhoto))
-                    isFacePhotoSumbitted = true;
+                if (property == nameof(CompanyHashFiles.IncorporationCertificate))
+                    isIncorporationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.RepresentationCertificate))
+                    isRepresentationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.TaxRegistrationCertificate))
+                    isTaxRegistrationCertificateSumbitted = true;
+                else if (property == nameof(CompanyHashFiles.ChambersRecords))
+                    isChambersRecordsSumbitted = true;
 
                 await InvokeAsync(() => StateHasChanged());
             }
