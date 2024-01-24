@@ -3,7 +3,7 @@ namespace BolWallet.Services.Abstractions;
 public interface IRepository
 {
 	/// <summary>
-	/// Gets the value of this <see cref="key"/> from the storage.
+	/// Gets the value of this key from the storage.
 	/// </summary>
 	/// <returns></returns>
 	Task<TEntity> GetAsync<TEntity>(string key, CancellationToken token = default)

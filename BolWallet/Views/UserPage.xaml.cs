@@ -16,7 +16,7 @@ public partial class UserPage : ContentPage
 
     }
 
-    private async void ValidButton_Click(object sender, EventArgs e)
+    private void ValidButton_Click(object sender, EventArgs e)
     {
         Uri uri = new Uri($"http://10.0.2.2:5014/{_userViewModel.Address}", UriKind.RelativeOrAbsolute);
 
@@ -24,12 +24,12 @@ public partial class UserPage : ContentPage
         timer1.Start();
         
     }
-    public async void OnCheckResult(Object? sender, ElapsedEventArgs eventArgs)
+    
+    public void OnCheckResult(Object sender, ElapsedEventArgs eventArgs)
     {
-        string result = string.Empty;
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            result = await wView.EvaluateJavaScriptAsync($"resback()");
+            var result = await wView.EvaluateJavaScriptAsync($"resback()");
             if(!string.IsNullOrEmpty(result) && result=="OK")
             {
                 timer1.Stop();
@@ -39,7 +39,5 @@ public partial class UserPage : ContentPage
                 vBtn.IsVisible  = false;
             }
         });
-        
-        
     }
 }
