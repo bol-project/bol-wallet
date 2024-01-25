@@ -1,7 +1,8 @@
-﻿using Bol.Core.Abstractions;
+﻿using Bol.Address;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
+using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
-using System.Collections.ObjectModel;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -9,6 +10,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
+    private readonly IAddressTransformer _addressTransformer;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -17,10 +19,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     public string CommunityText => "Bol Community";
 
     [ObservableProperty]
-    public List<KeyValuePair<string, string>> _commercialBalances = new();
-
-    [ObservableProperty]
-    public ObservableCollection<BalanceDisplayItem> _commercialBalancesDisplayList = new();
+    private List<BalanceDisplayItem> _commercialBalancesDisplayList = new();
 
     [ObservableProperty]
     private string _codeName = "";
@@ -41,7 +40,16 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private bool _isAccountOpen = false;
 
     [ObservableProperty]
-    private bool _isNotRegistered = true;
+    private bool _isRegistered = false;
+    
+    [ObservableProperty]
+    private bool _isWhiteListed = false;
+
+    [ObservableProperty]
+    private bool _canRegister = false;
+    
+    [ObservableProperty]
+    private bool _canWhiteList = false;
 
     [ObservableProperty]
     private bool _isCommercialAddressesExpanded = false;
@@ -50,54 +58,24 @@ public partial class MainWithAccountViewModel : BaseViewModel
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
-        IDeviceDisplay deviceDisplay)
+        IDeviceDisplay deviceDisplay, 
+        IAddressTransformer addressTransformer)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
+        _addressTransformer = addressTransformer;
     }
 
     [RelayCommand]
-    public async Task Initialize()
-    {
-        try
-        {
-            await FetchBolAccountData();
-
-            await GenerateCommercialBalanceDisplayList();
-        }
-        finally
-        {
-            IsRefreshing = false;
-            GC.Collect();
-        }
-    }
-
-    [RelayCommand]
-    private async Task FetchBolAccountData()
+    private async Task Refresh(CancellationToken token)
     {
         try
         {
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-            
-            userData = await _secureRepository.GetAsync<UserData>("userdata");
-
-            CodeName = userData.Codename;
-            MainAddress = userData.BolWallet.accounts?.FirstOrDefault(a => a.Label == "main").Address;
-
-            await Task.Run(async () => BolAccount = await _bolService.GetAccount(userData.Codename));
-
-            IsNotRegistered = false;
-
-            userData.IsCertifier = BolAccount.IsCertifier;
-            await _secureRepository.SetAsync("userdata", userData);
-
-            if (BolAccount.AccountStatus == AccountStatus.Open)
-                IsAccountOpen = true;
-            else
-                await NavigationService.NavigateTo<CertifyViewModel>(true);
+            await FetchBolAccountData(token);
         }
         catch (Exception ex)
         {
@@ -107,21 +85,60 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             _deviceDisplay.KeepScreenOn = false;
             IsLoading = false;
+            IsRefreshing = false;
         }
     }
-
-    private async Task GenerateCommercialBalanceDisplayList()
+    
+    private async Task FetchBolAccountData(CancellationToken token)
     {
         try
         {
-            CommercialBalances = BolAccount?.CommercialBalances?.ToList() ?? new();
+            userData = await _secureRepository.GetAsync<UserData>("userdata");
 
-            CommercialBalancesDisplayList.Clear();
+            CodeName = userData.Codename;
+            MainAddress = userData?.BolWallet?.accounts?.FirstOrDefault(a => a.Label == "main")?.Address
+                ?? throw new Exception("Could not find a Main Address account in open wallet.");
 
-            foreach (var commercialBalance in CommercialBalances)
+            try
             {
-                CommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+                BolAccount = await Task.Run(async () => await _bolService.GetAccount(userData.Codename, token), token);
+                IsRegistered = true;
             }
+            catch (RpcException ex)
+            {
+                IsRegistered = false;
+                await Toast.Make(ex.Message).Show();
+            }
+
+            if (IsRegistered)
+            {
+                userData.IsCertifier = BolAccount.IsCertifier;
+                await _secureRepository.SetAsync("userdata", userData);
+
+                if (BolAccount.AccountStatus == AccountStatus.Open)
+                    IsAccountOpen = true;
+                else
+                    await NavigationService.NavigateTo<CertifyViewModel>(true);
+
+                CommercialBalancesDisplayList = (BolAccount?.CommercialBalances ?? new())
+                    .Select(pair => new BalanceDisplayItem { Address = pair.Key, Balance = pair.Value })
+                    .ToList();
+                return;
+            }
+            
+            try
+            {
+                IsWhiteListed = await Task.Run(async () => 
+                    await _bolService.IsWhitelisted(_addressTransformer.ToScriptHash(MainAddress), token), token);
+            }
+            catch (RpcException ex)
+            {
+                IsWhiteListed = false;
+                await Toast.Make(ex.Message).Show();
+            }
+
+            CanWhiteList = !IsWhiteListed && !IsRegistered;
+            CanRegister = IsWhiteListed && !IsRegistered;
         }
         catch (Exception ex)
         {
@@ -130,17 +147,20 @@ public partial class MainWithAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task Register()
+    private async Task Register(CancellationToken token)
     {
         try
         {
             IsLoading = true;
 
-            await Task.Delay(100);
+            await _bolService.Register(token);
 
-            BolAccount = await _bolService.Register();
-
-            await Toast.Make("Your Account is registered now.").Show();
+            while (!IsRegistered)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                await Refresh(token);
+            }
+            await Toast.Make("Your Account has been registered.").Show();
         }
         catch (Exception ex)
         {
@@ -153,16 +173,29 @@ public partial class MainWithAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task Whitelist()
+    private async Task Whitelist(CancellationToken token)
     {
         try
         {
+            IsLoading = true;
+
             Uri uri = new Uri($"https://certifier.demo.bolchain.net/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+            
+            while (!IsWhiteListed)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(5), token);
+                await Refresh(token);
+            }
+            await Toast.Make("Your Main Address has been Whitelisted.").Show();
         }
         catch (Exception ex)
         {
             await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 

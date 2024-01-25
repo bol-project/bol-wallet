@@ -15,7 +15,7 @@
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
 
-	<RefreshView Command="{Binding InitializeCommand}" IsRefreshing="{Binding IsRefreshing}">
+	<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
 		<ScrollView>
 		<Grid
             Padding="{OnPlatform iOS='30,60,30,30',
@@ -27,11 +27,14 @@
 			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{OnPlatform False, WinUI=True}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
 					<ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
 			</StackLayout>
+            <StackLayout Grid.Row="0" Grid.ColumnSpan="3" IsVisible="{Binding IsRefreshing, Converter={StaticResource InverseBooleanConverter}}">
+                <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
+            </StackLayout>
 			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 
 				<Label IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 
-				<ImageButton IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<ImageButton IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -205,22 +208,22 @@
 				</ListView>
 				</Frame>
 
-				<Label IsVisible="{Binding IsNotRegistered}"
+				<Label IsVisible="{Binding CanWhiteList}"
 					Text="1. Your wallet is now set up. Please whitelist your Main Address first. Once this is complete, you can move on to the next step to Register."/>
 
 				<Button
-					IsVisible="{Binding IsNotRegistered}"
+					IsVisible="{Binding CanWhiteList}"
 					Command="{Binding WhitelistCommand}"
 											BackgroundColor="DarkSlateBlue"
 											TextColor="White"
 					HorizontalOptions="FillAndExpand"
 					Text="Whitelist your Main Address" />
 				
-				<Label IsVisible="{Binding IsNotRegistered}"
+				<Label IsVisible="{Binding CanRegister}"
 					Text="2. Please register your main address by clicking 'Register'. Continue to refresh until you are directed to the certification page."/>
 
 				<Button
-				IsVisible="{Binding IsNotRegistered}"
+				IsVisible="{Binding CanRegister}"
 				Command="{Binding RegisterCommand}"
 							BackgroundColor="DarkSlateBlue"
 							TextColor="White"
