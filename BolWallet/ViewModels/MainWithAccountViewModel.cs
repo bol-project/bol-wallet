@@ -158,7 +158,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
             while (!IsRegistered)
             {
                 await Task.Delay(TimeSpan.FromSeconds(5), token);
-                await Refresh(token);
+                await FetchBolAccountData(token);
             }
             await Toast.Make("Your Account has been registered.").Show();
         }
@@ -185,7 +185,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
             while (!IsWhiteListed)
             {
                 await Task.Delay(TimeSpan.FromSeconds(5), token);
-                await Refresh(token);
+                await FetchBolAccountData(token);
             }
             await Toast.Make("Your Main Address has been Whitelisted.").Show();
         }
