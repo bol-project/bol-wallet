@@ -25,7 +25,7 @@
             RowSpacing="25"
             ColumnSpacing="8">
 			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{OnPlatform False, WinUI=True}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-					<ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
+					<ActivityIndicator IsVisible="{Binding IsRefreshing}" IsRunning="True" />
 			</StackLayout>
             <StackLayout Grid.Row="0" Grid.ColumnSpan="3" IsVisible="{Binding IsRefreshing, Converter={StaticResource InverseBooleanConverter}}">
                 <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
