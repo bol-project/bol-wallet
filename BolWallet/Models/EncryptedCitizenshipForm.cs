@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bol.Core.Model;
-using YamlDotNet.Serialization;
 
 namespace BolWallet.Models;
 public class EncryptedCitizenshipForm
