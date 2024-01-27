@@ -40,9 +40,9 @@ public class FileDownloadService : IFileDownloadService
 
         foreach (EncryptedCitizenshipForm encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
         {
-            foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperties())
+            foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperties())
             {
-                var ediFileItem = property.GetValue(encryptedCitizenshipForm.CitizenshipHashes) as string;
+                var ediFileItem = property.GetValue(encryptedCitizenshipForm.CitizenshipActualBytes) as string;
 
                 PropertyInfo ediFileName = encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property.Name);
 

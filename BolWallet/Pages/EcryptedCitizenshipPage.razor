@@ -6,7 +6,8 @@
 @inject INavigationService navigationService;
 @inject IMediaPicker mediaPicker;
 @inject IPermissionService permissionService;
-@inject IBase16Encoder base16Encoder
+@inject IBase16Encoder base16Encoder;
+@inject ISha256Hasher sha256Hasher;
 
 <MudThemeProvider />
 
@@ -173,8 +174,10 @@
         {
             var fileBytes = File.ReadAllBytes(fileResult.FullPath);
             var encodedFileBytes = base16Encoder.Encode(fileBytes);
+            var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
 
-            encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, encodedFileBytes);
+            encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
+            encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
             encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, fileResult.FileName);
         }
 

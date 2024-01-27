@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Bol.Core.Model;
+using YamlDotNet.Serialization;
 
 namespace BolWallet.Models;
 public class EncryptedCitizenshipForm
@@ -25,6 +26,7 @@ public class EncryptedCitizenshipForm
     public string ThirdName { get; set; }
 
     public CitizenshipHashTable CitizenshipHashes { get; set; }
+    public CitizenshipHashTable CitizenshipActualBytes { get; set; }
 
     public CitizenshipHashTableFileNames CitizenshipHashTableFileNames { get; set; }
 
