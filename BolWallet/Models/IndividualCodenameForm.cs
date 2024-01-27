@@ -3,8 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace BolWallet.Models;
 
-[INotifyPropertyChanged]
-public partial class IndividualCodenameForm
+public class IndividualCodenameForm : ObservableObject
 {
     private static readonly Regex OneOrMoreCapitalLetters = new ("^[A-Z]+$");
     private static readonly Regex ZeroOrMoreCapitalLetters = new ("^[A-Z]*$");

@@ -153,7 +153,6 @@ public partial class ExtendedDatePicker : ContentView
     /// <summary>
     /// Floating Label
     /// </summary>
-    /// <param name="propertyName"></param>
     /// 
     public new void Focus()
     {
@@ -163,20 +162,8 @@ public partial class ExtendedDatePicker : ContentView
         }
     }
 
-    async void Handle_Focused(object sender, FocusEventArgs e)
-    {
-        
-        {
-            //await TransitionToTitle(true);
-        }
-    }
-    async void Handle_Unfocused(object sender, FocusEventArgs e)
-    {
-        
-        {
-            //await TransitionToPlaceholder(true);
-        }
-    }
+    void Handle_Focused(object sender, FocusEventArgs e) { }
+    void Handle_Unfocused(object sender, FocusEventArgs e) { }
 
     async Task TransitionToTitle(bool animated)
     {
@@ -236,74 +223,9 @@ public partial class ExtendedDatePicker : ContentView
         return taskCompletionSource.Task;
     }
 
-    private Dictionary<string, object> Params = new();
-    protected override async void OnPropertyChanged(string propertyName = null)
+    protected override void OnPropertyChanged(string propertyName = null)
     {
         base.OnPropertyChanged(propertyName);
-        /*
-        if(!Params.ContainsKey(propertyName))
-        {
-
-            if (propertyName == FormatProperty.PropertyName)
-            {
-                Params.Add(propertyName, Format);
-            }
-            else if (propertyName == DateProperty.PropertyName)
-            {
-                MaximumDate = new DateTime(DateTime.Now.Year - 1, 12, 31);
-                if(Date > MaximumDate) Date= MaximumDate;
-                Params.Add(propertyName, Date);
-            }
-            else if (propertyName == MaximumDateProperty.PropertyName)
-            {
-                Params.Add(propertyName, MaximumDate);
-            }
-            else if (propertyName == MinimumDateProperty.PropertyName)
-            {
-                Params.Add(propertyName, MinimumDate);
-            }
-            else if (propertyName == PlaceholderColorProperty.PropertyName)
-            {
-                Params.Add(propertyName, PlaceholderColor);
-            }
-            else if (propertyName == EndIconProperty.PropertyName)
-            {
-                Params.Add(propertyName, EndIcon);
-            }
-            else if (propertyName == FocusedLabelColorProperty.PropertyName)
-            {
-                Params.Add(propertyName, FocusedLabelColor);
-            }
-            else if (propertyName == FocusedBorderColorProperty.PropertyName)
-            {
-                Params.Add(propertyName, FocusedBorderColor);
-            }
-            else if (propertyName == ErrorColorProperty.PropertyName)
-            {
-                Params.Add(propertyName, ErrorColor);
-            }
-            else if (propertyName == EndIconColorProperty.PropertyName)
-            {
-                Params.Add(propertyName, EndIconColor);
-            }
-            else if (propertyName == LabelTextProperty.PropertyName)
-            {
-                Params.Add(propertyName, LabelText);
-            }
-            else if (propertyName == ErrorTextProperty.PropertyName)
-            {
-                Params.Add(propertyName, ErrorText);
-            }
-            else if (propertyName == FontSizeProperty.PropertyName)
-            {
-                _placeholderFontSize = FontSize;
-                LabelTitle.FontSize = _placeholderFontSize;
-                Params.Add(propertyName, FontSize);
-            }
-            else 
-            
-        }
-        */
         
         if (propertyName == StateProperty.PropertyName || propertyName == HasErrorProperty.PropertyName)
         {
@@ -318,7 +240,6 @@ public partial class ExtendedDatePicker : ContentView
                 Glyph = (string)_endIconConverter.Convert(State, typeof(string), null, CultureInfo.CurrentCulture),
                 Size = 24
             };
-            //Params.Add(propertyName, propertyName == StateProperty.PropertyName ? State : HasError);
         }
     }
 

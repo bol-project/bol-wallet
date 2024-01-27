@@ -128,7 +128,11 @@ public partial class SendBolViewModel : BaseViewModel
 
             foreach (var commercialBalance in searchCommercialBalances)
             {
-                SearchCommercialBalancesDisplayList.Add(new BalanceDisplayItem(address: commercialBalance.Key, balance: commercialBalance.Value));
+                SearchCommercialBalancesDisplayList.Add(new BalanceDisplayItem
+                {
+                    Address = commercialBalance.Key, 
+                    Balance = commercialBalance.Value
+                });
             }
         }
         catch (Exception ex)

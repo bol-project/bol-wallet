@@ -154,7 +154,6 @@ public partial class ExtendedComboBox : ContentView
     /// <summary>
     /// Floating Label
     /// </summary>
-    /// <param name="propertyName"></param>
     /// 
     public new void Focus()
     {

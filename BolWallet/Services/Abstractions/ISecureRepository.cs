@@ -5,13 +5,13 @@ public interface ISecureRepository
 	TEntity Get<TEntity>(string key) where TEntity : class;
 
 	/// <summary>
-	/// Gets the value of this <see cref="key"/> from the secure encrypted storage.
+	/// Gets the value of this key from the secure encrypted storage.
 	/// </summary>
 	/// <returns></returns>
 	Task<string> GetAsync(string key);
 	
 	/// <summary>
-	/// Gets the deserialized value of this <see cref="key"/> from the secure encrypted storage.
+	/// Gets the deserialized value of this key from the secure encrypted storage.
 	/// </summary>
 	/// <returns></returns>
 	Task<TEntity> GetAsync<TEntity>(string key) where TEntity : class;
@@ -24,7 +24,7 @@ public interface ISecureRepository
 	
 	/// <summary>
 	/// Saves the key-value pair to the secure encrypted storage.
-	/// The <see cref="entity"/> is saved as a json string.
+	/// The entity is saved as a json string.
 	/// </summary>
 	/// <returns></returns>
 	Task SetAsync<TEntity>(string key, TEntity entity) where TEntity : class;

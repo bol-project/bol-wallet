@@ -29,7 +29,7 @@ public partial class TransactionsPage : ContentPage
     {
         try
         {
-            string? transactionHash = sender is Button button ? button.CommandParameter.ToString() : null;
+            var transactionHash = sender is Button button ? button.CommandParameter.ToString() : null;
             if(transactionHash != null)
             {
                 Uri uri = new Uri("https://explorer.demo.bolchain.net/transaction/" + transactionHash);
