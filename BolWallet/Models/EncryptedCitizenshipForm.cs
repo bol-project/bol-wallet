@@ -25,6 +25,7 @@ public class EncryptedCitizenshipForm
     public string ThirdName { get; set; }
 
     public CitizenshipHashTable CitizenshipHashes { get; set; }
+    public CitizenshipHashTable CitizenshipActualBytes { get; set; }
 
     public CitizenshipHashTableFileNames CitizenshipHashTableFileNames { get; set; }
 

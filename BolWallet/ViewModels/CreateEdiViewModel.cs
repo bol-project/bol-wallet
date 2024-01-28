@@ -2,7 +2,6 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
-using Microsoft.Maui.Storage;
 using Plugin.AudioRecorder;
 using System.Reflection;
 
@@ -12,6 +11,7 @@ public partial class CreateEdiViewModel : BaseViewModel
 {
     private readonly IPermissionService _permissionService;
     private readonly IBase16Encoder _base16Encoder;
+    private readonly ISha256Hasher _sha256Hasher;
     private readonly ISecureRepository _secureRepository;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
     private readonly IMediaPicker _mediaPicker;
@@ -24,6 +24,7 @@ public partial class CreateEdiViewModel : BaseViewModel
         INavigationService navigationService,
         IPermissionService permissionService,
         IBase16Encoder base16Encoder,
+        ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
         IMediaPicker mediaPicker)
@@ -31,6 +32,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         _permissionService = permissionService;
         _base16Encoder = base16Encoder;
+        _sha256Hasher = sha256Hasher;
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
         _mediaPicker = mediaPicker;
@@ -191,14 +193,12 @@ public partial class CreateEdiViewModel : BaseViewModel
 
     private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
     {
-        var encodedFileBytes = _base16Encoder.Encode(fileBytes);
-
         propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
 
         extendedEncryptedDigitalMatrix.Hashes
             .GetType()
             .GetProperty(propertyNameInfo.Name)
-            .SetValue(extendedEncryptedDigitalMatrix.Hashes, encodedFileBytes);
+            .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)));
     }
 
     public async Task Initialize()
@@ -225,7 +225,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             extendedEncryptedDigitalMatrix.Hashes
                 .GetType()
                 .GetProperty(propertyNameInfo.Name)
-                .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(ediFileItem.Content));
+                .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
 
             ediFiles
                 .GetType()
