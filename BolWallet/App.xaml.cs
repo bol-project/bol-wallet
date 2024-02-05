@@ -1,5 +1,4 @@
 ﻿using BolWallet.Controls;
-using SkiaSharp.Extended.Iconify;
 namespace BolWallet;
 
 public partial class App : Application
@@ -40,8 +39,6 @@ public partial class App : Application
 				handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
 #endif
 			});
-
-		SKTextRunLookup.Instance.AddFontAwesome();
 
 		UserData userData = secureRepository.Get<UserData>("userdata");
 
