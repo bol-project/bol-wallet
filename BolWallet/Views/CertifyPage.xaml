@@ -20,8 +20,8 @@
 		Priority="0" 
 		Command="{Binding DownloadBolWalletCommand}"/>
 			<ToolbarItem 
-		Text="Download Edi Files"
-		Order="Secondary"
+		Text="Download Certification Files"
+		Order="Primary"
 		Priority="0" 
 		Command="{Binding DownloadEdiFilesCommand}"/>
 	</ContentPage.ToolbarItems>
