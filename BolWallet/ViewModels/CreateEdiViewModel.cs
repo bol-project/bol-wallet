@@ -172,6 +172,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
 
             extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
+            extendedEncryptedDigitalMatrix.Citizenships = Array.Empty<string>();
 
             userData.Edi = edi;
             userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
