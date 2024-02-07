@@ -15,13 +15,14 @@
             <MudStack Row="true" @key="edi">
                 <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    @if (edi.Item1 == "PersonalVoice")
+                @if (edi.Item1 == "PersonalVoice")
                 {
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetAudioFile(edi.Item1))"></MudIconButton>
                     <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
                 }
                 else
                 {
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
                     <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
                 }
             </MudStack>
@@ -78,6 +79,13 @@
         isProgressBarVisible = false;
 
         await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task GetAudioFile(string property)
+    {
+        await createEdiViewModel.PickAudioCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
     }
 
     private async Task GetFile(string property)

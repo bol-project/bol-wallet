@@ -55,15 +55,37 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
-            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
-            { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image", "public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
+            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image" } },
+            { DevicePlatform.Android, new[] { "application/pdf", "image/*"} },
+            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image" } },
+            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".png" } },
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
         {
             FileTypes = customFileType, PickerTitle = "Pick a file"
+        });
+
+        PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+
+        await PathPerImport(propertyNameInfo, pickResult);
+    }
+
+    [RelayCommand]
+    private async Task PickAudioAsync(string propertyName)
+    {
+        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.iOS, new[] {"public.audio" } },
+            { DevicePlatform.Android, new[] {  "audio/*" } },
+            { DevicePlatform.MacCatalyst, new[] {"public.audio" } },
+            { DevicePlatform.WinUI, new[] { ".mp3" } },
+        });
+
+        var pickResult = await FilePicker.PickAsync(new PickOptions
+        {
+            FileTypes = customFileType,
+            PickerTitle = "Pick a file"
         });
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
