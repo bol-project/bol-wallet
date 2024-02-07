@@ -60,13 +60,13 @@ public class FileDownloadService : IFileDownloadService
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrix)}.yaml",
+            FileName = $"ExtendedCertificationMatrix.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrix)
         });
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.EncryptedDigitalMatrix)}.yaml",
+            FileName = $"CertificationMatrix.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrix)
         });
 
