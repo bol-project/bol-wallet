@@ -197,9 +197,11 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         var fileBytes = File.ReadAllBytes(fileResult.FullPath);
 
-        var ediFileItem = new FileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
+        var fileName = propertyNameInfo.Name + Path.GetExtension(fileResult.FullPath);
 
-        SetFileHash(propertyNameInfo, fileResult, fileBytes);
+        var ediFileItem = new FileItem { Content = fileBytes, FileName = fileName };
+
+        SetFileHash(propertyNameInfo, fileName, fileBytes);
 
         ediFiles
             .GetType()
@@ -213,9 +215,9 @@ public partial class CreateEdiViewModel : BaseViewModel
         await _secureRepository.SetAsync("userdata", userData);
     }
 
-    private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
+    private void SetFileHash(PropertyInfo propertyNameInfo, string fileName, byte[] fileBytes)
     {
-        propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
+        propertyNameInfo.SetValue(GenericHashTableForm, fileName);
 
         extendedEncryptedDigitalMatrix.Hashes
             .GetType()
