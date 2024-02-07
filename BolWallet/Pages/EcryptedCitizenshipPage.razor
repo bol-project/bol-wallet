@@ -147,7 +147,7 @@
 
         encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
 
-        await UpdateIdentificationDocumentsList(property, pickResult.FileName);
+        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -165,7 +165,7 @@
 
         encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
 
-        await UpdateIdentificationDocumentsList(property, takePictureResult.FileName);
+        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(takePictureResult.FullPath));
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -178,7 +178,7 @@
 
             encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, fileResult.FileName);
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property + Path.GetExtension(fileResult.FullPath));
         }
 
         return encryptedCitizenshipForm;
