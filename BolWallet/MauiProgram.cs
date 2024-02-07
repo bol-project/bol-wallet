@@ -3,7 +3,6 @@ using Akavache;
 using Bol.App.Core.Services;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
-using BolWallet.Controls;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
@@ -12,22 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Newtonsoft.Json.Linq;
-using SkiaSharp.Views.Maui.Handlers;
 using Country = BolWallet.Models.Country;
 namespace BolWallet;
 
 public static class MauiProgram
 {
-    public static MauiAppBuilder UseRadialControl(this MauiAppBuilder builder)
-    {
-        builder.ConfigureMauiHandlers(h =>
-        {
-            h.AddHandler<RadialMenu, SKCanvasViewHandler>();
-        });
-
-        return builder;
-    }
-    
     public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
@@ -35,7 +23,6 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
-			.UseRadialControl()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
