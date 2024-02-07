@@ -4,7 +4,6 @@ using System.Text;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
-using Newtonsoft.Json;
 
 namespace BolWallet.Services;
 public class FileDownloadService : IFileDownloadService
@@ -147,7 +146,7 @@ public class FileDownloadService : IFileDownloadService
     {
         try
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data, Constants.WalletJsonSerializerDefaultOptions);
             byte[] jsonData = Encoding.UTF8.GetBytes(json);
 
             using (var stream = new MemoryStream(jsonData))
