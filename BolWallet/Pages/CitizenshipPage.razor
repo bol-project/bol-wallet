@@ -72,6 +72,14 @@
             {
                 BolWallet.Models.Country citizenshipCountry = _content.Countries.FirstOrDefault(c => c.Name == citizenshipName);
 
+                var ninSpec = _content.NinPerCountryCode[citizenshipCountry.Alpha3];
+
+                if (ninSpec.Status == Bol.Core.Model.NinStatus.Inactive)
+                {
+                    await Toast.Make($"Currently, there is no information available regarding the {ninSpec.InternationalName} for {citizenshipCountry.Name}.").Show();
+                    return;
+                }
+
                 citizenships.Add(citizenshipCountry);
 
                 var savedEncryptedCitizenshipForm = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryName == citizenshipName);
