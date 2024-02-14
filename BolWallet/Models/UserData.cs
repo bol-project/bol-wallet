@@ -20,4 +20,9 @@ public class UserData
     public string WalletPassword { get; set; }
     public bool IsCertifier { get; set; }
     public bool IsIndividualRegistration { get; set; }
+
+    public string GetShortHash()
+    {
+        return this.Codename?.Split('<')[7];
+    }
 }

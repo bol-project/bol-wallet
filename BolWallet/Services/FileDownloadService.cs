@@ -31,7 +31,7 @@ public class FileDownloadService : IFileDownloadService
             {
                 files.Add(new FileItem()
                 {
-                    FileName = ediFileItem.FileName,
+                    FileName = $"{Path.GetFileNameWithoutExtension(ediFileItem.FileName)}_{userdata.GetShortHash()}{Path.GetExtension(ediFileItem.FileName)}",
                     Content = ediFileItem.Content
                 });
             }
@@ -51,7 +51,7 @@ public class FileDownloadService : IFileDownloadService
                 {
                     files.Add(new FileItem()
                     {
-                        FileName = fileName,
+                        FileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{userdata.GetShortHash()}{Path.GetExtension(fileName)}",
                         Content = _base16Encoder.Decode(ediFileItem)
                     });
                 }
@@ -60,13 +60,13 @@ public class FileDownloadService : IFileDownloadService
 
         files.Add(new FileItem()
         {
-            FileName = $"ExtendedCertificationMatrix.yaml",
+            FileName = $"ExtendedCertificationMatrix_{userdata.GetShortHash()}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrix)
         });
 
         files.Add(new FileItem()
         {
-            FileName = $"CertificationMatrix.yaml",
+            FileName = $"CertificationMatrix_{userdata.GetShortHash()}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrix)
         });
 
