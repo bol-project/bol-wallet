@@ -57,6 +57,12 @@ public partial class BolCommunityViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task NavigateToAddMultiCitizenship()
+    {
+        await App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship());
+    }
+
+    [RelayCommand]
     private async Task UnRegisterAsCertifier(CancellationToken token)
     {
         try

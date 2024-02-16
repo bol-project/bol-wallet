@@ -112,6 +112,9 @@
     <MauiXaml Update="Views\AccountPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\AddMultiCitizenship.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\App.xaml">
       <SubType>Designer</SubType>
     </MauiXaml>
