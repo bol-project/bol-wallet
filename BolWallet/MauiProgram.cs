@@ -57,7 +57,7 @@ public static class MauiProgram
 
         services.RegisterViewAndViewModelSubsystem();
 
-        var bolConfig = new BolConfig();
+        var bolConfig = new BolWalletAppConfig();
         builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
 
         string contractHash = GetContractHash(bolConfig.RpcEndpoint);
@@ -83,6 +83,12 @@ public static class MauiProgram
         });
 
 		services.ConfigureWalletServices();
+
+        services.AddTransient<IBase64Encoder, Base64Encoder>();
+        services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService", client =>
+        {
+            client.BaseAddress = new Uri(bolConfig.BolIdentityEndpoint);
+        });
 
 		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
