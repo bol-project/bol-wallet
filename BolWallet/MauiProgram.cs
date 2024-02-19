@@ -3,6 +3,8 @@ using Akavache;
 using Bol.App.Core.Services;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
+using Bol.Cryptography;
+using Bol.Cryptography.Encoders;
 using BolWallet.Extensions;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
@@ -36,8 +38,10 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-#endif
+        builder.AddConfiguration("BolWallet.appsettings.Development.json");
+#else
         builder.AddConfiguration("BolWallet.appsettings.json");
+#endif
 
 		var services = builder.Services;
 
