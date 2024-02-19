@@ -69,4 +69,10 @@ public partial class BolCommunityViewModel : BaseViewModel
             await Toast.Make(ex.Message).Show();
         }
     }
+    
+    [RelayCommand]
+    private async Task CompleteBolLoginChallenge()
+    {
+        await App.Current.MainPage.Navigation.PushAsync(new Views.CompleteBolLoginChallengePage());
+    }
 }

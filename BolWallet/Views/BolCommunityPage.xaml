@@ -51,6 +51,13 @@
                 IsEnabled="{Binding IsCertifier}"
                 Command="{Binding UnRegisterAsCertifierCommand}"
                 Text="UnRegister As Certifier" />
+                
+            <Button
+                Grid.Row="4"
+                FontSize="12"
+                HorizontalOptions="FillAndExpand"
+                Command="{Binding CompleteBolLoginChallengeCommand}"
+                Text="Complete BoL Login Challenge" />
 
 		</Grid>
     </ScrollView>
