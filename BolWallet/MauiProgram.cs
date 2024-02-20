@@ -74,19 +74,20 @@ public static class MauiProgram
 
 		services.AddSingleton<HttpClient>();
 
-		// This model will hold the data from the Register flow
-		services.AddSingleton(sp =>
-		{
+        // This model will hold the data from the Register flow
+        services.AddSingleton(sp =>
+        {
             var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
             var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
+      
             return new RegisterContent
             {
                 Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
-                NinPerCountryCode = ninSpecifications.ToDictionary(n => n.CountryCode, n => n)
+                NinPerCountryCode = ninSpecifications.DistinctBy(c => c.CountryCode).ToDictionary(n => n.CountryCode, n => n)
             };
         });
 
-		services.ConfigureWalletServices();
+        services.ConfigureWalletServices();
 
         services.AddTransient<IBase64Encoder, Base64Encoder>();
         services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService", client =>
