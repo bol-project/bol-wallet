@@ -55,15 +55,37 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
-            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
-            { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image", "public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
+            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image" } },
+            { DevicePlatform.Android, new[] { "application/pdf", "image/*"} },
+            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image" } },
+            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".png" } },
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
         {
             FileTypes = customFileType, PickerTitle = "Pick a file"
+        });
+
+        PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+
+        await PathPerImport(propertyNameInfo, pickResult);
+    }
+
+    [RelayCommand]
+    private async Task PickAudioAsync(string propertyName)
+    {
+        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+        {
+            { DevicePlatform.iOS, new[] {"public.audio" } },
+            { DevicePlatform.Android, new[] {  "audio/*" } },
+            { DevicePlatform.MacCatalyst, new[] {"public.audio" } },
+            { DevicePlatform.WinUI, new[] { ".mp3" } },
+        });
+
+        var pickResult = await FilePicker.PickAsync(new PickOptions
+        {
+            FileTypes = customFileType,
+            PickerTitle = "Pick a file"
         });
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
@@ -121,6 +143,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             var encryptedCitizenshipForRegistration = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryCode.Trim() == userData.Person.CountryCode.Trim());
 
             extendedEncryptedDigitalMatrix.Hashes.IdentityCard = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCard;
+            extendedEncryptedDigitalMatrix.Hashes.IdentityCardBack = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCardBack;
             extendedEncryptedDigitalMatrix.Hashes.Passport = encryptedCitizenshipForRegistration.CitizenshipHashes.Passport;
             extendedEncryptedDigitalMatrix.Hashes.ProofOfNin = encryptedCitizenshipForRegistration.CitizenshipHashes.ProofOfNin;
             extendedEncryptedDigitalMatrix.Hashes.BirthCertificate = encryptedCitizenshipForRegistration.CitizenshipHashes.BirthCertificate;
@@ -150,6 +173,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
 
             extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
+            extendedEncryptedDigitalMatrix.Citizenships = Array.Empty<string>();
 
             userData.Edi = edi;
             userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
@@ -175,9 +199,11 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         var fileBytes = File.ReadAllBytes(fileResult.FullPath);
 
-        var ediFileItem = new FileItem { Content = fileBytes, FileName = Path.GetFileName(fileResult.FullPath) };
+        var fileName = propertyNameInfo.Name + Path.GetExtension(fileResult.FullPath);
 
-        SetFileHash(propertyNameInfo, fileResult, fileBytes);
+        var ediFileItem = new FileItem { Content = fileBytes, FileName = fileName };
+
+        SetFileHash(propertyNameInfo, fileName, fileBytes);
 
         ediFiles
             .GetType()
@@ -191,9 +217,9 @@ public partial class CreateEdiViewModel : BaseViewModel
         await _secureRepository.SetAsync("userdata", userData);
     }
 
-    private void SetFileHash(PropertyInfo propertyNameInfo, FileResult fileResult, byte[] fileBytes)
+    private void SetFileHash(PropertyInfo propertyNameInfo, string fileName, byte[] fileBytes)
     {
-        propertyNameInfo.SetValue(GenericHashTableForm, fileResult.FileName);
+        propertyNameInfo.SetValue(GenericHashTableForm, fileName);
 
         extendedEncryptedDigitalMatrix.Hashes
             .GetType()

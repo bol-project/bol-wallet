@@ -36,8 +36,16 @@
                 IsEnabled="{Binding IsCertifier}"
                 Text="Whitelist and Certify" />
 
-			<Button
+            <Button
                 Grid.Row="2"
+                FontSize="12"
+                HorizontalOptions="FillAndExpand"
+                IsEnabled="{Binding IsCertifier}"
+	            Command="{Binding NavigateToAddMultiCitizenshipCommand}"
+                Text="Add MultiCitizenship" />
+
+            <Button
+                Grid.Row="3"
                 FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier, Converter={StaticResource InvertedBoolConverter}}"
@@ -45,7 +53,7 @@
                 Text="Register As Certifier" />
 
             <Button
-                Grid.Row="3"
+                Grid.Row="4"
                 FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier}"

@@ -1,0 +1,51 @@
+﻿@page "/inputpage"
+@inject IBolService bolService;
+
+<MudThemeProvider />
+
+<EditForm Model="@inputModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Immediate=true Label="Short Hash" Required="true" Class="mt-3"
+                                  @bind-Value="inputModel.ShortHash" For="@(() => inputModel.ShortHash)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Submit</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private InputModel inputModel = new();
+
+    private async Task HandleValidSubmit()
+    {
+
+        try
+        {
+            var result = await bolService.AddMultiCitizenship(inputModel.ShortHash);
+
+            await Toast.Make($"Short hash {inputModel.ShortHash} has been successfully added.").Show();
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            inputModel.ShortHash = string.Empty;
+        }
+    }
+
+    public class InputModel
+    {
+        [Required]
+        [StringLength(11, ErrorMessage = "The short hash must be exactly 11 characters long.", MinimumLength = 11)]
+        public string ShortHash { get; set; }
+    }
+}

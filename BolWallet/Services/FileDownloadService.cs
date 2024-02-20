@@ -4,7 +4,6 @@ using System.Text;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
-using Newtonsoft.Json;
 
 namespace BolWallet.Services;
 public class FileDownloadService : IFileDownloadService
@@ -32,7 +31,7 @@ public class FileDownloadService : IFileDownloadService
             {
                 files.Add(new FileItem()
                 {
-                    FileName = ediFileItem.FileName,
+                    FileName = $"{Path.GetFileNameWithoutExtension(ediFileItem.FileName)}_{userdata.GetShortHash()}{Path.GetExtension(ediFileItem.FileName)}",
                     Content = ediFileItem.Content
                 });
             }
@@ -52,7 +51,7 @@ public class FileDownloadService : IFileDownloadService
                 {
                     files.Add(new FileItem()
                     {
-                        FileName = fileName,
+                        FileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{userdata.GetShortHash()}{Path.GetExtension(fileName)}",
                         Content = _base16Encoder.Decode(ediFileItem)
                     });
                 }
@@ -61,13 +60,13 @@ public class FileDownloadService : IFileDownloadService
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrix)}.yaml",
+            FileName = $"ExtendedCertificationMatrix_{userdata.GetShortHash()}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrix)
         });
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.EncryptedDigitalMatrix)}.yaml",
+            FileName = $"CertificationMatrix_{userdata.GetShortHash()}.yaml",
             Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrix)
         });
 
@@ -147,7 +146,7 @@ public class FileDownloadService : IFileDownloadService
     {
         try
         {
-            string json = JsonConvert.SerializeObject(data);
+            string json = JsonSerializer.Serialize(data, Constants.WalletJsonSerializerDefaultOptions);
             byte[] jsonData = Encoding.UTF8.GetBytes(json);
 
             using (var stream = new MemoryStream(jsonData))

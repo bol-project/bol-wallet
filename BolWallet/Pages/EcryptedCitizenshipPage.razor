@@ -23,23 +23,21 @@
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
-                                  @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
+                                  @bind-Value="@encryptedCitizenshipForm.SurName"
                                   Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
-                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
+                                  @bind-Value="@encryptedCitizenshipForm.FirstName"
                                   Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName"
-                                  OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
+                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName"
-                                  OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
+                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName" />
                 </MudItem>
                 @if (!string.IsNullOrEmpty(encryptedCitizenshipForm.CountryCode))
                 {
@@ -80,7 +78,8 @@
 
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
       {
-          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card - If the back side of your identity card is not available, please resubmit the front side.", "") },
           {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
           {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
           {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
@@ -98,10 +97,11 @@
 
         CitizeshipsDocuments = new()
         {
-            {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card", "") },
-            {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
-            {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
-            {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card - If the back side of your identity card is not available, please resubmit the front side.", "") },
+          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
         };
 
         foreach (var encryptedCitizenshipForm in userData.EncryptedCitizenshipForms)
@@ -147,7 +147,7 @@
 
         encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
 
-        await UpdateIdentificationDocumentsList(property, pickResult.FileName);
+        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -165,7 +165,7 @@
 
         encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
 
-        await UpdateIdentificationDocumentsList(property, takePictureResult.FileName);
+        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(takePictureResult.FullPath));
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -178,7 +178,7 @@
 
             encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, fileResult.FileName);
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property + Path.GetExtension(fileResult.FullPath));
         }
 
         return encryptedCitizenshipForm;
@@ -251,7 +251,7 @@
 
     private bool HasNonZeroHashes(CitizenshipHashTable citizenshipHashTable)
     {
-        return !(citizenshipHashTable.IdentityCard == Bol.Core.Constants.HASH_ZEROS &&
+        return !((citizenshipHashTable.IdentityCard == Bol.Core.Constants.HASH_ZEROS || citizenshipHashTable.IdentityCardBack == Bol.Core.Constants.HASH_ZEROS) &&
                  citizenshipHashTable.Passport == Bol.Core.Constants.HASH_ZEROS &&
                  citizenshipHashTable.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
                  citizenshipHashTable.BirthCertificate == Bol.Core.Constants.HASH_ZEROS);

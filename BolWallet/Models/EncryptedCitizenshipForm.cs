@@ -36,6 +36,8 @@ public class CitizenshipHashTableFileNames
 {
     public string IdentityCard { get; set; }
 
+    public string IdentityCardBack { get; set; }
+
     public string Passport { get; set; }
 
     public string ProofOfNin { get; set; }

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     BackgroundColor="{DynamicResource SecondaryColor}">
 
-	<ContentPage.ToolbarItems>
+    <ContentPage.ToolbarItems>
 		<ToolbarItem 
             Text="Download BolAccount"
 			Order="Secondary"
@@ -12,11 +12,11 @@
 			Command="{Binding DownloadAccountCommand}"/>
 		<ToolbarItem 
 			Text="Download BolWallet"
-			Order="Secondary"
+			Order="Primary"
 			Priority="0" 
 			Command="{Binding DownloadBolWalletCommand}"/>
 		<ToolbarItem 
-			Text="Download Edi Files"
+			Text="Download Certification Files"
 			Order="Secondary"
 			Priority="0" 
 			Command="{Binding DownloadEdiFilesCommand}"/>
