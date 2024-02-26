@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Newtonsoft.Json.Linq;
+using Plugin.Fingerprint.Abstractions;
+using Plugin.Fingerprint;
 using Country = BolWallet.Models.Country;
 namespace BolWallet;
 
@@ -58,6 +60,8 @@ public static class MauiProgram
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
 
         services.AddSingleton<IFileDownloadService, FileDownloadService>();
+
+        services.AddSingleton(typeof(IFingerprint), CrossFingerprint.Current);
 
         services.RegisterViewAndViewModelSubsystem();
 

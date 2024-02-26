@@ -30,6 +30,8 @@
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera</string>
+    <key>NSFaceIDUsageDescription</key>
+    <string>This app needs faceID for authentication</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

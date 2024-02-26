@@ -3,6 +3,7 @@ using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
+using Plugin.Fingerprint.Abstractions;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -54,13 +55,17 @@ public partial class MainWithAccountViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isCommercialAddressesExpanded = false;
 
+    [ObservableProperty]
+    private bool _isAuthenticated = false;
+
     public MainWithAccountViewModel(
         INavigationService navigationService,
+        IFingerprint fingerprint,
         ISecureRepository secureRepository,
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer)
-        : base(navigationService)
+        : base(navigationService, fingerprint)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
@@ -116,7 +121,13 @@ public partial class MainWithAccountViewModel : BaseViewModel
                 await _secureRepository.SetAsync("userdata", userData);
 
                 if (BolAccount.AccountStatus == AccountStatus.Open)
+                {
+                    do
+                    {
+                        IsAuthenticated = await Task.Run(() => FingerprintAuthAsync());
+                    } while (!IsAuthenticated);
                     IsAccountOpen = true;
+                }
                 else
                     await NavigationService.NavigateTo<CertifyViewModel>(true);
 
