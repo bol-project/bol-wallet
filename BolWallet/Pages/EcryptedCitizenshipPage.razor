@@ -178,7 +178,8 @@
 
             encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property + Path.GetExtension(fileResult.FullPath));
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property
+                + $"_{encryptedCitizenshipForm.CountryCode}" + Path.GetExtension(fileResult.FullPath));
         }
 
         return encryptedCitizenshipForm;
