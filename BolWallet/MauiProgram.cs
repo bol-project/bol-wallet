@@ -100,39 +100,39 @@ public static class MauiProgram
 		return builder.Build();
 	}
 
-	private static string GetContractHash(string url)
-	{
-		var client = new HttpClient();
+    private static string GetContractHash(string url)
+    {
+        try
+        {
+            var client = new HttpClient();
 
-		var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
 
-		var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getbolhash\",\r\n\"params\":[]\r\n}\r\n", null, "application/json");
-		request.Content = stringContent;
+            var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getbolhash\",\r\n\"params\":[]\r\n}\r\n", null, "application/json");
+            request.Content = stringContent;
 
-		try
-		{
-			using (var response = client.SendAsync(request).Result)
-			{
-				response.EnsureSuccessStatusCode();
+            using (var response = client.SendAsync(request).Result)
+            {
+                response.EnsureSuccessStatusCode();
 
-				var resultJson = response.Content.ReadAsStringAsync().Result;
+                var resultJson = response.Content.ReadAsStringAsync().Result;
 
-				var jsonResponse = JObject.Parse(resultJson);
+                var jsonResponse = JObject.Parse(resultJson);
 
-				var contractHash = jsonResponse["result"].ToString();
+                var contractHash = jsonResponse["result"].ToString();
 
-				return contractHash;
-			}
-		}
-		catch (Exception ex)
-		{
-			Toast.Make(ex.Message).Show().Wait();
-		}
+                return contractHash;
+            }
+        }
+        catch (Exception ex)
+        {
+            Toast.Make(ex.Message).Show().Wait();
+        }
 
-		return string.Empty;
-	}
+        return string.Empty;
+    }
 
-	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
+    private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
 	{
 		var assembly = Assembly.GetExecutingAssembly();
 		using var stream = assembly.GetManifestResourceStream(appSettingsPath);

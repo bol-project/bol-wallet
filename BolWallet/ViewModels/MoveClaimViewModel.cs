@@ -30,7 +30,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 	public List<string> _commercialBalancesDisplayList;
 
 	[ObservableProperty]
-	public int _selectedCommercialAddressIndex;
+	public int? _selectedCommercialAddressIndex;
 
 	public MoveClaimViewModel(INavigationService navigationService,
 		IAddressTransformer addressTransformer,
@@ -74,7 +74,10 @@ public partial class MoveClaimViewModel : BaseViewModel
 	{
 		try
 		{
-			MoveClaimForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex].Key;
+            if (!SelectedCommercialAddressIndex.HasValue || SelectedCommercialAddressIndex < 0)
+                throw new Exception("Please choose a commercial address for this transfer.");
+
+            MoveClaimForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex.Value].Key;
 
 			BolAccount = await _bolService.TransferClaim(
 			  _addressTransformer.ToScriptHash(MoveClaimForm.ComAddress.Trim()),
