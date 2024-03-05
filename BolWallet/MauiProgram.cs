@@ -69,6 +69,7 @@ public static class MauiProgram
         bolConfig.Contract = contractHash;
 
         services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
+        services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
 		services.AddBolSdk();
 
