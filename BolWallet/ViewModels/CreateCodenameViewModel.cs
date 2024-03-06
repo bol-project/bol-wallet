@@ -1,5 +1,7 @@
 ﻿using Bol.Core.Abstractions;
+using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace BolWallet.ViewModels;
@@ -8,16 +10,19 @@ public partial class CreateCodenameViewModel : BaseViewModel
 {
     protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
+    private readonly IOptions<BolConfig> _bolConfig;
 
     public CreateCodenameViewModel(
         INavigationService navigationService,
         ICodeNameService codeNameService,
         RegisterContent content,
-        ISecureRepository secureRepository)
+        ISecureRepository secureRepository,
+        IOptions<BolConfig> bolConfig)
         : base(navigationService)
     {
         _codeNameService = codeNameService;
         _secureRepository = secureRepository;
+        _bolConfig = bolConfig;
     }
 
     [ObservableProperty]
@@ -34,11 +39,11 @@ public partial class CreateCodenameViewModel : BaseViewModel
             await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
-    protected static bool IsCodenameExists(string codename)
+    protected bool IsCodenameExists(string codename)
     {
         var client = new HttpClient();
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://rpcnode.demo.bolchain.net:443");
+        var request = new HttpRequestMessage(HttpMethod.Post, _bolConfig.Value.RpcEndpoint);
 
         var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getAccount\",\r\n\"params\":[\"" + codename + "\"]\r\n}\r\n", null, "application/json");
         request.Content = stringContent;

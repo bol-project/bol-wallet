@@ -53,9 +53,9 @@
                 }
                 <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
                 <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
-                    <MudItem xs="12" sm="12" md="12">
+                    <MudItem Class="p-3" xs="12" sm="12" md="12">
                         <MudStack Row="true">
-                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                        <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                                       Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
                             <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
                             <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
@@ -71,7 +71,11 @@
             </MudCardActions>
         </MudCard>
     </EditForm>
-   
+<style>
+    .custom-mud-field .mud-input-label {
+        font-size: 0.75rem; /* Adjust the font size as desired */
+    }
+</style>
 
     @code {
     UserData userData;
@@ -79,7 +83,7 @@
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
       {
           {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
-          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card - If the back side of your identity card is not available, please resubmit the front side.", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
           {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
           {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
           {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
@@ -98,7 +102,7 @@
         CitizeshipsDocuments = new()
         {
           {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
-          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card - If the back side of your identity card is not available, please resubmit the front side.", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
           {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
           {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
           {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
@@ -178,7 +182,8 @@
 
             encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
             encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property + Path.GetExtension(fileResult.FullPath));
+            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property
+                + $"_{encryptedCitizenshipForm.CountryCode}" + Path.GetExtension(fileResult.FullPath));
         }
 
         return encryptedCitizenshipForm;

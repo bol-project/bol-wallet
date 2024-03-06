@@ -3,6 +3,7 @@ using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Options;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -11,6 +12,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
+    private readonly IOptions<BolWalletAppConfig> _bolConfig;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -59,13 +61,15 @@ public partial class MainWithAccountViewModel : BaseViewModel
         ISecureRepository secureRepository,
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
-        IAddressTransformer addressTransformer)
+        IAddressTransformer addressTransformer,
+        IOptions<BolWalletAppConfig> bolConfig)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
+        _bolConfig = bolConfig;
     }
 
     [RelayCommand]
@@ -179,7 +183,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             IsLoading = true;
 
-            Uri uri = new Uri($"https://certifier.demo.bolchain.net/{MainAddress}");
+            Uri uri = new Uri($"{_bolConfig.Value.BolCertifierEndpoint}/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
             
             while (!IsWhiteListed)

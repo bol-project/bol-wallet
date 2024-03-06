@@ -1,12 +1,17 @@
 ﻿using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Options;
 
 namespace BolWallet.Views;
 public partial class TransactionsPage : ContentPage
 {
-    public TransactionsPage(TransactionsViewModel transactionsViewModel)
+    private readonly IOptions<BolWalletAppConfig> _bolConfig;
+
+    public TransactionsPage(TransactionsViewModel transactionsViewModel,
+         IOptions<BolWalletAppConfig> bolConfig)
     {
         InitializeComponent();
         BindingContext = transactionsViewModel;
+        _bolConfig = bolConfig;
     }
 
 	protected override async void OnAppearing()
@@ -32,7 +37,7 @@ public partial class TransactionsPage : ContentPage
             var transactionHash = sender is Button button ? button.CommandParameter.ToString() : null;
             if(transactionHash != null)
             {
-                Uri uri = new Uri("https://explorer.demo.bolchain.net/transaction/" + transactionHash);
+                Uri uri = new Uri($"{_bolConfig.Value.BolExplorerEndpoint}/transaction/" + transactionHash);
                 Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
                 return;
             }
