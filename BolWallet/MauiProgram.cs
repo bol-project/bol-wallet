@@ -78,11 +78,6 @@ public static class MauiProgram
         
         services.AddBolSdk();
 
-        // Register a custom IContextAccessor by decorating the default one defined in BoL SDK.
-        // This should always follow AddBolSdk() to be the last IContextAccessor registration.
-        services.AddSingleton<WalletContextAccessor>();
-        services.AddSingleton<IContextAccessor, BolWalletContextAccessor>();
-
         services.AddSingleton<HttpClient>();
 
         // This model will hold the data from the Register flow
