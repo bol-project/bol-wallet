@@ -14,7 +14,9 @@ public partial class MoveClaimViewModel : BaseViewModel
 	private readonly ISecureRepository _secureRepository;
 	private readonly IBolService _bolService;
 
-	[ObservableProperty]
+    private const string COMMERCIAL_ADDRESS = "Commercial Address";
+
+    [ObservableProperty]
 	private MoveClaimForm _moveClaimForm;
 
 	[ObservableProperty]
@@ -31,6 +33,12 @@ public partial class MoveClaimViewModel : BaseViewModel
 
 	[ObservableProperty]
 	public int? _selectedCommercialAddressIndex;
+
+    [ObservableProperty]
+    public List<BalanceDisplayItem> _commercialBalancesList = [];
+
+    [ObservableProperty]
+    public string _selectedCommercialAddress = COMMERCIAL_ADDRESS;
 
 	public MoveClaimViewModel(INavigationService navigationService,
 		IAddressTransformer addressTransformer,
@@ -67,7 +75,12 @@ public partial class MoveClaimViewModel : BaseViewModel
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
 		CommercialBalancesDisplayList = CommercialBalances.Select(i => "Balance: " + i.Value + " - " + i.Key).ToList();
-	}
+
+        CommercialBalancesList = CommercialBalances
+            .Select(x => new BalanceDisplayItem { Address = x.Key, Balance = x.Value })
+            .ToList();
+
+    }
 
 	[RelayCommand]
 	private async Task MoveClaim()
@@ -88,7 +101,7 @@ public partial class MoveClaimViewModel : BaseViewModel
 			Result = "To Address: " + MoveClaimForm.ComAddress +
 					 "\nAmount: " + MoveClaimForm.ActualAmount;
 
-			MoveClaimForm.Amount = "";
+			ResetForm();
 
 			await Toast.Make(Result).Show();
 		}
@@ -97,4 +110,18 @@ public partial class MoveClaimViewModel : BaseViewModel
 			await Toast.Make(ex.Message).Show();
 		}
 	}
+
+    [RelayCommand]
+    private void SelectedCommercialBalance(BalanceDisplayItem selected)
+    {
+        SelectedCommercialAddress = $"{COMMERCIAL_ADDRESS} ({selected.Address})";
+        SelectedCommercialAddressIndex = CommercialBalancesList.IndexOf(selected);
+    }
+
+    private void ResetForm()
+    {
+        MoveClaimForm.Amount = string.Empty;
+        SelectedCommercialAddress = COMMERCIAL_ADDRESS;
+        SelectedCommercialAddressIndex = -1;
+    }
 }
