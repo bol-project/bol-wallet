@@ -25,7 +25,6 @@
 
     private async Task HandleValidSubmit()
     {
-
         try
         {
             var result = await bolService.AddMultiCitizenship(inputModel.ShortHash);
@@ -45,7 +44,7 @@
     public class InputModel
     {
         [Required]
-        [StringLength(11, ErrorMessage = "The short hash must be exactly 11 characters long.", MinimumLength = 11)]
+        [StringLength(11, ErrorMessage = "The short hash must be between 10 and 11 characters long.", MinimumLength = 10)]
         public string ShortHash { get; set; }
     }
 }
