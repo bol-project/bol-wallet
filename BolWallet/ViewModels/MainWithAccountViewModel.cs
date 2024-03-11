@@ -12,7 +12,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
+    private readonly IBolContractHashService _bolContractHashClient;
     private readonly IOptions<BolWalletAppConfig> _bolConfig;
+    private readonly IOptions<BolConfig> _bolSdkConfig;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -62,14 +64,18 @@ public partial class MainWithAccountViewModel : BaseViewModel
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
-        IOptions<BolWalletAppConfig> bolConfig)
+        IBolContractHashService bolContractHashClient,
+        IOptions<BolWalletAppConfig> bolConfig,
+        IOptions<BolConfig> bolSdkConfig)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
+        _bolContractHashClient = bolContractHashClient;
         _bolConfig = bolConfig;
+        _bolSdkConfig = bolSdkConfig;
     }
 
     [RelayCommand]
@@ -79,11 +85,15 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-            await FetchBolAccountData(token);
+
+            if (await TrySetBolContractHash(token))
+            {
+                await FetchBolAccountData(token);
+            }
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
         finally
         {
@@ -92,7 +102,25 @@ public partial class MainWithAccountViewModel : BaseViewModel
             IsRefreshing = false;
         }
     }
-    
+
+    private async Task<bool> TrySetBolContractHash(CancellationToken token)
+    {
+        if (!string.IsNullOrWhiteSpace(_bolSdkConfig.Value.Contract))
+        {
+            return true;
+        }
+
+        var result = await _bolContractHashClient.GetBolContractHash(token);
+        if (result.IsFailed)
+        {
+            await Toast.Make(result.Message).Show(token);
+            return false;
+        }
+
+        _bolSdkConfig.Value.Contract = result.Data;
+        return true;
+    }
+
     private async Task FetchBolAccountData(CancellationToken token)
     {
         try
