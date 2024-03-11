@@ -30,21 +30,16 @@
             <StackLayout Grid.Row="0" Grid.ColumnSpan="3" IsVisible="{Binding IsRefreshing, Converter={StaticResource InverseBooleanConverter}}">
                 <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
             </StackLayout>
-			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
-
-				<Label IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
-
-				<ImageButton IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"  Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
-					<ImageButton.Source>
-						<FontImageSource 
-						FontFamily="MaterialIconsRegular"
-						Glyph="{x:Static helpers:Icons.Refresh}"
-						Color="Black"
-						/>
-					</ImageButton.Source>
-				</ImageButton>
-
-				<Frame
+            <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="Start" HorizontalOptions="End">
+                <Label IsVisible="{OnPlatform False, WinUI=True}" IsEnabled="{Binding IsRegistered}" Text="Refresh" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+                <ImageButton IsVisible="{OnPlatform False, WinUI=True}" IsEnabled="{Binding IsRegistered}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="End">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="MaterialIconsRegular" Glyph="{x:Static helpers:Icons.Refresh}" Color="Black"/>
+                    </ImageButton.Source>
+                </ImageButton>
+            </StackLayout>
+            <StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+            <Frame
 				Grid.Row="1"
 				CornerRadius="25"
 				BackgroundColor="#582cd4">
