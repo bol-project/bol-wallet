@@ -36,6 +36,14 @@ public partial class SendBolViewModel : BaseViewModel
 
     [ObservableProperty]
 	public int? _selectedCommercialAddressIndex;
+    
+    [ObservableProperty]
+    public List<BalanceDisplayItem> _fromCommercialBalancesList = [];
+    
+    [ObservableProperty]
+    public string _selectedCommercialAddress = FromCommercialAddress;
+    
+    private const string FromCommercialAddress = "From Commercial Address";
 
 	private readonly IAddressTransformer _addressTransformer;
 	private readonly ISecureRepository _secureRepository;
@@ -77,6 +85,10 @@ public partial class SendBolViewModel : BaseViewModel
 		CommercialBalances = BolAccount.CommercialBalances.ToList();
 
 		CommercialBalancesDisplayList = CommercialBalances.Select(i => "Balance: " + i.Value + " - " + i.Key).ToList();
+        
+        FromCommercialBalancesList = CommercialBalances
+            .Select(x => new BalanceDisplayItem { Address = x.Key, Balance = x.Value })
+            .ToList();
 	}
 
 	[RelayCommand]
@@ -160,5 +172,12 @@ public partial class SendBolViewModel : BaseViewModel
         {
             await Toast.Make(ex.Message).Show();
         }
+    }
+    
+    [RelayCommand]
+    private void SelectedFromCommercialBalance(BalanceDisplayItem selected)
+    {
+        SelectedCommercialAddress = $"{FromCommercialAddress} ({selected.Address})";
+        SelectedCommercialAddressIndex = FromCommercialBalancesList.IndexOf(selected);
     }
 }
