@@ -21,11 +21,27 @@
 		<Entry Placeholder="Paste Codename To Certify" Text="{Binding CodeNameToCertify, Mode=TwoWay}" 
 			   PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
 
-        <Button
-            Text="Select Certification Files Zip for validation"
+        <Frame
+            Padding="10">
+            <Grid 
+                ColumnDefinitions="*, Auto">
+                <Label
+                    VerticalOptions="Center"
+                    TextColor="Black"
+                    Text="{Binding CertificationZipPath}" />
+                    
+                <Button 
+                    Grid.Column="1"
+                    HorizontalOptions="End"
+                    Text="..."
+                    Command="{Binding SelectZipFileCommand}" />
+            </Grid>
+        </Frame>
+        
+        <Button 
+            Text="Validate"
             BackgroundColor="DarkSlateBlue"
-            TextColor="White"
-            Command="{Binding SelectZipFileCommand}" />
+            Command="{Binding ValidateCertificationDocumentsCommand}" />
         
 		<Button 
 			Text="Certify"

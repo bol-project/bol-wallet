@@ -31,6 +31,9 @@ public partial class CertifierViewModel : BaseViewModel
 	[ObservableProperty]
 	private bool _isLoading = false;
 
+    [ObservableProperty]
+    private string _certificationZipPath = "Select a certification documents zip file";
+
     [RelayCommand]
 	private async Task Certify()
 	{
@@ -87,7 +90,7 @@ public partial class CertifierViewModel : BaseViewModel
 	}
 
     [RelayCommand]
-    private async Task SelectZipFile()
+    private async Task SelectZipFile(CancellationToken token)
     {
         try
         {
@@ -106,16 +109,31 @@ public partial class CertifierViewModel : BaseViewModel
             if (file is null)
                 return;
 
-            IsLoading = true;
+            CertificationZipPath = file.FullPath;
 
-            await using var stream = await file.OpenReadAsync();
-            ExtractZipFile(stream, CodeNameToCertify);
-
-            await Toast.Make($"{file.FullPath} ").Show();
+            await Toast.Make($"Selected {CertificationZipPath}").Show(token);
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
+        }
+    }
+    
+    [RelayCommand]
+    private async Task ValidateCertificationDocuments(CancellationToken token)
+    {
+        try
+        {
+            IsLoading = true;
+
+            await using var stream = File.OpenRead(CertificationZipPath);
+            ExtractZipFile(stream, CodeNameToCertify);
+
+            await Toast.Make($"{CertificationZipPath} validated successfully").Show(token);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show(token);
         }
         finally
         {
