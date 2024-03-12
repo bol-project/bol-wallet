@@ -4,6 +4,7 @@ using System.Text;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace BolWallet.Services;
 public class FileDownloadService : IFileDownloadService
@@ -140,6 +141,30 @@ public class FileDownloadService : IFileDownloadService
 
             return memoryStream.ToArray();
         }
+    }
+    
+    public async Task<byte[]> CreatePasswordProtectedZipFileAsync(IEnumerable<FileItem> files, string password, CancellationToken cancellationToken = default)
+    {
+        using var memoryStream = new MemoryStream();
+        await using (var archive = new ZipOutputStream(memoryStream))
+        {
+            archive.Password = password;
+            archive.SetLevel(9);
+
+            foreach (var file in files)
+            {
+                if (file.Content == null)
+                {
+                    continue;
+                }
+
+                var entry = new ZipEntry(file.FileName);
+                await archive.PutNextEntryAsync(entry, cancellationToken);
+                await archive.WriteAsync(file.Content.AsMemory(0, file.Content.Length), cancellationToken);
+            }
+        }
+
+        return memoryStream.ToArray();
     }
 
     public async Task DownloadDataAsync<T>(T data, string fileName, CancellationToken cancellationToken = default)

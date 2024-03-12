@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-namespace BolWallet.Services.Abstractions;
+﻿namespace BolWallet.Services.Abstractions;
 
 public interface IFileDownloadService
 {
@@ -11,4 +7,8 @@ public interface IFileDownloadService
     Task SaveZipFileAsync(byte[] ediZipFiles, CancellationToken cancellationToken);
     Task DownloadDataAsync<T>(T data, string fileName, CancellationToken cancellationToken = default);
     List<FileItem> CollectCompanyFilesForDownload(UserData userdata);
+    Task<byte[]> CreatePasswordProtectedZipFileAsync(
+        IEnumerable<FileItem> files,
+        string password,
+        CancellationToken cancellationToken = default);
 }
