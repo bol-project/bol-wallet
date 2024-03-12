@@ -263,7 +263,7 @@ public partial class CertifyViewModel : BaseViewModel
         else
             files = _fileDownloadService.CollectCompanyFilesForDownload(userdata);
 
-        var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
+        var ediZipFiles = await _fileDownloadService.CreatePasswordProtectedZipFileAsync(files, BolAccount.CodeName, cancellationToken);
 
         await _fileDownloadService.SaveZipFileAsync(ediZipFiles, cancellationToken);
     }

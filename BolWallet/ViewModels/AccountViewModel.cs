@@ -1,11 +1,6 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Storage;
-using Newtonsoft.Json;
-using System.IO.Compression;
-using System.Reflection;
-using System.Text;
 
 namespace BolWallet.ViewModels;
 
@@ -71,7 +66,7 @@ public partial class AccountViewModel : BaseViewModel
         else
             files = _fileDownloadService.CollectCompanyFilesForDownload(userdata);
 
-        var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
+        var ediZipFiles = await _fileDownloadService.CreatePasswordProtectedZipFileAsync(files, BolAccount.CodeName, cancellationToken);
 
         await _fileDownloadService.SaveZipFileAsync(ediZipFiles, cancellationToken);
     }
