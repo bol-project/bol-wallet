@@ -1,5 +1,6 @@
 ﻿@page "/inputpage"
 @inject IBolService bolService;
+@inject RegisterContent _content;
 
 <MudThemeProvider />
 
@@ -26,6 +27,12 @@
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
+                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputAddMultiCitizenshipModel.Alpha3">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                     <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to add to the multicitizenship list." Required="true" Class="mt-3"
                                   @bind-Value="inputAddMultiCitizenshipModel.ShortHash" For="@(() => inputAddMultiCitizenshipModel.ShortHash)" />
                 </MudCardContent>
@@ -83,6 +90,9 @@
 
     public class InputModel
     {
+        [Required]
+        public string Alpha3 { get; set; }
+
         [Required]
         [StringLength(11, ErrorMessage = "The short hash must be between 10 and 11 characters long.", MinimumLength = 10)]
         public string ShortHash { get; set; }
