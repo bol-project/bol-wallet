@@ -1,52 +1,65 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BolWallet.Views.CertifierPage"
-			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
-			 x:DataType="viewModels:CertifierViewModel"
-			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
+             xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+             x:DataType="viewModels:CertifierViewModel"
+             xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certifier Page"
-			 BackgroundColor="{DynamicResource SecondaryColor}">
-	<StackLayout Spacing="15" Padding="10" VerticalOptions="Center">
-		
-		<Entry Placeholder="Paste Main Address To Whitelist" Text="{Binding MainAddressToWhitelist, Mode=TwoWay}" 
-			PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+             BackgroundColor="{DynamicResource SecondaryColor}">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="10" VerticalOptions="Center">
 
-		<Button 
-			Text="Whitelist"
-			BackgroundColor="DarkSlateBlue"
-			TextColor="White"
-			Command="{Binding WhitelistCommand}"	/>
-		
-		<Entry Placeholder="Paste Codename To Certify" Text="{Binding CodeNameToCertify, Mode=TwoWay}" 
-			   PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+            <Entry
+                Placeholder="Paste Main Address To Whitelist"
+                Text="{Binding MainAddressToWhitelist, Mode=TwoWay}"
+                PlaceholderColor="Black"
+                BackgroundColor="#EDF2F7"
+                TextColor="Black"
+                Margin="0,0,0,10" />
 
-        <Frame
-            Padding="10">
-            <Grid 
-                ColumnDefinitions="*, Auto">
-                <Label
-                    VerticalOptions="Center"
-                    TextColor="Black"
-                    Text="{Binding CertificationZipPath}" />
-                    
-                <Button 
-                    Grid.Column="1"
-                    HorizontalOptions="End"
-                    Text="..."
-                    Command="{Binding SelectZipFileCommand}" />
-            </Grid>
-        </Frame>
-        
-        <Button 
-            Text="Validate"
-            BackgroundColor="DarkSlateBlue"
-            Command="{Binding ValidateCertificationDocumentsCommand}" />
-        
-		<Button 
-			Text="Certify"
-			BackgroundColor="DarkSlateBlue"
-			TextColor="White"
-			Command="{Binding CertifyCommand}"	/>
-	</StackLayout>
+            <Button
+                Text="Whitelist"
+                BackgroundColor="DarkSlateBlue"
+                TextColor="White"
+                Command="{Binding WhitelistCommand}" />
+
+            <Entry
+                Placeholder="Paste Codename To Certify"
+                Text="{Binding CodeNameToCertify, Mode=TwoWay}"
+                PlaceholderColor="Black"
+                BackgroundColor="#EDF2F7"
+                TextColor="Black"
+                Margin="0,0,0,10" />
+
+            <Frame
+                Padding="10">
+                <Grid
+                    ColumnDefinitions="*, Auto">
+                    <Label
+                        VerticalOptions="Center"
+                        TextColor="Black"
+                        Text="{Binding CertificationZipPath}" />
+
+                    <Button
+                        Grid.Column="1"
+                        HorizontalOptions="End"
+                        Text="..."
+                        Command="{Binding SelectZipFileCommand}" />
+                </Grid>
+            </Frame>
+
+            <Button
+                Text="Validate"
+                BackgroundColor="DarkSlateBlue"
+                Command="{Binding ValidateCertificationDocumentsCommand}" />
+
+            <Button
+                Text="Certify"
+                BackgroundColor="DarkSlateBlue"
+                TextColor="White"
+                Command="{Binding CertifyCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
