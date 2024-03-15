@@ -10,6 +10,12 @@
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
+                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputIsMultiCitizenshipModel.Alpha3">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                     <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to check if it already exists in the multicitizenship list." Required="true" Class="mt-3"
                                   @bind-Value="inputIsMultiCitizenshipModel.ShortHash" For="@(() => inputIsMultiCitizenshipModel.ShortHash)" />
                 </MudCardContent>
@@ -53,7 +59,7 @@
     {
         try
         {
-            var result = await bolService.AddMultiCitizenship(inputAddMultiCitizenshipModel.ShortHash);
+            var result = await bolService.AddMultiCitizenship(inputAddMultiCitizenshipModel.Alpha3.Trim(), inputAddMultiCitizenshipModel.ShortHash);
 
             await Toast.Make($"Short hash {inputAddMultiCitizenshipModel.ShortHash} has been successfully added.").Show();
         }
@@ -71,7 +77,7 @@
     {
         try
         {
-            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.ShortHash);
+            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.ShortHash.Trim(), inputIsMultiCitizenshipModel.ShortHash);
 
             if (isMultiCitizenship)
                 await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} already exists in the multicitizenship list.").Show();
