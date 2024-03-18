@@ -3,6 +3,7 @@ using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Options;
 using Plugin.Fingerprint.Abstractions;
 
 namespace BolWallet.ViewModels;
@@ -12,6 +13,9 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
+    private readonly IBolContractHashService _bolContractHashClient;
+    private readonly IOptions<BolWalletAppConfig> _bolConfig;
+    private readonly IOptions<BolConfig> _bolSdkConfig;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -64,13 +68,19 @@ public partial class MainWithAccountViewModel : BaseViewModel
         ISecureRepository secureRepository,
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
-        IAddressTransformer addressTransformer)
+        IAddressTransformer addressTransformer,
+        IBolContractHashService bolContractHashClient,
+        IOptions<BolWalletAppConfig> bolConfig,
+        IOptions<BolConfig> bolSdkConfig)
         : base(navigationService, fingerprint)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
+        _bolContractHashClient = bolContractHashClient;
+        _bolConfig = bolConfig;
+        _bolSdkConfig = bolSdkConfig;
     }
 
     [RelayCommand]
@@ -80,11 +90,15 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-            await FetchBolAccountData(token);
+
+            if (await TrySetBolContractHash(token))
+            {
+                await FetchBolAccountData(token);
+            }
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
         finally
         {
@@ -93,7 +107,25 @@ public partial class MainWithAccountViewModel : BaseViewModel
             IsRefreshing = false;
         }
     }
-    
+
+    private async Task<bool> TrySetBolContractHash(CancellationToken token)
+    {
+        if (!string.IsNullOrWhiteSpace(_bolSdkConfig.Value.Contract))
+        {
+            return true;
+        }
+
+        var result = await _bolContractHashClient.GetBolContractHash(token);
+        if (result.IsFailed)
+        {
+            await Toast.Make(result.Message).Show(token);
+            return false;
+        }
+
+        _bolSdkConfig.Value.Contract = result.Data;
+        return true;
+    }
+
     private async Task FetchBolAccountData(CancellationToken token)
     {
         try
@@ -190,7 +222,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             IsLoading = true;
 
-            Uri uri = new Uri($"https://certifier.demo.bolchain.net/{MainAddress}");
+            Uri uri = new Uri($"{_bolConfig.Value.BolCertifierEndpoint}/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
             
             while (!IsWhiteListed)

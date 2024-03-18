@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Akavache;
 using Bol.App.Core.Services;
+using Bol.Core.Abstractions;
+using Bol.Core.Accessors;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
 using Bol.Cryptography;
@@ -47,7 +49,7 @@ public static class MauiProgram
 
 		var services = builder.Services;
 
-		// Register Services
+        // Register Services
 		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
 		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
@@ -68,15 +70,19 @@ public static class MauiProgram
         var bolConfig = new BolWalletAppConfig();
         builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
 
-        string contractHash = GetContractHash(bolConfig.RpcEndpoint);
-
-        bolConfig.Contract = contractHash;
-
+        // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
         services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
+        services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
-		services.AddBolSdk();
+        // Register service to fetch the BoL Contract hash from the RPC node.
+        services.AddHttpClient<IBolContractHashService, BolContractHashService>("BolContractHashClient", client =>
+        {
+            client.BaseAddress = new Uri(bolConfig.RpcEndpoint);
+        });
+        
+        services.AddBolSdk();
 
-		services.AddSingleton<HttpClient>();
+        services.AddSingleton<HttpClient>();
 
         // This model will hold the data from the Register flow
         services.AddSingleton(sp =>
@@ -99,44 +105,12 @@ public static class MauiProgram
             client.BaseAddress = new Uri(bolConfig.BolIdentityEndpoint);
         });
 
-		Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
+        Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
-		return builder.Build();
+        return builder.Build();
 	}
 
-	private static string GetContractHash(string url)
-	{
-		var client = new HttpClient();
-
-		var request = new HttpRequestMessage(HttpMethod.Post, url);
-
-		var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getbolhash\",\r\n\"params\":[]\r\n}\r\n", null, "application/json");
-		request.Content = stringContent;
-
-		try
-		{
-			using (var response = client.SendAsync(request).Result)
-			{
-				response.EnsureSuccessStatusCode();
-
-				var resultJson = response.Content.ReadAsStringAsync().Result;
-
-				var jsonResponse = JObject.Parse(resultJson);
-
-				var contractHash = jsonResponse["result"].ToString();
-
-				return contractHash;
-			}
-		}
-		catch (Exception ex)
-		{
-			Toast.Make(ex.Message).Show().Wait();
-		}
-
-		return string.Empty;
-	}
-
-	private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
+    private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
 	{
 		var assembly = Assembly.GetExecutingAssembly();
 		using var stream = assembly.GetManifestResourceStream(appSettingsPath);

@@ -9,9 +9,11 @@ public static class ConfigureWalletExtensions
 {
 	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services)
 	{
-		services.AddTransient<IContextAccessor, WalletContextAccessor>();
+        // Register a custom IContextAccessor by decorating the default one defined in BoL SDK.
+        services.AddSingleton<WalletContextAccessor>();
+        services.AddSingleton<IContextAccessor, BolWalletContextAccessor>();
 
-		services.AddTransient<IBolService, BolService>();
+        services.AddTransient<IBolService, BolService>();
 
 		services.AddTransient<IOptions<WalletConfiguration>>((sp) =>
 		{

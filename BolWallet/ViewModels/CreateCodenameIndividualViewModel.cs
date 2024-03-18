@@ -1,6 +1,7 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Options;
 
 namespace BolWallet.ViewModels;
 
@@ -9,7 +10,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
     public CreateCodenameIndividualViewModel(INavigationService navigationService,
         ICodeNameService codeNameService,
         RegisterContent content,
-        ISecureRepository secureRepository) : base(navigationService, codeNameService, content, secureRepository)
+        ISecureRepository secureRepository,
+        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolConfig)
     {
         IndividualCodenameForm = new IndividualCodenameForm(content);
     }
