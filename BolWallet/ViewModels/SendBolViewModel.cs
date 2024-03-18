@@ -2,6 +2,7 @@
 using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using Plugin.Fingerprint.Abstractions;
 using System.Collections.ObjectModel;
 using System.Numerics;
 
@@ -53,7 +54,8 @@ public partial class SendBolViewModel : BaseViewModel
 		INavigationService navigationService,
 		IAddressTransformer addressTransformer,
 		ISecureRepository secureRepository,
-		IBolService bolService) : base(navigationService)
+		IBolService bolService,
+        IFingerprint ifingerprint) : base(navigationService, ifingerprint)
 	{
 		_addressTransformer = addressTransformer;
 		_secureRepository = secureRepository;
@@ -98,6 +100,8 @@ public partial class SendBolViewModel : BaseViewModel
         {
             if (!SelectedCommercialAddressIndex.HasValue || SelectedCommercialAddressIndex < 0)
                 throw new Exception("Please choose a commercial address for this transfer.");
+
+            if (!await FingerprintAuthAsync()) return;
 
             SendBolForm.ComAddress = CommercialBalances[SelectedCommercialAddressIndex.Value].Key;
 
