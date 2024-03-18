@@ -154,10 +154,10 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
                 if (BolAccount.AccountStatus == AccountStatus.Open)
                 {
-                    do
+                    while (!IsAuthenticated)
                     {
                         IsAuthenticated = await Task.Run(() => FingerprintAuthAsync());
-                    } while (!IsAuthenticated);
+                    }
                     IsAccountOpen = true;
                 }
                 else
