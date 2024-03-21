@@ -73,18 +73,18 @@ public partial class AccountViewModel : BaseViewModel
 
         var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
 
-        await _fileDownloadService.SaveZipFileAsync(ediZipFiles, cancellationToken);
+        await _fileDownloadService.SaveZipFileAsync(userdata.Codename, ediZipFiles, cancellationToken);
     }
 
     [RelayCommand]
     private async Task DownloadAccountAsync(CancellationToken cancellationToken = default)
     {
-        await _fileDownloadService.DownloadDataAsync(BolAccount, "BolAccount.json", cancellationToken);
+        await _fileDownloadService.DownloadDataAsync(BolAccount, $"BolAccount_{BolAccount.CodeName}.json", cancellationToken);
     }
 
     [RelayCommand]
     private async Task DownloadBolWalletAsync(CancellationToken cancellationToken = default)
     {
-        await _fileDownloadService.DownloadDataAsync(userData.BolWallet, "BolWallet.json", cancellationToken);
+        await _fileDownloadService.DownloadDataAsync(userData.BolWallet, $"BolWallet_{BolAccount.CodeName}.json", cancellationToken);
     }
 }

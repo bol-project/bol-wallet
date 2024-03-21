@@ -106,11 +106,11 @@ public class FileDownloadService : IFileDownloadService
         return files;
     }
 
-    public async Task SaveZipFileAsync(byte[] ediZipFiles, CancellationToken cancellationToken)
+    public async Task SaveZipFileAsync(string codeName, byte[] ediZipFiles, CancellationToken cancellationToken)
     {
         using (var stream = new MemoryStream(ediZipFiles))
         {
-            var result = await _fileSaver.SaveAsync("certification-documents.zip", stream, cancellationToken);
+            var result = await _fileSaver.SaveAsync($"certification-documents_{codeName}.zip", stream, cancellationToken);
 
             if (result.IsSuccessful)
             {
