@@ -80,11 +80,9 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted)
-        {
-            await _permissionService.DisplayWarningAsync<Permissions.Camera>();
-            return;
-        }
+        var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Camera>();
+
+        if (!hasGivenPermission) return;
 
         FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
 
