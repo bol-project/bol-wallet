@@ -28,7 +28,9 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera</string>
+	<string>"Bol requires access to your camera."</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>"Bol requires access to your microphone."</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

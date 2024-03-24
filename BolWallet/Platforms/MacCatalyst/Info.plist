@@ -34,9 +34,13 @@
 	<string>2024.0311.2100</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.4.1</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>1bol.org © 2024</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>1bol.org © 2024</string>
+	<key>NSCameraUsageDescription</key>
+	<string>"Bol requires access to your camera."</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>"Bol requires access to your microphone."</string>
 </dict>
 </plist>
