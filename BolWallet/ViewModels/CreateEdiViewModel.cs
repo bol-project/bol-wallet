@@ -110,11 +110,9 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task RecordAudio()
     {
-        if (await _permissionService.CheckPermissionAsync<Permissions.Speech>() != PermissionStatus.Granted)
-        {
-            await _permissionService.DisplayWarningAsync<Permissions.Speech>();
-            return;
-        }
+        var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Microphone>();
+
+        if (!hasGivenPermission) return;
 
         if (recorder.IsRecording) await recorder.StopRecording();
 
