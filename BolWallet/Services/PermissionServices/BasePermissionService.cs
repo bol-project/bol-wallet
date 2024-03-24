@@ -4,6 +4,11 @@ namespace BolWallet.Services.PermissionServices;
 
 public abstract class BasePermissionService : IPermissionService
 {
+    /// <summary>
+    /// Each platform-specific implementation should override this method to open the system settings.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     protected abstract Task OpenSystemSettingsAsync<T>() where T : BasePermission, new();
 
     public virtual async Task<PermissionStatus> CheckPermissionAsync<T>() where T : BasePermission, new()
