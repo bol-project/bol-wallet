@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Akavache;
-using Bol.App.Core.Services;
 using Bol.Core.Abstractions;
 using Bol.Core.Accessors;
 using Bol.Core.Extensions;
@@ -8,6 +7,7 @@ using Bol.Core.Model;
 using Bol.Cryptography;
 using Bol.Cryptography.Encoders;
 using BolWallet.Extensions;
+using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
@@ -52,8 +52,9 @@ public static class MauiProgram
 		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
 		services.AddScoped<ICountriesService, CountriesService>();
-		services.AddSingleton<IPermissionService, PermissionService>();
 
+        RegisterPermissionServices(services);
+        
         services.AddSingleton<IMediaPicker, Services.MediaPicker>();
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
@@ -105,6 +106,23 @@ public static class MauiProgram
 
         return builder.Build();
 	}
+
+    private static IServiceCollection RegisterPermissionServices(IServiceCollection services)
+    {
+        if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+        {
+            services.AddSingleton<IPermissionService, MacCatalystPermissionService>();
+        }
+        else if (DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            services.AddSingleton<IPermissionService, IosPermissionService>();
+        }
+        else
+        {
+            services.AddSingleton<IPermissionService, AndroidPermissionService>();
+        }
+        return services;
+    }
 
     private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
 	{
