@@ -2,8 +2,8 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
-using Plugin.AudioRecorder;
 using System.Reflection;
+using Plugin.Maui.Audio;
 
 namespace BolWallet.ViewModels;
 
@@ -17,8 +17,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly IMediaPicker _mediaPicker;
     private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
-
-    AudioRecorderService recorder;
+    private readonly IAudioRecorder _recorder;
 
     public CreateEdiViewModel(
         INavigationService navigationService,
@@ -27,7 +26,8 @@ public partial class CreateEdiViewModel : BaseViewModel
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker)
+        IMediaPicker mediaPicker,
+        IAudioManager audioManager)
         : base(navigationService)
     {
         _permissionService = permissionService;
@@ -38,17 +38,15 @@ public partial class CreateEdiViewModel : BaseViewModel
         _mediaPicker = mediaPicker;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
-        recorder = new AudioRecorderService
-        {
-            AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
-            TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
-        };
         ediFiles = new GenericHashTableFiles() { };
+        _recorder = audioManager.CreateRecorder();
     }
 
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
     [ObservableProperty] private bool _isLoading = false;
+
+    [ObservableProperty] private bool _isRecording = false;
 
     [RelayCommand]
     private async Task PickPhotoAsync(string propertyName)
@@ -108,21 +106,39 @@ public partial class CreateEdiViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task RecordAudio()
+    private async Task StartRecording()
     {
         var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Microphone>();
 
         if (!hasGivenPermission) return;
 
-        if (recorder.IsRecording) await recorder.StopRecording();
+        if (!_recorder.IsRecording)
+        {
+            IsRecording = true;
+            await _recorder.StartAsync();
+        }
+    }
 
-        Task<string> audioRecordTask = await recorder.StartRecording();
+    [RelayCommand]
+    private async Task StopRecording()
+    {
+        if (!_recorder.IsRecording) return;
+        
+        var recording = await _recorder.StopAsync();
+        IsRecording = false;
+        
+        var audioStream = recording.GetAudioStream();
 
-        string audiofilePath = await audioRecordTask;
+        string directoryPath = FileSystem.AppDataDirectory; // or FileSystem.CacheDirectory for temporary files
+        string filePath = Path.Combine(directoryPath, "personalVoice.audio");
+
+        await using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            await audioStream.CopyToAsync(fileStream);
+        }
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
-
-        await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
+        await PathPerImport(propertyNameInfo, new FileResult(filePath));
     }
 
     [RelayCommand]

@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using Akavache;
-using Bol.Core.Abstractions;
-using Bol.Core.Accessors;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
 using Bol.Cryptography;
@@ -9,12 +7,11 @@ using Bol.Cryptography.Encoders;
 using BolWallet.Extensions;
 using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
-using Newtonsoft.Json.Linq;
+using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
 namespace BolWallet;
 
@@ -64,9 +61,11 @@ public static class MauiProgram
 
         services.RegisterViewAndViewModelSubsystem();
 
+        services.AddSingleton(AudioManager.Current);
+        
         var bolConfig = new BolWalletAppConfig();
         builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
-
+        
         // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
         services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
         services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
