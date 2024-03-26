@@ -46,6 +46,8 @@ public partial class CreateEdiViewModel : BaseViewModel
 
     [ObservableProperty] private bool _isLoading = false;
 
+    [ObservableProperty] private bool _isRecording = false;
+
     [RelayCommand]
     private async Task PickPhotoAsync(string propertyName)
     {
@@ -104,21 +106,39 @@ public partial class CreateEdiViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task RecordAudio()
+    private async Task StartRecording()
     {
         var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Microphone>();
 
         if (!hasGivenPermission) return;
 
-        if (recorder.IsRecording) await recorder.StopRecording();
+        if (!_recorder.IsRecording)
+        {
+            IsRecording = true;
+            await _recorder.StartAsync();
+        }
+    }
 
-        Task<string> audioRecordTask = await recorder.StartRecording();
+    [RelayCommand]
+    private async Task StopRecording()
+    {
+        if (!_recorder.IsRecording) return;
+        
+        var recording = await _recorder.StopAsync();
+        IsRecording = false;
+        
+        var audioStream = recording.GetAudioStream();
 
-        string audiofilePath = await audioRecordTask;
+        string directoryPath = FileSystem.AppDataDirectory; // or FileSystem.CacheDirectory for temporary files
+        string filePath = Path.Combine(directoryPath, "personalVoice.audio");
+
+        await using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        {
+            await audioStream.CopyToAsync(fileStream);
+        }
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
-
-        await PathPerImport(propertyNameInfo, new FileResult(audiofilePath));
+        await PathPerImport(propertyNameInfo, new FileResult(filePath));
     }
 
     [RelayCommand]
