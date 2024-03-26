@@ -17,8 +17,10 @@
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                 @if (edi.Item1 == "PersonalVoice")
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetAudioFile(edi.Item1))"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.SpatialAudio" aria-label="@edi.Item1" OnClick="@(args=>GetAudio(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => GetAudioFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@(ViewModel.IsRecording ? Icons.Material.Filled.Stop : Icons.Material.Filled.Mic)" 
+                                   Color="@(ViewModel.IsRecording ? Color.Error : Color.Primary)" aria-label="@edi.Item1" 
+                                   OnClick="@(async () => await StartAudioRecording())"></MudIconButton>
                 }
                 else
                 {
@@ -34,10 +36,45 @@
         </div>
     </MudItem>
 </MudGrid>
+
+@if (ViewModel.IsRecording)
+{
+    <div class="recording-overlay">
+        <div class="recording-dialog">
+            <p>Recording in progress...</p>
+            <p>Click the button below to stop.</p>
+            <MudButton Color="Color.Error" OnClick="@(async () => await StopAndSaveAudioRecording("PersonalVoice"))">Stop Recording</MudButton>
+        </div>
+    </div>
+}
+
 <style>
     .text-center {
         text-align: center;
     }
+    
+    .recording-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6); /* Semi-transparent background */
+        z-index: 1050; /* Ensure it's above other content */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .recording-dialog {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        max-width: 400px;
+        text-align: center;
+    }
+
 </style>
 @code {
     CreateEdiViewModel createEdiViewModel;
@@ -102,10 +139,16 @@
         await UpdateIdentificationDocumentsList(property);
     }
 
-    private async Task GetAudio(string property)
+    private async Task StartAudioRecording()
     {
-        await createEdiViewModel.RecordAudioCommand.ExecuteAsync(null);
+        await createEdiViewModel.StartRecordingCommand.ExecuteAsync(null);
+    }
+    
+    private async Task StopAndSaveAudioRecording(string property)
+    {
+        await createEdiViewModel.StopRecordingCommand.ExecuteAsync(property);
 
+        await InvokeAsync(StateHasChanged);
         await UpdateIdentificationDocumentsList(property);
     }
 
