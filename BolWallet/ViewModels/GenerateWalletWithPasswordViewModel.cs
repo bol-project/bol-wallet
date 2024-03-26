@@ -91,7 +91,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
         JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
 
-        string fileName = "BolWallet.json";
+        string fileName = $"BolWallet_{bolWallet.Name}.json";
 
         var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
 
