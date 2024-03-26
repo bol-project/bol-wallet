@@ -156,13 +156,11 @@
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        if (await permissionService.CheckPermissionAsync<Permissions.Camera>() != PermissionStatus.Granted)
-        {
-            await permissionService.DisplayWarningAsync<Permissions.Camera>();
-            return;
-        }
+        var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
 
-        FileResult takePictureResult = await mediaPicker.CapturePhotoAsync();
+        if (!hasGivenPermission) return;
+        
+        var takePictureResult = await mediaPicker.CapturePhotoAsync();
 
         if (takePictureResult is null)
             return;
