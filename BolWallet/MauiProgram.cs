@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using Akavache;
-using Bol.Core.Abstractions;
-using Bol.Core.Accessors;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
 using Bol.Cryptography;
@@ -9,7 +7,6 @@ using Bol.Cryptography.Encoders;
 using BolWallet.Extensions;
 using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
