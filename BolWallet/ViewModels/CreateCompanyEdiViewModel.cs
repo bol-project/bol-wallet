@@ -2,8 +2,6 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
-using Microsoft.Maui.Storage;
-using Plugin.AudioRecorder;
 using System.Reflection;
 
 namespace BolWallet.ViewModels;
@@ -18,9 +16,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     private readonly IMediaPicker _mediaPicker;
     private ExtendedEncryptedDigitalMatrixCompany extendedEncryptedDigitalMatrix;
     public CompanyHashFiles ediFiles;
-
-    AudioRecorderService recorder;
-
+    
     public CreateCompanyEdiViewModel(
         INavigationService navigationService,
         IPermissionService permissionService,
@@ -43,11 +39,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
             Hashes = new CompanyHashTable()
         };
         _companyHashTableForm = new CompanyHashTableForm();
-        recorder = new AudioRecorderService
-        {
-            AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
-            TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
-        };
+
         ediFiles = new CompanyHashFiles() { };
     }
 

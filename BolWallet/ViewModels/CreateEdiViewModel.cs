@@ -2,8 +2,8 @@
 using Bol.Core.Model;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
-using Plugin.AudioRecorder;
 using System.Reflection;
+using Plugin.Maui.Audio;
 
 namespace BolWallet.ViewModels;
 
@@ -17,8 +17,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly IMediaPicker _mediaPicker;
     private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
-
-    AudioRecorderService recorder;
+    private readonly IAudioRecorder _recorder;
 
     public CreateEdiViewModel(
         INavigationService navigationService,
@@ -27,7 +26,8 @@ public partial class CreateEdiViewModel : BaseViewModel
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker)
+        IMediaPicker mediaPicker,
+        IAudioManager audioManager)
         : base(navigationService)
     {
         _permissionService = permissionService;
@@ -38,12 +38,8 @@ public partial class CreateEdiViewModel : BaseViewModel
         _mediaPicker = mediaPicker;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
-        recorder = new AudioRecorderService
-        {
-            AudioSilenceTimeout = TimeSpan.FromMilliseconds(5000),
-            TotalAudioTimeout = TimeSpan.FromMilliseconds(5000),
-        };
         ediFiles = new GenericHashTableFiles() { };
+        _recorder = audioManager.CreateRecorder();
     }
 
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
