@@ -31,6 +31,8 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
 
             userData = await this._secureRepository.GetAsync<UserData>("userdata") ?? new UserData();
 
+            var birthDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value);
+
             var company = new Company
             {
                 Country = new Bol.Core.Model.Country
@@ -42,7 +44,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 OrgType = CompanyCodenameForm.OrgType,
                 Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber.Value,
-                IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
+                IncorporationDate = new DateTime(birthDate.Year, birthDate.Month, birthDate.Day, 12, 0, 0, DateTimeKind.Utc),
                 Combination = CompanyCodenameForm.Combination.Value
             };
 

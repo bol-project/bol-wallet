@@ -31,6 +31,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
 
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
+            var birthDate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value);
+
             var person = new NaturalPerson
             {
                 FirstName = IndividualCodenameForm.FirstName.Value,
@@ -40,7 +42,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 Gender = IndividualCodenameForm.Gender,
                 Combination = IndividualCodenameForm.Combination.Value,
                 Nin = IndividualCodenameForm.NIN.Value,
-                Birthdate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value),
+                Birthdate = new DateTime(birthDate.Year, birthDate.Month, birthDate.Day, 12, 0, 0, DateTimeKind.Utc),
                 CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
             };
 
