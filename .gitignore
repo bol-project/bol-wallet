@@ -285,3 +285,6 @@ node_modules/
 
 **/.vs
 **/.vscode
+
+# Meteor debugger (VS Code extension) files
+**/.meteor/generated/*
