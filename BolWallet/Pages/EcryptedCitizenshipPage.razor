@@ -11,6 +11,10 @@
 
 <MudThemeProvider />
 
+<MudOverlay Visible="IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+    <MudText>Hashing...</MudText>
+</MudOverlay>
 
 <EditForm Model="@encryptedCitizenshipForm" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -77,7 +81,8 @@
     }
 </style>
 
-    @code {
+@code {
+    bool IsLoading = false;
     UserData userData;
 
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
@@ -156,34 +161,47 @@
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
-
-        if (!hasGivenPermission) return;
-
-        var photo = await mediaPicker.CapturePhotoAsync();
-
-        if (photo is null) return;
-
-        // save the file into local storage
-        var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-
-        await using var sourceStream = await photo.OpenReadAsync();
-
-        await using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
+        try
         {
-            await sourceStream.CopyToAsync(fileStream);
+            var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
+
+            if (!hasGivenPermission) return;
+
+            var photo = await mediaPicker.CapturePhotoAsync();
+
+            if (photo is null) return;
+            
+            // save the file into local storage
+            var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+            await using var sourceStream = await photo.OpenReadAsync();
+
+            await using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
+            {
+                await sourceStream.CopyToAsync(fileStream);
+            }
+
+            var fileResult = new FileResult(localFilePath);
+            encryptedCitizenshipForm = SetFileHash(property, fileResult, encryptedCitizenshipForm);
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
         }
-
-        var fileResult = new FileResult(localFilePath);
-        encryptedCitizenshipForm = SetFileHash(property, fileResult, encryptedCitizenshipForm);
-
-        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message).Show();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
         if (fileResult != null)
         {
+            IsLoading = true;
+
             var fileBytes = File.ReadAllBytes(fileResult.FullPath);
             var encodedFileBytes = base16Encoder.Encode(fileBytes);
             var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
