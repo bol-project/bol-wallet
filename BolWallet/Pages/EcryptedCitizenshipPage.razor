@@ -206,12 +206,13 @@
     private string ValidateNIN(EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
         string errorMessage = string.Empty;
-        string pattern = @"^[A-F0-9]+$";
+        string pattern = @"^[A-Z0-9]*$";
         Regex regex = new Regex(pattern);
 
         if (!(regex.IsMatch(encryptedCitizenshipForm?.Nin) && _content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits == encryptedCitizenshipForm.Nin?.Length))
         {
-            errorMessage = $"National Identification Number (NIN) does not match length for country {encryptedCitizenshipForm.CountryCode}. Only capital letters (A-F) and numbers accepted";
+            errorMessage = $"The National Identification Number (NIN) provided does not match the expected length of {_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits} digits for the country code {encryptedCitizenshipForm.CountryCode}." +
+            " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
         }
 
         NinErrorMessages[encryptedCitizenshipForm.CountryCode] = errorMessage;
