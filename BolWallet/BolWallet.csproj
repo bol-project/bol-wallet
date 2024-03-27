@@ -204,7 +204,7 @@
   <ItemGroup>
     <PackageReference Include="akavache" Version="9.1.20" />
     <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
-    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.23" />
+    <PackageReference Include="BolChain.Core" Version="0.0.1-alpha.24" />
     <PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
