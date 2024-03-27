@@ -27,21 +27,23 @@
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
-                                  @bind-Value="@encryptedCitizenshipForm.SurName"
+                                  @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
                                   Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
-                                  @bind-Value="@encryptedCitizenshipForm.FirstName"
+                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
                                   Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName" />
+                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
                     <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
-                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName" />
+                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
                 </MudItem>
                 @if (!string.IsNullOrEmpty(encryptedCitizenshipForm.CountryCode))
                 {
@@ -142,7 +144,7 @@
         { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
         { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
         { DevicePlatform.MacCatalyst, new[] { "pdf", "png", "jpeg", "jpg", "public.image", "public.audio" } },
-        { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
+        { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
         });
 
         try
@@ -265,12 +267,13 @@
     private string ValidateNIN(EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
         string errorMessage = string.Empty;
-        string pattern = @"^[A-F0-9]+$";
+        string pattern = @"^[A-Z0-9]*$";
         Regex regex = new Regex(pattern);
 
         if (!(regex.IsMatch(encryptedCitizenshipForm?.Nin) && _content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits == encryptedCitizenshipForm.Nin?.Length))
         {
-            errorMessage = $"National Identification Number (NIN) does not match length for country {encryptedCitizenshipForm.CountryCode}. Only capital letters (A-F) and numbers accepted";
+            errorMessage = $"The National Identification Number (NIN) provided does not match the expected length of {_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits} digits for the country code {encryptedCitizenshipForm.CountryCode}." +
+            " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
         }
 
         NinErrorMessages[encryptedCitizenshipForm.CountryCode] = errorMessage;

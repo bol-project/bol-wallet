@@ -55,7 +55,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
             { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
             { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
             { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image", "public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
+            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
