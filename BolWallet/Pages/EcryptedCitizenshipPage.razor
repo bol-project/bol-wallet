@@ -159,15 +159,25 @@
         var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
 
         if (!hasGivenPermission) return;
-        
-        var takePictureResult = await mediaPicker.CapturePhotoAsync();
 
-        if (takePictureResult is null)
-            return;
+        var photo = await mediaPicker.CapturePhotoAsync();
 
-        encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
+        if (photo is null) return;
 
-        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(takePictureResult.FullPath));
+        // save the file into local storage
+        var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+        await using var sourceStream = await photo.OpenReadAsync();
+
+        await using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
+        {
+            await sourceStream.CopyToAsync(fileStream);
+        }
+
+        var fileResult = new FileResult(localFilePath);
+        encryptedCitizenshipForm = SetFileHash(property, fileResult, encryptedCitizenshipForm);
+
+        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
