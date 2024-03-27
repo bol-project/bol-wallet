@@ -180,6 +180,13 @@
             {
                 await sourceStream.CopyToAsync(fileStream);
             }
+            
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
 
             var fileResult = new FileResult(localFilePath);
             encryptedCitizenshipForm = SetFileHash(property, fileResult, encryptedCitizenshipForm);
@@ -192,7 +199,11 @@
         }
         finally
         {
-            IsLoading = false;
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
         }
     }
 
@@ -202,8 +213,6 @@
         {
             return encryptedCitizenshipForm;
         }
-        
-        IsLoading = true;
 
         var fileBytes = File.ReadAllBytes(fileResult.FullPath);
         var encodedFileBytes = base16Encoder.Encode(fileBytes);
