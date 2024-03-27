@@ -1,5 +1,6 @@
 ﻿@page "/encrypted-citizenship"
 @using Bol.Core.Model
+@using CommunityToolkit.Maui.Core
 
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
@@ -167,7 +168,7 @@
         }
         catch (Exception e)
         {
-            await Toast.Make(e.Message).Show();
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
         }
         finally
         {
@@ -214,7 +215,7 @@
         }
         catch (Exception e)
         {
-            await Toast.Make(e.Message).Show();
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
         }
         finally
         {
