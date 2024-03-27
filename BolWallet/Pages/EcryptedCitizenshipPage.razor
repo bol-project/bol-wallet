@@ -161,7 +161,7 @@
                 StateHasChanged();
             });
             
-            encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
+            await Task.Run(() => SetFileHash(property, pickResult, encryptedCitizenshipForm));
 
             await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
         }
@@ -207,9 +207,8 @@
                 StateHasChanged();
             });
             
-
             var fileResult = new FileResult(localFilePath);
-            encryptedCitizenshipForm = SetFileHash(property, fileResult, encryptedCitizenshipForm);
+            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
 
             await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
         }
