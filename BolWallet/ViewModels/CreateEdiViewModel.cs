@@ -56,7 +56,7 @@ public partial class CreateEdiViewModel : BaseViewModel
             { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image" } },
             { DevicePlatform.Android, new[] { "application/pdf", "image/*"} },
             { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".png" } },
+            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".png", ".jpg", ".jpeg" } },
         });
 
         var pickResult = await FilePicker.PickAsync(new PickOptions
