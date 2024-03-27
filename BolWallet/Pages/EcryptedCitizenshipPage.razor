@@ -198,19 +198,21 @@
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        if (fileResult != null)
+        if (fileResult == null)
         {
-            IsLoading = true;
-
-            var fileBytes = File.ReadAllBytes(fileResult.FullPath);
-            var encodedFileBytes = base16Encoder.Encode(fileBytes);
-            var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
-
-            encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property
-                + $"_{encryptedCitizenshipForm.CountryCode}" + Path.GetExtension(fileResult.FullPath));
+            return encryptedCitizenshipForm;
         }
+        
+        IsLoading = true;
+
+        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+        var encodedFileBytes = base16Encoder.Encode(fileBytes);
+        var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
+
+        encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property +
+            $"_{encryptedCitizenshipForm.CountryCode}" + Path.GetExtension(fileResult.FullPath));
 
         return encryptedCitizenshipForm;
     }
