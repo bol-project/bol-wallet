@@ -145,18 +145,39 @@
         { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
         });
 
-        var pickResult = await FilePicker.PickAsync(new PickOptions
+        try
         {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
-        });
+            var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = customFileType,
+                PickerTitle = "Pick a file"
+            });
 
-        if (pickResult is null)
-            return;
+            if (pickResult is null)
+                return;
 
-        encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
 
-        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
