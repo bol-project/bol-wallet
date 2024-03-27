@@ -1,5 +1,6 @@
 ﻿@page "/encrypted-citizenship"
 @using Bol.Core.Model
+@using CommunityToolkit.Maui.Core
 
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
@@ -11,6 +12,9 @@
 
 <MudThemeProvider />
 
+<MudOverlay Visible="IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
 
 <EditForm Model="@encryptedCitizenshipForm" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -77,7 +81,8 @@
     }
 </style>
 
-    @code {
+@code {
+    bool IsLoading = false;
     UserData userData;
 
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
@@ -140,49 +145,105 @@
         { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png" } },
         });
 
-        var pickResult = await FilePicker.PickAsync(new PickOptions
+        try
         {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
-        });
+            var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = customFileType,
+                PickerTitle = "Pick a file"
+            });
 
-        if (pickResult is null)
-            return;
+            if (pickResult is null)
+                return;
 
-        encryptedCitizenshipForm = SetFileHash(property, pickResult, encryptedCitizenshipForm);
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await Task.Run(() => SetFileHash(property, pickResult, encryptedCitizenshipForm));
 
-        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
+        try
+        {
+            var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
 
-        if (!hasGivenPermission) return;
-        
-        var takePictureResult = await mediaPicker.CapturePhotoAsync();
+            if (!hasGivenPermission) return;
 
-        if (takePictureResult is null)
-            return;
+            var photo = await mediaPicker.CapturePhotoAsync();
 
-        encryptedCitizenshipForm = SetFileHash(property, takePictureResult, encryptedCitizenshipForm);
+            if (photo is null) return;
+            
+            // save the file into local storage
+            var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
 
-        await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(takePictureResult.FullPath));
+            await using var sourceStream = await photo.OpenReadAsync();
+
+            await using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
+            {
+                await sourceStream.CopyToAsync(fileStream);
+            }
+            
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            var fileResult = new FileResult(localFilePath);
+            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        if (fileResult != null)
+        if (fileResult == null)
         {
-            var fileBytes = File.ReadAllBytes(fileResult.FullPath);
-            var encodedFileBytes = base16Encoder.Encode(fileBytes);
-            var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
-
-            encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
-            encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames, property
-                + $"_{encryptedCitizenshipForm.CountryCode}" + Path.GetExtension(fileResult.FullPath));
+            return encryptedCitizenshipForm;
         }
+
+        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+        var encodedFileBytes = base16Encoder.Encode(fileBytes);
+        var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
+
+        encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType()
+            .GetProperty(property)
+            .SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames,
+                $"{property}_{encryptedCitizenshipForm.CountryCode}{Path.GetExtension(fileResult.FullPath)}");
 
         return encryptedCitizenshipForm;
     }
