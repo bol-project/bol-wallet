@@ -10,19 +10,43 @@ public class EncryptedCitizenshipForm
     [Required]
     public string Nin { get; set; }
 
-    [Required]
-    [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
-    public string SurName { get; set; }
+    private string _surName;
 
     [Required]
     [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
-    public string FirstName { get; set; }
+    public string SurName
+    {
+        get => _surName;
+        set => _surName = value?.ToUpper();
+    }
+
+    private string _firstName;
+
+    [Required]
+    [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
+    public string FirstName
+    {
+        get => _firstName;
+        set => _firstName = value?.ToUpper();
+    }
+
+    private string _secondName;
 
     [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
-    public string SecondName { get; set; }
+    public string SecondName
+    {
+        get => _secondName;
+        set => _secondName = value?.ToUpper();
+    }
+
+    private string _thirdName;
 
     [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
-    public string ThirdName { get; set; }
+    public string ThirdName
+    {
+        get => _thirdName;
+        set => _thirdName = value?.ToUpper();
+    }
 
     public CitizenshipHashTable CitizenshipHashes { get; set; }
     public CitizenshipHashTable CitizenshipActualBytes { get; set; }
