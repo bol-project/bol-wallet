@@ -61,9 +61,10 @@
                 <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
                     <MudItem Class="p-3" xs="12" sm="12" md="12">
                         <MudStack Row="true">
-                        <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
                                       Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
                             <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
                             <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
                         </MudStack>
                     </MudItem>
@@ -214,6 +215,38 @@
             await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
 
             await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+    
+    private async Task PickPhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        try
+        {
+            var photo = await mediaPicker.PickPhotoAsync();
+
+            if (photo is null) return;
+            
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await Task.Run(() => SetFileHash(property, photo, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(photo.FullPath));
         }
         catch (Exception e)
         {

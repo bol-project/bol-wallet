@@ -54,13 +54,16 @@ public abstract class BasePermissionService : IPermissionService
     {
         var initialPermissionStatus = await CheckPermissionAsync<T>();
 
-        if (initialPermissionStatus is PermissionStatus.Granted) return true;
+        if (HasAccess(initialPermissionStatus)) return true;
 
         var result = await RequestPermissionAsync<T>();
 
-        if (result is PermissionStatus.Granted) return true;
+        if (HasAccess(result)) return true;
 
         await PromptToOpenSettingsAsync<T>();
         return false;
     }
+
+    private static bool HasAccess(PermissionStatus permission) =>
+        permission is PermissionStatus.Granted or PermissionStatus.Limited;
 }

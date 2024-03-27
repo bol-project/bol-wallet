@@ -31,7 +31,9 @@
 	<string>"Bol requires access to your camera."</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>"Bol requires access to your microphone."</string>
-	<key>UIBackgroundModes</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Bol requires access to photos gallery for picking photos.</string>
+    <key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>

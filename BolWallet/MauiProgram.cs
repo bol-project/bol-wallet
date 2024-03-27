@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
+
 namespace BolWallet;
 
 public static class MauiProgram
@@ -52,7 +53,7 @@ public static class MauiProgram
 
         RegisterPermissionServices(services);
         
-        services.AddSingleton<IMediaPicker, Services.MediaPicker>();
+        services.AddSingleton(MediaPicker.Default);
 		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
