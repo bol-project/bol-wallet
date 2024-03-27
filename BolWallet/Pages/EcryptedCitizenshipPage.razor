@@ -234,10 +234,6 @@
     {
         try
         {
-            var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Photos>();
-            
-            if (!hasGivenPermission) return;
-
             var photo = await mediaPicker.PickPhotoAsync();
 
             if (photo is null) return;
