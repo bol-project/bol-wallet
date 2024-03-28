@@ -21,7 +21,8 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
-
+        builder.Services.ConfigureSerilog();
+        
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
