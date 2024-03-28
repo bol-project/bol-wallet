@@ -25,7 +25,7 @@ public static class LoggingExtensions
 
         var configuration = new LoggerConfiguration();
         configuration = Debugger.IsAttached
-            ? configuration.MinimumLevel.Verbose()
+            ? configuration.MinimumLevel.Verbose().WriteTo.Debug()
             : configuration.MinimumLevel.Information();
         
         Log.Logger = configuration
