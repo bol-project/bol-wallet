@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using System.Globalization;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
@@ -42,7 +43,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 Gender = IndividualCodenameForm.Gender,
                 Combination = IndividualCodenameForm.Combination.Value,
                 Nin = IndividualCodenameForm.NIN.Value,
-                Birthdate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value),
+                Birthdate = GetBirthDate(IndividualCodenameForm.Birthdate.Value),
                 CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
             };
 

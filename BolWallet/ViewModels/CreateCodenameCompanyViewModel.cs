@@ -44,7 +44,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 OrgType = CompanyCodenameForm.OrgType,
                 Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber.Value,
-                IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
+                IncorporationDate = GetBirthDate(CompanyCodenameForm.IncorporationDate.Value),
                 Combination = CompanyCodenameForm.Combination.Value
             };
 
