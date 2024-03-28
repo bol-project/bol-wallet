@@ -1,6 +1,7 @@
 ﻿@page "/encrypted-citizenship"
 @using Bol.Core.Model
 @using CommunityToolkit.Maui.Core
+@using Microsoft.Extensions.Logging
 
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
@@ -9,6 +10,7 @@
 @inject IPermissionService permissionService;
 @inject IBase16Encoder base16Encoder;
 @inject ISha256Hasher sha256Hasher;
+@inject ILogger<EcryptedCitizenshipPage> logger;
 
 <MudThemeProvider />
 
@@ -340,7 +342,17 @@
             }
             else
             {
-                await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+                // TODO: Adding try/catch to expose Toast bug in iOS/MacCatalyst release mode.
+                // https://github.com/dotnet/maui/issues/21407
+                // https://github.com/CommunityToolkit/Maui/issues/1752
+                try
+                {
+                    await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Error showing Toast");
+                }
             }
         }
         catch (Exception ex)
