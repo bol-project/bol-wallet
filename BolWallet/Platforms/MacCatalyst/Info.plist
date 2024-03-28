@@ -31,9 +31,9 @@
 		<string>processing</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2024.0327.1807</string>
+	<string>2024.0328.1820</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5.0</string>
+	<string>1.6.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSHumanReadableCopyright</key>
@@ -42,7 +42,7 @@
 	<string>"Bol requires access to your camera."</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>"Bol requires access to your microphone."</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Bol requires access to photos gallery for picking photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Bol requires access to photos gallery for picking photos.</string>
 </dict>
 </plist>
