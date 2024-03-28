@@ -40,5 +40,13 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
+    <key>CFBundleVersion</key>
+    <string>2024.0328.2000</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.6.0</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>1bol.org © 2024</string>
 </dict>
 </plist>
