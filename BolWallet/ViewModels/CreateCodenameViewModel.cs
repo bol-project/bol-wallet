@@ -1,8 +1,7 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
-using CommunityToolkit.Maui.Alerts;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
+using SimpleResults;
 
 namespace BolWallet.ViewModels;
 
@@ -10,6 +9,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
 {
     protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
+    protected readonly IBolRpcService BolRpcService;
     private readonly IOptions<BolConfig> _bolConfig;
 
     public CreateCodenameViewModel(
@@ -17,11 +17,13 @@ public partial class CreateCodenameViewModel : BaseViewModel
         ICodeNameService codeNameService,
         RegisterContent content,
         ISecureRepository secureRepository,
+        IBolRpcService bolRpcService,
         IOptions<BolConfig> bolConfig)
         : base(navigationService)
     {
         _codeNameService = codeNameService;
         _secureRepository = secureRepository;
+        BolRpcService = bolRpcService;
         _bolConfig = bolConfig;
     }
 
@@ -39,37 +41,19 @@ public partial class CreateCodenameViewModel : BaseViewModel
             await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
-    protected bool IsCodenameExists(string codename)
+    protected async Task<Result<bool>> CheckCodenameExists(string codename, CancellationToken token = default)
     {
-        var client = new HttpClient();
-
-        var request = new HttpRequestMessage(HttpMethod.Post, _bolConfig.Value.RpcEndpoint);
-
-        var stringContent = new StringContent("{\r\n\"jsonrpc\":\"2.0\",\r\n\"id\":1,\r\n\"method\":\"getAccount\",\r\n\"params\":[\"" + codename + "\"]\r\n}\r\n", null, "application/json");
-        request.Content = stringContent;
-
-        try
+        var result = await BolRpcService.GetBolAccount(codename, token);
+        if (result.IsSuccess)
         {
-            using (var response = client.SendAsync(request).Result)
-            {
-                response.EnsureSuccessStatusCode();
-
-                var resultJson = response.Content.ReadAsStringAsync().Result;
-
-                var jsonResponse = JObject.Parse(resultJson);
-
-                if (jsonResponse["error"] == null)
-                    return true;
-
-            }
-        }
-        catch (Exception ex)
-        {
-            Toast.Make(ex.Message).Show().Wait();
-
-            return false;
+            return Result.Success(true);
         }
 
-        return false;
+        if (result.Status == ResultStatus.NotFound)
+        {
+            return Result.Success(false);
+        }
+
+        return Result.CriticalError(result.Message, result.Errors);
     }
 }

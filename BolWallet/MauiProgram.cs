@@ -72,7 +72,7 @@ public static class MauiProgram
         services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
 
         // Register service to fetch the BoL Contract hash from the RPC node.
-        services.AddHttpClient<IBolContractHashService, BolContractHashService>("BolContractHashClient", client =>
+        services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService", client =>
         {
             client.BaseAddress = new Uri(bolConfig.RpcEndpoint);
         });

@@ -12,7 +12,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
-    private readonly IBolContractHashService _bolContractHashClient;
+    private readonly IBolRpcService _bolRpcClient;
     private readonly IOptions<BolWalletAppConfig> _bolConfig;
     private readonly IOptions<BolConfig> _bolSdkConfig;
 
@@ -64,7 +64,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
-        IBolContractHashService bolContractHashClient,
+        IBolRpcService bolRpcClient,
         IOptions<BolWalletAppConfig> bolConfig,
         IOptions<BolConfig> bolSdkConfig)
         : base(navigationService)
@@ -73,7 +73,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
-        _bolContractHashClient = bolContractHashClient;
+        _bolRpcClient = bolRpcClient;
         _bolConfig = bolConfig;
         _bolSdkConfig = bolSdkConfig;
     }
@@ -110,7 +110,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
             return true;
         }
 
-        var result = await _bolContractHashClient.GetBolContractHash(token);
+        var result = await _bolRpcClient.GetBolContractHash(token);
         if (result.IsFailed)
         {
             await Toast.Make(result.Message).Show(token);

@@ -6,18 +6,18 @@ namespace BolWallet;
 
 public partial class MainPage : ContentPage
 {
-    private readonly IBolContractHashService _bolContractHashClient;
+    private readonly IBolRpcService _bolRpcClient;
     private readonly IOptions<BolConfig> _bolConfigOptions;
     RadialControlViewModel RadialVM = new();
 
     public MainPage(
         MainViewModel mainViewModel,
-        IBolContractHashService bolContractHashClient,
+        IBolRpcService bolRpcClient,
         IOptions<BolConfig> bolConfigOptions)
     {
 		InitializeComponent();
 		BindingContext = mainViewModel;
-        _bolContractHashClient = bolContractHashClient;
+        _bolRpcClient = bolRpcClient;
         _bolConfigOptions = bolConfigOptions;
     }
 
@@ -35,7 +35,7 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        var result = await _bolContractHashClient.GetBolContractHash();
+        var result = await _bolRpcClient.GetBolContractHash();
         if (result.IsFailed)
         {
             await Toast.Make(result.Message).Show();
