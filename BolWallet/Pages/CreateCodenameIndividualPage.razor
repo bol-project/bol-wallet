@@ -56,7 +56,7 @@
                 <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
                                Margin="@Margin.Dense"
                                MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
-                               DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Birth Date(yyyy-MM-dd)" />
+                               DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)" />
             </MudItem>
             <MudItem xs="12" sm="12" md="12">
                 <MudAutocomplete T="Country" Label="Birth Country" @bind-Value="@IndividualCodenameForm.CountryOfBirth" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
@@ -164,7 +164,7 @@
 
     private void OnDateChanged(DateTime? dt)
     {
-        IndividualCodenameForm.Birthdate.Value = dt?.ToString("yyyy-MM-dd");
+        IndividualCodenameForm.Birthdate.Value = dt?.ToString(Constants.BirthDateFormat);
         BirthDate = dt;
     }
 

@@ -50,7 +50,7 @@
                            Margin="@Margin.Dense"
                            HelperText="VAT must contains at least 5 characters"
                            MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today" Immediate="true"
-                           DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="Incorporation Date(yyyy-MM-dd)" />
+                           DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Incorporation Date(yyyy-MM-dd)" />
         </MudItem>
 
         <MudItem xs="12" sm="12" md="12">
@@ -128,7 +128,7 @@
 
     private void OnDateChanged(DateTime? dt)
     {
-        CompanyCodenameForm.IncorporationDate.Value = dt?.ToString("yyyy-MM-dd");
+        CompanyCodenameForm.IncorporationDate.Value = dt?.ToString(Constants.BirthDateFormat);
         IncorporationDate = dt;
     }
 

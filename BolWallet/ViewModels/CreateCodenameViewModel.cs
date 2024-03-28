@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using System.Globalization;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
     private readonly IOptions<BolConfig> _bolConfig;
-
+    
     public CreateCodenameViewModel(
         INavigationService navigationService,
         ICodeNameService codeNameService,
@@ -72,4 +73,8 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
         return false;
     }
+
+    protected static DateTime GetBirthDate(string value) =>
+        DateOnly.ParseExact(value, Constants.BirthDateFormat, CultureInfo.InvariantCulture)
+            .ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 }

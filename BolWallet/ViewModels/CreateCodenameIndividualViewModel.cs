@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using System.Globalization;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using Microsoft.Extensions.Options;
@@ -31,8 +32,6 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
 
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-            var birthDate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value);
-
             var person = new NaturalPerson
             {
                 FirstName = IndividualCodenameForm.FirstName.Value,
@@ -42,7 +41,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 Gender = IndividualCodenameForm.Gender,
                 Combination = IndividualCodenameForm.Combination.Value,
                 Nin = IndividualCodenameForm.NIN.Value,
-                Birthdate = new DateTime(birthDate.Year, birthDate.Month, birthDate.Day, 12, 0, 0, DateTimeKind.Utc),
+                Birthdate = GetBirthDate(IndividualCodenameForm.Birthdate.Value),
                 CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
             };
 
