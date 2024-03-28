@@ -1,6 +1,7 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Options;
 
 namespace BolWallet.ViewModels;
@@ -11,7 +12,8 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         ICodeNameService codeNameService,
         RegisterContent content,
         ISecureRepository secureRepository,
-        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolConfig)
+        IBolRpcService bolRpcService,
+        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolRpcService, bolConfig)
     {
         CompanyCodenameForm = new CompanyCodenameForm(content);
     }
@@ -20,7 +22,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
     private CompanyCodenameForm _companyCodenameForm;
 
     [RelayCommand]
-    private async Task Generate()
+    private async Task Generate(CancellationToken token = default)
     {
         try
         {
@@ -42,15 +44,22 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                 OrgType = CompanyCodenameForm.OrgType,
                 Title = CompanyCodenameForm.Title.Value,
                 VatNumber = CompanyCodenameForm.VatNumber.Value,
-                IncorporationDate = DateTime.Parse(CompanyCodenameForm.IncorporationDate.Value),
+                IncorporationDate = GetBirthDate(CompanyCodenameForm.IncorporationDate.Value),
                 Combination = CompanyCodenameForm.Combination.Value
             };
 
             var result = _codeNameService.Generate(company);
-
-            if (IsCodenameExists(result))
+            var codenameExistsResult = await CheckCodenameExists(result, token);
+            
+            if (codenameExistsResult.IsSuccess && codenameExistsResult.Data)
             {
-                Toast.Make("The codename already exists. Please create a different codename.").Show().Wait();
+                await Toast.Make("The codename already exists. Please create a different codename.", ToastDuration.Long).Show(token);
+                return;
+            }
+
+            if (codenameExistsResult.IsFailed)
+            {
+                await Toast.Make($"Codename existence check failed with error: {codenameExistsResult.Message}", ToastDuration.Long).Show(token);
                 return;
             }
 

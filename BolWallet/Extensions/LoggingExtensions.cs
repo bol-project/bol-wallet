@@ -25,7 +25,7 @@ public static class LoggingExtensions
 
         var configuration = new LoggerConfiguration();
         configuration = Debugger.IsAttached
-            ? configuration.MinimumLevel.Verbose()
+            ? configuration.MinimumLevel.Verbose().WriteTo.Debug()
             : configuration.MinimumLevel.Information();
         
         Log.Logger = configuration
@@ -41,7 +41,31 @@ public static class LoggingExtensions
                 rollOnFileSizeLimit: true)
             .WriteTo.Console(outputTemplate)
             .CreateLogger();
-        
+
+        var deviceInfo = new
+        {
+            DeviceInfo.Current.Name,
+            DeviceInfo.Current.DeviceType,
+            DeviceInfo.Current.Manufacturer,
+            DeviceInfo.Current.Model,
+            Idiom = DeviceInfo.Current.Idiom.ToString(),
+            Platform = DeviceInfo.Current.Platform.ToString(),
+            DeviceInfo.Current.VersionString
+        };
+        var appInfo = new
+        {
+            AppInfo.Current.Name,
+            AppInfo.Current.VersionString,
+            AppInfo.Current.BuildString,
+            AppInfo.Current.PackageName,
+            AppInfo.Current.PackagingModel,
+            AppInfo.Current.RequestedTheme,
+            AppInfo.Current.RequestedLayoutDirection
+        };
+        Log.Logger.Information("Starting BolWallet application...");
+        Log.Logger.Information("Device Info: {@DeviceInfo}", deviceInfo);
+        Log.Logger.Information("App Info: {@AppInfo}", appInfo);
+
         services.AddLogging(configure => configure.AddSerilog(dispose: true));
 
         return services;

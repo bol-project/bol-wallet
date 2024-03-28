@@ -1,6 +1,8 @@
-﻿using Bol.Core.Abstractions;
+﻿using System.Globalization;
+using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Options;
 
 namespace BolWallet.ViewModels;
@@ -11,7 +13,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
         ICodeNameService codeNameService,
         RegisterContent content,
         ISecureRepository secureRepository,
-        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolConfig)
+        IBolRpcService bolRpcService,
+        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolRpcService, bolConfig)
     {
         IndividualCodenameForm = new IndividualCodenameForm(content);
     }
@@ -20,7 +23,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
     private IndividualCodenameForm _individualCodenameForm;
 
     [RelayCommand]
-    private async Task Generate()
+    private async Task Generate(CancellationToken token = default)
     {
         try
         {
@@ -40,17 +43,25 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 Gender = IndividualCodenameForm.Gender,
                 Combination = IndividualCodenameForm.Combination.Value,
                 Nin = IndividualCodenameForm.NIN.Value,
-                Birthdate = DateTime.Parse(IndividualCodenameForm.Birthdate.Value),
+                Birthdate = GetBirthDate(IndividualCodenameForm.Birthdate.Value),
                 CountryCode = IndividualCodenameForm.SelectedCountry.Alpha3
             };
 
             userData.BirthCountryCode = IndividualCodenameForm.CountryOfBirth.Alpha3;
 
             var result = _codeNameService.Generate(person);
-
-            if (IsCodenameExists(result))
+            var codenameExistsResult = await CheckCodenameExists(result, token);
+            
+            if (codenameExistsResult.IsSuccess && codenameExistsResult.Data)
             {
-                throw new Exception("The codename already exists. Please create a different codename.");
+                await Toast.Make("The codename already exists. Please create a different codename.", ToastDuration.Long).Show(token);
+                return;
+            }
+
+            if (codenameExistsResult.IsFailed)
+            {
+                await Toast.Make($"Codename existence check failed with error: {codenameExistsResult.Message}", ToastDuration.Long).Show(token);
+                return;
             }
 
             userData.Codename = result;
@@ -63,7 +74,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
     }
 
