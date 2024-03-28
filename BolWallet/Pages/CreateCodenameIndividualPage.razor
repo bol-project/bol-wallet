@@ -2,10 +2,6 @@
 
 @inherits MvvmComponentBase<CreateCodenameIndividualViewModel>
 
-@inject RegisterContent _content;
-@inject NavigationManager nav;
-@inject CreateEdiViewModel CreateEdiViewModel;
-
 <MudThemeProvider />
 <div style="overflow-y: auto">
     <MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
