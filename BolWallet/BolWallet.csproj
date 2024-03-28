@@ -61,6 +61,7 @@
     <CreatePackage>false</CreatePackage>
     <CodesignProvision>Automatic</CodesignProvision>
     <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchInterpreter>-all,System.Collections.Immutable</MtouchInterpreter>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
@@ -73,6 +74,7 @@
     <PackageSigningKey>Developer ID Installer</PackageSigningKey>
     <CodesignProvision>Distribution outside AppStore - Developer ID</CodesignProvision>
     <CodesignEntitlements>Platforms\MacCatalyst\Entitlements.plist</CodesignEntitlements>
+    <MtouchInterpreter>-all,System.Collections.Immutable</MtouchInterpreter>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
