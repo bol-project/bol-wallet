@@ -1,29 +1,42 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json.Nodes;
 using Bol.Core.Model;
 using SimpleResults;
 
 namespace BolWallet.Services;
 
+internal readonly record struct BolRpcRequest(
+    string Method,
+    string[] Params,
+    string JsonRpcVersion = "2.0",
+    int Id = 1);
+
+internal readonly record struct BolRpcErrorResult(int Code, string Message);
+
+internal readonly record struct BolRpcResponse<T>(T Result, BolRpcErrorResult? Error);
+
+internal static class BolRpcResponseExtensions
+{
+    internal static Result<T> ToResult<T>(this BolRpcResponse<T> response) => response switch
+    {
+        { Error: not null } => Result.NotFound([
+            $"BoL RPC Error Code: {response.Error.Value.Code}",
+            $"BoL RPC Error Message: {response.Error.Value.Message}"
+        ]),
+        { Result: null } => Result.CriticalError("No result found"),
+        { Result: not null } => Result.ObtainedResource(response.Result)
+    };
+}
+
 internal class BolRpcService(HttpClient client) : IBolRpcService
 {
-    private readonly record struct BolRpcErrorResult(int Code, string Message);
-
     private static JsonSerializerOptions JsonSerializerDefaults => new()
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
-
-    private readonly record struct BolRpcRequest(
-        string Method,
-        string[] Params,
-        string JsonRpcVersion = "2.0",
-        int Id = 1);
-
+    
     private static readonly BolRpcRequest s_getBolContractHashRequest = new("getbolhash", []);
     private static BolRpcRequest s_getAccountRequest(string codename) => new("getAccount", [codename]);
-
     
     public async Task<Result<string>> GetBolContractHash(CancellationToken token = default) =>
         await PerformRpcRequest<string>(s_getBolContractHashRequest, token: token);
@@ -50,22 +63,8 @@ internal class BolRpcService(HttpClient client) : IBolRpcService
                 return Result.CriticalError(await response.Content.ReadAsStringAsync(token));
             }
 
-            var json = await response.Content.ReadAsStringAsync(token);
-            var jsonNode = JsonNode.Parse(json);
-            var error = jsonNode![errorKey];
-            if (error is not null)
-            {
-                (int code, string message) = error.Deserialize<BolRpcErrorResult>(JsonSerializerDefaults);
-                return Result.NotFound([
-                    $"BoL RPC Error Code: {code}",
-                    $"BoL RPC Error Message: {message}"
-                ]);
-            }
-
-            var result = jsonNode[resultKey];
-            return result is null ?
-                Result.CriticalError("No result found") :
-                Result.ObtainedResource(result.GetValue<T>());
+            var responseResult = await response.Content.ReadFromJsonAsync<BolRpcResponse<T>>(token);
+            return responseResult.ToResult();
         }
         catch (Exception ex)
         {
