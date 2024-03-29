@@ -30,7 +30,7 @@ public static class ConfigureWalletExtensions
 
 			var userData = secureRepository.Get<UserData>("userdata");
 
-			return Options.Create(userData?.BolWallet);
+			return Options.Create(userData?.BolWallet ?? new Bol.Core.Model.BolWallet());
 		});
 
 		return services;
