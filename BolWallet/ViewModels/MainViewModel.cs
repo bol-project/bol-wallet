@@ -64,6 +64,12 @@ public partial class MainViewModel : BaseViewModel
             var bolWallet =
                 JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString,
                     Constants.WalletJsonSerializerDefaultOptions);
+            
+            var passwordPopup = new PasswordPopup();
+            await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
+            var password = await passwordPopup.TaskCompletionSource.Task;
+            
+            if (string.IsNullOrEmpty(password)) return;
 
 
             if (string.IsNullOrEmpty(password))
