@@ -3,7 +3,7 @@ using Bol.Core.Model;
 using Microsoft.Extensions.Logging;
 using SimpleResults;
 
-namespace BolWallet.Services;
+namespace BolWallet.Services.BolRpc;
 
 internal readonly record struct BolRpcRequest(
     string Method,
