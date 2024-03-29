@@ -89,7 +89,11 @@ public partial class MainViewModel : BaseViewModel
             
             if (!codeNameKey.SequenceEqual(expectedCodeNameKey))
             {
-                throw new Exception("Incorrect Password. Please provide a valid password.");
+                await Application.Current.MainPage.DisplayAlert(
+                    "Incorrect Password",
+                    "Please provide a valid password.",
+                    "OK");
+                return;
             }
 
             var userData = new UserData { Codename = bolWallet.Name, BolWallet = bolWallet, WalletPassword = password };
