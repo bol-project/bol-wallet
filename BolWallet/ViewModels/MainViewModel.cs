@@ -71,12 +71,6 @@ public partial class MainViewModel : BaseViewModel
             
             if (string.IsNullOrEmpty(password)) return;
 
-
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new Exception("Password cannot be empty. Please provide a valid password.");
-            }
-
             var codeNameAccount = bolWallet.accounts.Single(account => account.Label == "codename");
             var codeNameKey = await Task.Run(() => _exportKeyFactory.GetDecryptedPrivateKey(
                 codeNameAccount.Key,
