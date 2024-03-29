@@ -10,11 +10,10 @@ public static class ConfigureWalletExtensions
 	public static IServiceCollection ConfigureWalletServices(this IServiceCollection services)
 	{
         // Register a custom IContextAccessor by decorating the default one defined in BoL SDK.
-        services.AddSingleton<WalletContextAccessor>();
-        services.AddSingleton<IContextAccessor, BolWalletContextAccessor>();
+        services.AddTransient<WalletContextAccessor>();
+        services.AddTransient<IContextAccessor, BolWalletContextAccessor>();
 
         services.AddTransient<IBolService, BolService>();
-
 		services.AddTransient<IOptions<WalletConfiguration>>((sp) =>
 		{
 			ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
