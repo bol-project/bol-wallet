@@ -65,9 +65,6 @@ public partial class MainViewModel : BaseViewModel
                 JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString,
                     Constants.WalletJsonSerializerDefaultOptions);
 
-            var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync(
-                "Enter Your Password",
-                    null);
 
             if (string.IsNullOrEmpty(password))
             {
