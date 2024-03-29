@@ -92,7 +92,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
     }
 
