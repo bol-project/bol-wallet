@@ -2,6 +2,7 @@
 using Bol.Address.Abstractions;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
 
 namespace BolWallet.ViewModels;
 
@@ -25,6 +26,9 @@ public partial class MainViewModel : BaseViewModel
         _exportKeyFactory = exportKeyFactory;
         _sha256 = sha256;
     }
+
+    [ObservableProperty]
+    private bool _isLoading = false;
 
 	[RelayCommand]
 	private async Task NavigateToCodenameCompanyPage()
@@ -71,6 +75,7 @@ public partial class MainViewModel : BaseViewModel
             
             if (string.IsNullOrEmpty(password)) return;
 
+            IsLoading = true;
             var codeNameAccount = bolWallet.accounts.Single(account => account.Label == "codename");
             var codeNameKey = await Task.Run(() => _exportKeyFactory.GetDecryptedPrivateKey(
                 codeNameAccount.Key,
@@ -80,7 +85,8 @@ public partial class MainViewModel : BaseViewModel
                 bolWallet.Scrypt.P));
             
             var expectedCodeNameKey = _sha256.Hash(Encoding.ASCII.GetBytes(bolWallet.Name));
-
+            IsLoading = false;
+            
             if (!codeNameKey.SequenceEqual(expectedCodeNameKey))
             {
                 throw new Exception("Incorrect Password. Please provide a valid password.");
