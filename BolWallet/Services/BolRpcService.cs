@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Bol.Core.Model;
+using Microsoft.Extensions.Logging;
 using SimpleResults;
 
 namespace BolWallet.Services;
@@ -27,7 +28,7 @@ internal static class BolRpcResponseExtensions
     };
 }
 
-internal class BolRpcService(HttpClient client) : IBolRpcService
+internal class BolRpcService(HttpClient client, ILogger<BolRpcService> logger) : IBolRpcService
 {
     private static JsonSerializerOptions JsonSerializerDefaults => new()
     {
@@ -60,7 +61,9 @@ internal class BolRpcService(HttpClient client) : IBolRpcService
 
             if (!response.IsSuccessStatusCode)
             {
-                return Result.CriticalError(await response.Content.ReadAsStringAsync(token));
+                var result = Result.CriticalError(await response.Content.ReadAsStringAsync(token));
+                logger.LogCritical("BOL RPC request error: {BolRpcError}", result.Message);
+                return result;
             }
 
             var responseResult = await response.Content.ReadFromJsonAsync<BolRpcResponse<T>>(token);
@@ -68,6 +71,7 @@ internal class BolRpcService(HttpClient client) : IBolRpcService
         }
         catch (Exception ex)
         {
+            logger.LogCritical(ex, "BOL RPC request error");
             return Result.CriticalError(ex.Message);
         }
     }
