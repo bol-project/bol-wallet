@@ -2,7 +2,7 @@
 using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace BolWallet.ViewModels;
 
@@ -13,7 +13,14 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
         RegisterContent content,
         ISecureRepository secureRepository,
         IBolRpcService bolRpcService,
-        IOptions<BolConfig> bolConfig) : base(navigationService, codeNameService, content, secureRepository, bolRpcService, bolConfig)
+        IBolService bolService,
+        ILogger<CreateCodenameCompanyViewModel> logger) : base(
+            navigationService,
+            codeNameService,
+            secureRepository,
+            bolRpcService,
+            bolService,
+            logger)
     {
         CompanyCodenameForm = new CompanyCodenameForm(content);
     }
@@ -49,27 +56,39 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
             };
 
             var result = _codeNameService.Generate(company);
-            var codenameExistsResult = await CheckCodenameExists(result, token);
+            var codenameExistsResult = await CodenameExists(result, token);
             
-            if (codenameExistsResult.IsSuccess && codenameExistsResult.Data)
+            switch (codenameExistsResult.IsSuccess)
             {
-                await Toast.Make("The codename already exists. Please create a different codename.", ToastDuration.Long).Show(token);
-                return;
+                case true when !codenameExistsResult.Data.Exists:
+                    {
+                        userData.Codename = result;
+                        userData.Company = company;
+                        userData.IsIndividualRegistration = false;
+
+                        await _secureRepository.SetAsync("userdata", userData);
+
+                        Codename = result;
+                        return;
+                    }
+                case true when codenameExistsResult.Data.Exists:
+                    {
+                        var alternatives = string.Join(Environment.NewLine, codenameExistsResult.Data.Alternatives);
+                
+                        await Toast
+                            .Make($"The codename already exists. Please consider some of the {alternatives}",
+                                ToastDuration.Long)
+                            .Show(token);
+                
+                        return;
+                    }
+                case false:
+                    {
+                        await Toast.Make($"Codename existence check failed with error: {codenameExistsResult.Message}",
+                            ToastDuration.Long).Show(token);
+                        return;
+                    }
             }
-
-            if (codenameExistsResult.IsFailed)
-            {
-                await Toast.Make($"Codename existence check failed with error: {codenameExistsResult.Message}", ToastDuration.Long).Show(token);
-                return;
-            }
-
-            userData.Codename = result;
-            userData.Company = company;
-            userData.IsIndividualRegistration = false;
-
-            await _secureRepository.SetAsync("userdata", userData);
-
-            Codename = result;
         }
         catch (Exception ex)
         {

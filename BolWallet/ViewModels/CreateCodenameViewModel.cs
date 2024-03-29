@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Bol.Core.Abstractions;
-using Bol.Core.Model;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using SimpleResults;
 
 namespace BolWallet.ViewModels;
@@ -11,28 +10,28 @@ public partial class CreateCodenameViewModel : BaseViewModel
     protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
     protected readonly IBolRpcService BolRpcService;
-    private readonly IOptions<BolConfig> _bolConfig;
+    protected readonly IBolService BolService;
+    private readonly ILogger _logger;
     
     public CreateCodenameViewModel(
         INavigationService navigationService,
         ICodeNameService codeNameService,
-        RegisterContent content,
         ISecureRepository secureRepository,
         IBolRpcService bolRpcService,
-        IOptions<BolConfig> bolConfig)
+        IBolService bolService,
+        ILogger logger)
         : base(navigationService)
     {
         _codeNameService = codeNameService;
         _secureRepository = secureRepository;
         BolRpcService = bolRpcService;
-        _bolConfig = bolConfig;
+        BolService = bolService;
+        _logger = logger;
     }
 
     [ObservableProperty]
     protected string _codename = " ";
-
-
-
+    
     [RelayCommand]
     public async Task Submit()
     {
@@ -56,6 +55,27 @@ public partial class CreateCodenameViewModel : BaseViewModel
         }
 
         return Result.CriticalError(result.Message, result.Errors);
+    }
+
+    protected async Task<Result<CodenameExistsCheck>> CodenameExists(string codename, CancellationToken token = default)
+    {
+        try
+        {
+            var exists = await BolService.CodeNameExists(codename, token);
+            if (!exists)
+            {
+                return Result.Success(CodenameExistsCheck.CodenameDoesNotExist());
+            }
+
+            var alternatives = await BolService.FindAlternativeCodeNames(codename, token);
+
+            return Result.Success(CodenameExistsCheck.CodenameExists(alternatives));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error checking if codename {Codename} exists", codename);
+            return Result.CriticalError(e.Message);
+        }
     }
 
     protected static DateTime GetBirthDate(string value) =>
