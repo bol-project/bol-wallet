@@ -65,7 +65,7 @@
                                HeightRequest="200"
                                WidthRequest="200"/>
             <Label Grid.Row="6"
-                   Text="Checking your password... Please wait."
+                   Text="Unlocking your wallet... Please wait."
                    IsVisible="{Binding IsLoading}"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="EndAndExpand"
