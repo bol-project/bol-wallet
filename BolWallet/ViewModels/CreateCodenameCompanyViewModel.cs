@@ -76,7 +76,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
                         var alternatives = string.Join(Environment.NewLine, codenameExistsResult.Data.Alternatives);
                 
                         await Toast
-                            .Make($"The codename already exists. Please consider some of the {alternatives}",
+                            .Make($"The codename already exists. Found:{Environment.NewLine}{alternatives}",
                                 ToastDuration.Long)
                             .Show(token);
                 

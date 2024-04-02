@@ -41,6 +41,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
             await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
+    [Obsolete($"Use {nameof(CodenameExists)} instead.")]
     protected async Task<Result<bool>> CheckCodenameExists(string codename, CancellationToken token = default)
     {
         var result = await BolRpcService.GetBolAccount(codename, token);
@@ -61,15 +62,11 @@ public partial class CreateCodenameViewModel : BaseViewModel
     {
         try
         {
-            var exists = await BolService.CodeNameExists(codename, token);
-            if (!exists)
-            {
-                return Result.Success(CodenameExistsCheck.CodenameDoesNotExist());
-            }
+            var alternatives = (await BolService.FindAlternativeCodeNames(codename, token)).ToArray();
 
-            var alternatives = await BolService.FindAlternativeCodeNames(codename, token);
-
-            return Result.Success(CodenameExistsCheck.CodenameExists(alternatives));
+            return alternatives.Length == 0
+                ? Result.Success(CodenameExistsCheck.CodenameDoesNotExist())
+                : Result.Success(CodenameExistsCheck.CodenameExists(alternatives));
         }
         catch (Exception e)
         {
