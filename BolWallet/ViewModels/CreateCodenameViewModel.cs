@@ -31,6 +31,9 @@ public partial class CreateCodenameViewModel : BaseViewModel
 
     [ObservableProperty]
     protected string _codename = " ";
+
+    [ObservableProperty]
+    protected bool _isLoading = false;
     
     [RelayCommand]
     public async Task Submit()
@@ -62,6 +65,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
     {
         try
         {
+            IsLoading = true;
             var alternatives = (await BolService.FindAlternativeCodeNames(codename, token)).ToArray();
 
             return alternatives.Length == 0
@@ -72,6 +76,10 @@ public partial class CreateCodenameViewModel : BaseViewModel
         {
             _logger.LogError(e, "Error checking if codename {Codename} exists", codename);
             return Result.CriticalError(e.Message);
+        }
+        finally
+        {
+            IsLoading = false;
         }
     }
 
