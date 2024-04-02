@@ -77,7 +77,7 @@
     {
         try
         {
-            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.ShortHash.Trim(), inputIsMultiCitizenshipModel.ShortHash);
+            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.Alpha3.Trim(), inputIsMultiCitizenshipModel.ShortHash);
 
             if (isMultiCitizenship)
                 await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} already exists in the multicitizenship list.").Show();
