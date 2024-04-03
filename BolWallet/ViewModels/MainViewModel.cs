@@ -2,6 +2,7 @@
 using Bol.Address.Abstractions;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
 
 namespace BolWallet.ViewModels;
 
@@ -25,6 +26,9 @@ public partial class MainViewModel : BaseViewModel
         _exportKeyFactory = exportKeyFactory;
         _sha256 = sha256;
     }
+
+    [ObservableProperty]
+    private bool _isLoading = false;
 
 	[RelayCommand]
 	private async Task NavigateToCodenameCompanyPage()
@@ -64,16 +68,14 @@ public partial class MainViewModel : BaseViewModel
             var bolWallet =
                 JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString,
                     Constants.WalletJsonSerializerDefaultOptions);
+            
+            var passwordPopup = new PasswordPopup();
+            await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
+            var password = await passwordPopup.TaskCompletionSource.Task;
+            
+            if (string.IsNullOrEmpty(password)) return;
 
-            var password = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayPromptAsync(
-                "Enter Your Password",
-                    null);
-
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new Exception("Password cannot be empty. Please provide a valid password.");
-            }
-
+            IsLoading = true;
             var codeNameAccount = bolWallet.accounts.Single(account => account.Label == "codename");
             var codeNameKey = await Task.Run(() => _exportKeyFactory.GetDecryptedPrivateKey(
                 codeNameAccount.Key,
@@ -83,10 +85,15 @@ public partial class MainViewModel : BaseViewModel
                 bolWallet.Scrypt.P));
             
             var expectedCodeNameKey = _sha256.Hash(Encoding.ASCII.GetBytes(bolWallet.Name));
-
+            IsLoading = false;
+            
             if (!codeNameKey.SequenceEqual(expectedCodeNameKey))
             {
-                throw new Exception("Incorrect Password. Please provide a valid password.");
+                await Application.Current.MainPage.DisplayAlert(
+                    "Incorrect Password",
+                    "Please provide a valid password.",
+                    "OK");
+                return;
             }
 
             var userData = new UserData { Codename = bolWallet.Name, BolWallet = bolWallet, WalletPassword = password };

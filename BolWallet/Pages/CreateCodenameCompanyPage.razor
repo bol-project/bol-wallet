@@ -4,6 +4,10 @@
 
 <MudThemeProvider />
 
+<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
 <MudForm @ref="form" FieldChanged="FieldChanged" @bind-Errors="@errors" Class="pa-4">
     <MudGrid>
         <MudItem xs="6" sm="6" md="6">

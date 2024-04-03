@@ -47,7 +47,6 @@
                 HorizontalOptions="Center"
                 WidthRequest="200"
                 Text="New Company Wallet" />
-
             <Button
              Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"
@@ -55,6 +54,23 @@
              HorizontalOptions="Center"
              WidthRequest="200"
              Text="Import Existing Wallet" />
+            
+            <ActivityIndicator Grid.Row="5"
+                               Grid.RowSpan="6"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="EndAndExpand"
+                               IsRunning="True"
+                               IsVisible="{Binding IsLoading}"
+                               Color="Coral"
+                               HeightRequest="200"
+                               WidthRequest="200"/>
+            <Label Grid.Row="6"
+                   Text="Unlocking your wallet... Please wait."
+                   IsVisible="{Binding IsLoading}"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="EndAndExpand"
+                   TextColor="Blue"
+                   FontSize="Large"/>
         </Grid>
     </ScrollView>
 </ContentPage>
