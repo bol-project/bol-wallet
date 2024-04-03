@@ -1,24 +1,54 @@
 ﻿@page "/citizenship"
 
-@inject RegisterContent _content;
-@inject INavigationService navigationService;
-@inject ISecureRepository secureRepository;
+@inherits MvvmComponentBase<CitizenshipViewModel>
 
 <MudThemeProvider />
 
-<EditForm Model="@citizenshipsForm" OnValidSubmit="OnValidSubmit">
+<EditForm Model="@ViewModel.citizenshipsForm" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <MudGrid>
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
-                    <MudSelect style="margin-bottom: 20px;" T="string" SelectedValues="SelectedCitizeships" SelectedValuesChanged="SelectedCitizenshipsChanged" Label="Citizenships" Required="true" For="@(() => citizenshipsForm.Citizenships)" HelperText="Choose up to three citizenships from the options provided." MultiSelection="true" @bind-Value="citizenshipsForm.Citizenships">
-                        @foreach (var country in _content.Countries)
-                        {
-                            <MudSelectItem T="string" Value="country.Name">@country.Name</MudSelectItem>
-                        }
-                    </MudSelect>
+                    
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.FirstCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a first country."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     Required="true"
+                                     RequiredError="Country is required" Strict="true">
+                    </MudAutocomplete>
 
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.SecondCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a second country (optional)."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     Required="false" Strict="true">
+                    </MudAutocomplete>
+
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.ThirdCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a third country (optional)."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     Required="false" Strict="false">
+                    </MudAutocomplete>
+                    
+                    <MudChipSet Class="autocomplete-margin">
+                        @foreach (var country in @ViewModel.SelectedCountries)
+                        {
+                            <MudChip Text="@country" OnClose="@(() => ViewModel.RemoveCountry(country))"/>
+                        }
+                    </MudChipSet>
+                    <MudTooltip Placement="Placement.Right" Text="You can select up to three countries of citizenship. 
+                                                          It is important to select all your citizenships otherwise the account may fail to be validated.">
+                        <MudFab Icon="@Icons.Material.Filled.Info" Color="Color.Info"/>
+                    </MudTooltip>
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
@@ -29,86 +59,33 @@
     </MudGrid>
 </EditForm>
 
+<style>
+    .autocomplete-margin {
+        margin-bottom: 50px;
+    }
+</style>
+
 @code {
-    CitizenshipsForm citizenshipsForm = new CitizenshipsForm();
-
-    UserData userData;
-
-    List<string> SelectedCitizeships = new() { };
 
     protected override async Task OnInitializedAsync()
     {
-        userData = await secureRepository.GetAsync<UserData>("userdata") ?? new UserData();
-        if (userData?.Citizenships is null) return;
-
-        SelectedCitizeships = userData.Citizenships.Select(c => c.Name).ToList();
-        citizenshipsForm.Citizenships = string.Join(",", SelectedCitizeships);
-    }
-
-    private async Task SelectedCitizenshipsChanged(IEnumerable<string> selectedCountries)
-    {
-        SelectedCitizeships = selectedCountries.ToList();
-
-        if (SelectedCitizeships.Count > 3)
-        {
-            SelectedCitizeships.RemoveAt(SelectedCitizeships.Count - 1);
-
-            await Toast.Make("Maximum of 3 citizenships can be selected.").Show();
-
-            return;
-        }
+        await ViewModel.OnInitializedAsync();
     }
 
     private async Task OnValidSubmit(EditContext context)
     {
+        var citizenshipsForm = context.Model as CitizenshipsForm;
+
         try
         {
-            var citizenshipsForm = context.Model as CitizenshipsForm;
-
-            List<Country> citizenships = new List<Country>();
-            List<EncryptedCitizenshipForm> encryptedCitizenshipForms = new List<EncryptedCitizenshipForm>();
-
-            foreach (var citizenshipName in citizenshipsForm.Citizenships.Split(",").Select(c => c.Trim()))
-            {
-                BolWallet.Models.Country citizenshipCountry = _content.Countries.FirstOrDefault(c => c.Name == citizenshipName);
-
-                var ninSpec = _content.NinPerCountryCode[citizenshipCountry.Alpha3];
-
-                if (ninSpec.Status == Bol.Core.Model.NinStatus.Inactive)
-                {
-                    await Toast.Make($"Currently, there is no information available regarding the {ninSpec.InternationalName} for {citizenshipCountry.Name}.").Show();
-                    return;
-                }
-
-                citizenships.Add(citizenshipCountry);
-
-                var savedEncryptedCitizenshipForm = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryName == citizenshipName);
-
-                encryptedCitizenshipForms.Add(new EncryptedCitizenshipForm()
-                {
-                    CountryName = citizenshipCountry.Name,
-                    CountryCode = citizenshipCountry.Alpha3,
-                    CitizenshipHashes = savedEncryptedCitizenshipForm?.CitizenshipHashes ?? new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipActualBytes = savedEncryptedCitizenshipForm?.CitizenshipActualBytes ?? new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipHashTableFileNames = savedEncryptedCitizenshipForm?.CitizenshipHashTableFileNames ?? new CitizenshipHashTableFileNames(),
-                    FirstName = savedEncryptedCitizenshipForm?.FirstName,
-                    SecondName = savedEncryptedCitizenshipForm?.SecondName,
-                    ThirdName = savedEncryptedCitizenshipForm?.ThirdName,
-                    SurName = savedEncryptedCitizenshipForm?.SurName,
-                    Nin = savedEncryptedCitizenshipForm?.Nin ?? string.Empty
-                });
-            }
-
-            userData.Citizenships = citizenships;
-            userData.EncryptedCitizenshipForms = encryptedCitizenshipForms;
-
-            await secureRepository.SetAsync("userdata", userData);
-
-            await App.Current.MainPage.Navigation.PushAsync(new Views.EcryptedCitizenshipPage());
+            await ViewModel.TrySubmitFormCommand.ExecuteAsync(citizenshipsForm);
         }
         catch (Exception ex)
         {
             await Toast.Make(ex.Message).Show();
+            return;
         }
+
+        await App.Current.MainPage.Navigation.PushAsync(new Views.EcryptedCitizenshipPage());
     }
 }
