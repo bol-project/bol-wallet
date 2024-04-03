@@ -1,0 +1,61 @@
+@page "/transactions"
+@using BolWallet.ViewModels
+
+@inherits MvvmComponentBase<TransactionsViewModel>
+
+<MudThemeProvider/>
+
+<MudContainer>
+    @if (ViewModel.Transactions != null)
+    {
+        <MudExpansionPanels MultiExpansion="true" Class="pa-1">
+            @foreach (var transaction in ViewModel.Transactions)
+            {
+                <MudExpansionPanel Class="mt-6" bind-IsExpanded="transaction.IsExpanded">
+                    <TitleContent>
+                        <MudText>@transaction.BolTransactionEntry.TransactionHash</MudText>
+                        @{
+                            var color = transaction.IsReceivingTransaction ? Colors.Green.Default : MudBlazor.Colors.Red.Default;
+                        }
+                        <MudText Style="@($"color:{color};")">@transaction.BolAmount</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudText>
+                            <strong>Transaction Type: </strong>@transaction.BolTransactionEntry.TransactionType
+                        </MudText>
+                        <MudText>
+                            <strong>Sender Codename: </strong>@transaction.BolTransactionEntrySenderCodeName
+                        </MudText>
+                        <MudText>
+                            <strong>Sender address: </strong>@transaction.BolTransactionEntrySenderAddress
+                        </MudText>
+                        <MudText>
+                            <strong>Receiver Codename: </strong>@transaction.BolTransactionEntryReceiverCodeName
+                        </MudText>
+                        <MudText>
+                            <strong>Receiver Address: </strong>@transaction.BolTransactionEntryReceiverAddress
+                        </MudText>
+                        <MudText>
+                            <strong>Amount: </strong>@transaction.BolAmount
+                        </MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.OpenBrowserWithTransactionDetailsCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Details</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.CopyTransactionHashToClipboardCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Copy Hash</MudButton>
+                    </ChildContent>
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info">No transactions found</MudAlert>
+    }
+</MudContainer>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.Initialize();
+    }
+
+}
