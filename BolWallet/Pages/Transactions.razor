@@ -13,33 +13,42 @@
             {
                 <MudExpansionPanel Class="mt-6" bind-IsExpanded="transaction.IsExpanded">
                     <TitleContent>
-                        <MudText>@transaction.BolTransactionEntry.TransactionHash</MudText>
+                        <MudText Class="text-wrap-all-chars" Typo="Typo.body2">@transaction.BolTransactionEntry.TransactionHash</MudText>
                         @{
                             var color = transaction.IsReceivingTransaction ? Colors.Green.Default : MudBlazor.Colors.Red.Default;
                         }
-                        <MudText Style="@($"color:{color};")">@transaction.BolAmount</MudText>
+                        <MudText Typo="Typo.body1" Style="@($"color:{color};")">@transaction.BolAmount</MudText>
                     </TitleContent>
                     <ChildContent>
-                        <MudText>
-                            <strong>Transaction Type: </strong>@transaction.BolTransactionEntry.TransactionType
-                        </MudText>
-                        <MudText>
-                            <strong>Sender Codename: </strong>@transaction.BolTransactionEntrySenderCodeName
-                        </MudText>
-                        <MudText>
-                            <strong>Sender address: </strong>@transaction.BolTransactionEntrySenderAddress
-                        </MudText>
-                        <MudText>
-                            <strong>Receiver Codename: </strong>@transaction.BolTransactionEntryReceiverCodeName
-                        </MudText>
-                        <MudText>
-                            <strong>Receiver Address: </strong>@transaction.BolTransactionEntryReceiverAddress
-                        </MudText>
-                        <MudText>
-                            <strong>Amount: </strong>@transaction.BolAmount
-                        </MudText>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.OpenBrowserWithTransactionDetailsCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Details</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.CopyTransactionHashToClipboardCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Copy Hash</MudButton>
+                        <div class="mb-2">
+                            <MudLabel><strong>Transaction Type</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntry.TransactionType</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Sender Codename</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntrySenderCodeName</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Sender address</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntrySenderAddress</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Receiver Codename</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntryReceiverCodeName</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Receiver Address</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntryReceiverAddress</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.OpenBrowserWithTransactionDetailsCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Details</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.CopyTransactionHashToClipboardCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Copy Hash</MudButton>
+                        </div>
                     </ChildContent>
                 </MudExpansionPanel>
             }
@@ -57,5 +66,4 @@
     {
         await ViewModel.Initialize();
     }
-
 }

@@ -85,3 +85,7 @@ a, .btn-link {
 .my-custom-class {
     backdrop-filter: blur(10px);
 }
+
+.text-wrap-all-chars {
+    word-break: break-all;
+}
