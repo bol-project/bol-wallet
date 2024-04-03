@@ -1,0 +1,69 @@
+@page "/transactions"
+@using BolWallet.ViewModels
+
+@inherits MvvmComponentBase<TransactionsViewModel>
+
+<MudThemeProvider/>
+
+<MudContainer>
+    @if (ViewModel.Transactions != null)
+    {
+        <MudExpansionPanels MultiExpansion="true" Class="pa-1">
+            @foreach (var transaction in ViewModel.Transactions)
+            {
+                <MudExpansionPanel Class="mt-6" bind-IsExpanded="transaction.IsExpanded">
+                    <TitleContent>
+                        <MudText Class="text-wrap-all-chars" Typo="Typo.body2">@transaction.BolTransactionEntry.TransactionHash</MudText>
+                        @{
+                            var color = transaction.IsReceivingTransaction ? Colors.Green.Default : MudBlazor.Colors.Red.Default;
+                        }
+                        <MudText Typo="Typo.body1" Style="@($"color:{color};")">@transaction.BolAmount</MudText>
+                    </TitleContent>
+                    <ChildContent>
+                        <div class="mb-2">
+                            <MudLabel><strong>Transaction Type</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntry.TransactionType</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Sender Codename</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntrySenderCodeName</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Sender address</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntrySenderAddress</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Receiver Codename</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntryReceiverCodeName</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudLabel><strong>Receiver Address</strong></MudLabel>
+                            <MudText Class="text-wrap-all-chars">@transaction.BolTransactionEntryReceiverAddress</MudText>
+                        </div>
+
+                        <div class="mb-2">
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.OpenBrowserWithTransactionDetailsCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Details</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await ViewModel.CopyTransactionHashToClipboardCommand.ExecuteAsync(transaction.BolTransactionEntry.TransactionHash)">Copy Hash</MudButton>
+                        </div>
+                    </ChildContent>
+                </MudExpansionPanel>
+            }
+        </MudExpansionPanels>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info">No transactions found</MudAlert>
+    }
+</MudContainer>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.Initialize();
+    }
+}

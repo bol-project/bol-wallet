@@ -1,5 +1,4 @@
 ﻿using Bol.Core.Model;
-using System.Text.RegularExpressions;
 
 namespace BolWallet.Models;
 
@@ -20,10 +19,10 @@ public partial class BolTransactionEntryListItem : ObservableObject
 	[ObservableProperty]
 	private bool _isExpanded;
     
-    private bool IsReceivingTransaction => UserCodeName == BolTransactionEntry.ReceiverCodeName;
+    public bool IsReceivingTransaction => UserCodeName == BolTransactionEntry.ReceiverCodeName;
     public string BolAmount => (IsReceivingTransaction ? "+" : "-") + BolTransactionEntry.Amount + " BOL";
 
-    public Color AmountTextColor => IsReceivingTransaction ? Colors.LawnGreen : Colors.Red;  
+    public string AmountTextColor => IsReceivingTransaction ? MudBlazor.Colors.Green.Default : MudBlazor.Colors.Red.Default;  
 
     public BolTransactionEntryListItem(string userCodeName, BolTransactionEntry bolTransactionEntry)
     {
