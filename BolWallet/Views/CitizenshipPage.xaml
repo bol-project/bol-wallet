@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BolWallet.Views.CitizenshipPage"
              xmlns:pages="clr-namespace:BolWallet.Pages"
-             Title="Citizenship Page"
+             Title="Choose Citizenship Countries"
              BackgroundColor="{DynamicResource SecondaryColor}" >
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
