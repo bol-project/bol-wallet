@@ -12,6 +12,10 @@ namespace BolWallet.Services
         public IBolContext GetContext()
         {
             var bolContext = walletContextAccessor.GetContext();
+            if (bolContext is UnauthorizedBolContext)
+            {
+                return bolContext;
+            }
 
             return new BolContext(
                 bolConfig.Value.Contract,

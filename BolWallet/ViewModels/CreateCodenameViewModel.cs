@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Bol.Core.Abstractions;
-using Bol.Core.Model;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using SimpleResults;
 
 namespace BolWallet.ViewModels;
@@ -11,28 +10,31 @@ public partial class CreateCodenameViewModel : BaseViewModel
     protected readonly ICodeNameService _codeNameService;
     protected readonly ISecureRepository _secureRepository;
     protected readonly IBolRpcService BolRpcService;
-    private readonly IOptions<BolConfig> _bolConfig;
+    protected readonly IBolService BolService;
+    private readonly ILogger _logger;
     
     public CreateCodenameViewModel(
         INavigationService navigationService,
         ICodeNameService codeNameService,
-        RegisterContent content,
         ISecureRepository secureRepository,
         IBolRpcService bolRpcService,
-        IOptions<BolConfig> bolConfig)
+        IBolService bolService,
+        ILogger logger)
         : base(navigationService)
     {
         _codeNameService = codeNameService;
         _secureRepository = secureRepository;
         BolRpcService = bolRpcService;
-        _bolConfig = bolConfig;
+        BolService = bolService;
+        _logger = logger;
     }
 
     [ObservableProperty]
     protected string _codename = " ";
 
-
-
+    [ObservableProperty]
+    protected bool _isLoading = false;
+    
     [RelayCommand]
     public async Task Submit()
     {
@@ -42,6 +44,7 @@ public partial class CreateCodenameViewModel : BaseViewModel
             await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
+    [Obsolete($"Use {nameof(CodenameExists)} instead.")]
     protected async Task<Result<bool>> CheckCodenameExists(string codename, CancellationToken token = default)
     {
         var result = await BolRpcService.GetBolAccount(codename, token);
@@ -56,6 +59,28 @@ public partial class CreateCodenameViewModel : BaseViewModel
         }
 
         return Result.CriticalError(result.Message, result.Errors);
+    }
+
+    protected async Task<Result<CodenameExistsCheck>> CodenameExists(string codename, CancellationToken token = default)
+    {
+        try
+        {
+            IsLoading = true;
+            var alternatives = (await BolService.FindAlternativeCodeNames(codename, token)).ToArray();
+
+            return alternatives.Length == 0
+                ? Result.Success(CodenameExistsCheck.CodenameDoesNotExist())
+                : Result.Success(CodenameExistsCheck.CodenameExists(alternatives));
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error checking if codename {Codename} exists", codename);
+            return Result.CriticalError(e.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     protected static DateTime GetBirthDate(string value) =>
