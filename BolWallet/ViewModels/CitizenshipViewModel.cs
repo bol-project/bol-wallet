@@ -10,7 +10,9 @@ public partial class CitizenshipViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly ILogger<CitizenshipViewModel> _logger;
     private readonly List<string> _allCountries;
-    public UserData UserData { get; private set; }
+    private UserData UserData { get; set; }
+    
+    [ObservableProperty]
     public CitizenshipsForm citizenshipsForm;
 
     public CitizenshipViewModel(
@@ -24,17 +26,8 @@ public partial class CitizenshipViewModel : BaseViewModel
         _logger = logger;
         _allCountries = _content.Countries.Select(country => country.Name).ToList();
         
-        citizenshipsForm = new CitizenshipsForm(); // TODO initialize this object
+        citizenshipsForm = new CitizenshipsForm();
     }
-    
-    [ObservableProperty]
-    private string _firstCountry;
-
-    [ObservableProperty]
-    private string _secondCountry;
-
-    [ObservableProperty]
-    private string _thirdCountry;
 
     public override async Task OnInitializedAsync()
     {
@@ -42,13 +35,9 @@ public partial class CitizenshipViewModel : BaseViewModel
         
         var citizenships = UserData.Citizenships.Select(citizenship => citizenship.Name).ToArray();
         
-        FirstCountry = citizenships.FirstOrDefault() ?? string.Empty;
-        SecondCountry = citizenships.Skip(1).FirstOrDefault() ?? string.Empty;
-        ThirdCountry = citizenships.Skip(2).FirstOrDefault() ?? string.Empty;
-        
-        citizenshipsForm.FirstCountry = FirstCountry;
-        citizenshipsForm.SecondCountry = SecondCountry;
-        citizenshipsForm.ThirdCountry = ThirdCountry;
+        CitizenshipsForm.FirstCountry = citizenships.FirstOrDefault() ?? string.Empty;
+        CitizenshipsForm.SecondCountry = citizenships.Skip(1).FirstOrDefault() ?? string.Empty;
+        CitizenshipsForm.ThirdCountry = citizenships.Skip(2).FirstOrDefault() ?? string.Empty;
         
         await base.OnInitializedAsync();
     }
