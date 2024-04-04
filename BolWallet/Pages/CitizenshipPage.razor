@@ -2,13 +2,13 @@
 
 @inherits MvvmComponentBase<CitizenshipViewModel>
 
-<MudThemeProvider />
+<MudThemeProvider/>
 
-<EditForm Model="@ViewModel.citizenshipsForm" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
+<EditForm Model="ViewModel.citizenshipsForm" OnValidSubmit="@OnValidSubmit" >
+    <DataAnnotationsValidator/>
     <MudGrid>
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-            <MudCard>
+            <MudCard Style="padding: 20px;">
                 <MudCardContent>
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
                                      @bind-Value="@ViewModel.CitizenshipsForm.FirstCountry"
@@ -42,6 +42,7 @@
                                      Disabled="@HasSelectedSecondCountry"
                                      Required="false">
                     </MudAutocomplete>
+
                     <MudChipSet Class="autocomplete-margin">
                         @foreach (var country in @ViewModel.SelectedCountries)
                         {
@@ -68,6 +69,9 @@
 <style>
     .autocomplete-margin {
         margin-bottom: 50px;
+    }
+    .mud-typography-body1 {
+            font-size: 16px;
     }
 </style>
 
