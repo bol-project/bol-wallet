@@ -10,19 +10,19 @@
         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
             <MudCard>
                 <MudCardContent>
-                    
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.FirstCountry"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.FirstCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a first country."
                                      AdornmentIcon="Icons.Material.Filled.Search"
                                      Required="true"
+                                     ResetValueOnEmptyText="true"
                                      RequiredError="Country is required" Strict="true">
                     </MudAutocomplete>
 
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.SecondCountry"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.SecondCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a second country (optional)."
@@ -33,17 +33,15 @@
                     </MudAutocomplete>
 
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.ThirdCountry"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.ThirdCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a third country (optional)."
                                      AdornmentIcon="Icons.Material.Filled.Search"
-                                     Required="false" Strict="false">
                                      ResetValueOnEmptyText="true"
                                      Disabled="@HasSelectedSecondCountry"
                                      Required="false">
                     </MudAutocomplete>
-                    
                     <MudChipSet Class="autocomplete-margin">
                         @foreach (var country in @ViewModel.SelectedCountries)
                         {
@@ -80,13 +78,14 @@
         await ViewModel.OnInitializedAsync();
     }
 
+    private bool HasSelectedFirstCountry => string.IsNullOrEmpty(ViewModel.citizenshipsForm.FirstCountry);
+    private bool HasSelectedSecondCountry => string.IsNullOrEmpty(ViewModel.citizenshipsForm.SecondCountry);
+
     private async Task OnValidSubmit(EditContext context)
     {
-        var citizenshipsForm = context.Model as CitizenshipsForm;
-
         try
         {
-            await ViewModel.TrySubmitFormCommand.ExecuteAsync(citizenshipsForm);
+            await ViewModel.TrySubmitFormCommand.ExecuteAsync(null);
         }
         catch (Exception ex)
         {
