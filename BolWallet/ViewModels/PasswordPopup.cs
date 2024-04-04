@@ -87,7 +87,7 @@ public sealed class PasswordPopup : Popup
             HorizontalOptions = LayoutOptions.Fill
         };
 
-        var mockFrame = new BoxView
+        var boxView = new BoxView
         {
             CornerRadius = 20,
             BackgroundColor = Colors.White,
@@ -104,7 +104,7 @@ public sealed class PasswordPopup : Popup
             HeightRequest = 400,
             Children =
         {
-            mockFrame,
+            boxView,
             new VerticalStackLayout
             {
                 Children = { titleLabel, stackLayout },
