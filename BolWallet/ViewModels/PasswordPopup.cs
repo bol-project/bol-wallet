@@ -15,6 +15,7 @@ public sealed class PasswordPopup : Popup
         { 
             IsPassword = true,
             Placeholder = "Password",
+            PlaceholderColor = Colors.DarkGray,
             Margin = new Thickness(20),
             HeightRequest = 60,
             HorizontalOptions = LayoutOptions.Fill,
@@ -86,26 +87,34 @@ public sealed class PasswordPopup : Popup
             HorizontalOptions = LayoutOptions.Fill
         };
 
-        // The frame that gives the popup its structure
-        var frame = new Frame
+        var mockFrame = new BoxView
         {
             CornerRadius = 20,
-            Padding = 0, 
+            BackgroundColor = Colors.White,
+            VerticalOptions = LayoutOptions.CenterAndExpand,
+            HorizontalOptions = LayoutOptions.CenterAndExpand,
+        };
+
+        var container = new AbsoluteLayout
+        {
+            HorizontalOptions = LayoutOptions.CenterAndExpand,
+            VerticalOptions = LayoutOptions.CenterAndExpand,
             Margin = new Thickness(20, 100),
-            Content = new VerticalStackLayout
+            WidthRequest = 300,
+            HeightRequest = 400,
+            Children =
+        {
+            mockFrame,
+            new VerticalStackLayout
             {
                 Children = { titleLabel, stackLayout },
                 Spacing = 10,
-                Padding = new Thickness(20)
-            },
-            BackgroundColor = Colors.White,
-            HorizontalOptions = LayoutOptions.Center,
-            VerticalOptions = LayoutOptions.Center,
-            WidthRequest = 300,
-            HeightRequest = 400
+                Padding = new Thickness(12)
+            }
+        }
         };
 
-        Content = frame;
+        Content = container;
     }
 
     protected override Task OnDismissedByTappingOutsideOfPopup(CancellationToken token)
