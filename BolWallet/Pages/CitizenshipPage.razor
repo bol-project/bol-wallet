@@ -27,7 +27,9 @@
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a second country (optional)."
                                      AdornmentIcon="Icons.Material.Filled.Search"
-                                     Required="false" Strict="true">
+                                     ResetValueOnEmptyText="true"
+                                     Disabled="@HasSelectedFirstCountry"
+                                     Required="false">
                     </MudAutocomplete>
 
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
@@ -37,6 +39,9 @@
                                      HelperText="Choose a third country (optional)."
                                      AdornmentIcon="Icons.Material.Filled.Search"
                                      Required="false" Strict="false">
+                                     ResetValueOnEmptyText="true"
+                                     Disabled="@HasSelectedSecondCountry"
+                                     Required="false">
                     </MudAutocomplete>
                     
                     <MudChipSet Class="autocomplete-margin">
@@ -52,7 +57,10 @@
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+                               Disabled="@HasSelectedFirstCountry"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                        Submit
+                    </MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>
