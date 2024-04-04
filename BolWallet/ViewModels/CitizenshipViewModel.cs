@@ -79,18 +79,18 @@ public partial class CitizenshipViewModel : BaseViewModel
 
     public void RemoveCountry(string country)
     {
-        Action action = country switch
+        switch (country)
         {
-            _ when country.Equals(FirstCountry) => () => FirstCountry = "",
-            _ when country.Equals(SecondCountry) => () => SecondCountry = "",
-            _ when country.Equals(ThirdCountry) => () => ThirdCountry = "",
-            _ => null
-        };
-
-        action?.Invoke();
-        SelectedCountries.Remove(country);
-        UserData.Citizenships.RemoveAll(citizenship => citizenship.Name == country);
-        UserData.EncryptedCitizenshipForms.RemoveAll(form => form.CountryName == country);
+            case var _ when country.Equals(CitizenshipsForm.FirstCountry):
+                CitizenshipsForm.FirstCountry = "";
+                break;
+            case var _ when country.Equals(CitizenshipsForm.SecondCountry):
+                CitizenshipsForm.SecondCountry = "";
+                break;
+            case var _ when country.Equals(CitizenshipsForm.ThirdCountry):
+                CitizenshipsForm.ThirdCountry = "";
+                break;
+        }
     }
     
     
