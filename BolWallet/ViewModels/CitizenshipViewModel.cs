@@ -65,14 +65,14 @@ public partial class CitizenshipViewModel : BaseViewModel
     
     public Task<IEnumerable<string>> FilterCountries(string filter)
     {
-        if (string.IsNullOrEmpty(filter)) 
-        {
-            return Task.FromResult(_allCountries.AsEnumerable());
-        }
-
         var filteredCountries = _allCountries
-            .Where(country => country.Contains(filter, StringComparison.OrdinalIgnoreCase))
-            .Where(country => !SelectedCountries.Contains(country)); // exclude already selected countries
+            .Where(country => !SelectedCountries.Contains(country));
+        
+        if (!string.IsNullOrEmpty(filter)) 
+        {
+            filteredCountries = filteredCountries
+                .Where(country => country.Contains(filter, StringComparison.OrdinalIgnoreCase));
+        }
         
         return Task.FromResult(filteredCountries);
     }
