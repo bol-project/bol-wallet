@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace BolWallet.Models;
-internal class CitizenshipsForm
-{
 
+public class CitizenshipsForm : ObservableObject
+{
     [Required]
-    public string Citizenships { get; set; }
+    public string FirstCountry { get; set; }
+    public string SecondCountry { get; set; }
+    public string ThirdCountry { get; set; }
 }
+
