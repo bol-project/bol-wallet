@@ -59,7 +59,7 @@ public partial class CitizenshipViewModel : BaseViewModel
     }
     
     public List<string> SelectedCountries => new List<string> 
-            { FirstCountry, SecondCountry, ThirdCountry }
+            { CitizenshipsForm.FirstCountry, CitizenshipsForm.SecondCountry, CitizenshipsForm.ThirdCountry }
         .Where(country => !string.IsNullOrEmpty(country))
         .ToList();
     
@@ -93,38 +93,27 @@ public partial class CitizenshipViewModel : BaseViewModel
         }
     }
     
-    
     [RelayCommand]
     private async Task TrySubmitForm(CitizenshipsForm context)
     {
         try
         {
-            var totalCitizenships = SelectedCountries.Count + UserData.EncryptedCitizenshipForms.Count;
-
-            if (totalCitizenships > 3)
-            {
-                await Toast
-                    .Make($"" +
-                          $"You have exceeded the maximum allowed citizenships. Please, choose up to three.",
-                        ToastDuration.Long)
-                    .Show();
-                throw new ArgumentException(
-                    "You have exceeded the maximum allowed citizenships. Please, choose up to three.");
-            }
-
-            var savedCountryNames = UserData
-                .EncryptedCitizenshipForms
-                .Select(form => form.CountryName)
+            var savedCountriesToKeep = UserData
+                .Citizenships
+                .Where(c => SelectedCountries.Contains(c.Name))
                 .ToArray();
-
-            var newCountriesSelected = SelectedCountries.Except(savedCountryNames).ToArray();
 
             var newCountries = _content
                 .Countries
-                .Where(c => newCountriesSelected.Contains(c.Name))
+                .Where(c => SelectedCountries.Contains(c.Name))
+                .Where(c => !savedCountriesToKeep.Select(sc => sc.Name).Contains(c.Name)) // exclude already saved countries
                 .ToArray();
 
-            var newCitizenshipForms = newCountries
+            var savedCitizenships = UserData
+                .EncryptedCitizenshipForms
+                .Where(c => SelectedCountries.Contains(c.CountryName));
+            
+            var newCitizenships = newCountries
                 .Select(c => new EncryptedCitizenshipForm
                 {
                     CountryName = c.Name,
@@ -137,10 +126,10 @@ public partial class CitizenshipViewModel : BaseViewModel
                     ThirdName = string.Empty,
                     SurName = string.Empty,
                     Nin = string.Empty
-                }).ToArray();
+                });
 
-            UserData.Citizenships.AddRange(newCountries);
-            UserData.EncryptedCitizenshipForms.AddRange(newCitizenshipForms);
+            UserData.Citizenships = savedCountriesToKeep.Concat(newCountries).ToList();
+            UserData.EncryptedCitizenshipForms = savedCitizenships.Concat(newCitizenships).ToList();
 
             await _secureRepository.SetAsync("userdata", UserData);
         }
