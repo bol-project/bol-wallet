@@ -125,6 +125,7 @@ public partial class CitizenshipViewModel : BaseViewModel
 
             UserData.Citizenships = savedCountriesToKeep.Concat(newCountries).ToList();
             UserData.EncryptedCitizenshipForms = savedCitizenships.Concat(newCitizenships).ToList();
+            UserData.EncryptedCitizenshipForms.ForEach(e => e.IsSubmitted = false);
 
             await _secureRepository.SetAsync("userdata", UserData);
         }
