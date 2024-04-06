@@ -51,6 +51,7 @@ public static class MauiProgram
 		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
 		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
+        services.AddScoped<IMediaService, MediaService>();
 		services.AddScoped<ICountriesService, CountriesService>();
 
         RegisterPermissionServices(services);
