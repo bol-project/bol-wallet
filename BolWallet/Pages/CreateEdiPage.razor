@@ -6,7 +6,7 @@
 
 <MudThemeProvider />
 
-<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+<MudOverlay @bind-Visible="ViewModel.IsLoading" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
 <MudGrid Style="padding:5px">
@@ -88,8 +88,6 @@
         {new("ProofOfCommunication",Color.Transparent, "Proof Of Communication", "") },
         {new("ProofOfResidence",Color.Transparent, "Proof Of Residence", "") },
     };
-
-    private bool isProgressBarVisible = false;
 
     bool isPersonalVoiceSumbitted = false, isFacePhotoSumbitted = false;
 
