@@ -14,7 +14,6 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly ISha256Hasher _sha256Hasher;
     private readonly ISecureRepository _secureRepository;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
-    private readonly IMediaPicker _mediaPicker;
     private readonly IMediaService _mediaService;
     private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
@@ -27,7 +26,6 @@ public partial class CreateEdiViewModel : BaseViewModel
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker,
         IAudioManager audioManager,
         IMediaService mediaService)
         : base(navigationService)
@@ -37,7 +35,6 @@ public partial class CreateEdiViewModel : BaseViewModel
         _sha256Hasher = sha256Hasher;
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
-        _mediaPicker = mediaPicker;
         _mediaService = mediaService;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
