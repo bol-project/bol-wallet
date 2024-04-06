@@ -49,7 +49,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [ObservableProperty] private bool _isRecording = false;
 
     [RelayCommand]
-    private async Task PickPhotoAsync(string propertyName)
+    private async Task PickFileAsync(string propertyName)
     {
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {

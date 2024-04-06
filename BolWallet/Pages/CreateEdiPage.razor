@@ -127,7 +127,7 @@
 
     private async Task GetFile(string property)
     {
-        await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+        await createEdiViewModel.PickFileCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }
