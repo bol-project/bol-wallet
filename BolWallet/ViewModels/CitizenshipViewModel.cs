@@ -120,7 +120,12 @@ public partial class CitizenshipViewModel : BaseViewModel
                     CountryCode = c.Alpha3,
                     CitizenshipHashes = new Bol.Core.Model.CitizenshipHashTable(),
                     CitizenshipActualBytes = new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipHashTableFileNames = new CitizenshipHashTableFileNames()
+                    CitizenshipHashTableFileNames = new CitizenshipHashTableFileNames(),
+                    FirstName = string.Empty,
+                    SecondName = string.Empty,
+                    ThirdName = string.Empty,
+                    SurName = string.Empty,
+                    Nin = string.Empty
                 });
 
             UserData.Citizenships = savedCountriesToKeep.Concat(newCountries).ToList();
