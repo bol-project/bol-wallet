@@ -10,6 +10,7 @@
 @inject IPermissionService permissionService;
 @inject IBase16Encoder base16Encoder;
 @inject ISha256Hasher sha256Hasher;
+@inject IMediaService MediaService;
 @inject ILogger<EcryptedCitizenshipPage> logger;
 
 <MudThemeProvider />
@@ -189,31 +190,16 @@
     {
         try
         {
-            var hasGivenPermission = await permissionService.TryGetPermissionAsync<Permissions.Camera>();
-
-            if (!hasGivenPermission) return;
-
-            var photo = await mediaPicker.CapturePhotoAsync();
-
-            if (photo is null) return;
+            var photoFilePath = await MediaService.TakePhotoAsync(FileSystem.CacheDirectory);
             
-            // save the file into local storage
-            var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-
-            await using var sourceStream = await photo.OpenReadAsync();
-
-            await using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
-            {
-                await sourceStream.CopyToAsync(fileStream);
-            }
+            var fileResult = new FileResult(photoFilePath);
             
             await InvokeAsync(() =>
             {
                 IsLoading = true;
                 StateHasChanged();
             });
-            
-            var fileResult = new FileResult(localFilePath);
+
             await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
 
             await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
@@ -236,7 +222,7 @@
     {
         try
         {
-            var photo = await mediaPicker.PickPhotoAsync();
+            var photo = await MediaService.PickPhotoAsync();
 
             if (photo is null) return;
             

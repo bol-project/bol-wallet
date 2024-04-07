@@ -127,9 +127,23 @@ public partial class CitizenshipViewModel : BaseViewModel
                     SurName = string.Empty,
                     Nin = string.Empty
                 });
+            
+            var selectionOrder = SelectedCountries
+                .Select((country, index) => (c: country, i: index))
+                .ToDictionary(c => c.c, c => c.i);
+            
+            // We want the countries to be in the same order as the user selected them
+            // Otherwise, if the order randomly changes, EDI creation will not be deterministic.
+            UserData.Citizenships = savedCountriesToKeep
+                .Concat(newCountries)
+                .OrderBy(c => selectionOrder[c.Name])
+                .ToList();
+            
+            UserData.EncryptedCitizenshipForms = savedCitizenships
+                .Concat(newCitizenships)
+                .OrderBy(c => selectionOrder[c.CountryName])
+                .ToList();
 
-            UserData.Citizenships = savedCountriesToKeep.Concat(newCountries).ToList();
-            UserData.EncryptedCitizenshipForms = savedCitizenships.Concat(newCitizenships).ToList();
             UserData.EncryptedCitizenshipForms.ForEach(e => e.IsSubmitted = false);
 
             await _secureRepository.SetAsync("userdata", UserData);

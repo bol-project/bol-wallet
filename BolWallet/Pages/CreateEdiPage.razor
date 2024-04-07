@@ -1,12 +1,13 @@
 ﻿@page "/create-edi-page"
-@using System.Reflection
+@using CommunityToolkit.Maui.Core
+@using Microsoft.Extensions.Logging
 
 @inherits MvvmComponentBase<CreateEdiViewModel>
-@inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
+@inject ILogger<CreateEdiPage> Logger;
 
 <MudThemeProvider />
 
-<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+<MudOverlay @bind-Visible="ViewModel.IsLoading" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
 <MudGrid Style="padding:5px">
@@ -25,7 +26,8 @@
                 else
                 {
                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>GetPhoto(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@edi.Item1" OnClick="@(args=>PickPhotoAsync(edi.Item1))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>TakePhotoAsync(edi.Item1))"></MudIconButton>
                 }
             </MudStack>
         </MudItem>
@@ -89,8 +91,6 @@
         {new("ProofOfResidence",Color.Transparent, "Proof Of Residence", "") },
     };
 
-    private bool isProgressBarVisible = false;
-
     bool isPersonalVoiceSumbitted = false, isFacePhotoSumbitted = false;
 
     protected override async Task OnInitializedAsync()
@@ -107,13 +107,19 @@
 
     private async Task Submit()
     {
-        isProgressBarVisible = true;
-
-        await InvokeAsync(() => StateHasChanged());
-
+        await InvokeAsync(() =>
+        {
+            ViewModel.IsLoading = true;
+            StateHasChanged();
+        });
+        
         await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
 
-        isProgressBarVisible = false;
+        await InvokeAsync(() =>
+        {
+            ViewModel.IsLoading = false;
+            StateHasChanged();
+        });
 
         await InvokeAsync(() => StateHasChanged());
     }
@@ -127,23 +133,76 @@
 
     private async Task GetFile(string property)
     {
-        await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+        await createEdiViewModel.PickFileCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }
 
-    private async Task GetPhoto(string property)
+    private async Task TakePhotoAsync(string property)
     {
-        await createEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
+        try
+        {
+            await createEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
 
-        await UpdateIdentificationDocumentsList(property);
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await UpdateIdentificationDocumentsList(property);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error while taking photo");
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+            throw;
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async Task PickPhotoAsync(string property)
+    {
+        try
+        {
+            await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await UpdateIdentificationDocumentsList(property);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error while picking photo");
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+            throw;
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = false;
+                StateHasChanged();
+            });
+        }
     }
 
     private async Task StartAudioRecording()
     {
         await createEdiViewModel.StartRecordingCommand.ExecuteAsync(null);
     }
-    
+
     private async Task StopAndSaveAudioRecording(string property)
     {
         await createEdiViewModel.StopRecordingCommand.ExecuteAsync(property);
@@ -176,4 +235,5 @@
             }
         }
     }
+
 }
