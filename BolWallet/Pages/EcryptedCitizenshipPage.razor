@@ -60,30 +60,57 @@
                                       OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
                     </MudItem>
                 }
-                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
-                <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
-                    <MudItem Class="p-3" xs="12" sm="12" md="12">
-                        <MudStack Row="true">
-                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
-                            <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                            <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                        </MudStack>
-                    </MudItem>
-                </Virtualize>
-            </MudCardContent>
-            <MudCardActions >
-                <MudItem Style="text-align: center;" xs="12">
-                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
-                </MudItem>
-            </MudCardActions>
-        </MudCard>
-    </EditForm>
+            <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least your Identity card document.</MudText>
+            <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+                <MudCard Class="styled-card">
+                    <MudCardContent>
+                        <MudGrid Justify="Justify.SpaceBetween">
+                            <MudItem xs="4" sm="4" md="4">
+                                <MudText Typo="Typo.body1">@citizeshipDocument.Item3</MudText>
+                            </MudItem>
+                            <MudItem xs="2" sm="2" md="2">
+                                @if (!string.IsNullOrEmpty(citizeshipDocument.Item4))
+                                {
+                                    <MudChip Class="centered-content" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success"  Size="Size.Medium" />
+                                }
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="2">
+                                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args => UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                                <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args => PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                                <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args => TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </Virtualize>
+        </MudCardContent>
+        <MudCardActions >
+            <MudItem Style="text-align: center;" xs="12">
+                <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                           Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                    Submit
+                </MudButton>
+            </MudItem>
+        </MudCardActions>
+    </MudCard>
+</EditForm>
 <style>
-    .custom-mud-field .mud-input-label {
-        font-size: 0.75rem; /* Adjust the font size as desired */
+    .styled-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        background-color: #f8f9fa;
+        margin: 10px;
+    }
+    
+    .styled-card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+    
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 
