@@ -14,7 +14,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly ISha256Hasher _sha256Hasher;
     private readonly ISecureRepository _secureRepository;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
-    private readonly IMediaPicker _mediaPicker;
+    private readonly IMediaService _mediaService;
     private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
     private readonly IAudioRecorder _recorder;
@@ -26,8 +26,8 @@ public partial class CreateEdiViewModel : BaseViewModel
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker,
-        IAudioManager audioManager)
+        IAudioManager audioManager,
+        IMediaService mediaService)
         : base(navigationService)
     {
         _permissionService = permissionService;
@@ -35,13 +35,13 @@ public partial class CreateEdiViewModel : BaseViewModel
         _sha256Hasher = sha256Hasher;
         _secureRepository = secureRepository;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
-        _mediaPicker = mediaPicker;
+        _mediaService = mediaService;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
         ediFiles = new GenericHashTableFiles() { };
         _recorder = audioManager.CreateRecorder();
     }
-
+    
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
     [ObservableProperty] private bool _isLoading = false;
@@ -49,7 +49,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [ObservableProperty] private bool _isRecording = false;
 
     [RelayCommand]
-    private async Task PickPhotoAsync(string propertyName)
+    private async Task PickFileAsync(string propertyName)
     {
         var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
         {
@@ -90,19 +90,27 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         await PathPerImport(propertyNameInfo, pickResult);
     }
-
+    
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Camera>();
-
-        if (!hasGivenPermission) return;
+        var photoFilePath = await _mediaService.TakePhotoAsync(FileSystem.CacheDirectory);
+            
+        var fileResult = new FileResult(photoFilePath);
         
-        FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
+        PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
+
+        await PathPerImport(propertyNameInfo, fileResult);
+    }
+
+    [RelayCommand]
+    private async Task PickPhotoAsync(string propertyName)
+    {
+        var photoResult = await _mediaService.PickPhotoAsync();
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-        await PathPerImport(propertyNameInfo, takePictureResult);
+        await PathPerImport(propertyNameInfo, photoResult);
     }
 
     [RelayCommand]
