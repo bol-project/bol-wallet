@@ -178,8 +178,8 @@ public partial class CreateEdiViewModel : BaseViewModel
                     Nin = form.Nin,
                     SurName = form.SurName,
                     FirstName = form.FirstName,
-                    SecondName = form.SecondName,
-                    ThirdName = form.ThirdName,
+                    SecondName = string.IsNullOrEmpty(form.SecondName) ? null : form.SecondName,
+                    ThirdName = string.IsNullOrEmpty(form.ThirdName) ? null : form.ThirdName,
                     CitizenshipHashes = form.CitizenshipHashes,
                     BirthCountryCode = userData.BirthCountryCode,
                     BirthDate = userData.Person.Birthdate

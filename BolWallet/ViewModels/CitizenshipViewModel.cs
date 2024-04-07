@@ -144,6 +144,8 @@ public partial class CitizenshipViewModel : BaseViewModel
                 .OrderBy(c => selectionOrder[c.CountryName])
                 .ToList();
 
+            UserData.EncryptedCitizenshipForms.ForEach(e => e.IsSubmitted = false);
+
             await _secureRepository.SetAsync("userdata", UserData);
         }
         catch (Exception ex)
