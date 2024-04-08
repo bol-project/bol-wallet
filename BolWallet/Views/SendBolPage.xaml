@@ -1,0 +1,232 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.SendBolPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls1="clr-namespace:BolWallet.Controls"
+    xmlns:converters="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:SendBolViewModel"
+	xmlns:helpers="clr-namespace:BolWallet.Helpers"
+	xmlns:models="clr-namespace:BolWallet.Models"
+	xmlns:Converters="clr-namespace:BolWallet.Converters"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+	<ContentPage.Resources>
+		<StyleSheet>
+			<![CDATA[
+            .border-style {
+                background-color: lightgray;
+            }
+            ]]>
+		</StyleSheet>
+		<ResourceDictionary>
+
+			<Style TargetType="controls1:ExtendedTextEdit">
+				<Setter Property="ClearIconVisibility" Value="Never" />
+				<Setter Property="HorizontalOptions" Value="Fill" />
+				<Setter Property="IsErrorIconVisible" Value="False" />
+				<Setter Property="BoxHeight" Value="56" />
+				<Setter Property="FontSize" Value="18" />
+			</Style>
+
+			<Color x:Key="FocusedColor">#718792</Color>
+
+			<Converters:DecimalToStringConverter x:Key="DecimalToStringConverter" />
+
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<ScrollView>
+	
+		<Grid
+            Padding="{OnPlatform iOS='30,60,30,30',
+                                 Default='30'}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowSpacing="25">
+
+			<Entry 
+                Placeholder="Search Codename" 
+                Grid.Row="0"
+				FontSize="12"
+                TextColor="Black" 
+				Text="{Binding SearchCodename}">
+			</Entry>
+			<ImageButton  Command="{Binding FetchBolAccountDataCommand}" VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+				<ImageButton.Source>
+					<FontImageSource 
+					FontFamily="MaterialIconsRegular"
+					Glyph="{x:Static helpers:Icons.Search}"
+					Color="Black"
+					/>
+				</ImageButton.Source>
+			</ImageButton>
+
+			<ListView Grid.Row="1" ItemsSource="{Binding SearchCommercialBalancesDisplayList, Mode=TwoWay}"  HasUnevenRows="True">
+				<ListView.ItemTemplate >
+					<DataTemplate x:DataType="models:BalanceDisplayItem">
+						<ViewCell>
+							<Grid>
+								<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+									<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+										<Label 
+												Text="{Binding Address}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+												<Label.GestureRecognizers>
+													<TapGestureRecognizer  Tapped="OnTapCommercialAddress"/>
+												</Label.GestureRecognizers>
+										</Label>
+										<Label 
+												Text="{Binding Balance, StringFormat= 'Balance: {0}'}" 
+												HorizontalOptions="Center" 
+												HorizontalTextAlignment="Center" 
+												FontAttributes="Bold" 
+												TextColor="White" >
+										</Label>
+									</StackLayout>
+								</Frame>
+							</Grid>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			
+			<Label
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                FontSize="32"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                SemanticProperties.HeadingLevel="Level1"
+                Text="Send Bol" />
+
+			<Picker 
+			    Grid.Row="3"
+                IsVisible="{OnPlatform MacCatalyst=false, Default=true}"
+			    Title="From Commercial Address" 
+                ItemsSource="{Binding CommercialBalancesDisplayList}"
+			    SelectedIndex="{Binding SelectedCommercialAddressIndex}" >
+			</Picker>
+            
+            <Grid Grid.Row="3"
+                  Grid.ColumnSpan="3"
+                  HorizontalOptions="Start"
+                  RowDefinitions="Auto,*"
+                  RowSpacing="25"
+                  IsVisible="{OnPlatform MacCatalyst=true, Default=false}">
+                
+                <Label Grid.Row="0"
+                       Grid.ColumnSpan="3"
+                       Text="{Binding SelectedCommercialAddress}"
+                       TextColor="Black"/>
+                
+                <Frame   
+	                Grid.Row="1"
+	                Grid.ColumnSpan="3" 
+	                BackgroundColor="WhiteSmoke"
+                    Padding="10">
+
+                    <CollectionView
+                        x:Name="CommercialBalancesCollectionView"
+                        HeightRequest="150"
+                        BackgroundColor="WhiteSmoke"
+                        EmptyView="No addresses found"
+                        ItemsSource="{Binding FromCommercialBalancesList}"
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectedFromCommercialBalanceCommand}"
+                        SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference CommercialBalancesCollectionView}}">
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:BalanceDisplayItem">
+                                <Grid>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroupList>
+                                            <VisualStateGroup x:Name="SelectionStates">
+                                                <VisualState x:Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="Transparent"/>
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState x:Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="LightGray"/>
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateGroupList>
+                                    </VisualStateManager.VisualStateGroups>
+                                    
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    
+                                    <Label Grid.Row="0"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="WordWrap"
+                                           Text="{Binding Address}" />
+
+                                    <Label Grid.Row="1"
+                                           LineBreakMode="WordWrap"
+                                           Padding="0, 0, 0, 10"
+                                           VerticalOptions="End"
+                                           Text="{Binding Balance}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        
+                    </CollectionView>
+                </Frame>
+            </Grid>
+
+			<controls1:ExtendedTextEdit 
+                Grid.Row="4"
+				FontSize="12"
+                LabelText="Receiver Address:"
+                Text="{Binding SendBolForm.ReceiverAddress, Mode=TwoWay}" />
+
+			<controls1:ExtendedTextEdit 
+                    Grid.Row="5"
+                    LabelText="Receiver Codename:"
+					FontSize="10"
+                    Text="{Binding SendBolForm.ReceiverCodename, Mode=TwoWay}" />
+
+			<Entry Placeholder="Amount" 
+				   Keyboard="Numeric"
+				   Grid.Row="6" 
+				   Grid.Column="0"
+				   Text="{Binding SendBolForm.Amount, Mode=TwoWay}"
+				   PlaceholderColor="Black"
+				   BackgroundColor="#EDF2F7"
+				   TextColor="Black"
+				   Margin="0,0,0,10" />
+
+			<StackLayout  Grid.Row="7" >
+				<Entry
+				   Keyboard="Numeric"  
+				   Text="{Binding SendBolForm.ActualAmount, Converter={StaticResource DecimalToStringConverter}}" 
+				   PlaceholderColor="Black" 
+				   IsEnabled="False" 
+				   BackgroundColor="#EDF2F7" 
+				   TextColor="Black" 
+				   Margin="0,0,0,10" />
+
+				<Label
+					FontSize="10"
+					HorizontalOptions="Start"
+					Text="A fee of 0,0001 bol applies to every transfer." />
+			</StackLayout>
+
+			<Button
+                Grid.Row="8"
+                Command="{Binding SendBolCommand}"
+                FontAttributes="Bold"
+                FontSize="8"
+                HorizontalOptions="FillAndExpand"
+                Text="Send" />
+
+		</Grid>
+	</ScrollView>
+</ContentPage>    

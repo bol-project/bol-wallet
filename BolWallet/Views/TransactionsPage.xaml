@@ -1,0 +1,17 @@
+﻿<ContentPage
+    x:Class="BolWallet.Views.TransactionsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:BolWallet.Pages"
+    xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+    x:DataType="viewModels:TransactionsViewModel"
+    Title="{Binding TransactionsLabel}"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+    
+    <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
+        <BlazorWebView.RootComponents>
+            <RootComponent Selector="#app" ComponentType="{x:Type pages:Transactions}" />
+        </BlazorWebView.RootComponents>
+    </BlazorWebView>
+    
+</ContentPage>

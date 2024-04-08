@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+			 x:DataType="viewModels:FinancialTransactionsViewModel"
+             x:Class="BolWallet.Views.FinancialTransactionsPage"
+			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
+             Title="Financial Transactions"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+			 BackgroundColor="{DynamicResource SecondaryColor}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout VerticalOptions="Center"  Spacing="15" Padding="20">
+
+        <Button
+                Command="{Binding NavigateToTransferPageCommand}"
+                FontAttributes="Bold"
+                FontSize="12"
+                Text="Transfer" />
+
+        <Button
+                Command="{Binding NavigateToTransferClaimPageCommand}"
+                IsEnabled="{Binding IsCompanyAccount, Converter={StaticResource InvertedBoolConverter}}"
+                FontAttributes="Bold"
+                FontSize="12"
+                Text="Transfer Claim" />
+
+        <Button
+                FontAttributes="Bold"
+                FontSize="12"
+                Command="{Binding ClaimCommand}"
+                IsEnabled="{Binding IsCompanyAccount, Converter={StaticResource InvertedBoolConverter}}"
+                Text="Claim Your Bol" />
+
+    </StackLayout>
+</ContentPage>

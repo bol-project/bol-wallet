@@ -1,0 +1,239 @@
+﻿@page "/create-edi-page"
+@using CommunityToolkit.Maui.Core
+@using Microsoft.Extensions.Logging
+
+@inherits MvvmComponentBase<CreateEdiViewModel>
+@inject ILogger<CreateEdiPage> Logger;
+
+<MudThemeProvider />
+
+<MudOverlay @bind-Visible="ViewModel.IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+<MudGrid Style="padding:5px">
+    <Virtualize Items="IdentificationDocuments" Context="edi">
+        <MudItem xs="12" sm="12" md="12">
+            <MudStack Row="true" @key="edi">
+                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                @if (edi.Item1 == "PersonalVoice")
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => GetAudioFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@(ViewModel.IsRecording ? Icons.Material.Filled.Stop : Icons.Material.Filled.Mic)" 
+                                   Color="@(ViewModel.IsRecording ? Color.Error : Color.Primary)" aria-label="@edi.Item1" 
+                                   OnClick="@(async () => await StartAudioRecording())"></MudIconButton>
+                }
+                else
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@edi.Item1" OnClick="@(args=>PickPhotoAsync(edi.Item1))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>TakePhotoAsync(edi.Item1))"></MudIconButton>
+                }
+            </MudStack>
+        </MudItem>
+    </Virtualize>
+    <MudItem xs="12" sm="12" md="12">
+        <div class="text-center">
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isPersonalVoiceSumbitted && isFacePhotoSumbitted))">Submit</MudButton>
+        </div>
+    </MudItem>
+</MudGrid>
+
+@if (ViewModel.IsRecording)
+{
+    <div class="recording-overlay">
+        <div class="recording-dialog">
+            <p>Recording in progress...</p>
+            <p>Click the button below to stop.</p>
+            <MudButton Color="Color.Error" OnClick="@(async () => await StopAndSaveAudioRecording("PersonalVoice"))">Stop Recording</MudButton>
+        </div>
+    </div>
+}
+
+<style>
+    .text-center {
+        text-align: center;
+    }
+    
+    .recording-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6); /* Semi-transparent background */
+        z-index: 1050; /* Ensure it's above other content */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .recording-dialog {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        max-width: 400px;
+        text-align: center;
+    }
+
+</style>
+@code {
+    CreateEdiViewModel createEdiViewModel;
+
+    List<(string, MudBlazor.Color, string, string)> IdentificationDocuments = new()
+    {
+        {new("FacePhoto",Color.Transparent, "Face Photo*", "") },
+        {new("PersonalVoice",Color.Transparent, "Personal Voice*", "") },
+        {new("DrivingLicense",Color.Transparent, "Driving License", "") },
+        {new("OtherIdentity",Color.Transparent, "Other Identity", "") },
+        {new("ProofOfCommunication",Color.Transparent, "Proof Of Communication", "") },
+        {new("ProofOfResidence",Color.Transparent, "Proof Of Residence", "") },
+    };
+
+    bool isPersonalVoiceSumbitted = false, isFacePhotoSumbitted = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        createEdiViewModel = ViewModel;
+
+        await createEdiViewModel.Initialize();
+
+        foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
+        {
+            await UpdateIdentificationDocumentsList(propertyInfo.Name);
+        }
+    }
+
+    private async Task Submit()
+    {
+        await InvokeAsync(() =>
+        {
+            ViewModel.IsLoading = true;
+            StateHasChanged();
+        });
+        
+        await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
+
+        await InvokeAsync(() =>
+        {
+            ViewModel.IsLoading = false;
+            StateHasChanged();
+        });
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task GetAudioFile(string property)
+    {
+        await createEdiViewModel.PickAudioCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task GetFile(string property)
+    {
+        await createEdiViewModel.PickFileCommand.ExecuteAsync(property);
+
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task TakePhotoAsync(string property)
+    {
+        try
+        {
+            await createEdiViewModel.TakePhotoCommand.ExecuteAsync(property);
+
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await UpdateIdentificationDocumentsList(property);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error while taking photo");
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+            throw;
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async Task PickPhotoAsync(string property)
+    {
+        try
+        {
+            await createEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await UpdateIdentificationDocumentsList(property);
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error while picking photo");
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+            throw;
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                ViewModel.IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async Task StartAudioRecording()
+    {
+        await createEdiViewModel.StartRecordingCommand.ExecuteAsync(null);
+    }
+
+    private async Task StopAndSaveAudioRecording(string property)
+    {
+        await createEdiViewModel.StopRecordingCommand.ExecuteAsync(property);
+
+        await InvokeAsync(StateHasChanged);
+        await UpdateIdentificationDocumentsList(property);
+    }
+
+    private async Task UpdateIdentificationDocumentsList(string property)
+    {
+        var propertyValue = createEdiViewModel.GenericHashTableForm.GetType().GetProperty(property).GetValue(createEdiViewModel.GenericHashTableForm, null);
+
+        if (propertyValue != null)
+        {
+            string fileName = propertyValue.ToString();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                var index = IdentificationDocuments.FindIndex(x => x.Item1 == property);
+
+                fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
+
+                IdentificationDocuments[index] = new(IdentificationDocuments[index].Item1, Color.Success, IdentificationDocuments[index].Item3, fileName);
+
+                if (property == nameof(GenericHashTableForm.PersonalVoice))
+                    isPersonalVoiceSumbitted = true;
+                else if (property == nameof(GenericHashTableForm.FacePhoto))
+                    isFacePhotoSumbitted = true;
+
+                await InvokeAsync(() => StateHasChanged());
+            }
+        }
+    }
+
+}

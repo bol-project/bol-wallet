@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BolWallet.Views.CertifyPage"
+			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
+			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
+			 xmlns:Converters="clr-namespace:BolWallet.Converters"
+             Title="Certify Your Account"
+			 BackgroundColor="{DynamicResource SecondaryColor}">
+
+	<ContentPage.ToolbarItems>
+		<ToolbarItem 
+		Text="Download BolAccount"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadAccountCommand}"/>
+			<ToolbarItem 
+		Text="Download BolWallet"
+		Order="Secondary"
+		Priority="0" 
+		Command="{Binding DownloadBolWalletCommand}"/>
+			<ToolbarItem 
+		Text="Download Certification Files"
+		Order="Primary"
+		Priority="0" 
+		Command="{Binding DownloadEdiFilesCommand}"/>
+	</ContentPage.ToolbarItems>
+	
+	<ContentPage.Resources>
+		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+	</ContentPage.Resources>
+	<ScrollView>
+		<StackLayout>
+			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
+				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+					<ImageButton.Source>
+						<FontImageSource 
+						FontFamily="MaterialIconsRegular"
+						Glyph="{x:Static helpers:Icons.Refresh}"
+						Color="Black"
+						/>
+					</ImageButton.Source>
+				</ImageButton>
+                <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" VerticalOptions="Start" HorizontalOptions="EndAndExpand" />
+                <Label
+                    Text="{Binding CertificationRound, StringFormat='Certification Round {0}'}"
+                    HorizontalTextAlignment="Center"
+                    FontSize="24"
+                    TextColor="DarkSlateBlue" />
+                <Label
+                    Text="You need 2 certifications to Open your Account."
+                    IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                    HorizontalTextAlignment="Center"
+                    TextColor="DarkSlateBlue" />
+                <Label
+                    Text="Your Account is Open but you can acquire additional certifications."
+                    IsVisible="{Binding IsAccountOpen}"
+                    HorizontalTextAlignment="Center"
+                    TextColor="DarkSlateBlue" />
+				<Label
+				Text="Code Name"
+				FontSize="18"
+				TextColor="DarkSlateBlue" />
+
+				<Frame BackgroundColor="WhiteSmoke" Padding="10">
+					<Label Text="{Binding BolAccount.CodeName}" TextColor="Black">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnTapCopy"/>
+						</Label.GestureRecognizers>
+					</Label>
+				</Frame>
+
+				<Label
+				Text="Account Status"
+				FontSize="18"
+				TextColor="DarkSlateBlue" />
+
+				<Frame BackgroundColor="WhiteSmoke" Padding="10">
+					<Label Text="{Binding BolAccount.AccountStatus}" TextColor="Black">
+						<Label.GestureRecognizers>
+							<TapGestureRecognizer Tapped="OnTapCopy"/>
+						</Label.GestureRecognizers>
+					</Label>
+				</Frame>
+
+			</StackLayout>
+			
+			<StackLayout Spacing="15" Padding="10" IsVisible="{Binding CanSelectCertifiers}">
+				<Button 
+			        Text="Select Mandatory Certifiers"
+			        BackgroundColor="DarkSlateBlue"
+			        TextColor="White"
+			        Command="{Binding SelectMandatoryCertifiersCommand}"	/>
+
+				<Label HorizontalOptions="Start" Text="Click 'Select Mandatory Certifiers' to choose the mandatory certifiers for this certification round."/>
+            </StackLayout>
+            
+            <StackLayout Spacing="15" Padding="10" IsVisible="{Binding CertifiersSelected}">
+				<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
+					<CollectionView.ItemTemplate>
+						<DataTemplate>
+							<Grid  Padding="3" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <Frame BackgroundColor="{Binding Color}" Padding="10" Grid.Column="0">
+									<Label Text="{Binding CodeName}" TextColor="Black">
+										<Label.GestureRecognizers>
+											<TapGestureRecognizer Tapped="OnTapCopy" />
+										</Label.GestureRecognizers>
+									</Label>
+								</Frame>
+                                <Frame BackgroundColor="WhiteSmoke" Padding="10" Grid.Column="1">
+                                    <Label Text="{Binding Fee, StringFormat='{0} Bols Fee'}" TextColor="Black">
+                                    </Label>
+                                </Frame>
+							</Grid>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
+
+				<Entry Placeholder="Paste Certifier Codename" Text="{Binding CertifierCodename, Mode=TwoWay}" PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
+
+				<Button 
+			        Text="{Binding CertificationRound, StringFormat='Request Certification No.{0}'}"
+			        BackgroundColor="DarkSlateBlue"
+			        TextColor="White"
+			        Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
+                
+                <Label HorizontalOptions="Start" Text="1. Select the codename of one of the certifiers and press Request Certification."/>
+                <Label HorizontalOptions="Start" Text="2. Submit your identification documents to the certifier so that they can verify your identity."/>
+                <Label HorizontalOptions="Start" Text="3. Refresh the page when the certifier has submitted the Certify transaction on their part to proceed."/>
+                <Label HorizontalOptions="Start" Text="If you are unable to contact your selected certifier, please request your certification from one of the other choices."/>
+			</StackLayout>
+	
+            <StackLayout Spacing="15" Padding="10" IsVisible="{Binding IsAccountPendingFees}">
+                
+                <CollectionView  ItemsSource="{Binding Certifiers}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid  Padding="3" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <Frame BackgroundColor="{Binding Color}" Padding="10" Grid.Column="0">
+                                    <Label Text="{Binding CodeName}" TextColor="Black">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnTapCopy" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Frame>
+                                <Frame BackgroundColor="WhiteSmoke" Padding="10" Grid.Column="1">
+                                    <Label Text="{Binding Fee, StringFormat='{0} Bols Fee'}" TextColor="Black">
+                                    </Label>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+			    
+			    <Button
+			        HorizontalOptions="Center"
+			        Text="Pay Certification Fees"
+			        BackgroundColor="DarkSlateBlue"
+			        TextColor="White"
+			        Command="{Binding PayCertificationFeesCommand}"	/>
+                
+                <Label HorizontalOptions="Start" Text="Click 'Pay Certification Fees' to send the fees in BoL required by the certifiers for your certifications."/>
+                <Label HorizontalOptions="Start" Text="The fees will be subtracted from your Claim balance."/>
+            </StackLayout>
+
+		</StackLayout>
+	</ScrollView>
+</ContentPage>

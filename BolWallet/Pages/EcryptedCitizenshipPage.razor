@@ -1,0 +1,357 @@
+﻿@page "/encrypted-citizenship"
+@using Bol.Core.Model
+@using CommunityToolkit.Maui.Core
+@using Microsoft.Extensions.Logging
+
+@inject RegisterContent _content;
+@inject ISecureRepository secureRepository;
+@inject INavigationService navigationService;
+@inject IMediaPicker mediaPicker;
+@inject IPermissionService permissionService;
+@inject IBase16Encoder base16Encoder;
+@inject ISha256Hasher sha256Hasher;
+@inject IMediaService MediaService;
+@inject ILogger<EcryptedCitizenshipPage> logger;
+
+<MudThemeProvider />
+
+<MudOverlay Visible="IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
+<EditForm Model="@encryptedCitizenshipForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudText Style="text-align: center;" Typo="Typo.h6">@encryptedCitizenshipForm.CountryName</MudText>
+            <MudCardContent>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" @bind-Value="@encryptedCitizenshipForm.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
+                                  Margin="@Margin.Dense" Required="true" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => encryptedCitizenshipForm.SurName)" OnlyValidateIfDirty="true"
+                                  @bind-Value="@encryptedCitizenshipForm.SurName" OnBlur="@(x=> encryptedCitizenshipForm.SurName= encryptedCitizenshipForm.SurName?.Trim().ToUpper())"
+                                  Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => encryptedCitizenshipForm.FirstName)" OnlyValidateIfDirty="true"
+                                  @bind-Value="@encryptedCitizenshipForm.FirstName" OnBlur="@(x=> encryptedCitizenshipForm.FirstName= encryptedCitizenshipForm.FirstName?.Trim().ToUpper())"
+                                  Margin="@Margin.Dense" Required="true" RequiredError="First name is required!" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                  Margin="@Margin.Dense" Label="Middle Name" For="@(() => encryptedCitizenshipForm.SecondName)" @bind-Value="@encryptedCitizenshipForm.SecondName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.SecondName= encryptedCitizenshipForm.SecondName?.Trim().ToUpper())" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                                  Margin="@Margin.Dense" Label="Third Name" For="@(() => encryptedCitizenshipForm.ThirdName)" @bind-Value="@encryptedCitizenshipForm.ThirdName"
+                                  OnBlur="@(x=> encryptedCitizenshipForm.ThirdName= encryptedCitizenshipForm.ThirdName?.Trim().ToUpper())" />
+                </MudItem>
+                @if (!string.IsNullOrEmpty(encryptedCitizenshipForm.CountryCode))
+                {
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => encryptedCitizenshipForm.Nin)" Label="NIN" @bind-Value="@encryptedCitizenshipForm.Nin"
+                                      Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].InternationalName"
+                                      Immediate="true" Required="true"
+                                      RequiredError="NIN is required!"
+                                      Error="@(!string.IsNullOrEmpty(NinErrorMessages[encryptedCitizenshipForm.CountryCode]))"
+                                      ErrorText="@NinErrorMessages[encryptedCitizenshipForm.CountryCode]"
+                                      OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
+                    </MudItem>
+                }
+                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
+                <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+                    <MudItem Class="p-3" xs="12" sm="12" md="12">
+                        <MudStack Row="true">
+                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
+                            <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                            <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
+                        </MudStack>
+                    </MudItem>
+                </Virtualize>
+            </MudCardContent>
+            <MudCardActions >
+                <MudItem Style="text-align: center;" xs="12">
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+                </MudItem>
+            </MudCardActions>
+        </MudCard>
+    </EditForm>
+<style>
+    .custom-mud-field .mud-input-label {
+        font-size: 0.75rem; /* Adjust the font size as desired */
+    }
+</style>
+
+@code {
+    bool IsLoading = false;
+    UserData userData;
+
+    List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
+      {
+          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
+          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+      };
+
+    Dictionary<string, string> NinErrorMessages = new Dictionary<string, string>();
+
+    EncryptedCitizenshipForm encryptedCitizenshipForm = new EncryptedCitizenshipForm();
+
+    int lastYear = DateTime.Now.Year - 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userData = await secureRepository.GetAsync<UserData>("userdata");
+
+        CitizeshipsDocuments = new()
+        {
+          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
+          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
+          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+        };
+
+        foreach (var encryptedCitizenshipForm in userData.EncryptedCitizenshipForms)
+        {
+            if (!encryptedCitizenshipForm.IsSubmitted)
+            {
+                this.encryptedCitizenshipForm = encryptedCitizenshipForm;
+
+                encryptedCitizenshipForm.IsSubmitted = false;
+
+                NinErrorMessages.Add(encryptedCitizenshipForm.CountryCode, string.Empty);
+
+                foreach (var propertyInfo in encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperties())
+                {
+                    if ((string)propertyInfo.GetValue(encryptedCitizenshipForm.CitizenshipHashes) != Bol.Core.Constants.HASH_ZEROS)
+                        await UpdateIdentificationDocumentsList(propertyInfo.Name, "Uploaded");
+                }
+
+                return;
+            }
+        }
+
+        await navigationService.NavigateTo<CreateCodenameIndividualViewModel>(true);
+    }
+
+    private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>> {
+        { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
+        { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
+        { DevicePlatform.MacCatalyst, new[] { "pdf", "png", "jpeg", "jpg", "public.image", "public.audio" } },
+        { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
+        });
+
+        try
+        {
+            var pickResult = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = customFileType,
+                PickerTitle = "Pick a file"
+            });
+
+            if (pickResult is null)
+                return;
+
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await Task.Run(() => SetFileHash(property, pickResult, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+    private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        try
+        {
+            var photoFilePath = await MediaService.TakePhotoAsync(FileSystem.CacheDirectory);
+            
+            var fileResult = new FileResult(photoFilePath);
+            
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+
+            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+    
+    private async Task PickPhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        try
+        {
+            var photo = await MediaService.PickPhotoAsync();
+
+            if (photo is null) return;
+            
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+            
+            await Task.Run(() => SetFileHash(property, photo, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(photo.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+    private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        if (fileResult == null)
+        {
+            return encryptedCitizenshipForm;
+        }
+
+        var fileBytes = File.ReadAllBytes(fileResult.FullPath);
+        var encodedFileBytes = base16Encoder.Encode(fileBytes);
+        var hashedEncodedFileBytes = base16Encoder.Encode(sha256Hasher.Hash(fileBytes));
+
+        encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipActualBytes, encodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashes.GetType().GetProperty(property).SetValue(encryptedCitizenshipForm.CitizenshipHashes, hashedEncodedFileBytes);
+        encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType()
+            .GetProperty(property)
+            .SetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames,
+                $"{property}_{encryptedCitizenshipForm.CountryCode}{Path.GetExtension(fileResult.FullPath)}");
+
+        return encryptedCitizenshipForm;
+    }
+
+    private async Task UpdateIdentificationDocumentsList(string property, string fileName)
+    {
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var index = CitizeshipsDocuments.FindIndex(x => x.Item1 == property);
+
+            fileName = fileName.Length <= 20 ? fileName : fileName.Substring(0, 20) + "...";
+
+            CitizeshipsDocuments[index] = new(CitizeshipsDocuments[index].Item1, Color.Success, CitizeshipsDocuments[index].Item3, fileName);
+
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    private string ValidateNIN(EncryptedCitizenshipForm encryptedCitizenshipForm)
+    {
+        string errorMessage = string.Empty;
+        string pattern = @"^[A-Z0-9]*$";
+        Regex regex = new Regex(pattern);
+
+        if (!(regex.IsMatch(encryptedCitizenshipForm?.Nin) && _content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits == encryptedCitizenshipForm.Nin?.Length))
+        {
+            errorMessage = $"The National Identification Number (NIN) provided does not match the expected length of {_content.NinPerCountryCode[encryptedCitizenshipForm.CountryCode].Digits} digits for the country code {encryptedCitizenshipForm.CountryCode}." +
+            " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+        }
+
+        NinErrorMessages[encryptedCitizenshipForm.CountryCode] = errorMessage;
+
+        return errorMessage;
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            EncryptedCitizenshipForm form = context.Model as EncryptedCitizenshipForm;
+
+            if (HasNonZeroHashes(form.CitizenshipHashes))
+            {
+                var associatedForm = userData.EncryptedCitizenshipForms.FirstOrDefault(f => f.CountryCode == form.CountryCode);
+
+                if (associatedForm != null)
+                {
+                    associatedForm.SurName = form.SurName;
+                    associatedForm.FirstName = form.FirstName;
+                    associatedForm.SecondName = form.SecondName;
+                    associatedForm.ThirdName = form.ThirdName;
+                    associatedForm.Nin = form.Nin;
+                    associatedForm.IsSubmitted = true;
+                }
+
+                await secureRepository.SetAsync("userdata", userData);
+
+                await OnInitializedAsync();
+            }
+            else
+            {
+                // TODO: Adding try/catch to expose Toast bug in iOS/MacCatalyst release mode.
+                // https://github.com/dotnet/maui/issues/21407
+                // https://github.com/CommunityToolkit/Maui/issues/1752
+                try
+                {
+                    await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Error showing Toast");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+
+    private bool HasNonZeroHashes(CitizenshipHashTable citizenshipHashTable)
+    {
+        return !((citizenshipHashTable.IdentityCard == Bol.Core.Constants.HASH_ZEROS || citizenshipHashTable.IdentityCardBack == Bol.Core.Constants.HASH_ZEROS) &&
+                 citizenshipHashTable.Passport == Bol.Core.Constants.HASH_ZEROS &&
+                 citizenshipHashTable.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
+                 citizenshipHashTable.BirthCertificate == Bol.Core.Constants.HASH_ZEROS);
+    }
+}

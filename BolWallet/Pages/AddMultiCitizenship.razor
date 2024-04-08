@@ -1,0 +1,106 @@
+﻿@page "/inputpage"
+@inject IBolService bolService;
+@inject RegisterContent _content;
+
+<MudThemeProvider />
+
+<EditForm Model="@inputIsMultiCitizenshipModel" OnValidSubmit="HandleIsMultiCitizenshipSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputIsMultiCitizenshipModel.Alpha3">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to check if it already exists in the multicitizenship list." Required="true" Class="mt-3"
+                                  @bind-Value="inputIsMultiCitizenshipModel.ShortHash" For="@(() => inputIsMultiCitizenshipModel.ShortHash)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Check Short Hash</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+<EditForm Model="@inputAddMultiCitizenshipModel" OnValidSubmit="HandleAddMultiCitizenshipSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputAddMultiCitizenshipModel.Alpha3">
+                        @foreach (var country in _content.Countries)
+                        {
+                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to add to the multicitizenship list." Required="true" Class="mt-3"
+                                  @bind-Value="inputAddMultiCitizenshipModel.ShortHash" For="@(() => inputAddMultiCitizenshipModel.ShortHash)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Add Short Hash</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private InputModel inputAddMultiCitizenshipModel = new();
+
+    private InputModel inputIsMultiCitizenshipModel = new();
+
+    private async Task HandleAddMultiCitizenshipSubmit()
+    {
+        try
+        {
+            var result = await bolService.AddMultiCitizenship(inputAddMultiCitizenshipModel.Alpha3.Trim(), inputAddMultiCitizenshipModel.ShortHash);
+
+            await Toast.Make($"Short hash {inputAddMultiCitizenshipModel.ShortHash} has been successfully added.").Show();
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            inputAddMultiCitizenshipModel.ShortHash = string.Empty;
+        }
+    }
+
+    private async Task HandleIsMultiCitizenshipSubmit()
+    {
+        try
+        {
+            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.Alpha3.Trim(), inputIsMultiCitizenshipModel.ShortHash);
+
+            if (isMultiCitizenship)
+                await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} already exists in the multicitizenship list.").Show();
+            else
+                await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} does not exist in the multicitizenship list.").Show();
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            inputIsMultiCitizenshipModel.ShortHash = string.Empty;
+        }
+    }
+
+    public class InputModel
+    {
+        [Required]
+        public string Alpha3 { get; set; }
+
+        [Required]
+        [StringLength(11, ErrorMessage = "The short hash must be between 10 and 11 characters long.", MinimumLength = 10)]
+        public string ShortHash { get; set; }
+    }
+}

@@ -1,0 +1,46 @@
+﻿@page "/complete-bol-login-challenge"
+
+@inherits MvvmComponentBase<CompleteBolLoginChallengeViewModel>
+@inject INavigationService NavigationService
+
+<MudThemeProvider />
+
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+
+                    <MudTextField Immediate=true Label="BoL Login Challenge" HelperText="Write or paste the BoL Login Challenge" Class="mt-3"
+                                  @bind-Value="model.Challenge" For="@(() => model.Challenge)" InputType="InputType.Text" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Complete</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+@code {
+    private class BolChallengeModel
+    {
+        [Required]
+        public string Challenge { get; set; }
+    }
+    
+    BolChallengeModel model = new BolChallengeModel();
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        await InvokeAsync(() => StateHasChanged());
+
+        ViewModel.Challenge = model.Challenge;
+        await ViewModel.CompleteBolChallengeCommand.ExecuteAsync(null);
+
+        await InvokeAsync(() => StateHasChanged());
+
+        // await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+    }
+}

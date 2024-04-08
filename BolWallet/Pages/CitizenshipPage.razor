@@ -1,0 +1,102 @@
+﻿@page "/citizenship"
+
+@inherits MvvmComponentBase<CitizenshipViewModel>
+
+<MudThemeProvider/>
+
+<EditForm Model="ViewModel.citizenshipsForm" OnValidSubmit="@OnValidSubmit" >
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Style="padding: 20px;">
+                <MudCardContent>
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.FirstCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a first country."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     Required="true"
+                                     ResetValueOnEmptyText="true"
+                                     RequiredError="Country is required" Strict="true">
+                    </MudAutocomplete>
+
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.SecondCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a second country (optional)."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     ResetValueOnEmptyText="true"
+                                     Disabled="@HasSelectedFirstCountry"
+                                     Required="false">
+                    </MudAutocomplete>
+
+                    <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
+                                     @bind-Value="@ViewModel.CitizenshipsForm.ThirdCountry"
+                                     SearchFunc="@ViewModel.FilterCountries"
+                                     Dense="true" Variant="Variant.Outlined"
+                                     HelperText="Choose a third country (optional)."
+                                     AdornmentIcon="Icons.Material.Filled.Search"
+                                     ResetValueOnEmptyText="true"
+                                     Disabled="@HasSelectedSecondCountry"
+                                     Required="false">
+                    </MudAutocomplete>
+
+                    <MudChipSet Class="autocomplete-margin">
+                        @foreach (var country in @ViewModel.SelectedCountries)
+                        {
+                            <MudChip Text="@country" OnClose="@(() => ViewModel.RemoveCountry(country))"/>
+                        }
+                    </MudChipSet>
+                    <MudTooltip Placement="Placement.Right" Text="You can select up to three countries of citizenship. 
+                                                          It is important to select all your citizenships otherwise the account may fail to be validated.">
+                        <MudFab Icon="@Icons.Material.Filled.Info" Color="Color.Info"/>
+                    </MudTooltip>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Disabled="@HasSelectedFirstCountry"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                        Submit
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+<style>
+    .autocomplete-margin {
+        margin-bottom: 50px;
+    }
+    .mud-typography-body1 {
+            font-size: 16px;
+    }
+</style>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.OnInitializedAsync();
+    }
+
+    private bool HasSelectedFirstCountry => string.IsNullOrEmpty(ViewModel.citizenshipsForm.FirstCountry);
+    private bool HasSelectedSecondCountry => string.IsNullOrEmpty(ViewModel.citizenshipsForm.SecondCountry);
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            await ViewModel.TrySubmitFormCommand.ExecuteAsync(null);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+            return;
+        }
+
+        await App.Current.MainPage.Navigation.PushAsync(new Views.EcryptedCitizenshipPage());
+    }
+}

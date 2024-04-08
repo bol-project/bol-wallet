@@ -1,0 +1,297 @@
+<ContentPage 
+    x:Class="BolWallet.Views.AccountPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{DynamicResource SecondaryColor}">
+
+    <ContentPage.ToolbarItems>
+		<ToolbarItem 
+            Text="Download BolAccount"
+			Order="Secondary"
+            Priority="0" 
+			Command="{Binding DownloadAccountCommand}"/>
+		<ToolbarItem 
+			Text="Download BolWallet"
+			Order="Primary"
+			Priority="0" 
+			Command="{Binding DownloadBolWalletCommand}"/>
+		<ToolbarItem 
+			Text="Download Certification Files"
+			Order="Secondary"
+			Priority="0" 
+			Command="{Binding DownloadEdiFilesCommand}"/>
+	</ContentPage.ToolbarItems>
+
+	<ScrollView>
+
+		<Grid
+            Padding="{OnPlatform iOS='30,60,30,30', 
+                      Default='30'}"
+            RowSpacing="25"
+            HorizontalOptions="Center">
+
+			<StackLayout Spacing="15" Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
+				<Frame
+				Grid.Row="1"
+				Grid.ColumnSpan="3" 
+				CornerRadius="25"
+				BackgroundColor="#582cd4">
+					<StackLayout
+							VerticalOptions="CenterAndExpand"
+							Orientation="Vertical">
+						<Label 
+						Text="CodeName"
+						HorizontalOptions="Center"
+						HorizontalTextAlignment="Center"
+						FontAttributes="Bold"
+						TextColor="White"/>
+						<Label 
+						Text="{Binding BolAccount.CodeName}"
+						HorizontalOptions="Center"
+						HorizontalTextAlignment="Center"
+						FontAttributes="Bold"
+						FontSize="10"
+						TextColor="White">
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy"/>
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Total Balance" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.TotalBalance}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Claim Balance" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.ClaimBalance}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="EDI" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.Edi}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White">
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy" />
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Account Status" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.AccountStatus}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Account Type" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.AccountType}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Main Address" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.MainAddress}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" >
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy" />
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="BlockChain Address" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.BlockChainAddress}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" >
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy" />
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Social Address" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.SocialAddress}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White">
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy" />
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Voting Address" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.VotingAddress}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" >
+							<Label.GestureRecognizers>
+								<TapGestureRecognizer Tapped="OnTapCopy" />
+							</Label.GestureRecognizers>
+						</Label>
+					</StackLayout>
+				</Frame>
+                
+                <Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                    <StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+                        <Label Text="Certifier" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="{Binding BolAccount.IsCertifier}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+                    </StackLayout>
+                    <Frame.Triggers>
+                        <DataTrigger TargetType="Frame" Binding="{Binding BolAccount.IsCertifier}" Value="True">
+                            <Setter Property="BackgroundColor" Value="#27C1F3"/>
+                        </DataTrigger>
+                        <DataTrigger  TargetType="Frame" Binding="{Binding BolAccount.IsCertifier}" Value="False">
+                            <Setter Property="BackgroundColor" Value="#582cd4"/>
+                        </DataTrigger>
+                    </Frame.Triggers>
+                </Frame>
+                
+                <Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                    <StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+                        <Label Text="Number of Certifications" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="{Binding BolAccount.Certifications}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+                    </StackLayout>
+                </Frame>
+                
+                <Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                    <StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+                        <Label Text="Certifiers" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                        <Grid Padding="10" BackgroundColor="#582cd4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Text="CodeName"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Grid.Column="1"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Text="Block Height"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                        </Grid>
+                        <ListView ItemsSource="{Binding Certifiers}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Grid Padding="10" BackgroundColor="#582cd4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0"
+                                                   FontSize="12"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding Key}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"/>
+                                            <Label Grid.Column="1"
+                                                   FontSize="12"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   Text="{Binding Value}"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"/>
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </Frame>
+                
+                <Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                    <StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+                        <Label Text="Certification Requests" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+                        <ListView ItemsSource="{Binding CertificationRequests}" HorizontalOptions="Center" >
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Grid Padding="10" BackgroundColor="#582cd4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding }"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White"/>
+                                        </Grid>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                </Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Last Certification Height" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.LastCertificationHeight}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Last Certifier Selection Height" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.LastCertifierSelectionHeight}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Registration Height" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.RegistrationHeight}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Last Claim Height" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.LastClaimHeight}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Last Claim" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.LastClaim}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+				<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+					<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
+						<Label Text="Total Transactions" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" TextColor="White" />
+						<Label Text="{Binding BolAccount.TransactionsCount}" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="10" TextColor="White" />
+					</StackLayout>
+				</Frame>
+
+			</StackLayout>
+
+		</Grid>
+	</ScrollView>
+</ContentPage>
