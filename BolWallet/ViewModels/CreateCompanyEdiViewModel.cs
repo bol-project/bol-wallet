@@ -8,31 +8,28 @@ namespace BolWallet.ViewModels;
 
 public partial class CreateCompanyEdiViewModel : BaseViewModel
 {
-    private readonly IPermissionService _permissionService;
     private readonly IBase16Encoder _base16Encoder;
     private readonly ISecureRepository _secureRepository;
     private readonly ISha256Hasher _sha256Hasher;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
-    private readonly IMediaPicker _mediaPicker;
+    private readonly IMediaService _mediaService;
     private ExtendedEncryptedDigitalMatrixCompany extendedEncryptedDigitalMatrix;
     public CompanyHashFiles ediFiles;
     
     public CreateCompanyEdiViewModel(
         INavigationService navigationService,
-        IPermissionService permissionService,
         IBase16Encoder base16Encoder,
         ISecureRepository secureRepository,
         ISha256Hasher sha256Hasher,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IMediaPicker mediaPicker)
+        IMediaService mediaService)
         : base(navigationService)
     {
-        _permissionService = permissionService;
         _base16Encoder = base16Encoder;
         _secureRepository = secureRepository;
         _sha256Hasher = sha256Hasher;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
-        _mediaPicker = mediaPicker;
+        _mediaService = mediaService;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrixCompany
         {
             Incorporation = new CompanyIncorporation(),
@@ -40,7 +37,7 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
         };
         _companyHashTableForm = new CompanyHashTableForm();
 
-        ediFiles = new CompanyHashFiles() { };
+        ediFiles = new CompanyHashFiles();
     }
 
     [ObservableProperty] private CompanyHashTableForm _companyHashTableForm;
@@ -48,39 +45,23 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     [ObservableProperty] private bool _isLoading = false;
 
     [RelayCommand]
-    private async Task PickPhotoAsync(string propertyName)
+    private async Task PickFileAsync(string propertyName)
     {
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
-            { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image", "public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
-        });
-
-        var pickResult = await FilePicker.PickAsync(new PickOptions
-        {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
-        });
+        var pickFileResult = await _mediaService.PickFileAsync();
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-        await PathPerImport(propertyNameInfo, pickResult);
+        await PathPerImport(propertyNameInfo, pickFileResult);
     }
 
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Camera>();
-
-        if (!hasGivenPermission) return;
-
-        FileResult takePictureResult = await _mediaPicker.CapturePhotoAsync();
+        var takePhotoResult = await _mediaService.TakePhotoAsync(FileSystem.CacheDirectory);
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-        await PathPerImport(propertyNameInfo, takePictureResult);
+        await PathPerImport(propertyNameInfo, takePhotoResult);
     }
 
     [RelayCommand]
