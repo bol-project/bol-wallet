@@ -5,7 +5,7 @@ public class PasswordForm
 {
 
     [Required]
-    [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+    [StringLength(128, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
     [RegularExpression(
         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,}$",
         ErrorMessage = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character."
