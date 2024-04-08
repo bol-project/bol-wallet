@@ -9,7 +9,6 @@ namespace BolWallet.ViewModels;
 
 public partial class CreateEdiViewModel : BaseViewModel
 {
-    private readonly IPermissionService _permissionService;
     private readonly IBase16Encoder _base16Encoder;
     private readonly ISha256Hasher _sha256Hasher;
     private readonly ISecureRepository _secureRepository;
@@ -17,20 +16,16 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly IMediaService _mediaService;
     private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
     public GenericHashTableFiles ediFiles;
-    private readonly IAudioRecorder _recorder;
 
     public CreateEdiViewModel(
         INavigationService navigationService,
-        IPermissionService permissionService,
         IBase16Encoder base16Encoder,
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
         IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
-        IAudioManager audioManager,
         IMediaService mediaService)
         : base(navigationService)
     {
-        _permissionService = permissionService;
         _base16Encoder = base16Encoder;
         _sha256Hasher = sha256Hasher;
         _secureRepository = secureRepository;
@@ -38,8 +33,7 @@ public partial class CreateEdiViewModel : BaseViewModel
         _mediaService = mediaService;
         extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
-        ediFiles = new GenericHashTableFiles() { };
-        _recorder = audioManager.CreateRecorder();
+        ediFiles = new GenericHashTableFiles();
     }
     
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
@@ -51,18 +45,7 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task PickFileAsync(string propertyName)
     {
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image" } },
-            { DevicePlatform.Android, new[] { "application/pdf", "image/*"} },
-            { DevicePlatform.MacCatalyst, new[] { "pdf", "public.image" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".png", ".jpg", ".jpeg" } },
-        });
-
-        var pickResult = await FilePicker.PickAsync(new PickOptions
-        {
-            FileTypes = customFileType, PickerTitle = "Pick a file"
-        });
+        var pickResult = await _mediaService.PickFileAsync();
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
@@ -72,35 +55,21 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task PickAudioAsync(string propertyName)
     {
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.iOS, new[] {"public.audio" } },
-            { DevicePlatform.Android, new[] {  "audio/*" } },
-            { DevicePlatform.MacCatalyst, new[] {"public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".mp3" } },
-        });
-
-        var pickResult = await FilePicker.PickAsync(new PickOptions
-        {
-            FileTypes = customFileType,
-            PickerTitle = "Pick a file"
-        });
+        var audioFileResult = await _mediaService.PickAudioFileAsync();
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-        await PathPerImport(propertyNameInfo, pickResult);
+        await PathPerImport(propertyNameInfo, audioFileResult);
     }
     
     [RelayCommand]
     private async Task TakePhotoAsync(string propertyName)
     {
-        var photoFilePath = await _mediaService.TakePhotoAsync(FileSystem.CacheDirectory);
-            
-        var fileResult = new FileResult(photoFilePath);
+        var photoFileResult = await _mediaService.TakePhotoAsync(FileSystem.CacheDirectory);
         
         PropertyInfo propertyNameInfo = GetPropertyInfo(propertyName);
 
-        await PathPerImport(propertyNameInfo, fileResult);
+        await PathPerImport(propertyNameInfo, photoFileResult);
     }
 
     [RelayCommand]
@@ -116,37 +85,18 @@ public partial class CreateEdiViewModel : BaseViewModel
     [RelayCommand]
     private async Task StartRecording()
     {
-        var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Microphone>();
-
-        if (!hasGivenPermission) return;
-
-        if (!_recorder.IsRecording)
-        {
-            IsRecording = true;
-            await _recorder.StartAsync();
-        }
+        await _mediaService.StartRecordingAudioAsync();
+        IsRecording = true;
     }
 
     [RelayCommand]
     private async Task StopRecording()
     {
-        if (!_recorder.IsRecording) return;
-        
-        var recording = await _recorder.StopAsync();
+        var audioFileResult = await _mediaService.StopRecordingAudioAsync();
         IsRecording = false;
-        
-        var audioStream = recording.GetAudioStream();
-
-        string directoryPath = FileSystem.AppDataDirectory; // or FileSystem.CacheDirectory for temporary files
-        string filePath = Path.Combine(directoryPath, "personalVoice.audio");
-
-        await using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-        {
-            await audioStream.CopyToAsync(fileStream);
-        }
 
         PropertyInfo propertyNameInfo = GetPropertyInfo(nameof(GenericHashTableForm.PersonalVoice));
-        await PathPerImport(propertyNameInfo, new FileResult(filePath));
+        await PathPerImport(propertyNameInfo, audioFileResult);
     }
 
     [RelayCommand]
