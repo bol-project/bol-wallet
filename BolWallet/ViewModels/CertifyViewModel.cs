@@ -249,8 +249,8 @@ public partial class CertifyViewModel : BaseViewModel
     {
         var userdata = await this._secureRepository.GetAsync<UserData>("userdata");
 
-        if (string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrix) &&
-            string.IsNullOrEmpty(userdata?.EncryptedDigitalMatrixCompany))
+        if (string.IsNullOrEmpty(userdata?.IdentificationMatrix) &&
+            string.IsNullOrEmpty(userdata?.IdentificationMatrixCompany))
         {
             await Toast.Make("Encrypted Digital Matrix not found in the device.").Show(cancellationToken);
             return;
