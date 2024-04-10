@@ -99,7 +99,7 @@
 
         await createEdiViewModel.Initialize();
 
-        foreach (PropertyInfo propertyInfo in createEdiViewModel.ediFiles.GetType().GetProperties())
+        foreach (PropertyInfo propertyInfo in createEdiViewModel.EdiFiles.GetType().GetProperties())
         {
             await UpdateIdentificationDocumentsList(propertyInfo.Name);
         }

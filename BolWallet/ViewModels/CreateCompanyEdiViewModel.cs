@@ -12,8 +12,8 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly ISha256Hasher _sha256Hasher;
     private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
+    private CertificationMatrixCompany _certificationMatrix;
     private readonly IMediaService _mediaService;
-    private ExtendedEncryptedDigitalMatrixCompany extendedEncryptedDigitalMatrix;
     public CompanyHashFiles ediFiles;
     
     public CreateCompanyEdiViewModel(
@@ -30,9 +30,9 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
         _sha256Hasher = sha256Hasher;
         _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
         _mediaService = mediaService;
-        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrixCompany
+        _certificationMatrix = new CertificationMatrixCompany
         {
-            Incorporation = new CompanyIncorporation(),
+            Incorporation = new Incorporation(),
             Hashes = new CompanyHashTable()
         };
         _companyHashTableForm = new CompanyHashTableForm();
@@ -73,20 +73,21 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
 
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-            extendedEncryptedDigitalMatrix.CodeName = userData.Codename;
-            extendedEncryptedDigitalMatrix.Incorporation.Title = userData.Company.Title;
-            extendedEncryptedDigitalMatrix.Incorporation.VatNumber = userData.Company.VatNumber;
-            extendedEncryptedDigitalMatrix.Incorporation.IncorporationDate = userData.Company.IncorporationDate;
+            _certificationMatrix.CodeName = userData.Codename;
+            _certificationMatrix.Incorporation.Title = userData.Company.Title;
+            _certificationMatrix.Incorporation.VatNumber = userData.Company.VatNumber;
+            _certificationMatrix.Incorporation.IncorporationDate = userData.Company.IncorporationDate;
 
-            var edm = await Task.Run(() => _encryptedDigitalIdentityService.GenerateMatrix(extendedEncryptedDigitalMatrix));
+            var idmc = await Task.Run(() => _encryptedDigitalIdentityService.GenerateMatrix(_certificationMatrix));
 
-            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateCompanyEDI(edm));
+            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateCompanyEDI(idmc));
 
-            extendedEncryptedDigitalMatrix.IncorporationHash = edm.IncorporationHash;
+            _certificationMatrix.IncorporationHash = idmc.IncorporationHash;
 
             userData.Edi = edi;
-            userData.ExtendedEncryptedDigitalMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
-            userData.EncryptedDigitalMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(edm);
+            userData.CertificationMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(_certificationMatrix);
+            userData.IdentificationMatrixCompany = _encryptedDigitalIdentityService.SerializeMatrix(idmc);
+            userData.IncorporationMatrix = _encryptedDigitalIdentityService.SerializeIncorporation(_certificationMatrix);
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -130,10 +131,10 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
     {
         propertyNameInfo.SetValue(CompanyHashTableForm, fileName);
 
-        extendedEncryptedDigitalMatrix.Hashes
+        _certificationMatrix.Hashes
             .GetType()
             .GetProperty(propertyNameInfo.Name)
-            .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)));
+            .SetValue(_certificationMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)));
     }
 
     public async Task Initialize()
@@ -157,10 +158,10 @@ public partial class CreateCompanyEdiViewModel : BaseViewModel
 
             propertyNameInfo.SetValue(CompanyHashTableForm, ediFileItem.FileName);
 
-            extendedEncryptedDigitalMatrix.Hashes
+            _certificationMatrix.Hashes
                 .GetType()
                 .GetProperty(propertyNameInfo.Name)
-                .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
+                .SetValue(_certificationMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
 
             ediFiles
                 .GetType()

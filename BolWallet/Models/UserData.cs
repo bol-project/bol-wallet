@@ -13,10 +13,12 @@ public class UserData
     public Bol.Core.Model.BolWallet BolWallet { get; set; }
     public GenericHashTableFiles GenericHashTableFiles { get; set; }
     public CompanyHashFiles CompanyHashFiles { get; set; }
-    public string ExtendedEncryptedDigitalMatrix { get; set; }
-    public string EncryptedDigitalMatrix { get; set; }
-    public string ExtendedEncryptedDigitalMatrixCompany { get; set; }
-    public string EncryptedDigitalMatrixCompany { get; set; }
+    public string CertificationMatrix { get; set; }
+    public string IdentificationMatrix { get; set; }
+    public string[] CitizenshipMatrices { get; set; }
+    public string CertificationMatrixCompany { get; set; }
+    public string IdentificationMatrixCompany { get; set; }
+    public string IncorporationMatrix { get; set; }
     public string WalletPassword { get; set; }
     public bool IsCertifier { get; set; }
     public bool IsIndividualRegistration { get; set; }
