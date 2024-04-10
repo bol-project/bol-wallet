@@ -37,11 +37,11 @@ public partial class CreateEdiViewModel : BaseViewModel
         _mediaService = mediaService;
         _certificationMatrix = new CertificationMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
-        _ediFiles = new GenericHashTableFiles();
+        EdiFiles = new GenericHashTableFiles();
         _recorder = audioManager.CreateRecorder();
     }
     
-    [ObservableProperty] private GenericHashTableFiles _ediFiles;
+    public GenericHashTableFiles EdiFiles { get; private set; }
     
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
@@ -224,14 +224,14 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         SetFileHash(propertyNameInfo, fileName, fileBytes);
 
-        _ediFiles
+        EdiFiles
             .GetType()
             .GetProperty(propertyNameInfo.Name)
-            .SetValue(_ediFiles, ediFileItem);
+            .SetValue(EdiFiles, ediFileItem);
 
         OnPropertyChanged(nameof(GenericHashTableForm));
 
-        userData.GenericHashTableFiles = _ediFiles;
+        userData.GenericHashTableFiles = EdiFiles;
 
         await _secureRepository.SetAsync("userdata", userData);
     }
@@ -252,13 +252,13 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         if (userData?.GenericHashTableFiles is null) return;
 
-        _ediFiles = userData.GenericHashTableFiles;
+        EdiFiles = userData.GenericHashTableFiles;
 
-        foreach (var propertyInfo in _ediFiles.GetType().GetProperties())
+        foreach (var propertyInfo in EdiFiles.GetType().GetProperties())
         {
             PropertyInfo propertyNameInfo = GetPropertyInfo(propertyInfo.Name);
 
-            var ediFileItem = (FileItem)propertyInfo.GetValue(_ediFiles, null);
+            var ediFileItem = (FileItem)propertyInfo.GetValue(EdiFiles, null);
 
             if (ediFileItem?.Content == null)
             {
@@ -272,10 +272,10 @@ public partial class CreateEdiViewModel : BaseViewModel
                 .GetProperty(propertyNameInfo.Name)
                 .SetValue(_certificationMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
 
-            _ediFiles
+            EdiFiles
                 .GetType()
                 .GetProperty(propertyNameInfo.Name)
-                .SetValue(_ediFiles, ediFileItem);
+                .SetValue(EdiFiles, ediFileItem);
         }
 
         OnPropertyChanged(nameof(GenericHashTableForm));
