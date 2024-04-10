@@ -13,19 +13,18 @@ public partial class CreateEdiViewModel : BaseViewModel
     private readonly IBase16Encoder _base16Encoder;
     private readonly ISha256Hasher _sha256Hasher;
     private readonly ISecureRepository _secureRepository;
-    private readonly IEncryptedDigitalIdentityService _encryptedDigitalIdentityService;
+    private readonly IEncryptedDigitalIdentityService _ediService;
     private readonly IMediaService _mediaService;
-    private ExtendedEncryptedDigitalMatrix extendedEncryptedDigitalMatrix;
-    public GenericHashTableFiles ediFiles;
+    private readonly CertificationMatrix _certificationMatrix;
     private readonly IAudioRecorder _recorder;
-
+    
     public CreateEdiViewModel(
         INavigationService navigationService,
         IPermissionService permissionService,
         IBase16Encoder base16Encoder,
         ISha256Hasher sha256Hasher,
         ISecureRepository secureRepository,
-        IEncryptedDigitalIdentityService encryptedDigitalIdentityService,
+        IEncryptedDigitalIdentityService ediService,
         IAudioManager audioManager,
         IMediaService mediaService)
         : base(navigationService)
@@ -34,13 +33,15 @@ public partial class CreateEdiViewModel : BaseViewModel
         _base16Encoder = base16Encoder;
         _sha256Hasher = sha256Hasher;
         _secureRepository = secureRepository;
-        _encryptedDigitalIdentityService = encryptedDigitalIdentityService;
+        _ediService = ediService;
         _mediaService = mediaService;
-        extendedEncryptedDigitalMatrix = new ExtendedEncryptedDigitalMatrix { Hashes = new GenericHashTable() };
+        _certificationMatrix = new CertificationMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
-        ediFiles = new GenericHashTableFiles() { };
+        _ediFiles = new GenericHashTableFiles();
         _recorder = audioManager.CreateRecorder();
     }
+    
+    [ObservableProperty] private GenericHashTableFiles _ediFiles;
     
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
@@ -158,21 +159,21 @@ public partial class CreateEdiViewModel : BaseViewModel
 
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
-            extendedEncryptedDigitalMatrix.CodeName = userData.Codename;
+            _certificationMatrix.CodeName = userData.Codename;
 
             var encryptedCitizenshipForRegistration = userData.EncryptedCitizenshipForms.FirstOrDefault(ecf => ecf.CountryCode.Trim() == userData.Person.CountryCode.Trim());
 
-            extendedEncryptedDigitalMatrix.Hashes.IdentityCard = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCard;
-            extendedEncryptedDigitalMatrix.Hashes.IdentityCardBack = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCardBack;
-            extendedEncryptedDigitalMatrix.Hashes.Passport = encryptedCitizenshipForRegistration.CitizenshipHashes.Passport;
-            extendedEncryptedDigitalMatrix.Hashes.ProofOfNin = encryptedCitizenshipForRegistration.CitizenshipHashes.ProofOfNin;
-            extendedEncryptedDigitalMatrix.Hashes.BirthCertificate = encryptedCitizenshipForRegistration.CitizenshipHashes.BirthCertificate;
+            _certificationMatrix.Hashes.IdentityCard = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCard;
+            _certificationMatrix.Hashes.IdentityCardBack = encryptedCitizenshipForRegistration.CitizenshipHashes.IdentityCardBack;
+            _certificationMatrix.Hashes.Passport = encryptedCitizenshipForRegistration.CitizenshipHashes.Passport;
+            _certificationMatrix.Hashes.ProofOfNin = encryptedCitizenshipForRegistration.CitizenshipHashes.ProofOfNin;
+            _certificationMatrix.Hashes.BirthCertificate = encryptedCitizenshipForRegistration.CitizenshipHashes.BirthCertificate;
 
-            List<EncryptedCitizenship> encryptedCitizenships = new List<EncryptedCitizenship>();
+            var citizenships = new List<Citizenship>();
 
             foreach (var form in userData.EncryptedCitizenshipForms)
             {
-                encryptedCitizenships.Add(new EncryptedCitizenship
+                citizenships.Add(new Citizenship
                 {
                     CountryCode = form.CountryCode,
                     Nin = form.Nin,
@@ -186,18 +187,16 @@ public partial class CreateEdiViewModel : BaseViewModel
                 });
             }
 
-            extendedEncryptedDigitalMatrix.CitizenshipMatrices = encryptedCitizenships.ToArray();
+            _certificationMatrix.Citizenships = citizenships.ToArray();
 
-            var edm = await Task.Run(() => _encryptedDigitalIdentityService.GenerateMatrix(extendedEncryptedDigitalMatrix));
+            var idm = await Task.Run(() => _ediService.GenerateMatrix(_certificationMatrix));
 
-            var edi = await Task.Run(() => _encryptedDigitalIdentityService.GenerateEDI(edm));
-
-            extendedEncryptedDigitalMatrix.Citizenships = edm.Citizenships;
-            extendedEncryptedDigitalMatrix.Citizenships = Array.Empty<string>();
+            var edi = await Task.Run(() => _ediService.GenerateEDI(idm));
 
             userData.Edi = edi;
-            userData.ExtendedEncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(extendedEncryptedDigitalMatrix);
-            userData.EncryptedDigitalMatrix = _encryptedDigitalIdentityService.SerializeMatrix(edm);
+            userData.CertificationMatrix = _ediService.SerializeMatrix(_certificationMatrix);
+            userData.IdentificationMatrix = _ediService.SerializeMatrix(idm);
+            userData.CitizenshipMatrices = _ediService.SerializeCitizenships(_certificationMatrix);
 
             await _secureRepository.SetAsync("userdata", userData);
 
@@ -225,14 +224,14 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         SetFileHash(propertyNameInfo, fileName, fileBytes);
 
-        ediFiles
+        _ediFiles
             .GetType()
             .GetProperty(propertyNameInfo.Name)
-            .SetValue(ediFiles, ediFileItem);
+            .SetValue(_ediFiles, ediFileItem);
 
         OnPropertyChanged(nameof(GenericHashTableForm));
 
-        userData.GenericHashTableFiles = ediFiles;
+        userData.GenericHashTableFiles = _ediFiles;
 
         await _secureRepository.SetAsync("userdata", userData);
     }
@@ -241,10 +240,10 @@ public partial class CreateEdiViewModel : BaseViewModel
     {
         propertyNameInfo.SetValue(GenericHashTableForm, fileName);
 
-        extendedEncryptedDigitalMatrix.Hashes
+        _certificationMatrix.Hashes
             .GetType()
             .GetProperty(propertyNameInfo.Name)
-            .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)));
+            .SetValue(_certificationMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)));
     }
 
     public async Task Initialize()
@@ -253,13 +252,13 @@ public partial class CreateEdiViewModel : BaseViewModel
 
         if (userData?.GenericHashTableFiles is null) return;
 
-        ediFiles = userData.GenericHashTableFiles;
+        _ediFiles = userData.GenericHashTableFiles;
 
-        foreach (var propertyInfo in ediFiles.GetType().GetProperties())
+        foreach (var propertyInfo in _ediFiles.GetType().GetProperties())
         {
             PropertyInfo propertyNameInfo = GetPropertyInfo(propertyInfo.Name);
 
-            var ediFileItem = (FileItem)propertyInfo.GetValue(ediFiles, null);
+            var ediFileItem = (FileItem)propertyInfo.GetValue(_ediFiles, null);
 
             if (ediFileItem?.Content == null)
             {
@@ -268,15 +267,15 @@ public partial class CreateEdiViewModel : BaseViewModel
 
             propertyNameInfo.SetValue(GenericHashTableForm, ediFileItem.FileName);
 
-            extendedEncryptedDigitalMatrix.Hashes
+            _certificationMatrix.Hashes
                 .GetType()
                 .GetProperty(propertyNameInfo.Name)
-                .SetValue(extendedEncryptedDigitalMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
+                .SetValue(_certificationMatrix.Hashes, _base16Encoder.Encode(_sha256Hasher.Hash(ediFileItem.Content)));
 
-            ediFiles
+            _ediFiles
                 .GetType()
                 .GetProperty(propertyNameInfo.Name)
-                .SetValue(ediFiles, ediFileItem);
+                .SetValue(_ediFiles, ediFileItem);
         }
 
         OnPropertyChanged(nameof(GenericHashTableForm));

@@ -21,7 +21,7 @@ public class FileDownloadService : IFileDownloadService
 
     public List<FileItem> CollectIndividualFilesForDownload(UserData userdata)
     {
-        List<FileItem> files = new List<FileItem>();
+        var files = new List<FileItem>();
 
         foreach (PropertyInfo property in userdata.GenericHashTableFiles.GetType().GetProperties())
         {
@@ -60,22 +60,29 @@ public class FileDownloadService : IFileDownloadService
 
         files.Add(new FileItem()
         {
-            FileName = $"ExtendedCertificationMatrix_{userdata.GetShortHash()}.yaml",
-            Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrix)
+            FileName = $"{nameof(userdata.CertificationMatrix)}_{userdata.GetShortHash()}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.CertificationMatrix)
         });
 
         files.Add(new FileItem()
         {
-            FileName = $"CertificationMatrix_{userdata.GetShortHash()}.yaml",
-            Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrix)
+            FileName = $"{nameof(userdata.IdentificationMatrix)}_{userdata.GetShortHash()}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.IdentificationMatrix)
         });
 
+        files.AddRange(userdata.CitizenshipMatrices
+            .Select(((citizenship, i) => new FileItem
+            {
+                FileName = $"Citizenship_{i}_{userdata.GetShortHash()}.yaml",
+                Content = Encoding.UTF8.GetBytes(citizenship)
+            })));
+        
         return files;
     }
 
     public List<FileItem> CollectCompanyFilesForDownload(UserData userdata)
     {
-        List<FileItem> files = new List<FileItem>();
+        var files = new List<FileItem>();
 
         foreach (PropertyInfo property in userdata.CompanyHashFiles.GetType().GetProperties())
         {
@@ -93,14 +100,20 @@ public class FileDownloadService : IFileDownloadService
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.ExtendedEncryptedDigitalMatrixCompany)}.yaml",
-            Content = Encoding.UTF8.GetBytes(userdata.ExtendedEncryptedDigitalMatrixCompany)
+            FileName = $"{nameof(userdata.CertificationMatrixCompany)}_{userdata.GetShortHash()}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.CertificationMatrixCompany)
         });
 
         files.Add(new FileItem()
         {
-            FileName = $"{nameof(userdata.EncryptedDigitalMatrixCompany)}.yaml",
-            Content = Encoding.UTF8.GetBytes(userdata.EncryptedDigitalMatrixCompany)
+            FileName = $"{nameof(userdata.IdentificationMatrixCompany)}_{userdata.GetShortHash()}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.IdentificationMatrixCompany)
+        });
+
+        files.Add(new FileItem()
+        {
+            FileName = $"{nameof(userdata.IncorporationMatrix)}_{userdata.GetShortHash()}.yaml",
+            Content = Encoding.UTF8.GetBytes(userdata.IncorporationMatrix)
         });
 
         return files;
