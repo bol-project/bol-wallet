@@ -109,25 +109,6 @@ public partial class CitizenshipViewModel : BaseViewModel
                 .Where(c => !savedCountriesToKeep.Select(sc => sc.Name).Contains(c.Name)) // exclude already saved countries
                 .ToArray();
 
-            var savedCitizenships = UserData
-                .EncryptedCitizenshipForms
-                .Where(c => SelectedCountries.Contains(c.CountryName));
-            
-            var newCitizenships = newCountries
-                .Select(c => new EncryptedCitizenshipForm
-                {
-                    CountryName = c.Name,
-                    CountryCode = c.Alpha3,
-                    CitizenshipHashes = new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipActualBytes = new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipHashTableFileNames = new CitizenshipHashTableFileNames(),
-                    FirstName = string.Empty,
-                    SecondName = string.Empty,
-                    ThirdName = string.Empty,
-                    SurName = string.Empty,
-                    Nin = string.Empty
-                });
-            
             var selectionOrder = SelectedCountries
                 .Select((country, index) => (c: country, i: index))
                 .ToDictionary(c => c.c, c => c.i);
@@ -138,13 +119,6 @@ public partial class CitizenshipViewModel : BaseViewModel
                 .Concat(newCountries)
                 .OrderBy(c => selectionOrder[c.Name])
                 .ToList();
-            
-            UserData.EncryptedCitizenshipForms = savedCitizenships
-                .Concat(newCitizenships)
-                .OrderBy(c => selectionOrder[c.CountryName])
-                .ToList();
-
-            UserData.EncryptedCitizenshipForms.ForEach(e => e.IsSubmitted = false);
 
             await _secureRepository.SetAsync("userdata", UserData);
         }
