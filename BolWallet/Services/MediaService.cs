@@ -42,17 +42,17 @@ public class MediaService : IMediaService
         _logger = logger;
     }
 
-    public async Task<FileResult> PickFileAsync()
+    public async Task<FileResult?> PickFileAsync()
     {
         return await PickFileAsync(_supportedFileTypes, "Pick a file");
     }
 
-    public async Task<FileResult> PickAudioFileAsync()
+    public async Task<FileResult?> PickAudioFileAsync()
     {
         return await PickFileAsync(_supportedAudioFileTypes, "Pick an audio file");
     }
 
-    public async Task<FileResult> TakePhotoAsync(string saveLocation)
+    public async Task<FileResult?> TakePhotoAsync(string saveLocation)
     {
         var hasGivenPermission = await _permissionService.TryGetPermissionAsync<Permissions.Camera>();
 
@@ -60,7 +60,7 @@ public class MediaService : IMediaService
 
         var photo = await _mediaPicker.CapturePhotoAsync();
 
-        if (photo is null) throw new InvalidOperationException("The photo capture was not successful.");
+        if (photo is null) return null;
 
         // save the file into the provided save location
         var photoFilePath = Path.Combine(saveLocation, photo.FileName);
@@ -74,18 +74,14 @@ public class MediaService : IMediaService
         return new FileResult(photoFilePath);
     }
 
-    public async Task<FileResult> PickPhotoAsync()
+    public async Task<FileResult?> PickPhotoAsync()
     {
         var photo = await _mediaPicker.PickPhotoAsync(new MediaPickerOptions
         {
             Title = "Pick a photo"
         });
 
-        if (photo is not null) return photo;
-
-        var exception = new FileNotFoundException("The requested photo was not found.");
-        _logger.LogError(exception, "No photo was picked.");
-        throw exception;
+        return photo;
     }
 
     public async Task<bool> StartRecordingAudioAsync()
@@ -132,17 +128,13 @@ public class MediaService : IMediaService
         return new FileResult(filePath);
     }
 
-    private async Task<FileResult> PickFileAsync(FilePickerFileType supportedFileTypes, string pickerTitle)
+    private async Task<FileResult?> PickFileAsync(FilePickerFileType supportedFileTypes, string pickerTitle)
     {
         var fileResult = await _filePicker.PickAsync(new PickOptions
         {
             FileTypes = supportedFileTypes, PickerTitle = pickerTitle
         });
 
-        if (fileResult is not null) return fileResult;
-
-        var exception = new FileNotFoundException("The requested file was not found.");
-        _logger.LogError(exception, $"No file was picked with picker title: {pickerTitle}");
-        throw exception;
+        return fileResult;
     }
 }

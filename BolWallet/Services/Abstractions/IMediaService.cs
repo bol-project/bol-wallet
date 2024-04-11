@@ -7,13 +7,13 @@ public interface IMediaService
     /// Pick a file from the device.
     /// </summary>
     /// <returns></returns>
-    Task<FileResult> PickFileAsync();
+    Task<FileResult?> PickFileAsync();
     
     /// <summary>
     /// Pick an audio file from the device.
     /// </summary>
     /// <returns></returns>
-    Task<FileResult> PickAudioFileAsync();
+    Task<FileResult?> PickAudioFileAsync();
     
     /// <summary>
     /// Takes a photo and saves it to the provided location.
@@ -21,14 +21,14 @@ public interface IMediaService
     /// </summary>
     /// <param name="saveLocation"></param>
     /// <returns></returns>
-    Task<FileResult> TakePhotoAsync(string saveLocation);
+    Task<FileResult?> TakePhotoAsync(string saveLocation);
     
     /// <summary>
     /// Pick a photo from the device.
     /// No permissions are requested when calling this method.
     /// </summary>
     /// <returns></returns>
-    Task<FileResult> PickPhotoAsync();
+    Task<FileResult?> PickPhotoAsync();
     
     /// <summary>
     /// Starts recording audio and returns a boolean indicating whether the recording was started successfully.
