@@ -37,7 +37,7 @@ public class FileDownloadService : IFileDownloadService
             }
         }
 
-        foreach (EncryptedCitizenshipForm encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
+        foreach (EncryptedCitizenshipData encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
         {
             foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperties())
             {
