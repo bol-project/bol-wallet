@@ -21,10 +21,11 @@
                 <MudCardContent>
                     <MudText Typo="Typo.h6">Registration Steps:</MudText>
                     <MudText>1) For certifier registration, must have at least 4 certifications.</MudText>
-                    <MudText>2) Select the countries for which you will offer your certification services.</MudText>
-                    <MudText>3) Set the fee you will charge for your services.</MudText>
-                    <MudText>4) Add 100 bol as collateral to your first commercial address. They will be reserved for as long as you are a certifier.</MudText>
+                    <MudText>2) Add 100 bol as collateral to your first commercial address. They will be reserved for as long as you are a certifier.</MudText>
+                    <MudText>3) Select the countries for which you will offer your certification services.</MudText>
+                    <MudText>4) Set the fee you will charge for your services.</MudText>
                     <MudText>5) Please note that there is a maximum fee limit of 0,05b that you can set for your certification services.</MudText>
+                    <MudText>6) Removing your certifier status is subject to a network fee.</MudText>
 
                     <MudSelect T="string" Label="Countries" Required="true" HelperText="Supported Countries as Certifier" MultiSelection="true" @bind-SelectedValues="registerAsCertifierForm.Countries">
                         <MudSelectItem T="string" Value="@("ALL")">Global</MudSelectItem>
