@@ -58,8 +58,9 @@
             List<CoreCountry> supportedCountries = registerAsCertifierForm.Countries
                 .Select(a3 => new CoreCountry { Alpha3 = a3.Trim() })
                 .ToList();
-
-            var account = await bolService.RegisterAsCertifier(supportedCountries, new BigInteger(registerAsCertifierForm.Fee));
+            
+            var fee = new BigInteger(Math.Round(registerAsCertifierForm.Fee, 8) * 100000000);
+            await bolService.RegisterAsCertifier(supportedCountries, fee);
             await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
         }
         catch (Exception ex)
