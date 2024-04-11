@@ -1,0 +1,345 @@
+﻿using System.Text.RegularExpressions;
+using Bol.Core.Model;
+using Bol.Cryptography;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using Microsoft.Extensions.Logging;
+
+namespace BolWallet.ViewModels;
+
+public partial class SubmitCitizenshipViewModel : BaseViewModel
+{
+    private readonly IMediaService _mediaService;
+    private readonly IBase16Encoder _base16Encoder;
+    private readonly ISha256Hasher _sha256Hasher;
+    private readonly RegisterContent _registerContent;
+    private readonly INavigationService _navigationService;
+    private readonly ISecureRepository _secureRepository;
+    private readonly ILogger<SubmitCitizenshipViewModel> _logger;
+
+    private UserData UserData { get; set; }
+
+    public SubmitCitizenshipViewModel(
+        IMediaService mediaService,
+        IBase16Encoder base16Encoder,
+        ISha256Hasher sha256Hasher,
+        RegisterContent registerContent,
+        INavigationService navigationService,
+        ISecureRepository secureRepository,
+        ILogger<SubmitCitizenshipViewModel> logger) : base(navigationService)
+    {
+        _mediaService = mediaService;
+        _base16Encoder = base16Encoder;
+        _sha256Hasher = sha256Hasher;
+        _registerContent = registerContent;
+        _navigationService = navigationService;
+        _secureRepository = secureRepository;
+        _logger = logger;
+    }
+
+    [ObservableProperty] private bool _isFormInitialized;
+    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private List<string> _outstandingCitizenships;
+    [ObservableProperty] private EncryptedCitizenshipForm _citizenshipForm;
+    [ObservableProperty] CitizenshipHashTableFiles _files;
+
+    [ObservableProperty] private string _ninInternationalName;
+    
+    [ObservableProperty] private string _ninValidationErrorMessage = "";
+
+    public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
+    {
+        IsLoading = true;
+        
+        try
+        {
+            UserData = await _secureRepository.GetAsync<UserData>("userdata");
+
+            var outstandingCitizenships = GetOutstandingCitizenships();
+            
+            OutstandingCitizenships = outstandingCitizenships;
+            
+            if (OutstandingCitizenships.Count == 0)
+            {
+                await _navigationService.NavigateTo<CreateCodenameIndividualViewModel>();
+            }
+            else
+            {
+                CitizenshipForm = new EncryptedCitizenshipForm();
+                Files = new CitizenshipHashTableFiles();
+                CitizenshipForm.CountryName = OutstandingCitizenships.First();
+                CitizenshipForm.CountryCode = UserData
+                    .Citizenships
+                    .First(c => c.Name == CitizenshipForm.CountryName).Alpha3;
+                IsFormInitialized = true;
+            }
+
+            IsLoading = false;
+        }
+        
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error initializing SubmitCitizenshipViewModel");
+            await Toast.Make(ex.Message).Show(cancellationToken);
+        }
+    }
+
+    private List<string> GetOutstandingCitizenships()
+    {
+        var selectedCountries = UserData.Citizenships;
+        
+        var submittedForms = UserData
+            .EncryptedCitizenshipForms
+            .Where(form => form.IsSubmitted)
+            .Select(f => f.CountryName);
+        
+        var outstandingCitizenships = selectedCountries
+            .Select(c => c.Name)
+            .Except(submittedForms)
+            .ToList();
+
+        return outstandingCitizenships;
+    }
+
+    [RelayCommand]
+    private async Task PickFile(string fileType)
+    {
+        var fileResult = await GetFileAsync(_mediaService.PickFileAsync);
+        SetFile(fileType, fileResult);
+    }
+
+    [RelayCommand]
+    private async Task TakePhoto(string fileType)
+    {
+        var fileResult = await GetFileAsync(() => _mediaService.TakePhotoAsync(FileSystem.CacheDirectory));
+        SetFile(fileType, fileResult);
+    }
+    
+    [RelayCommand]
+    private async Task PickPhoto(string fileType, CancellationToken cancellationToken = default)
+    {
+        var fileResult = await GetFileAsync(_mediaService.PickPhotoAsync);
+        SetFile(fileType, fileResult);
+    }
+    
+    [RelayCommand]
+    private void SetNinInternationalName()
+    {
+        NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
+    }
+
+    [RelayCommand]
+    private Task ValidateNin()
+    {
+        var nin = CitizenshipForm.Nin;
+        var countryCode = CitizenshipForm.CountryCode;
+        
+        const string Pattern = @"^[A-Z0-9]*$";
+        var regex = new Regex(Pattern);
+
+        var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
+        
+        bool isNinValid = regex.IsMatch(nin);
+        bool isNinLengthCorrect = ninRequiredDigits == nin.Length;
+
+        if (isNinValid && isNinLengthCorrect)
+        {
+            NinValidationErrorMessage = "";
+            return Task.CompletedTask;
+        }
+
+        NinValidationErrorMessage = 
+                $"The National Identification Number (NIN) provided does not match the expected length of {ninRequiredDigits} digits for the country code {countryCode}." +
+                " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+        
+        return Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task SubmitForm(EncryptedCitizenshipForm form,  CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            IsLoading = true;
+            await Task.Run((Func<Task>)(async () =>
+            {
+                (string encodedIdentityFront, string identityFrontHash) = Files.IdentityCard != null
+                    ? await EncodeAndHashFile(Files.IdentityCard, cancellationToken)
+                    : (null, null);
+                (string encodedIdentityBack, string identityBackHash) = Files.IdentityCardBack != null
+                    ? await EncodeAndHashFile(Files.IdentityCardBack, cancellationToken)
+                    : (null, null);
+                (string encodedPassport, string passportHash) = Files.Passport != null
+                    ? await EncodeAndHashFile(Files.Passport, cancellationToken)
+                    : (null, null);
+                (string encodedProofOfNin, string proofOfNinHash) = Files.ProofOfNin != null
+                    ? await EncodeAndHashFile(Files.ProofOfNin, cancellationToken)
+                    : (null, null);
+                (string encodedBirthCertificate, string birthCertificateHash) = Files.BirthCertificate != null
+                    ? await EncodeAndHashFile(Files.BirthCertificate, cancellationToken)
+                    : (null, null);
+
+                var countryCode = form.CountryCode;
+
+                var citizenshipHashTableFileNames = new CitizenshipHashTableFileNames();
+                var citizenshipHashes = new CitizenshipHashTable();
+                var citizenshipActualBytes = new CitizenshipHashTable();
+
+                if (Files.IdentityCard != null)
+                {
+                    citizenshipHashTableFileNames.IdentityCard =
+                        GenerateHashTableFileName(nameof(CitizenshipHashTable.IdentityCard),
+                            Files.IdentityCard.FullPath);
+                    citizenshipHashes.IdentityCard = identityFrontHash;
+                    citizenshipActualBytes.IdentityCard = encodedIdentityFront;
+                }
+
+                if (Files.IdentityCardBack != null)
+                {
+                    citizenshipHashTableFileNames.IdentityCardBack =
+                        GenerateHashTableFileName(nameof(CitizenshipHashTable.IdentityCardBack),
+                            Files.IdentityCardBack.FullPath);
+                    citizenshipHashes.IdentityCardBack = identityBackHash;
+                    citizenshipActualBytes.IdentityCardBack = encodedIdentityBack;
+                }
+
+                if (Files.Passport != null)
+                {
+                    citizenshipHashTableFileNames.Passport =
+                        GenerateHashTableFileName(nameof(CitizenshipHashTable.Passport), Files.Passport.FullPath);
+                    citizenshipHashes.Passport = passportHash;
+                    citizenshipActualBytes.Passport = encodedPassport;
+                }
+
+                if (Files.ProofOfNin != null)
+                {
+                    citizenshipHashTableFileNames.ProofOfNin =
+                        GenerateHashTableFileName(nameof(CitizenshipHashTable.ProofOfNin), Files.ProofOfNin.FullPath);
+                    citizenshipHashes.ProofOfNin = proofOfNinHash;
+                    citizenshipActualBytes.ProofOfNin = encodedProofOfNin;
+                }
+
+                if (Files.BirthCertificate != null)
+                {
+                    citizenshipHashTableFileNames.BirthCertificate =
+                        GenerateHashTableFileName(nameof(CitizenshipHashTable.BirthCertificate),
+                            Files.BirthCertificate.FullPath);
+                    citizenshipHashes.BirthCertificate = birthCertificateHash;
+                    citizenshipActualBytes.BirthCertificate = encodedBirthCertificate;
+                }
+
+                var encryptedCitizenshipData = new EncryptedCitizenshipData
+                {
+                    CountryCode = countryCode,
+                    CountryName = form.CountryName,
+                    Nin = form.Nin,
+                    SurName = form.SurName,
+                    FirstName = form.FirstName,
+                    SecondName = form.SecondName,
+                    ThirdName = form.ThirdName,
+                    CitizenshipHashes = citizenshipHashes,
+                    CitizenshipActualBytes = citizenshipActualBytes,
+                    CitizenshipHashTableFileNames = citizenshipHashTableFileNames,
+                    IsSubmitted = true
+                };
+
+                UserData.EncryptedCitizenshipForms.Add(encryptedCitizenshipData);
+                await _secureRepository.SetAsync("userdata", UserData);
+                OutstandingCitizenships.Remove(form.CountryName);
+            }), cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error submitting citizenship form.");
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+            await _navigationService.NavigateTo<SubmitCitizenshipViewModel>();
+        }
+    }
+
+    private  string GenerateHashTableFileName(string propertyName, string fullPath)
+    {
+        return $"{propertyName}_{CitizenshipForm.CountryCode}{Path.GetExtension(fullPath)}";
+    }
+
+    private async Task<(string encodedFileBytes, string fileHash)> EncodeAndHashFile(
+        FileResult fileResult,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (fileResult is null) throw new ArgumentNullException(nameof(fileResult), "File cannot be null.");
+
+            var fileBytes = await File.ReadAllBytesAsync(fileResult.FullPath, cancellationToken);
+            var encodedFileBytes = _base16Encoder.Encode(fileBytes);
+            var hashedEncodedFileBytes = _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)); // TODO is this ok?
+
+            return (encodedFileBytes, hashedEncodedFileBytes);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error handling file");
+            throw;
+        }
+    }
+
+    private void SetFile(string fileTypeStr, FileResult file)
+    {
+        CitizenshipFileType fileType = ConvertStringToEnum(fileTypeStr);
+        
+        switch (fileType)
+        {
+            case CitizenshipFileType.IdentityCard:
+                Files.IdentityCard = file;
+                break;
+            case CitizenshipFileType.IdentityCardBack:
+                Files.IdentityCardBack = file;
+                break;
+            case CitizenshipFileType.Passport:
+                Files.Passport = file;
+                break;
+            case CitizenshipFileType.ProofOfNin:
+                Files.ProofOfNin = file;
+                break;
+            case CitizenshipFileType.BirthCertificate:
+                Files.BirthCertificate = file;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(fileType), fileType, "The file type is not supported.");
+        }
+    }
+
+    private async Task<FileResult> GetFileAsync(Func<Task<FileResult>> fileAction)
+    {
+        try
+        {
+            IsLoading = true;
+
+            var fileResult = await fileAction();
+            return fileResult;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error handling file");
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+    
+    private static CitizenshipFileType ConvertStringToEnum(string fileTypeStr)
+    {
+        if (!Enum.TryParse(fileTypeStr, out CitizenshipFileType fileType))
+        {
+            throw new ArgumentException($"Invalid file type: {fileTypeStr}");
+        }
+
+        return fileType;
+    }
+}
