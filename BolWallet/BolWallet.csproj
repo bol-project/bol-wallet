@@ -217,7 +217,7 @@
     <PackageReference Include="Plugin.Maui.Audio" Version="2.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Neo.VM" Version="2.4.3.1" />
-    <PackageReference Include="MudBlazor" Version="6.14.0" />
+    <PackageReference Include="MudBlazor" Version="6.19.1" />
     <PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" PrivateAssets="all" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Expressions" Version="4.0.0" />
