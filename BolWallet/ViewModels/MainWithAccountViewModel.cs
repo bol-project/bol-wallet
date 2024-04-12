@@ -150,7 +150,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
                 if (BolAccount.AccountStatus == AccountStatus.Open)
                     IsAccountOpen = true;
                 else
-                    await NavigationService.NavigateTo<CertifyViewModel>(true);
+                    await NavigationService.NavigateTo<GetCertifiedViewModel>(true);
 
                 CommercialBalancesDisplayList = (BolAccount?.CommercialBalances ?? new())
                     .Select(pair => new BalanceDisplayItem { Address = pair.Key, Balance = pair.Value })

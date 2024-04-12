@@ -2,20 +2,20 @@ using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.Views;
 
-public partial class CertifyPage : ContentPage
+public partial class GetCertifiedPage : ContentPage
 {
     private CancellationTokenSource _cts;
 
-    public CertifyPage(CertifyViewModel certifyViewModel)
+    public GetCertifiedPage(GetCertifiedViewModel getCertifiedViewModel)
 	{
 		InitializeComponent();
-		BindingContext = certifyViewModel;
+		BindingContext = getCertifiedViewModel;
 	}
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
         _cts = new CancellationTokenSource();
-		await ((CertifyViewModel)BindingContext).Initialize(_cts.Token);
+		await ((GetCertifiedViewModel)BindingContext).Initialize(_cts.Token);
 	}
 
     protected override void OnDisappearing()
@@ -30,7 +30,7 @@ public partial class CertifyPage : ContentPage
 		{
 			Clipboard.Default.SetTextAsync(label.Text);
 
-            ((CertifyViewModel)BindingContext).CertifierCodename = label.Text;
+            ((GetCertifiedViewModel)BindingContext).CertifierCodename = label.Text;
 			Toast.Make("Copied to Clipboard").Show();
 		}
 	}

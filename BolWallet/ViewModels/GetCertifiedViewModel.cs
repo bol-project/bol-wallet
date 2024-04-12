@@ -3,13 +3,13 @@ using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
-public partial class CertifyViewModel : BaseViewModel
+public partial class GetCertifiedViewModel : BaseViewModel
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
     private readonly IFileDownloadService _fileDownloadService;
 
-    public CertifyViewModel(
+    public GetCertifiedViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
