@@ -30,6 +30,7 @@ public static class RegistrationExtensions
 			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>()
 			.BindViewModelToView<ClaimViewModel, ClaimPage>()
             .BindViewModelToView<CompleteBolLoginChallengeViewModel, CompleteBolLoginChallengePage>()
+            .BindViewModelToView<CertifyViewModel, CertifyPage>()
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>();
 
 		return services;
