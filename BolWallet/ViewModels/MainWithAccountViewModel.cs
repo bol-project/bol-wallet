@@ -155,6 +155,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
                 CommercialBalancesDisplayList = (BolAccount?.CommercialBalances ?? new())
                     .Select(pair => new BalanceDisplayItem { Address = pair.Key, Balance = pair.Value })
                     .ToList();
+
+                await App.Current.MainPage.Navigation.PushAsync(new HomePage());
                 return;
             }
             
