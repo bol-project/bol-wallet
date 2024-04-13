@@ -6,8 +6,6 @@
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
 @inject INavigationService navigationService;
-@inject IMediaPicker mediaPicker;
-@inject IPermissionService permissionService;
 @inject IBase16Encoder base16Encoder;
 @inject ISha256Hasher sha256Hasher;
 @inject IMediaService MediaService;
@@ -156,111 +154,17 @@
 
     private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
-        {
-            { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
-            { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-            { DevicePlatform.MacCatalyst, new[] { "pdf", "png", "jpeg", "jpg", "public.image", "public.audio" } },
-            { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
-        });
-
-        try
-        {
-            var pickResult = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = customFileType,
-                PickerTitle = "Pick a file"
-            });
-
-            if (pickResult is null)
-                return;
-
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-            
-            await Task.Run(() => SetFileHash(property, pickResult, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, MediaService.PickFileAsync);
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        try
-        {
-            var photoFilePath = await MediaService.TakePhotoAsync(FileSystem.CacheDirectory);
-            
-            var fileResult = new FileResult(photoFilePath);
-            
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-
-            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, () => MediaService.TakePhotoAsync(FileSystem.CacheDirectory));
     }
-    
+
     private async Task PickPhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        try
-        {
-            var photo = await MediaService.PickPhotoAsync();
-
-            if (photo is null) return;
-            
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-            
-            await Task.Run(() => SetFileHash(property, photo, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(photo.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, MediaService.PickPhotoAsync);
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -368,4 +272,33 @@
                  citizenshipHashTable.BirthCertificate == Bol.Core.Constants.HASH_ZEROS);
     }
 
+    private async Task HandleFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm, Func<Task<FileResult>> fileAction)
+    {
+        try
+        {
+            var fileResult = await fileAction();
+
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+
+            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
+    }
 }

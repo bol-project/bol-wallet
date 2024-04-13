@@ -52,6 +52,7 @@ public static class MauiProgram
 		services.AddScoped<ISecureRepository, AkavacheRepository>();
 		services.AddSingleton<INavigationService, NavigationService>();
         services.AddScoped<IMediaService, MediaService>();
+        services.AddSingleton<IFilePicker>(_ => FilePicker.Default);
 		services.AddScoped<ICountriesService, CountriesService>();
 
         RegisterPermissionServices(services);
