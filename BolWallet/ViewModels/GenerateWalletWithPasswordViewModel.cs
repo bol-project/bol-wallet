@@ -10,26 +10,20 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 {
     private readonly IWalletService _walletService;
     private readonly ISecureRepository _secureRepository;
-    private readonly ISha256Hasher _sha256Hasher;
-    private readonly IBase16Encoder _base16Encoder;
-    private readonly IFileSaver _fileSaver;
+    private readonly IFileDownloadService _fileDownloadService;
     private readonly IDeviceDisplay _deviceDisplay;
 
     public GenerateWalletWithPasswordViewModel(
         INavigationService navigationService,
         IWalletService walletService,
         ISecureRepository secureRepository,
-        ISha256Hasher sha256Hasher,
-        IBase16Encoder base16Encoder,
-        IFileSaver fileSaver,
+        IFileDownloadService fileDownloadService,
         IDeviceDisplay deviceDisplay)
         : base(navigationService)
     {
         _walletService = walletService;
         _secureRepository = secureRepository;
-        _sha256Hasher = sha256Hasher;
-        _base16Encoder = base16Encoder;
-        _fileSaver = fileSaver;
+        _fileDownloadService = fileDownloadService;
         _deviceDisplay = deviceDisplay;
     }
 
@@ -49,7 +43,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         {
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-            
+
             UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
             Bol.Core.Model.BolWallet bolWallet;
@@ -83,17 +77,6 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         Bol.Core.Model.BolWallet bolWallet,
         CancellationToken cancellationToken = default)
     {
-        using var stream = new MemoryStream();
-
-        JsonSerializer.Serialize(stream, bolWallet, Constants.WalletJsonSerializerDefaultOptions);
-
-        string fileName = "BolWallet.json";
-
-        var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
-
-        if (result.IsSuccessful)
-        {
-            await Toast.Make($"File '{fileName}' saved successfully!").Show(cancellationToken);
-        }
+        await _fileDownloadService.DownloadDataAsync(bolWallet, "BolWallet.json", cancellationToken);
     }
 }

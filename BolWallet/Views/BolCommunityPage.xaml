@@ -61,7 +61,7 @@
                 Text="UnRegister As Certifier" />
                 
             <Button
-                Grid.Row="4"
+                Grid.Row="5"
                 FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 Command="{Binding CompleteBolLoginChallengeCommand}"
