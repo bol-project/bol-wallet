@@ -25,7 +25,7 @@ public class MediaService : IMediaService
         { DevicePlatform.iOS, new[] {"public.audio" } },
         { DevicePlatform.Android, new[] {  "audio/*" } },
         { DevicePlatform.MacCatalyst, new[] {"public.audio", ".mp3" } },
-        { DevicePlatform.WinUI, new[] { ".mp3" } }
+        { DevicePlatform.WinUI, new[] { ".mp3", ".wav", ".wma", ".m4a", ".flac" } }
     });
 
     public MediaService(
