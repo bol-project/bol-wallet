@@ -34,36 +34,36 @@
     <EditForm Model="@form" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator/>
         <MudCard>
-            <MudText Style="text-align: center;" Typo="Typo.h6">@form.CountryName</MudText>
+            <MudText Style="text-align: center;" Typo="Typo.h6">Submit your citizenship for @form.CountryName</MudText>
             <MudCardContent>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" @bind-Value="@form.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
+                    <MudTextField Class="styled-textfield" T="string" @bind-Value="@form.CountryCode" Variant="MudBlazor.Variant.Outlined" Disabled=true Label="CountryCode" OnlyValidateIfDirty="true"
                                   Margin="@Margin.Dense" Required="true"/>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => form.SurName)" OnlyValidateIfDirty="true"
+                    <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined" Label="Surname" For="@(() => form.SurName)" OnlyValidateIfDirty="true"
                                   @bind-Value="@form.SurName" OnBlur="@(x => form.SurName = form.SurName?.Trim().ToUpper())"
                                   Margin="@Margin.Dense" Required="true" RequiredError="Surname is required!"/>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => form.FirstName)" OnlyValidateIfDirty="true"
+                    <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined" Label="First Name" For="@(() => form.FirstName)" OnlyValidateIfDirty="true"
                                   @bind-Value="@form.FirstName" OnBlur="@(x => form.FirstName = form.FirstName?.Trim().ToUpper())"
                                   Margin="@Margin.Dense" Required="true" RequiredError="First name is required!"/>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                    <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined"
                                   Margin="@Margin.Dense" Label="Middle Name" For="@(() => form.SecondName)" @bind-Value="@form.SecondName"
                                   OnBlur="@(x => form.SecondName = form.SecondName?.Trim().ToUpper())"/>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined"
+                    <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined"
                                   Margin="@Margin.Dense" Label="Third Name" For="@(() => form.ThirdName)" @bind-Value="@form.ThirdName"
                                   OnBlur="@(x => form.ThirdName = form.ThirdName?.Trim().ToUpper())"/>
                 </MudItem>
                 @if (!string.IsNullOrEmpty(form.CountryCode))
                 {
                     <MudItem xs="12" sm="12" md="12">
-                        <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => form.Nin)" Label="NIN" @bind-Value="@form.Nin"
+                        <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => form.Nin)" Label="NIN" @bind-Value="@form.Nin"
                                       Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@ViewModel.NinInternationalName"
                                       Immediate="true" Required="true"
                                       RequiredError="NIN is required!"
@@ -72,7 +72,7 @@
                                       OnBlur="@ValidateNinAsync"/>
                     </MudItem>
                 }
-                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least your Identity card document.</MudText>
+                <MudText Class="spaced-text" Align="Align.Center" Typo="Typo.h6">Please provide at least your Identity card document.</MudText>
                 @foreach (var document in citizenshipDocuments)
                 {
                     var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
@@ -112,7 +112,26 @@
     </EditForm>
 }
 <style>
+    .styled-textfield {
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
 
+    .styled-textfield:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .styled-textfield:focus {
+        border-color: #007BFF;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+
+    .spaced-text {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 </style>
 
 @code {
