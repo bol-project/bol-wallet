@@ -84,7 +84,7 @@
             <MudCardActions >
                 <MudItem Style="text-align: center;" xs="12">
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto" Disabled="!ViewModel.HasAddedMandatoryFiles">
                         Submit
                     </MudButton>
                 </MudItem>
@@ -154,5 +154,12 @@
             logger.LogError(ex, "Error submitting form");
             await Toast.Make(ex.Message).Show();
         }
+    }
+
+    private bool HasAddedMandatoryFiles()
+    {
+        var hasAddedMandatoryFiles = ViewModel.Files is { IdentityCard: not null, IdentityCardBack: not null };
+        
+        return hasAddedMandatoryFiles;
     }
 }

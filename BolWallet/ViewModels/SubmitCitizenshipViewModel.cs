@@ -41,6 +41,8 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
     [ObservableProperty] private string _ninInternationalName;
     [ObservableProperty] private string _ninValidationErrorMessage = "";
+    
+    public bool HasAddedMandatoryFiles => Files is { IdentityCard: not null, IdentityCardBack: not null };
 
     public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
     {

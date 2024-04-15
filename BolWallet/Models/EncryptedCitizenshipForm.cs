@@ -78,7 +78,9 @@ public class CitizenshipHashTableFileNames
 
 public class CitizenshipHashTableFiles : ObservableObject
 {
+    [Required]
     public FileResult IdentityCard { get; set; }
+    [Required]
     public FileResult IdentityCardBack { get; set; }
     public FileResult Passport { get; set; }
     public FileResult ProofOfNin { get; set; }
