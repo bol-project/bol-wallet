@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using Bol.Core.Model;
-using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
@@ -10,9 +9,8 @@ namespace BolWallet.ViewModels;
 public partial class SubmitCitizenshipViewModel : BaseViewModel
 {
     private readonly IMediaService _mediaService;
-    private readonly IBase16Encoder _base16Encoder;
-    private readonly ISha256Hasher _sha256Hasher;
     private readonly RegisterContent _registerContent;
+    private readonly ICitizenshipHashTableProcessor _hashTableProcessor;
     private readonly INavigationService _navigationService;
     private readonly ISecureRepository _secureRepository;
     private readonly ILogger<SubmitCitizenshipViewModel> _logger;
@@ -21,17 +19,15 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
     public SubmitCitizenshipViewModel(
         IMediaService mediaService,
-        IBase16Encoder base16Encoder,
-        ISha256Hasher sha256Hasher,
         RegisterContent registerContent,
+        ICitizenshipHashTableProcessor hashTableProcessor,
         INavigationService navigationService,
         ISecureRepository secureRepository,
         ILogger<SubmitCitizenshipViewModel> logger) : base(navigationService)
     {
         _mediaService = mediaService;
-        _base16Encoder = base16Encoder;
-        _sha256Hasher = sha256Hasher;
         _registerContent = registerContent;
+        _hashTableProcessor = hashTableProcessor;
         _navigationService = navigationService;
         _secureRepository = secureRepository;
         _logger = logger;
@@ -44,12 +40,12 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [ObservableProperty] CitizenshipHashTableFiles _files;
 
     [ObservableProperty] private string _ninInternationalName;
-    
     [ObservableProperty] private string _ninValidationErrorMessage = "";
 
     public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
     {
         IsLoading = true;
+        IsFormInitialized = false;
         
         try
         {
@@ -159,72 +155,25 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         try
         {
             IsLoading = true;
+            
             await Task.Run((Func<Task>)(async () =>
             {
-                (string encodedIdentityFront, string identityFrontHash) = Files.IdentityCard != null
-                    ? await EncodeAndHashFile(Files.IdentityCard, cancellationToken)
-                    : (null, null);
-                (string encodedIdentityBack, string identityBackHash) = Files.IdentityCardBack != null
-                    ? await EncodeAndHashFile(Files.IdentityCardBack, cancellationToken)
-                    : (null, null);
-                (string encodedPassport, string passportHash) = Files.Passport != null
-                    ? await EncodeAndHashFile(Files.Passport, cancellationToken)
-                    : (null, null);
-                (string encodedProofOfNin, string proofOfNinHash) = Files.ProofOfNin != null
-                    ? await EncodeAndHashFile(Files.ProofOfNin, cancellationToken)
-                    : (null, null);
-                (string encodedBirthCertificate, string birthCertificateHash) = Files.BirthCertificate != null
-                    ? await EncodeAndHashFile(Files.BirthCertificate, cancellationToken)
-                    : (null, null);
-
                 var countryCode = form.CountryCode;
 
-                var citizenshipHashTableFileNames = new CitizenshipHashTableFileNames();
-                var citizenshipHashes = new CitizenshipHashTable();
-                var citizenshipActualBytes = new CitizenshipHashTable();
-
-                if (Files.IdentityCard != null)
-                {
-                    citizenshipHashTableFileNames.IdentityCard =
-                        GenerateHashTableFileName(nameof(CitizenshipHashTable.IdentityCard),
-                            Files.IdentityCard.FullPath);
-                    citizenshipHashes.IdentityCard = identityFrontHash;
-                    citizenshipActualBytes.IdentityCard = encodedIdentityFront;
-                }
-
-                if (Files.IdentityCardBack != null)
-                {
-                    citizenshipHashTableFileNames.IdentityCardBack =
-                        GenerateHashTableFileName(nameof(CitizenshipHashTable.IdentityCardBack),
-                            Files.IdentityCardBack.FullPath);
-                    citizenshipHashes.IdentityCardBack = identityBackHash;
-                    citizenshipActualBytes.IdentityCardBack = encodedIdentityBack;
-                }
-
-                if (Files.Passport != null)
-                {
-                    citizenshipHashTableFileNames.Passport =
-                        GenerateHashTableFileName(nameof(CitizenshipHashTable.Passport), Files.Passport.FullPath);
-                    citizenshipHashes.Passport = passportHash;
-                    citizenshipActualBytes.Passport = encodedPassport;
-                }
-
-                if (Files.ProofOfNin != null)
-                {
-                    citizenshipHashTableFileNames.ProofOfNin =
-                        GenerateHashTableFileName(nameof(CitizenshipHashTable.ProofOfNin), Files.ProofOfNin.FullPath);
-                    citizenshipHashes.ProofOfNin = proofOfNinHash;
-                    citizenshipActualBytes.ProofOfNin = encodedProofOfNin;
-                }
-
-                if (Files.BirthCertificate != null)
-                {
-                    citizenshipHashTableFileNames.BirthCertificate =
-                        GenerateHashTableFileName(nameof(CitizenshipHashTable.BirthCertificate),
-                            Files.BirthCertificate.FullPath);
-                    citizenshipHashes.BirthCertificate = birthCertificateHash;
-                    citizenshipActualBytes.BirthCertificate = encodedBirthCertificate;
-                }
+                await _hashTableProcessor
+                    .ProcessFile(Files.IdentityCard, nameof(CitizenshipHashTable.IdentityCard), countryCode,
+                        cancellationToken);
+                await _hashTableProcessor
+                    .ProcessFile(Files.IdentityCardBack, nameof(CitizenshipHashTable.IdentityCardBack), countryCode,
+                        cancellationToken);
+                await _hashTableProcessor
+                    .ProcessFile(Files.Passport, nameof(CitizenshipHashTable.Passport), countryCode, cancellationToken);
+                await _hashTableProcessor
+                    .ProcessFile(Files.ProofOfNin, nameof(CitizenshipHashTable.ProofOfNin), countryCode,
+                        cancellationToken);
+                await _hashTableProcessor
+                    .ProcessFile(Files.BirthCertificate, nameof(CitizenshipHashTable.BirthCertificate), countryCode,
+                        cancellationToken);
 
                 var encryptedCitizenshipData = new EncryptedCitizenshipData
                 {
@@ -235,9 +184,9 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     FirstName = form.FirstName,
                     SecondName = form.SecondName,
                     ThirdName = form.ThirdName,
-                    CitizenshipHashes = citizenshipHashes,
-                    CitizenshipActualBytes = citizenshipActualBytes,
-                    CitizenshipHashTableFileNames = citizenshipHashTableFileNames,
+                    CitizenshipHashes = _hashTableProcessor.GetCitizenshipHashes(),
+                    CitizenshipActualBytes = _hashTableProcessor.GetCitizenshipActualBytes(),
+                    CitizenshipHashTableFileNames = _hashTableProcessor.GetCitizenshipHashTableFileNames(),
                     IsSubmitted = true
                 };
 
@@ -269,32 +218,6 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         {
             IsLoading = false;
             await _navigationService.NavigateTo<SubmitCitizenshipViewModel>();
-        }
-    }
-
-    private  string GenerateHashTableFileName(string propertyName, string fullPath)
-    {
-        return $"{propertyName}_{CitizenshipForm.CountryCode}{Path.GetExtension(fullPath)}";
-    }
-
-    private async Task<(string encodedFileBytes, string fileHash)> EncodeAndHashFile(
-        FileResult fileResult,
-        CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            if (fileResult is null) throw new ArgumentNullException(nameof(fileResult), "File cannot be null.");
-
-            var fileBytes = await File.ReadAllBytesAsync(fileResult.FullPath, cancellationToken);
-            var encodedFileBytes = _base16Encoder.Encode(fileBytes);
-            var hashedEncodedFileBytes = _base16Encoder.Encode(_sha256Hasher.Hash(fileBytes)); // TODO is this ok?
-
-            return (encodedFileBytes, hashedEncodedFileBytes);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error handling file");
-            throw;
         }
     }
 
