@@ -10,8 +10,27 @@
 <MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
+
 @if (ViewModel.IsFormInitialized)
 {
+    <MudContainer Class="mb-10">
+        <MudTimeline TimelineOrientation="TimelineOrientation.Horizontal">
+            @foreach (var country in ViewModel.SelectedCountryNames)
+            {
+                var isSubmitted = !ViewModel.OutstandingCitizenships.Contains(country);
+                var isSelected = country == form.CountryName;
+
+                var color = isSubmitted
+                    ? Color.Success
+                    : isSelected
+                        ? Color.Primary
+                        : Color.Default;
+                <MudTimelineItem Color="@color" Size="Size.Medium">
+                    <MudText Align="Align.Center">@country</MudText>
+                </MudTimelineItem>
+            }
+        </MudTimeline>
+    </MudContainer>
     <EditForm Model="@form" OnValidSubmit="OnValidSubmit">
         <DataAnnotationsValidator/>
         <MudCard>
@@ -154,12 +173,5 @@
             logger.LogError(ex, "Error submitting form");
             await Toast.Make(ex.Message).Show();
         }
-    }
-
-    private bool HasAddedMandatoryFiles()
-    {
-        var hasAddedMandatoryFiles = ViewModel.Files is { IdentityCard: not null, IdentityCardBack: not null };
-        
-        return hasAddedMandatoryFiles;
     }
 }

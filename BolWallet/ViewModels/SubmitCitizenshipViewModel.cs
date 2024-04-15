@@ -43,6 +43,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [ObservableProperty] private string _ninValidationErrorMessage = "";
     
     public bool HasAddedMandatoryFiles => Files is { IdentityCard: not null, IdentityCardBack: not null };
+    public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
 
     public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
     {
