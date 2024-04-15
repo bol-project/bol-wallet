@@ -4,7 +4,8 @@
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Rounded.Archive" Color="Color.Inherit" Link="https://explorer.mainnet.bolchain.net" Target="_blank" />
+        <MudProgressCircular Indeterminate="true" Size="Size.Small" hidden="@idle"/>
+        <MudIconButton Icon="@Icons.Material.Rounded.Refresh" Color="Color.Inherit" OnClick="@OnRefresh" />
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
         <MudDrawerHeader>
@@ -15,9 +16,9 @@
                 <MudNavLink Icon="@Icons.Material.Rounded.AddReaction" OnClick="() => NavigationService.NavigateTo<ClaimViewModel>(true)">Claim your Bol</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.TransferWithinAStation" OnClick="() => NavigationService.NavigateTo<MoveClaimViewModel>(true)">Transfer Claim</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Send" OnClick="() => NavigationService.NavigateTo<SendBolViewModel>(true)">Transfer Bol</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.Receipt">Receive Bol</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.Receipt" Href="https://monitor.mainnet.bolchain.net">Receive Bol</MudNavLink>
             </MudNavGroup>
-            <MudNavGroup Title="Community">
+            <MudNavGroup Title="Community" Expanded="true">
                 <MudNavLink Icon="@Icons.Material.Rounded.AccountCircle" OnClick="() => NavigationService.NavigateTo<AccountViewModel>(true)">My Account</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.SupervisedUserCircle" OnClick="() => NavigationService.NavigateTo<GetCertifiedViewModel>(true)">Get Certified</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
@@ -32,17 +33,34 @@
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink>
             </MudNavGroup>
         </MudNavMenu>
     </MudDrawer>
+    <MudMainContent>
+        @ChildContent
+    </MudMainContent>
 </MudLayout>
 
-
 @code{
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> OnRefreshCallback {get; set;}
+
     bool open = false;
+    bool idle = true;
     
     void ToggleDrawer()
     {
         open = !open;
+    }
+    
+    private async Task OnRefresh()
+    {
+        idle = false;
+        await OnRefreshCallback.InvokeAsync();
+        await Task.Delay(500);
+        idle = true;
     }
 }

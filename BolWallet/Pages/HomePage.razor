@@ -4,84 +4,79 @@
 
 <MudThemeProvider />
 
-<MenuPanel/>
-
-<MudStack Style="padding-top: 7%" AlignItems="AlignItems.Stretch" Spacing="5">
-    <MudText Typo="Typo.h5" Align="Align.Center">Summary</MudText>
-    <MudCard Outlined="true">
-        <MudCardHeader>
-            <CardHeaderAvatar>
-                <MudAvatar Color="Color.Secondary">
-                    <MudIcon Icon="@Icons.Material.Rounded.Person"/>
-                </MudAvatar>
-            </CardHeaderAvatar>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h6">CodeName</MudText>
-            </CardHeaderContent>
-            <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default"/>
-            </CardHeaderActions>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTextField @bind-Value="ViewModel.CodeName" Label="Your Blockchain Id" HelperText="This is your unique identifier in the world as an individual or organization" ReadOnly="true" Variant="Variant.Outlined"/>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined="true">
-        <MudCardHeader>
-            <CardHeaderAvatar>
-                <MudAvatar Color="Color.Secondary">
-                    <MudIcon Icon="@Icons.Material.Rounded.Cases"/>
-                </MudAvatar>
-            </CardHeaderAvatar>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h6">Total Balance</MudText>
-            </CardHeaderContent>
-            <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default"/>
-            </CardHeaderActions>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTextField @bind-Value="ViewModel.BolAccount.TotalBalance" Label="Your total amount of Bol" HelperText="Includes the amount of Bol you own between your claim and all commercial accounts" ReadOnly="true" Variant="Variant.Outlined"/>
-        </MudCardContent>
-    </MudCard>
-    <MudCard Outlined="true">
-        <MudCardHeader>
-            <CardHeaderAvatar>
-                <MudAvatar Color="Color.Secondary">
-                    <MudIcon Icon="@Icons.Material.Rounded.AddReaction"/>
-                </MudAvatar>
-            </CardHeaderAvatar>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h6">Claim Balance</MudText>
-            </CardHeaderContent>
-            <CardHeaderActions>
-                <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default"/>
-            </CardHeaderActions>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTextField @bind-Value="ViewModel.BolAccount.ClaimBalance" Label="Your current Claim balance." HelperText="@ClaimTooltip()" ReadOnly="true" Variant="Variant.Outlined"/>
-        </MudCardContent>
-    </MudCard>
-    <MudText Typo="Typo.h5" Align="Align.Center" Style="padding-top: 7%">Commercial Accounts</MudText>
-    @foreach (var (item, i) in ViewModel.CommercialBalancesDisplayList.Select((item, i) => (item, i)))
-    {
-        <MudCard Style="">
+<MenuPanel OnRefreshCallback="async () => await ViewModel.FetchBolAccountData(CancellationToken.None)">
+    <MudStack AlignItems="AlignItems.Stretch" Spacing="5">
+        <MudText Typo="Typo.h5" Align="Align.Center">Summary</MudText>
+        <MudCard Outlined="true">
             <MudCardHeader>
                 <CardHeaderAvatar>
-                    <MudAvatar Color="Color.Secondary">@(i + 1)</MudAvatar>
+                    <MudAvatar Color="Color.Secondary">
+                        <MudIcon Icon="@Icons.Material.Rounded.Person"/>
+                    </MudAvatar>
                 </CardHeaderAvatar>
-                <CardHeaderContent/>
-                <CardHeaderActions >
-                    <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default"/>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">CodeName</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(ViewModel.CodeName)"/>
                 </CardHeaderActions>
             </MudCardHeader>
             <MudCardContent>
-                <MudTextField @bind-Value="item.Balance" Label="@CommercialLabel(i)" HelperText="@item.Address" ReadOnly="true" Variant="Variant.Outlined"/>
+                <MudTextField @bind-Value="ViewModel.CodeName" Label="Your Blockchain Id" HelperText="This is your unique identifier in the world as an individual or organization" ReadOnly="true" Variant="Variant.Outlined"/>
             </MudCardContent>
         </MudCard>
-    }
-    <MudDivider/>
-</MudStack>
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                    <MudAvatar Color="Color.Secondary">
+                        <MudIcon Icon="@Icons.Material.Rounded.Cases"/>
+                    </MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Total Balance</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="ViewModel.BolAccount.TotalBalance" Label="Your total amount of Bol" HelperText="Includes the amount of Bol you own between your claim and all commercial accounts" ReadOnly="true" Variant="Variant.Outlined"/>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                    <MudAvatar Color="Color.Secondary">
+                        <MudIcon Icon="@Icons.Material.Rounded.AddReaction"/>
+                    </MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Claim Balance</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField @bind-Value="ViewModel.BolAccount.ClaimBalance" Label="Your current Claim balance." HelperText="@ClaimTooltip()" ReadOnly="true" Variant="Variant.Outlined"/>
+            </MudCardContent>
+        </MudCard>
+        <MudText Typo="Typo.h5" Align="Align.Center" Style="padding-top: 20px">Commercial Accounts</MudText>
+        @foreach (var (item, i) in ViewModel.CommercialBalancesDisplayList.Select((item, i) => (item, i)))
+        {
+            <MudCard Style="">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">@(i + 1)</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent/>
+                    <CardHeaderActions >
+                        <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(item.Address)"/>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField @bind-Value="item.Balance" Label="@CommercialLabel(i)" HelperText="@item.Address" ReadOnly="true" Variant="Variant.Outlined"/>
+                </MudCardContent>
+            </MudCard>
+        }
+        <MudDivider/>
+    </MudStack>
+</MenuPanel>
+
 @code {
     protected override async Task OnInitializedAsync()
     {
@@ -103,6 +98,12 @@
         }
 
         return label;
+    }
+
+    private void ClipBoard(string clip)
+    {
+        Clipboard.Default.SetTextAsync(clip);
+        Toast.Make("Copied to Clipboard").Show();
     }
 
 }
