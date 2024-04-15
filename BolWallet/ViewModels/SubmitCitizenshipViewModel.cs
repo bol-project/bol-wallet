@@ -84,17 +84,22 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     {
         var selectedCountries = UserData.Citizenships;
         
-        var submittedForms = UserData
+        var submittedCountries = UserData
             .EncryptedCitizenshipForms
             .Where(form => form.IsSubmitted)
-            .Select(f => f.CountryName);
+            .Select(f => f.CountryName)
+            .ToArray();
         
-        var outstandingCitizenships = selectedCountries
+        // Those forms no longer belong to the selected countries. 
+        var formsToClean = submittedCountries.Except(selectedCountries.Select(c => c.Name)).ToList();
+        UserData.EncryptedCitizenshipForms.RemoveAll(form => formsToClean.Contains(form.CountryName));
+        
+        var outstandingCountries = selectedCountries
             .Select(c => c.Name)
-            .Except(submittedForms)
+            .Except(submittedCountries)
             .ToList();
 
-        return outstandingCitizenships;
+        return outstandingCountries;
     }
 
     [RelayCommand]
