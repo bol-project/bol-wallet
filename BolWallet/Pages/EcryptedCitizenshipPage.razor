@@ -6,8 +6,6 @@
 @inject RegisterContent _content;
 @inject ISecureRepository secureRepository;
 @inject INavigationService navigationService;
-@inject IMediaPicker mediaPicker;
-@inject IPermissionService permissionService;
 @inject IBase16Encoder base16Encoder;
 @inject ISha256Hasher sha256Hasher;
 @inject IMediaService MediaService;
@@ -60,31 +58,42 @@
                                       OnBlur="@(() => ValidateNIN(encryptedCitizenshipForm))" />
                     </MudItem>
                 }
-                <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least one document</MudText>
-                <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
-                    <MudItem Class="p-3" xs="12" sm="12" md="12">
-                        <MudStack Row="true">
-                            <MudField Style="width:150px" Label="@citizeshipDocument.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@citizeshipDocument.Item2">@citizeshipDocument.Item4</MudField>
-                            <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                            <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                            <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args=>TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))" />
-                        </MudStack>
-                    </MudItem>
-                </Virtualize>
-            </MudCardContent>
-            <MudCardActions >
-                <MudItem Style="text-align: center;" xs="12">
-                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Submit</MudButton>
-                </MudItem>
-            </MudCardActions>
-        </MudCard>
-    </EditForm>
+            <MudText Typo="Typo.h6">To proceed with the verification process, please provide at least your Identity card document.</MudText>
+            <Virtualize Items="CitizeshipsDocuments" Context="citizeshipDocument">
+                <MudCard Class="styled-card">
+                    <MudCardContent>
+                        <MudGrid Justify="Justify.SpaceBetween">
+                            <MudItem xs="4" sm="4" md="4">
+                                <MudText Typo="Typo.body1">@citizeshipDocument.Item3</MudText>
+                            </MudItem>
+                            <MudItem xs="2" sm="2" md="2">
+                                @if (!string.IsNullOrEmpty(citizeshipDocument.Item4))
+                                {
+                                    <MudChip Class="centered-content" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success"  Size="Size.Medium" />
+                                }
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="2">
+                                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@citizeshipDocument.Item1" OnClick="@(args => UploadFile(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                                <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@citizeshipDocument.Item1" OnClick="@(args => PickPhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                                <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@citizeshipDocument.Item1" OnClick="@(args => TakePhoto(citizeshipDocument.Item1, encryptedCitizenshipForm))"/>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </Virtualize>
+        </MudCardContent>
+        <MudCardActions >
+            <MudItem Style="text-align: center;" xs="12">
+                <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                           Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">
+                    Submit
+                </MudButton>
+            </MudItem>
+        </MudCardActions>
+    </MudCard>
+</EditForm>
 <style>
-    .custom-mud-field .mud-input-label {
-        font-size: 0.75rem; /* Adjust the font size as desired */
-    }
+
 </style>
 
 @code {
@@ -92,13 +101,13 @@
     UserData userData;
 
     List<(string, MudBlazor.Color, string, string)> CitizeshipsDocuments = new()
-      {
-          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
-          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
-          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
-          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
-          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
-      };
+    {
+        {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Identity Card (front)", "") },
+        {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Identity Card (back)", "") },
+        {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
+        {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+        {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+    };
 
     Dictionary<string, string> NinErrorMessages = new Dictionary<string, string>();
 
@@ -112,11 +121,11 @@
 
         CitizeshipsDocuments = new()
         {
-          {new(nameof(CitizenshipHashTable.IdentityCard),Color.Transparent, "Front Side of Identity Card", "") },
-          {new(nameof(CitizenshipHashTable.IdentityCardBack),Color.Transparent, "Back Side of Identity Card-Resubmit front side if not exist.", "") },
-          {new(nameof(CitizenshipHashTable.Passport),Color.Transparent, "Passport", "") },
-          {new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
-          {new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
+            { new(nameof(CitizenshipHashTable.IdentityCard), Color.Transparent, "Identity Card (front)", "") },
+            { new(nameof(CitizenshipHashTable.IdentityCardBack), Color.Transparent, "Identity Card (back)", "") },
+            { new(nameof(CitizenshipHashTable.Passport), Color.Transparent, "Passport", "") },
+            { new(nameof(CitizenshipHashTable.ProofOfNin), Color.Transparent, "Proof Of Nin", "") },
+            { new(nameof(CitizenshipHashTable.BirthCertificate), Color.Transparent, "Birth Certificate", "") }
         };
 
         foreach (var encryptedCitizenshipForm in userData.EncryptedCitizenshipForms)
@@ -135,6 +144,7 @@
                         await UpdateIdentificationDocumentsList(propertyInfo.Name, "Uploaded");
                 }
 
+                StateHasChanged();
                 return;
             }
         }
@@ -144,110 +154,17 @@
 
     private async Task UploadFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        var customFileType = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>> {
-        { DevicePlatform.iOS, new[] { "com.adobe.pdf", "public.image", "public.audio" } },
-        { DevicePlatform.Android, new[] { "application/pdf", "image/*", "audio/*" } },
-        { DevicePlatform.MacCatalyst, new[] { "pdf", "png", "jpeg", "jpg", "public.image", "public.audio" } },
-        { DevicePlatform.WinUI, new[] { ".pdf", ".gif", ".mp3", ".png", ".jpg", ".jpeg" } },
-        });
-
-        try
-        {
-            var pickResult = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = customFileType,
-                PickerTitle = "Pick a file"
-            });
-
-            if (pickResult is null)
-                return;
-
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-            
-            await Task.Run(() => SetFileHash(property, pickResult, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(pickResult.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, MediaService.PickFileAsync);
     }
 
     private async Task TakePhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        try
-        {
-            var photoFilePath = await MediaService.TakePhotoAsync(FileSystem.CacheDirectory);
-            
-            var fileResult = new FileResult(photoFilePath);
-            
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-
-            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, () => MediaService.TakePhotoAsync(FileSystem.CacheDirectory));
     }
-    
+
     private async Task PickPhoto(string property, EncryptedCitizenshipForm encryptedCitizenshipForm)
     {
-        try
-        {
-            var photo = await MediaService.PickPhotoAsync();
-
-            if (photo is null) return;
-            
-            await InvokeAsync(() =>
-            {
-                IsLoading = true;
-                StateHasChanged();
-            });
-            
-            await Task.Run(() => SetFileHash(property, photo, encryptedCitizenshipForm));
-
-            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(photo.FullPath));
-        }
-        catch (Exception e)
-        {
-            await Toast.Make(e.Message, ToastDuration.Long).Show();
-        }
-        finally
-        {
-            await InvokeAsync(() =>
-            {
-                IsLoading = false;
-                StateHasChanged();
-            });
-        }
+        await HandleFile(property, encryptedCitizenshipForm, MediaService.PickPhotoAsync);
     }
 
     private EncryptedCitizenshipForm SetFileHash(string property, FileResult fileResult, EncryptedCitizenshipForm encryptedCitizenshipForm)
@@ -333,7 +250,7 @@
                 // https://github.com/CommunityToolkit/Maui/issues/1752
                 try
                 {
-                    await Toast.Make($"Please provide at least one verification document for {form.CountryName} Citizenship").Show();
+                    await Toast.Make($"Providing your Identity card  for {form.CountryName} Citizenship is mandatory.").Show();
                 }
                 catch (Exception e)
                 {
@@ -353,5 +270,35 @@
                  citizenshipHashTable.Passport == Bol.Core.Constants.HASH_ZEROS &&
                  citizenshipHashTable.ProofOfNin == Bol.Core.Constants.HASH_ZEROS &&
                  citizenshipHashTable.BirthCertificate == Bol.Core.Constants.HASH_ZEROS);
+    }
+
+    private async Task HandleFile(string property, EncryptedCitizenshipForm encryptedCitizenshipForm, Func<Task<FileResult>> fileAction)
+    {
+        try
+        {
+            var fileResult = await fileAction();
+
+            await InvokeAsync(() =>
+            {
+                IsLoading = true;
+                StateHasChanged();
+            });
+
+            await Task.Run(() => SetFileHash(property, fileResult, encryptedCitizenshipForm));
+
+            await UpdateIdentificationDocumentsList(property, property + Path.GetExtension(fileResult.FullPath));
+        }
+        catch (Exception e)
+        {
+            await Toast.Make(e.Message, ToastDuration.Long).Show();
+        }
+        finally
+        {
+            await InvokeAsync(() =>
+            {
+                IsLoading = false;
+                StateHasChanged();
+            });
+        }
     }
 }
