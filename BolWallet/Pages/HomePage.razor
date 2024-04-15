@@ -7,7 +7,7 @@
 <MenuPanel OnRefreshCallback="async () => await ViewModel.FetchBolAccountData(CancellationToken.None)">
     <MudStack AlignItems="AlignItems.Stretch" Spacing="5">
         <MudText Typo="Typo.h5" Align="Align.Center">Summary</MudText>
-        <MudCard Outlined="true">
+        <MudCard Class="styled-card" Outlined="true">
             <MudCardHeader>
                 <CardHeaderAvatar>
                     <MudAvatar Color="Color.Secondary">
@@ -25,7 +25,7 @@
                 <MudTextField @bind-Value="ViewModel.CodeName" Label="Your Blockchain Id" HelperText="This is your unique identifier in the world as an individual or organization" ReadOnly="true" Variant="Variant.Outlined"/>
             </MudCardContent>
         </MudCard>
-        <MudCard Outlined="true">
+        <MudCard Class="styled-card" Outlined="true">
             <MudCardHeader>
                 <CardHeaderAvatar>
                     <MudAvatar Color="Color.Secondary">
@@ -40,7 +40,7 @@
                 <MudTextField @bind-Value="ViewModel.BolAccount.TotalBalance" Label="Your total amount of Bol" HelperText="Includes the amount of Bol you own between your claim and all commercial accounts" ReadOnly="true" Variant="Variant.Outlined"/>
             </MudCardContent>
         </MudCard>
-        <MudCard Outlined="true">
+        <MudCard Class="styled-card" Outlined="true">
             <MudCardHeader>
                 <CardHeaderAvatar>
                     <MudAvatar Color="Color.Secondary">
@@ -58,7 +58,7 @@
         <MudText Typo="Typo.h5" Align="Align.Center" Style="padding-top: 20px">Commercial Accounts</MudText>
         @foreach (var (item, i) in ViewModel.CommercialBalancesDisplayList.Select((item, i) => (item, i)))
         {
-            <MudCard Style="">
+            <MudCard Class="styled-card" Outlined="true">
                 <MudCardHeader>
                     <CardHeaderAvatar>
                         <MudAvatar Color="Color.Secondary">@(i + 1)</MudAvatar>
