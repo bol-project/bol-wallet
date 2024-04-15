@@ -73,10 +73,8 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     .First(c => c.Name == CitizenshipForm.CountryName).Alpha3;
                 IsFormInitialized = true;
             }
-
             IsLoading = false;
         }
-        
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error initializing SubmitCitizenshipViewModel");
@@ -243,7 +241,21 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     IsSubmitted = true
                 };
 
-                UserData.EncryptedCitizenshipForms.Add(encryptedCitizenshipData);
+                var existingFormIndex = UserData
+                    .EncryptedCitizenshipForms
+                    .FindIndex(f => f.CountryCode == form.CountryCode);
+
+                // Insert new form at the same index otherwise the EDI will change.
+                if (existingFormIndex != -1)
+                {
+                    UserData.EncryptedCitizenshipForms.RemoveAt(existingFormIndex);
+                    UserData.EncryptedCitizenshipForms.Insert(existingFormIndex, encryptedCitizenshipData);
+                }
+                else
+                {
+                    UserData.EncryptedCitizenshipForms.Add(encryptedCitizenshipData);
+                }
+
                 await _secureRepository.SetAsync("userdata", UserData);
                 OutstandingCitizenships.Remove(form.CountryName);
             }), cancellationToken);
