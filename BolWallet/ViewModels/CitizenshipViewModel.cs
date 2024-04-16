@@ -15,6 +15,8 @@ public partial class CitizenshipViewModel : BaseViewModel
     [ObservableProperty]
     public CitizenshipsForm citizenshipsForm;
 
+    [ObservableProperty] bool _isLoading;
+
     public CitizenshipViewModel(
         RegisterContent content,
         ISecureRepository secureRepository,
@@ -31,6 +33,7 @@ public partial class CitizenshipViewModel : BaseViewModel
 
     public override async Task OnInitializedAsync()
     {
+        IsLoading = true;
         UserData = await GetUserData();
         
         var citizenships = UserData.Citizenships.Select(citizenship => citizenship.Name).ToArray();
@@ -40,6 +43,7 @@ public partial class CitizenshipViewModel : BaseViewModel
         CitizenshipsForm.ThirdCountry = citizenships.Skip(2).FirstOrDefault() ?? string.Empty;
         
         await base.OnInitializedAsync();
+        IsLoading = false;
     }
 
     [RelayCommand]
@@ -112,7 +116,7 @@ public partial class CitizenshipViewModel : BaseViewModel
             var selectionOrder = SelectedCountries
                 .Select((country, index) => (c: country, i: index))
                 .ToDictionary(c => c.c, c => c.i);
-            
+
             // We want the countries to be in the same order as the user selected them
             // Otherwise, if the order randomly changes, EDI creation will not be deterministic.
             UserData.Citizenships = savedCountriesToKeep

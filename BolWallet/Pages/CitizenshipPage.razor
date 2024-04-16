@@ -4,6 +4,10 @@
 
 <MudThemeProvider/>
 
+<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
 <EditForm Model="ViewModel.citizenshipsForm" OnValidSubmit="@OnValidSubmit" >
     <DataAnnotationsValidator/>
     <MudGrid>
