@@ -1,8 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using Bol.Core.Model;
+using BolWallet.Bolnformation;
+using BolWallet.Pages;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 
 namespace BolWallet.ViewModels;
 
@@ -13,6 +16,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     private readonly ICitizenshipHashTableProcessor _hashTableProcessor;
     private readonly INavigationService _navigationService;
     private readonly ISecureRepository _secureRepository;
+    private readonly IDialogService _dialogService;
     private readonly ILogger<SubmitCitizenshipViewModel> _logger;
 
     private UserData UserData { get; set; }
@@ -23,6 +27,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         ICitizenshipHashTableProcessor hashTableProcessor,
         INavigationService navigationService,
         ISecureRepository secureRepository,
+        IDialogService dialogService,
         ILogger<SubmitCitizenshipViewModel> logger) : base(navigationService)
     {
         _mediaService = mediaService;
@@ -30,6 +35,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         _hashTableProcessor = hashTableProcessor;
         _navigationService = navigationService;
         _secureRepository = secureRepository;
+        _dialogService = dialogService;
         _logger = logger;
     }
 
@@ -41,6 +47,20 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
     [ObservableProperty] private string _ninInternationalName;
     [ObservableProperty] private string _ninValidationErrorMessage = "";
+
+    public void OpenMoreInfo()
+    {
+        var parameters = new DialogParameters<MoreInfoDialog>
+        {
+            { x => x.Title, SubmitCitizenshipInformation.Title },
+            { x => x.Paragraph1, SubmitCitizenshipInformation.Description },
+            { x => x.Paragraph2, SubmitCitizenshipInformation.Content }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        
+        _dialogService.Show<MoreInfoDialog>("This a a dialog", parameters, options);
+    }
     
     public bool HasAddedMandatoryFiles => Files is { IdentityCard: not null, IdentityCardBack: not null };
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();

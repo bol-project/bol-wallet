@@ -6,6 +6,7 @@
 @inject ILogger<EcryptedCitizenshipPage> logger;
 
 <MudThemeProvider />
+<MudDialogProvider />
 
 <MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
@@ -73,6 +74,13 @@
                     </MudItem>
                 }
                 <MudText Class="spaced-text" Align="Align.Center" Typo="Typo.body1">Please provide your documents.</MudText>
+                <MudButton
+                    Size="Size.Small"
+                    Variant="Variant.Filled"
+                    Color="Color.Info"
+                    OnClick="ViewModel.OpenMoreInfo">
+                    More Info
+                </MudButton>
                 @foreach (var document in citizenshipDocuments)
                 {
                     var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
