@@ -80,7 +80,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
             await Toast.Make(ex.Message).Show(cancellationToken);
         }
     }
-
+    
     private List<string> GetOutstandingCitizenships()
     {
         var selectedCountries = UserData.Citizenships;
@@ -91,7 +91,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
             .Select(f => f.CountryName)
             .ToArray();
         
-        // Those forms no longer belong to the selected countries. 
+        // Those forms no longer belong to the selected countries. They will be removed.
         var formsToClean = submittedCountries.Except(selectedCountries.Select(c => c.Name)).ToList();
         UserData.EncryptedCitizenshipForms.RemoveAll(form => formsToClean.Contains(form.CountryName));
         
@@ -128,6 +128,35 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     private void SetNinInternationalName()
     {
         NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
+    }
+    
+    [RelayCommand]
+    private void RemoveFile(string fileTypeStr)
+    {
+        CitizenshipFileType fileType = ConvertStringToEnum(fileTypeStr);
+
+        switch (fileType)
+        {
+            case CitizenshipFileType.IdentityCard:
+                Files.IdentityCard = null;
+                break;
+            case CitizenshipFileType.IdentityCardBack:
+                Files.IdentityCardBack = null;
+                break;
+            case CitizenshipFileType.Passport:
+                Files.Passport = null;
+                break;
+            case CitizenshipFileType.ProofOfNin:
+                Files.ProofOfNin = null;
+                break;
+            case CitizenshipFileType.BirthCertificate:
+                Files.BirthCertificate = null;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(fileType), fileType, "The file type is not supported.");
+        }
+
+        Toast.Make("The file was successfully removed.").Show();
     }
 
     [RelayCommand]
@@ -202,7 +231,8 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     .EncryptedCitizenshipForms
                     .FindIndex(f => f.CountryCode == form.CountryCode);
 
-                // Insert new form at the same index otherwise the EDI will change.
+                // If the form already exists, replace it.
+                // Also, insert the updated form at the same index otherwise the EDI will change.
                 if (existingFormIndex != -1)
                 {
                     UserData.EncryptedCitizenshipForms.RemoveAt(existingFormIndex);

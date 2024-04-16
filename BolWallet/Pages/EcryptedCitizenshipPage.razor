@@ -175,6 +175,11 @@
         await ViewModel.PickPhotoCommand.ExecuteAsync(property);
     }
 
+    private Task RemoveFile(string property)
+    {
+        ViewModel.RemoveFileCommand.Execute(property);
+        return Task.CompletedTask;
+    }
     private async Task ValidateNinAsync()
     {
         await ViewModel.ValidateNinCommand.ExecuteAsync(null);
