@@ -13,7 +13,7 @@
 
 @if (ViewModel.IsFormInitialized)
 {
-    <MudContainer Class="mb-10">
+    <MudContainer Class="mb-10" Style="margin-top: 30px;">
         <MudTimeline TimelineOrientation="TimelineOrientation.Horizontal">
             @foreach (var country in ViewModel.SelectedCountryNames)
             {
@@ -72,7 +72,7 @@
                                       OnBlur="@ValidateNinAsync"/>
                     </MudItem>
                 }
-                <MudText Class="spaced-text" Align="Align.Center" Typo="Typo.h6">Please provide at least your Identity card document.</MudText>
+                <MudText Class="spaced-text" Align="Align.Center" Typo="Typo.body1">Please provide your documents.</MudText>
                 @foreach (var document in citizenshipDocuments)
                 {
                     var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
