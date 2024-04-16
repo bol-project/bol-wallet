@@ -81,16 +81,45 @@
                     <MudCard Class="styled-card">
                         <MudCardContent>
                             <MudGrid Justify="Justify.SpaceBetween">
-                                <MudItem xs="4" sm="4" md="4">
+                                <MudItem xs="12" sm="12" md="4">
                                     <MudText Typo="Typo.body1">@document.description</MudText>
                                 </MudItem>
-                                <MudItem xs="2" sm="2" md="2">
+                                <MudItem xs="12" sm="12" md="4">
                                     @if (fileResult != null)
                                     {
-                                        <MudChip Class="centered-content" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" Size="Size.Medium"/>
+                                        <MudChip
+                                            Class="centered-content"
+                                            Color="Color.Success"
+                                            OnClose="@(args => RemoveFile(propertyInfo.Name))"
+                                            Size="Size.Medium"
+                                            Text="@TrimFileName(fileResult.FileName, 15)"/>
                                     }
+                                    else
+                                        switch (propertyInfo.Name)
+                                        {
+                                            case "IdentityCard":
+                                                <MudChip 
+                                                Class="centered-content" 
+                                                Icon="@Icons.Material.Filled.Warning" 
+                                                Color="Color.Warning" 
+                                                Size="Size.Medium" 
+                                                Text="Is Mandatory" />
+                                                break;
+                                            case "IdentityCardBack":
+                                            {
+                                                <MudChip
+                                                    Class="centered-content"
+                                                    Icon="@Icons.Material.Filled.Warning"
+                                                    Color="Color.Warning"
+                                                    Size="Size.Medium"
+                                                    OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
+                                                    Text="Is Mandatory">
+                                                </MudChip>
+                                                break;
+                                            }
+                                        }
                                 </MudItem>
-                                <MudItem xs="12" sm="12" md="2">
+                                <MudItem xs="12" sm="12" md="1">
                                     <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@document.file" OnClick="@(args => UploadFile(document.file))"/>
                                     <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@document.file" OnClick="@(args => PickPhoto(document.file))"/>
                                     <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@document.file" OnClick="@(args => TakePhoto(document.file))"/>
@@ -103,7 +132,9 @@
             <MudCardActions >
                 <MudItem Style="text-align: center;" xs="12">
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto" Disabled="!ViewModel.HasAddedMandatoryFiles">
+                               Variant="MudBlazor.Variant.Filled"
+                               Color="Color.Primary"
+                               Class="ml-auto" Disabled="!ViewModel.HasAddedMandatoryFiles">
                         Submit
                     </MudButton>
                 </MudItem>
@@ -180,6 +211,22 @@
         ViewModel.RemoveFileCommand.Execute(property);
         return Task.CompletedTask;
     }
+    
+    private string TrimFileName(string fileName, int maxLength)
+    {
+        if (string.IsNullOrEmpty(fileName) || fileName.Length <= maxLength)
+        {
+            return fileName;
+        }
+
+        var extension = Path.GetExtension(fileName);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+        var trimmedFileName = fileNameWithoutExtension[..maxLength] + "..";
+
+        return trimmedFileName + extension;
+    }
+
     private async Task ValidateNinAsync()
     {
         await ViewModel.ValidateNinCommand.ExecuteAsync(null);
