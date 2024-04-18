@@ -62,7 +62,9 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         _dialogService.Show<MoreInfoDialog>("This a a dialog", parameters, options);
     }
     
-    public bool HasAddedMandatoryFiles => Files is { IdentityCard: not null, IdentityCardBack: not null };
+    public bool HasAddedMandatoryFiles => Files is 
+        { Passport: not null } or { IdentityCard: not null, IdentityCardBack: not null };
+    
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
 
     public async Task OnInitializeAsync(CancellationToken cancellationToken = default)

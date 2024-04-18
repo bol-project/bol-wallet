@@ -102,7 +102,7 @@
                                             Size="Size.Medium"
                                             Text="@TrimFileName(fileResult.FileName, 15)"/>
                                     }
-                                    else
+                                    else if (ViewModel.Files.Passport == null)
                                         switch (propertyInfo.Name)
                                         {
                                             case "IdentityCard":
@@ -122,6 +122,18 @@
                                                     Size="Size.Medium"
                                                     OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
                                                     Text="Is Mandatory">
+                                                </MudChip>
+                                                break;
+                                            }
+                                            case "Passport":
+                                            {
+                                                <MudChip
+                                                    Class="centered-content"
+                                                    Icon="@Icons.Material.Filled.Warning"
+                                                    Color="Color.Warning"
+                                                    Size="Size.Medium"
+                                                    OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
+                                                    Text="Use instead of Identity">
                                                 </MudChip>
                                                 break;
                                             }
