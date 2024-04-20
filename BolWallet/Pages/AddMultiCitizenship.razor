@@ -1,106 +1,95 @@
 ﻿@page "/multi-citizenship"
-@inject IBolService bolService;
+
 @inject RegisterContent _content;
+@inherits MvvmComponentBase<AddMultiCitizenshipViewModel>
 
 <MudThemeProvider />
 
-<EditForm Model="@inputIsMultiCitizenshipModel" OnValidSubmit="HandleIsMultiCitizenshipSubmit">
-    <DataAnnotationsValidator />
-    <MudGrid>
-        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-            <MudCard>
+<MudGrid>
+    <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+        <EditForm Model="@ViewModel.MultiCitizenshipModel" OnValidSubmit="ViewModel.Generate">
+            <DataAnnotationsValidator />
+            <MudCard Class="styled-card">
                 <MudCardContent>
-                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputIsMultiCitizenshipModel.Alpha3">
+                    <MudSelect T="string" Label="Country" Required="true" HelperText="Enter the Country on which the individual holds a citizenship." @bind-value="ViewModel.MultiCitizenshipModel.CountryCode">
                         @foreach (var country in _content.Countries)
                         {
                             <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to check if it already exists in the multicitizenship list." Required="true" Class="mt-3"
-                                  @bind-Value="inputIsMultiCitizenshipModel.ShortHash" For="@(() => inputIsMultiCitizenshipModel.ShortHash)" />
+                    <MudDatePicker Editable="true" @bind-Date="ViewModel.MultiCitizenshipModel.BirthDate"
+                                   MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today"
+                                   Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)"/>
+                    <MudTextField Label="First Name" HelperText="Enter the First Name of the individual." Required="true" Class="mt-3"
+                                  @bind-Value="ViewModel.MultiCitizenshipModel.FirstName" For="@(() => ViewModel.MultiCitizenshipModel.FirstName)"/>
+                    <MudTextField Class="mt-3" T="string" For="@(() => ViewModel.MultiCitizenshipModel.Nin)" Label="NIN" @bind-Value="@ViewModel.MultiCitizenshipModel.Nin"
+                                  OnlyValidateIfDirty="false" HelperText="@ViewModel.NinInternationalName"
+                                  Immediate="true" Required="true"
+                                  RequiredError="NIN is required!"
+                                  Error="@(!string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage))"
+                                  ErrorText="@ViewModel.NinValidationErrorMessage"
+                                  OnBlur="@ViewModel.ValidateNin"/>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Check Short Hash</MudButton>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Generate Short Hash</MudButton>
                 </MudCardActions>
             </MudCard>
-        </MudItem>
-    </MudGrid>
-</EditForm>
-
-<EditForm Model="@inputAddMultiCitizenshipModel" OnValidSubmit="HandleAddMultiCitizenshipSubmit">
-    <DataAnnotationsValidator />
-    <MudGrid>
-        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-            <MudCard>
-                <MudCardContent>
-                    <MudSelect T="string" Label="Country" Required="true" HelperText="Short Hash Country" @bind-value="inputAddMultiCitizenshipModel.Alpha3">
-                        @foreach (var country in _content.Countries)
-                        {
-                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                    <MudTextField Immediate=true Label="Short Hash" HelperText="Enter the short hash to add to the multicitizenship list." Required="true" Class="mt-3"
-                                  @bind-Value="inputAddMultiCitizenshipModel.ShortHash" For="@(() => inputAddMultiCitizenshipModel.ShortHash)" />
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Add Short Hash</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
-</EditForm>
-
-@code {
-    private InputModel inputAddMultiCitizenshipModel = new();
-
-    private InputModel inputIsMultiCitizenshipModel = new();
-
-    private async Task HandleAddMultiCitizenshipSubmit()
-    {
-        try
-        {
-            var result = await bolService.AddMultiCitizenship(inputAddMultiCitizenshipModel.Alpha3.Trim(), inputAddMultiCitizenshipModel.ShortHash);
-
-            await Toast.Make($"Short hash {inputAddMultiCitizenshipModel.ShortHash} has been successfully added.").Show();
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make(ex.Message).Show();
-        }
-        finally
-        {
-            inputAddMultiCitizenshipModel.ShortHash = string.Empty;
-        }
-    }
-
-    private async Task HandleIsMultiCitizenshipSubmit()
-    {
-        try
-        {
-            var isMultiCitizenship = await bolService.IsMultiCitizenship(inputIsMultiCitizenshipModel.Alpha3.Trim(), inputIsMultiCitizenshipModel.ShortHash);
-
-            if (isMultiCitizenship)
-                await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} already exists in the multicitizenship list.").Show();
+        </EditForm>
+    </MudItem>
+    <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+        <MudCard hidden="@(string.IsNullOrWhiteSpace(ViewModel.ShortHash))">
+            @if (ViewModel.IsMultiCitizenshipRegistered)
+            {
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Success">
+                            <MudIcon Icon="@Icons.Material.Rounded.LockPerson"/>
+                        </MudAvatar> 
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Multiple Citizenship ShortHash is registered.</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(ViewModel.ShortHash)"/>
+                    </CardHeaderActions>
+                </MudCardHeader>
+            }
             else
-                await Toast.Make($"The short hash {inputIsMultiCitizenshipModel.ShortHash} does not exist in the multicitizenship list.").Show();
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make(ex.Message).Show();
-        }
-        finally
-        {
-            inputIsMultiCitizenshipModel.ShortHash = string.Empty;
-        }
-    }
-
-    public class InputModel
+            {
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Warning">
+                            <MudIcon Icon="@Icons.Material.Rounded.LockOpen"/>
+                        </MudAvatar> 
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Multiple Citizenship ShortHash is not registered.</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(ViewModel.ShortHash)"/>
+                    </CardHeaderActions>
+                </MudCardHeader>
+            }
+            <MudCardContent>
+                <MudTextField Immediate=true ReadOnly="true" Label="ShortHash" HelperText="This is the generated ShortHash for the details entered." Class="mt-3" @bind-Value="ViewModel.ShortHash"/>
+            </MudCardContent>
+            <MudCardActions>
+                @if (!ViewModel.IsMultiCitizenshipRegistered)
+                { 
+                    <MudButton Disabled="@(ViewModel.IsLoading)" StartIcon="@Icons.Material.Rounded.LockPerson" Class="ml-auto" Color="Color.Success" OnClick="ViewModel.Register">Register Multiple Citizenship</MudButton>
+                }
+                @if (ViewModel.IsLoading)
+                {
+                    <MudProgressCircular Indeterminate="true" Size="Size.Small" />
+                }
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+@code {
+    private void ClipBoard(string clip)
     {
-        [Required]
-        public string Alpha3 { get; set; }
-
-        [Required]
-        [StringLength(11, ErrorMessage = "The short hash must be between 10 and 11 characters long.", MinimumLength = 10)]
-        public string ShortHash { get; set; }
+        Clipboard.Default.SetTextAsync(clip);
+        Toast.Make("Copied to Clipboard").Show();
     }
 }
