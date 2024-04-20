@@ -1,0 +1,43 @@
+@page "/certify"
+
+@inject CertifyViewModel CertifyViewModel
+
+<MudThemeProvider />
+
+<EditForm Model="@_certifyModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Immediate="true" Label="CodeName" HelperText="Type or paste the CodeName of the individual or organization that you want to certify." Class="mt-3"
+                                  @bind-Value="_certifyModel.CodeName" For="@(() => _certifyModel.CodeName)" InputType="InputType.Text" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Certify</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    private class CertifyModel
+    {
+        [Required]
+        public string CodeName { get; set; }
+    }
+
+    private readonly CertifyModel _certifyModel = new CertifyModel();
+
+    private async Task OnValidSubmit(EditContext obj)
+    {
+        await InvokeAsync(() => StateHasChanged());
+
+        CertifyViewModel.CodeName = _certifyModel.CodeName;
+        await CertifyViewModel.Certify();
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+}

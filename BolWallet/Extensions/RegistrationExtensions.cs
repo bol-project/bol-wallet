@@ -16,7 +16,7 @@ public static class RegistrationExtensions
 			.BindViewModelToView<CreateEdiViewModel, CreateEdiPage>()
 			.BindViewModelToView<CreateCompanyEdiViewModel, CreateEdiCompanyPage>()
             .BindViewModelToView<GenerateWalletWithPasswordViewModel, GenerateWalletWithPasswordPage>()
-			.BindViewModelToView<CertifyViewModel, CertifyPage>()
+			.BindViewModelToView<GetCertifiedViewModel, GetCertifiedPage>()
 
 			.BindViewModelToView<BolCommunityViewModel, BolCommunityPage>()
 			.BindViewModelToView<MainWithAccountViewModel, MainWithAccountPage>()
@@ -25,11 +25,12 @@ public static class RegistrationExtensions
 			.BindViewModelToView<UserViewModel, UserPage>()
             .BindViewModelToView<AccountViewModel, AccountPage>()
 			.BindViewModelToView<TransactionsViewModel, TransactionsPage>()
-			.BindViewModelToView<CertifierViewModel, CertifierPage>()
+			.BindViewModelToView<WhitelistViewModel, WhitelistPage>()
 			.BindViewModelToView<FinancialTransactionsViewModel, FinancialTransactionsPage>()
 			.BindViewModelToView<MoveClaimViewModel, MoveClaimPage>()
 			.BindViewModelToView<ClaimViewModel, ClaimPage>()
             .BindViewModelToView<CompleteBolLoginChallengeViewModel, CompleteBolLoginChallengePage>()
+            .BindViewModelToView<CertifyViewModel, CertifyPage>()
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>();
 
 		return services;

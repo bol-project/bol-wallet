@@ -4,12 +4,12 @@ using Bol.Core.Model;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
-public partial class CertifierViewModel : BaseViewModel
+public partial class WhitelistViewModel : BaseViewModel
 {
 	private readonly IBolService _bolService;
 	private readonly IAddressTransformer _addressTransformer;
 
-	public CertifierViewModel(
+	public WhitelistViewModel(
 		INavigationService navigationService,
 		IBolService bolService,
 		IAddressTransformer addressTransformer) : base(navigationService)
@@ -29,34 +29,6 @@ public partial class CertifierViewModel : BaseViewModel
 
 	[ObservableProperty]
 	private bool _isLoading = false;
-
-	[RelayCommand]
-	private async Task Certify()
-	{
-		try
-		{
-			if (string.IsNullOrEmpty(CodeNameToCertify))
-				throw new Exception("Please Select a CodeName");
-
-			IsLoading = true;
-
-			await Task.Delay(100);
-
-			BolAccount = await _bolService.Certify(CodeNameToCertify);
-
-			await Toast.Make($"{CodeNameToCertify} has received the certification.").Show();
-
-		}
-		catch (Exception ex)
-		{
-			await Toast.Make(ex.Message).Show();
-		}
-		finally
-		{
-			IsLoading = false;
-			CodeNameToCertify = string.Empty;
-		}
-	}
 
 	[RelayCommand]
 	private async Task Whitelist()

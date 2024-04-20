@@ -41,13 +41,13 @@ public partial class BolCommunityViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToGetCertificationsPage()
     {
-        await NavigationService.NavigateTo<CertifyViewModel>(true);
+        await NavigationService.NavigateTo<GetCertifiedViewModel>(true);
     }
 
     [RelayCommand]
     private async Task NavigateToWhitelistAndCertifyPage()
     {
-        await NavigationService.NavigateTo<CertifierViewModel>(true);
+        await NavigationService.NavigateTo<WhitelistViewModel>(true);
     }
 
     [RelayCommand]

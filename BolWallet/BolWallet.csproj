@@ -123,10 +123,10 @@
     <MauiXaml Update="Views\BolCommunityPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Views\CertifierPage.xaml">
+    <MauiXaml Update="Views\WhitelistPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Views\CertifyPage.xaml">
+    <MauiXaml Update="Views\GetCertifiedPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\CitizenshipPage.xaml">
