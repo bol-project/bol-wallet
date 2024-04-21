@@ -32,7 +32,7 @@ public static class RegistrationExtensions
             .BindViewModelToView<CompleteBolLoginChallengeViewModel, CompleteBolLoginChallengePage>()
             .BindViewModelToView<CertifyViewModel, CertifyPage>()
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>()
-            .BindViewModelToView<AddMultiCitizenshipViewModel, AddMultiCitizenship>();
+            .BindViewModelToView<AddMultiCitizenshipViewModel, AddMultiCitizenship>()
             .BindViewModelToView<SubmitCitizenshipViewModel, EcryptedCitizenshipPage>();
 
 		return services;
