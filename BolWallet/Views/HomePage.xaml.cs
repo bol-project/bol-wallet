@@ -1,8 +1,8 @@
 ﻿namespace BolWallet.Views;
 
-public partial class CertifyPage : ContentPage
+public partial class HomePage : ContentPage
 {
-    public CertifyPage()
+    public HomePage()
     {
         InitializeComponent();
     }

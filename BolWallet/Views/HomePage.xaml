@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="BolWallet.Views.CertifyPage"
+    x:Class="BolWallet.Views.HomePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:BolWallet.Pages"
-    Title="Certify"
-    BackgroundColor="{DynamicResource SecondaryColor}">
+    Title="Home"
+    BackgroundColor="{DynamicResource SecondaryColor}"
+    NavigationPage.HasNavigationBar="false">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
-            <RootComponent Selector="#app" ComponentType="{x:Type pages:CertifyPage}" />
+            <RootComponent Selector="#app" ComponentType="{x:Type pages:HomePage}" />
         </BlazorWebView.RootComponents>
     </BlazorWebView>
 
