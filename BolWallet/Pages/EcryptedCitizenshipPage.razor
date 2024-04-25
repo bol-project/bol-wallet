@@ -215,6 +215,7 @@
         {
             await ViewModel.OnInitializeAsync();
             form = ViewModel.CitizenshipForm;
+            ViewModel.SetNinInternationalNameCommand.Execute(null);
         }
         catch (Exception e)
         {
