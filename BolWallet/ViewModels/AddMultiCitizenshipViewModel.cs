@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 using Bol.Core.Abstractions;
 using Bol.Core.Rpc.Model;
+using BolWallet.Helpers;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
@@ -26,13 +26,17 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
 {
     private readonly ICodeNameService _codeNameService;
     private readonly IBolService _bolService;
-    private readonly RegisterContent _registerContent;
+    private readonly INinHelper _ninHelper;
     
-    public AddMultiCitizenshipViewModel(INavigationService navigationService, ICodeNameService codeNameService, IBolService bolService, RegisterContent registerContent) : base(navigationService)
+    public AddMultiCitizenshipViewModel(
+        INavigationService navigationService,
+        ICodeNameService codeNameService,
+        IBolService bolService,
+        INinHelper ninHelper) : base(navigationService)
     {
         _codeNameService = codeNameService;
         _bolService = bolService;
-        _registerContent = registerContent;
+        _ninHelper = ninHelper;
     }
 
     public MultiCitizenshipModel MultiCitizenshipModel { get; } = new MultiCitizenshipModel();
@@ -94,27 +98,11 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(countryCode) || string.IsNullOrWhiteSpace(nin)) return;
         
-        const string Pattern = @"^[A-Z0-9]*$";
-        var regex = new Regex(Pattern);
+        (bool _, string errorMessage) = _ninHelper.ValidateNin(nin, countryCode);
 
-        var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
-        
-        bool isNinValid = regex.IsMatch(nin);
-        bool isNinLengthCorrect = ninRequiredDigits == nin.Length;
-
-        if (isNinValid && isNinLengthCorrect)
-        {
-            NinValidationErrorMessage = "";
-            return;
-        }
-
-        NinValidationErrorMessage = 
-            $"The National Identification Number (NIN) provided does not match the expected length of {ninRequiredDigits} digits for the country code {countryCode}." +
-            " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+        NinValidationErrorMessage = errorMessage;
     }
 
     public string NinValidationErrorMessage { get; set; }
-    public string NinInternationalName => string.IsNullOrWhiteSpace(MultiCitizenshipModel.CountryCode) 
-        ? ""
-        : _registerContent.NinPerCountryCode[MultiCitizenshipModel.CountryCode]?.InternationalName;
+    public string NinInternationalName => _ninHelper.GetNinInternationalName(MultiCitizenshipModel.CountryCode);
 }

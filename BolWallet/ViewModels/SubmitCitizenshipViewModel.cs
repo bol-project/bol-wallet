@@ -2,6 +2,7 @@
 using Bol.Core.Model;
 using BolWallet.Bolnformation;
 using BolWallet.Components;
+using BolWallet.Helpers;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ namespace BolWallet.ViewModels;
 public partial class SubmitCitizenshipViewModel : BaseViewModel
 {
     private readonly IMediaService _mediaService;
-    private readonly RegisterContent _registerContent;
+    private readonly INinHelper _ninHelper;
     private readonly ICitizenshipHashTableProcessor _hashTableProcessor;
     private readonly INavigationService _navigationService;
     private readonly ISecureRepository _secureRepository;
@@ -23,7 +24,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
     public SubmitCitizenshipViewModel(
         IMediaService mediaService,
-        RegisterContent registerContent,
+        INinHelper ninHelper,
         ICitizenshipHashTableProcessor hashTableProcessor,
         INavigationService navigationService,
         ISecureRepository secureRepository,
@@ -31,7 +32,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         ILogger<SubmitCitizenshipViewModel> logger) : base(navigationService)
     {
         _mediaService = mediaService;
-        _registerContent = registerContent;
+        _ninHelper = ninHelper;
         _hashTableProcessor = hashTableProcessor;
         _navigationService = navigationService;
         _secureRepository = secureRepository;
@@ -151,7 +152,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [RelayCommand]
     private void SetNinInternationalName()
     {
-        NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
+        NinInternationalName =_ninHelper.GetNinInternationalName(CitizenshipForm.CountryCode);
     }
     
     [RelayCommand]
@@ -186,26 +187,9 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [RelayCommand]
     private Task ValidateNin()
     {
-        var nin = CitizenshipForm.Nin;
-        var countryCode = CitizenshipForm.CountryCode;
-        
-        const string Pattern = @"^[A-Z0-9]*$";
-        var regex = new Regex(Pattern);
+        (bool _, string errorMessage) = _ninHelper.ValidateNin(CitizenshipForm.Nin, CitizenshipForm.CountryCode);
 
-        var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
-        
-        bool isNinValid = regex.IsMatch(nin);
-        bool isNinLengthCorrect = ninRequiredDigits == nin.Length;
-
-        if (isNinValid && isNinLengthCorrect)
-        {
-            NinValidationErrorMessage = "";
-            return Task.CompletedTask;
-        }
-
-        NinValidationErrorMessage = 
-                $"The National Identification Number (NIN) provided does not match the expected length of {ninRequiredDigits} digits for the country code {countryCode}." +
-                " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+        NinValidationErrorMessage = errorMessage;
         
         return Task.CompletedTask;
     }
