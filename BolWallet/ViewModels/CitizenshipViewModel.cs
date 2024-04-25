@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Maui.Alerts;
+﻿using BolWallet.Bolnformation;
+using BolWallet.Components;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 
 namespace BolWallet.ViewModels;
 
@@ -8,6 +11,7 @@ public partial class CitizenshipViewModel : BaseViewModel
 {
     private readonly RegisterContent _content;
     private readonly ISecureRepository _secureRepository;
+    private readonly IDialogService _dialogService;
     private readonly ILogger<CitizenshipViewModel> _logger;
     private readonly List<string> _allCountries;
     private UserData UserData { get; set; }
@@ -15,14 +19,18 @@ public partial class CitizenshipViewModel : BaseViewModel
     [ObservableProperty]
     public CitizenshipsForm citizenshipsForm;
 
+    [ObservableProperty] bool _isLoading;
+
     public CitizenshipViewModel(
         RegisterContent content,
         ISecureRepository secureRepository,
         INavigationService navigationService,
+        IDialogService dialogService,
         ILogger<CitizenshipViewModel> logger) : base(navigationService)
     {
         _content = content;
         _secureRepository = secureRepository;
+        _dialogService = dialogService;
         _logger = logger;
         _allCountries = _content.Countries.Select(country => country.Name).ToList();
         
@@ -31,6 +39,7 @@ public partial class CitizenshipViewModel : BaseViewModel
 
     public override async Task OnInitializedAsync()
     {
+        IsLoading = true;
         UserData = await GetUserData();
         
         var citizenships = UserData.Citizenships.Select(citizenship => citizenship.Name).ToArray();
@@ -40,6 +49,21 @@ public partial class CitizenshipViewModel : BaseViewModel
         CitizenshipsForm.ThirdCountry = citizenships.Skip(2).FirstOrDefault() ?? string.Empty;
         
         await base.OnInitializedAsync();
+        IsLoading = false;
+    }
+    
+    public void OpenMoreInfo()
+    {
+        var parameters = new DialogParameters<MoreInfoDialog>
+        {
+            { x => x.Title, SelectCountryInformation.Title },
+            { x => x.Paragraph1, SelectCountryInformation.Description },
+            {χ => χ.Paragraph2, SelectCountryInformation.Content}
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        
+        _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
 
     [RelayCommand]
@@ -109,42 +133,16 @@ public partial class CitizenshipViewModel : BaseViewModel
                 .Where(c => !savedCountriesToKeep.Select(sc => sc.Name).Contains(c.Name)) // exclude already saved countries
                 .ToArray();
 
-            var savedCitizenships = UserData
-                .EncryptedCitizenshipForms
-                .Where(c => SelectedCountries.Contains(c.CountryName));
-            
-            var newCitizenships = newCountries
-                .Select(c => new EncryptedCitizenshipForm
-                {
-                    CountryName = c.Name,
-                    CountryCode = c.Alpha3,
-                    CitizenshipHashes = new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipActualBytes = new Bol.Core.Model.CitizenshipHashTable(),
-                    CitizenshipHashTableFileNames = new CitizenshipHashTableFileNames(),
-                    FirstName = string.Empty,
-                    SecondName = string.Empty,
-                    ThirdName = string.Empty,
-                    SurName = string.Empty,
-                    Nin = string.Empty
-                });
-            
             var selectionOrder = SelectedCountries
                 .Select((country, index) => (c: country, i: index))
                 .ToDictionary(c => c.c, c => c.i);
-            
+
             // We want the countries to be in the same order as the user selected them
             // Otherwise, if the order randomly changes, EDI creation will not be deterministic.
             UserData.Citizenships = savedCountriesToKeep
                 .Concat(newCountries)
                 .OrderBy(c => selectionOrder[c.Name])
                 .ToList();
-            
-            UserData.EncryptedCitizenshipForms = savedCitizenships
-                .Concat(newCitizenships)
-                .OrderBy(c => selectionOrder[c.CountryName])
-                .ToList();
-
-            UserData.EncryptedCitizenshipForms.ForEach(e => e.IsSubmitted = false);
 
             await _secureRepository.SetAsync("userdata", UserData);
         }
