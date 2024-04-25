@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using Bol.Core.Model;
 using BolWallet.Bolnformation;
 using BolWallet.Components;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Storage;
 using MudBlazor;
 
 namespace BolWallet.ViewModels;
@@ -64,7 +59,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
         var options = new DialogOptions { CloseOnEscapeKey = true };
         
-        _dialogService.Show<MoreInfoDialog>("This a a dialog", parameters, options);
+        _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
     
     public bool HasAddedMandatoryFiles => Files is 
