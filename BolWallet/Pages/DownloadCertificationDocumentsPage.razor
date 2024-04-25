@@ -1,0 +1,76 @@
+﻿@page "/download-certification-documents"
+@inject ISecureRepository secureRepository;
+@inject IFileDownloadService fileDownloadService;
+
+
+<MudPaper Elevation="3" Class="px-4 py-5 my-2">
+    <MudText Style="text-align: center;" Typo="Typo.body1">Attention! Please click 'Save All Certification Documents' to download and safeguard your documents required for the certification process. </MudText>
+    @if (files != null)
+    {
+        <div class="card-container">
+            <MudCard Elevation="8" Border="true" Class="p-4 styled-card">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h4">Save All Certification Documents</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudIconButton Icon="@Icons.Material.Rounded.Archive" Color="Color.Primary" OnClick=" async () => await DownloadAllDocuments()" />
+                    </CardHeaderActions>
+                </MudCardHeader>
+            </MudCard>
+
+            <Virtualize Items="files" Context="file">
+                <MudCard Class="styled-card">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@file.FileName</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick=" async () => await fileDownloadService.DownloadDataAsync(file.Content, file.FileName)" />
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                </MudCard>
+            </Virtualize>
+        </div>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1" Class="text-white">No documents available.</MudText>
+    }
+</MudPaper>
+<style>
+    .card-container .mud-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        background-color: #f8f9fa;
+        margin: 10px;
+    }
+
+        .card-container .mud-card:first-child {
+            background: #d8bfd8;
+            border: 2px solid #a0522d;
+        }
+</style>
+
+@code {
+    List<FileItem> files;
+    UserData userData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userData = await secureRepository.GetAsync<UserData>("userdata");
+
+        if (userData.IsIndividualRegistration)
+            files = fileDownloadService.CollectIndividualFilesForDownload(userData);
+        else
+            files = fileDownloadService.CollectCompanyFilesForDownload(userData);
+    }
+
+    private async Task DownloadAllDocuments()
+    {
+        var ediZipFiles = await fileDownloadService.CreateZipFileAsync(files);
+
+        await fileDownloadService.SaveZipFileAsync(ediZipFiles);
+    }
+}
