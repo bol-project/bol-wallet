@@ -102,7 +102,7 @@
                                             Size="Size.Medium"
                                             Text="@TrimFileName(fileResult.FileName, 15)"/>
                                     }
-                                    else if (ViewModel.Files.Passport == null)
+                                    else if (ViewModel.Files.Passport == null && ViewModel.Files.BirthCertificate == null)
                                         switch (propertyInfo.Name)
                                         {
                                             case "IdentityCard":
@@ -134,6 +134,18 @@
                                                     Size="Size.Medium"
                                                     OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
                                                     Text="Use instead of Identity">
+                                                </MudChip>
+                                                break;
+                                            }
+                                            case "BirthCertificate":
+                                            {
+                                                <MudChip
+                                                    Class="centered-content"
+                                                    Icon="@Icons.Material.Filled.Warning"
+                                                    Color="Color.Warning"
+                                                    Size="Size.Medium"
+                                                    OnClick="@(args => Toast.Make("Children can be registered with this document.").Show())"
+                                                    Text="Use for children">
                                                 </MudChip>
                                                 break;
                                             }
