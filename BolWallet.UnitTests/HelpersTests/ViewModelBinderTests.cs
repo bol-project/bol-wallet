@@ -1,9 +1,9 @@
 using BolWallet.Helpers;
 using FluentAssertions;
 
-namespace BolWallet.UnitTests;
+namespace BolWallet.UnitTests.HelpersTests;
 
-public class HelpersTests
+public class ViewModelBinderTests
 {
     private readonly ViewModelToViewBinder _sut = new();
 
