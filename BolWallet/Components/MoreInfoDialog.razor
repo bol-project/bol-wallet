@@ -1,0 +1,63 @@
+<MudDialog Class="styled-dialog">
+    <TitleContent >
+        <MudText Class="dialog-title">@Title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Class="dialog-content">@((MarkupString)Paragraph1)</MudText>
+        @if (@Paragraph2 != "")
+        {
+        <MudDivider Class="custom-divider"></MudDivider>
+        }
+        <MudText Class="dialog-content">@((MarkupString)Paragraph2)</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton 
+            Class="styled-button" 
+            Color="Color.Info" 
+            Variant="Variant.Filled" 
+            OnClick="Ok">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<style>
+    .styled-dialog {
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .dialog-title {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #007BFF;
+    }
+
+    .dialog-content {
+        padding: 20px;
+    }
+
+    .styled-button {
+        background-color: #0e70d9;
+        color: #ffffff;
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+
+    .styled-button:hover {
+        background-color: #0056b3;
+    }
+
+    .custom-divider {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Paragraph1 { get; set; } = "";
+    [Parameter] public string Paragraph2 { get; set; } = "";
+    
+    void Ok() => MudDialog.Close(DialogResult.Ok(true));
+}
