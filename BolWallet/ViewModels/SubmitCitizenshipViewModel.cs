@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Bol.Core.Model;
 using BolWallet.Bolnformation;
-using BolWallet.Pages;
+using BolWallet.Components;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
@@ -59,11 +59,13 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
         var options = new DialogOptions { CloseOnEscapeKey = true };
         
-        _dialogService.Show<MoreInfoDialog>("This a a dialog", parameters, options);
+        _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
     
     public bool HasAddedMandatoryFiles => Files is 
-        { Passport: not null } or { IdentityCard: not null, IdentityCardBack: not null };
+        { Passport: not null } 
+        or { IdentityCard: not null, IdentityCardBack: not null }
+        or { BirthCertificate: not null };
     
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
 

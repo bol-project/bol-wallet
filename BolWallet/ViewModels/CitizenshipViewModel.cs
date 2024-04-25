@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Maui.Alerts;
+﻿using BolWallet.Bolnformation;
+using BolWallet.Components;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 
 namespace BolWallet.ViewModels;
 
@@ -8,6 +11,7 @@ public partial class CitizenshipViewModel : BaseViewModel
 {
     private readonly RegisterContent _content;
     private readonly ISecureRepository _secureRepository;
+    private readonly IDialogService _dialogService;
     private readonly ILogger<CitizenshipViewModel> _logger;
     private readonly List<string> _allCountries;
     private UserData UserData { get; set; }
@@ -21,10 +25,12 @@ public partial class CitizenshipViewModel : BaseViewModel
         RegisterContent content,
         ISecureRepository secureRepository,
         INavigationService navigationService,
+        IDialogService dialogService,
         ILogger<CitizenshipViewModel> logger) : base(navigationService)
     {
         _content = content;
         _secureRepository = secureRepository;
+        _dialogService = dialogService;
         _logger = logger;
         _allCountries = _content.Countries.Select(country => country.Name).ToList();
         
@@ -44,6 +50,20 @@ public partial class CitizenshipViewModel : BaseViewModel
         
         await base.OnInitializedAsync();
         IsLoading = false;
+    }
+    
+    public void OpenMoreInfo()
+    {
+        var parameters = new DialogParameters<MoreInfoDialog>
+        {
+            { x => x.Title, SelectCountryInformation.Title },
+            { x => x.Paragraph1, SelectCountryInformation.Description },
+            {χ => χ.Paragraph2, SelectCountryInformation.Content}
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        
+        _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
 
     [RelayCommand]

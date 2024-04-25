@@ -3,12 +3,12 @@
         <MudText Class="dialog-title">@Title</MudText>
     </TitleContent>
     <DialogContent>
-        <MudText Class="dialog-content">@Paragraph1</MudText>
+        <MudText Class="dialog-content">@((MarkupString)Paragraph1)</MudText>
         @if (@Paragraph2 != "")
         {
         <MudDivider Class="custom-divider"></MudDivider>
         }
-        <MudText Class="dialog-content">@Paragraph2</MudText>
+        <MudText Class="dialog-content">@((MarkupString)Paragraph2)</MudText>
     </DialogContent>
     <DialogActions>
         <MudButton 
