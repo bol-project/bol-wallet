@@ -1,10 +1,17 @@
 ﻿@page "/download-certification-documents"
 @inject ISecureRepository secureRepository;
 @inject IFileDownloadService fileDownloadService;
+@inject INavigationService navigationService;
 
 
 <MudPaper Elevation="3" Class="px-4 py-5 my-2">
-    <MudText Style="text-align: center;" Typo="Typo.body1">Attention! Please click 'Save All Certification Documents' to download and safeguard your documents required for the certification process. </MudText>
+    <MudCard Elevation="8" Border="true" Class="p-4 styled-card">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Style="text-align: center;" Typo="Typo.body1">Please click 'Save All Certification Documents' to download and safeguard your documents required for the certification process. </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
     @if (files != null)
     {
         <div class="card-container">
@@ -26,7 +33,7 @@
                             <MudText Typo="Typo.h6">@file.FileName</MudText>
                         </CardHeaderContent>
                         <CardHeaderActions>
-                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick=" async () => await fileDownloadService.DownloadDataAsync(file.Content, file.FileName)" />
+                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await fileDownloadService.DownloadDataAsync(file.Content, file.FileName)" />
                         </CardHeaderActions>
                     </MudCardHeader>
                 </MudCard>
@@ -37,6 +44,13 @@
     {
         <MudText Typo="Typo.body1" Class="text-white">No documents available.</MudText>
     }
+    <MudItem Style="text-align: center; margin-top: 20px;" xs="12">
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                   Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.ArrowForwardIos"
+                   Style="background: linear-gradient(to right, #673ab7, #512da8); color: white; padding: 15px 30px; font-size: 14px;">
+            Next
+        </MudButton>
+    </MudItem>
 </MudPaper>
 <style>
     .card-container .mud-card {
