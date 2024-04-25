@@ -5,7 +5,19 @@ namespace BolWallet.Helpers;
 
 public interface INinHelper
 {
+    /// <summary>
+    ///  Validates the National Identification Number (NIN) based on the country code.
+    /// </summary>
+    /// <param name="nin"></param>
+    /// <param name="countryCode"></param>
+    /// <returns></returns>
     (bool isValid, string errorMessage) ValidateNin(string nin, string countryCode);
+    
+    /// <summary>
+    /// Returns the international name of the National Identification Number (NIN) based on the country code.
+    /// </summary>
+    /// <param name="countryCode"></param>
+    /// <returns></returns>
     string GetNinInternationalName(string countryCode);
 }
 
