@@ -45,7 +45,7 @@
         <MudText Typo="Typo.body1" Class="text-white">No documents available.</MudText>
     }
     <MudItem Style="text-align: center; margin-top: 20px;" xs="12">
-        <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit" OnClick="()=>navigationService.NavigateTo<MainWithAccountViewModel>()"
                    Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.ArrowForwardIos"
                    Style="background: linear-gradient(to right, #673ab7, #512da8); color: white; padding: 15px 30px; font-size: 14px;">
             Next
