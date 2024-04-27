@@ -33,9 +33,10 @@ public static class RegistrationExtensions
             .BindViewModelToView<CertifyViewModel, CertifyPage>()
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>()
             .BindViewModelToView<AddMultiCitizenshipViewModel, AddMultiCitizenship>()
-            .BindViewModelToView<SubmitCitizenshipViewModel, EcryptedCitizenshipPage>();
+            .BindViewModelToView<SubmitCitizenshipViewModel, EcryptedCitizenshipPage>()
+            .BindViewModelToView<DownloadCertificationDocumentsViewModel, DownloadCertificationDocumentsPage>();
 
-		return services;
+        return services;
 	}
 	
 	private static IServiceCollection BindViewModelToView<TViewModel, TView>(this IServiceCollection services)

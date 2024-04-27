@@ -1,8 +1,7 @@
 ﻿@page "/download-certification-documents"
-@inject ISecureRepository secureRepository;
-@inject IFileDownloadService fileDownloadService;
 @inject INavigationService navigationService;
 
+@inherits MvvmComponentBase<DownloadCertificationDocumentsViewModel>
 
 <MudPaper Elevation="3" Class="px-4 py-5 my-2">
     <MudCard Elevation="8" Border="true" Class="p-4 styled-card">
@@ -33,7 +32,7 @@
                             <MudText Typo="Typo.h6">@file.FileName</MudText>
                         </CardHeaderContent>
                         <CardHeaderActions>
-                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await fileDownloadService.DownloadDataAsync(file.Content, file.FileName)" />
+                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
                         </CardHeaderActions>
                     </MudCardHeader>
                 </MudCard>
@@ -69,22 +68,15 @@
 
 @code {
     List<FileItem> files;
-    UserData userData;
 
     protected override async Task OnInitializedAsync()
     {
-        userData = await secureRepository.GetAsync<UserData>("userdata");
-
-        if (userData.IsIndividualRegistration)
-            files = fileDownloadService.CollectIndividualFilesForDownload(userData);
-        else
-            files = fileDownloadService.CollectCompanyFilesForDownload(userData);
+        await ViewModel.OnInitializeAsync();
+        files = ViewModel.Files;
     }
 
     private async Task DownloadAllDocuments()
     {
-        var ediZipFiles = await fileDownloadService.CreateZipFileAsync(files);
-
-        await fileDownloadService.SaveZipFileAsync(ediZipFiles);
+        await ViewModel.DownloadAllDocumentsCommand.ExecuteAsync(files);
     }
 }
