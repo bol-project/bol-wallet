@@ -28,20 +28,6 @@ namespace BolWallet.ViewModels
 
         [ObservableProperty] private List<FileItem> _files;
 
-        [RelayCommand]
-        public async Task DownloadAllDocuments(List<FileItem> files)
-        {
-            var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
-
-            await _fileDownloadService.SaveZipFileAsync(ediZipFiles);
-        }
-
-        [RelayCommand]
-        public async Task DownloadDocument(FileItem file)
-        {
-            await _fileDownloadService.DownloadDataAsync(file.Content, file.FileName);
-        }
-
         public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
         {
             try
@@ -58,6 +44,20 @@ namespace BolWallet.ViewModels
                 _logger.LogError(ex, "Error initializing DownloadCertificationDocumentsViewModel");
                 await Toast.Make(ex.Message).Show(cancellationToken);
             }
+        }
+
+        [RelayCommand]
+        public async Task DownloadAllDocuments(List<FileItem> files)
+        {
+            var ediZipFiles = await _fileDownloadService.CreateZipFileAsync(files);
+
+            await _fileDownloadService.SaveZipFileAsync(ediZipFiles);
+        }
+
+        [RelayCommand]
+        public async Task DownloadDocument(FileItem file)
+        {
+            await _fileDownloadService.DownloadDataAsync(file.Content, file.FileName);
         }
     }
 }
