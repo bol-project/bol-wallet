@@ -28,6 +28,9 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
     [ObservableProperty]
     private IndividualCodenameForm _individualCodenameForm;
 
+    [ObservableProperty]
+    private ILookup<string, string> _alternativeCodenames = Array.Empty<string>().ToLookup(x => x, x => x);
+
     [RelayCommand]
     private async Task Generate(CancellationToken token = default)
     {
@@ -73,11 +76,10 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                     }
                 case true when codenameExistsResult.Data.Exists:
                     {
-                        var alternatives = string.Join(Environment.NewLine, codenameExistsResult.Data.Alternatives);
-                
+                        AlternativeCodenames = codenameExistsResult.Data.Alternatives.ToLookup(x => x, x => x);
+                        
                         await Toast
-                            .Make($"The codename already exists. Found:{Environment.NewLine}{alternatives}",
-                                ToastDuration.Long)
+                            .Make($"The codename already exists.", ToastDuration.Long)
                             .Show(token);
                 
                         return;

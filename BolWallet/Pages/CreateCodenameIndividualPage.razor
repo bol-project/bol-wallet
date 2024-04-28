@@ -85,7 +85,14 @@
                         }
                         else
                         {
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> createCodenameIndividualViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
+                            @if (ViewModel.AlternativeCodenames.Contains(ViewModel.Codename))
+                            {
+                                <MudAlert Severity="Severity.Error">@(string.Join(Environment.NewLine, ViewModel.AlternativeCodenames))</MudAlert>
+                            }
+                            else
+                            {
+                                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(() => createCodenameIndividualViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
+                            }
                         }
                     }
                 </div>
