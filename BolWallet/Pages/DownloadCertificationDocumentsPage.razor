@@ -57,7 +57,7 @@
     {
         <MudText Typo="Typo.body1" Class="text-white">No documents available.</MudText>
     }
-    <MudItem Style="text-align: center; margin-top: 20px;" xs="12">
+    <MudItem Class="bottom-button" xs="12">
         <MudButton ButtonType="MudBlazor.ButtonType.Submit" OnClick="()=>navigationService.NavigateTo<MainWithAccountViewModel>()"
                    Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.ArrowForwardIos"
                    Style="background: linear-gradient(to right, #673ab7, #512da8); color: white; padding: 15px 30px; font-size: 14px;">
@@ -77,6 +77,12 @@
     .emphasized-file {
         background: #d8bfd8;
         border: 2px solid #a0522d;
+    }
+
+    .bottom-button {
+        margin-top: 100%; 
+        width: 100%;
+        text-align: center;
     }
 </style>
 
