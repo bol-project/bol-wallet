@@ -3,40 +3,54 @@
 
 @inherits MvvmComponentBase<DownloadCertificationDocumentsViewModel>
 
-<MudPaper Elevation="3" Class="px-4 py-5 my-2">
-    <MudCard Elevation="8" Border="true" Class="p-4 styled-card">
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText Style="text-align: center;" Typo="Typo.body1">Please click 'Save All Certification Documents' to download and safeguard your documents required for the certification process. </MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-    </MudCard>
-    @if (files != null)
+<MudPaper Elevation="3"  Class="px-4 py-5 my-2">
+    @if (files != null && files.Any())
     {
         <div class="card-container">
-            <MudCard Elevation="8" Border="true" Class="p-4 styled-card">
+            <MudCard Elevation="8" Border="true" Class="p-4 styled-card emphasized-file">
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h4">Save All Certification Documents</MudText>
+                        <MudText Typo="Typo.h4">Download All Documents</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <MudIconButton Icon="@Icons.Material.Rounded.Archive" Color="Color.Primary" OnClick=" async () => await DownloadAllDocuments()" />
                     </CardHeaderActions>
                 </MudCardHeader>
             </MudCard>
-
-            <Virtualize Items="files" Context="file">
-                <MudCard Class="styled-card">
-                    <MudCardHeader>
-                        <CardHeaderContent>
-                            <MudText Typo="Typo.h6">@file.FileName</MudText>
-                        </CardHeaderContent>
-                        <CardHeaderActions>
-                            <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
-                        </CardHeaderActions>
-                    </MudCardHeader>
-                </MudCard>
-            </Virtualize>
+            <MudCard>
+                <MudExpansionPanel Text="Generated Documents">
+                    @foreach (var file in files.Where(f => f.FileName.EndsWith(".yaml") || f.FileName.EndsWith(".json")))
+                    {
+                        <MudCard Class="styled-card" style="font-size: 12px;">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText Typo="Typo.h6">@file.FileName</MudText>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                        </MudCard>
+                    }
+                </MudExpansionPanel>
+            </MudCard>
+            <MudCard>
+                <MudExpansionPanel Text="Uploaded Documents">
+                    @foreach (var file in files.Where(f => !f.FileName.EndsWith(".yaml")))
+                    {
+                        <MudCard Class="styled-card" style="font-size: 12px;">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText Typo="Typo.h6">@file.FileName</MudText>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                        </MudCard>
+                    }
+                </MudExpansionPanel>
+            </MudCard>
         </div>
     }
     else
@@ -60,10 +74,10 @@
         margin: 10px;
     }
 
-        .card-container .mud-card:first-child {
-            background: #d8bfd8;
-            border: 2px solid #a0522d;
-        }
+    .emphasized-file {
+        background: #d8bfd8;
+        border: 2px solid #a0522d;
+    }
 </style>
 
 @code {
