@@ -3,14 +3,17 @@
 
 @inherits MvvmComponentBase<DownloadCertificationDocumentsViewModel>
 
-<MudPaper Elevation="3"  Class="px-4 py-5 my-2">
+<MudThemeProvider />
+<MudDialogProvider />
+
+<MudPaper Elevation="3" Class="px-4 py-5 my-2">
     @if (files != null && files.Any())
     {
         <div class="card-container">
             <MudCard Elevation="8" Border="true" Class="p-4 styled-card emphasized-file">
                 <MudCardHeader>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h4">Download All Documents</MudText>
+                        <MudText Typo="Typo.h5">Download All Documents</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <MudIconButton Icon="@Icons.Material.Rounded.Archive" Color="Color.Primary" OnClick=" async () => await DownloadAllDocuments()" />
@@ -19,6 +22,7 @@
             </MudCard>
             <MudCard>
                 <MudExpansionPanel Text="Generated Documents">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Info" OnClick="ViewModel.OpenGeneratedDocumentsMoreInfo" />
                     @foreach (var file in files.Where(f => f.FileName.EndsWith(".yaml") || f.FileName.EndsWith(".json")))
                     {
                         <MudCard Class="styled-card" style="font-size: 12px;">
@@ -36,6 +40,7 @@
             </MudCard>
             <MudCard>
                 <MudExpansionPanel Text="Uploaded Documents">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Info" OnClick="ViewModel.OpenGeneratedDocumentsMoreInfo" />
                     @foreach (var file in files.Where(f => !f.FileName.EndsWith(".yaml")))
                     {
                         <MudCard Class="styled-card" style="font-size: 12px;">
@@ -80,7 +85,7 @@
     }
 
     .bottom-button {
-        margin-top: 100%; 
+        margin-top: 100%;
         width: 100%;
         text-align: center;
     }
