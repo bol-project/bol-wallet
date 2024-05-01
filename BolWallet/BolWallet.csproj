@@ -123,6 +123,9 @@
     <MauiXaml Update="Views\BolCommunityPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\SetCertifierFeePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\DownloadCertificationDocumentsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

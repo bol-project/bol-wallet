@@ -25,6 +25,7 @@
             </MudNavGroup>
             <MudNavGroup Title="Certifier">
                 <MudNavLink Icon="@Icons.Material.Rounded.SupervisorAccount" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage())">Become a Certifier</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.AddModerator" OnClick="() => NavigationService.NavigateTo<WhitelistViewModel>(true)">Whitelist a Main Address</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.PersonAdd" OnClick="() => NavigationService.NavigateTo<CertifyViewModel>(true)">Certify a CodeName</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
