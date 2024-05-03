@@ -4,7 +4,7 @@
 
 <MudThemeProvider />
 
-<MenuPanel OnRefreshCallback="async () => await ViewModel.FetchBolAccountData(CancellationToken.None)">
+<MenuPanel OnRefreshCallback="async () => await ViewModel.FetchBolAccountData(CancellationToken.None)" BolAccount="@ViewModel.BolAccount">
     <MudStack AlignItems="AlignItems.Stretch" Spacing="5">
         <MudText Typo="Typo.h5" Align="Align.Center">Summary</MudText>
         <MudCard Class="styled-card" Outlined="true">

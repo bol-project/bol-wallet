@@ -1,10 +1,11 @@
+@using Bol.Core.Model
 @inject INavigationService NavigationService
 
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
         <MudSpacer />
-        <MudProgressCircular Indeterminate="true" Size="Size.Small" hidden="@idle"/>
+        <MudProgressCircular Indeterminate="true" Size="Size.Small" hidden="@idle" />
         <MudIconButton Icon="@Icons.Material.Rounded.Refresh" Color="Color.Inherit" OnClick="@OnRefresh" />
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
@@ -24,11 +25,17 @@
                 <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
             </MudNavGroup>
             <MudNavGroup Title="Certifier">
-                <MudNavLink Icon="@Icons.Material.Rounded.SupervisorAccount" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage())">Become a Certifier</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.AddModerator" OnClick="() => NavigationService.NavigateTo<WhitelistViewModel>(true)">Whitelist a Main Address</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.PersonAdd" OnClick="() => NavigationService.NavigateTo<CertifyViewModel>(true)">Certify a CodeName</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
+                @if (!BolAccount.IsCertifier)
+                {
+                    <MudNavLink Icon="@Icons.Material.Rounded.SupervisorAccount" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage())">Become a Certifier</MudNavLink>
+                }
+                else
+                {
+                    <MudNavLink Icon="@Icons.Material.Rounded.PersonAdd" OnClick="() => NavigationService.NavigateTo<CertifyViewModel>(true)">Certify a CodeName</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.AddModerator" OnClick="() => NavigationService.NavigateTo<WhitelistViewModel>(true)">Whitelist a Main Address</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
+                }
             </MudNavGroup>
             <MudNavGroup Title="Tools">
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
@@ -38,29 +45,32 @@
             </MudNavGroup>
         </MudNavMenu>
     </MudDrawer>
-    <MudMainContent>
-        @ChildContent
-    </MudMainContent>
+    <CascadingValue Value="BolAccount">
+        <MudMainContent>
+            @ChildContent
+        </MudMainContent>
+    </CascadingValue>
 </MudLayout>
 
-@code{
+@code {
+    [Parameter] public BolAccount BolAccount { get; set; }
+
     [Parameter] public RenderFragment ChildContent { get; set; }
-    
-    [Parameter]
-    public EventCallback<string> OnRefreshCallback {get; set;}
+
+    [Parameter] public EventCallback<BolAccount> OnRefreshCallback { get; set; }
 
     bool open = false;
     bool idle = true;
-    
+
     void ToggleDrawer()
     {
         open = !open;
     }
-    
+
     private async Task OnRefresh()
     {
         idle = false;
-        await OnRefreshCallback.InvokeAsync();
+        await OnRefreshCallback.InvokeAsync(BolAccount);
         await Task.Delay(500);
         idle = true;
     }
