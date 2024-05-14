@@ -137,6 +137,17 @@
                                                 </MudChip>
                                                 break;
                                             }
+                                            case "ProofOfNin":
+                                            {
+                                                <MudChip Class="centered-content"
+                                                            Icon="@Icons.Material.Filled.Warning"
+                                                            Color="Color.Warning"
+                                                            Size="Size.Medium"
+                                                            OnClick="@(args => Toast.Make("If Proof of NIN is used, identity card is not mandatory.").Show())"
+                                                            Text="Use instead of Identity">
+                                                </MudChip>
+                                                break;
+                                            }
                                             case "BirthCertificate":
                                             {
                                                 <MudChip
