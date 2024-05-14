@@ -1,5 +1,6 @@
 @using Bol.Core.Model
 @inject INavigationService NavigationService
+@inject IBolService bolService;
 
 <MudLayout>
     <MudAppBar>
@@ -35,6 +36,7 @@
                     <MudNavLink Icon="@Icons.Material.Rounded.AddModerator" OnClick="() => NavigationService.NavigateTo<WhitelistViewModel>(true)">Whitelist a Main Address</MudNavLink>
                     <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
                     <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.RemoveModerator" OnClick="() => ShowUnregisterConfirmation()">Unregister as Certifier</MudNavLink>
                 }
             </MudNavGroup>
             <MudNavGroup Title="Tools">
@@ -73,5 +75,21 @@
         await OnRefreshCallback.InvokeAsync(BolAccount);
         await Task.Delay(500);
         idle = true;
+    }
+
+    private async Task ShowUnregisterConfirmation()
+    {
+        try
+        {
+            bool confirmed = await App.Current.MainPage.DisplayAlert("Confirm", "Are you sure you want to unregister as a certifier?", "Yes", "No");
+            if (confirmed)
+            {
+                await bolService.UnRegisterAsCertifier();
+            }
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
     }
 }
