@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BolWallet", "BolWallet/BolWallet.csproj", "{E4689C52-4B94-48F2-8F7A-1031659D60A5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C0BEE187-E86B-431B-83B1-23CE9F678216}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BolWallet.UnitTests", "BolWallet.UnitTests\BolWallet.UnitTests.csproj", "{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +21,18 @@ Global
 		{E4689C52-4B94-48F2-8F7A-1031659D60A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4689C52-4B94-48F2-8F7A-1031659D60A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4689C52-4B94-48F2-8F7A-1031659D60A5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DCAA2E43-2F23-4A5F-AE8E-ECD87E0211A1} = {C0BEE187-E86B-431B-83B1-23CE9F678216}
 	EndGlobalSection
 EndGlobal

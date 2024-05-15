@@ -5,6 +5,7 @@ using Bol.Core.Model;
 using Bol.Cryptography;
 using Bol.Cryptography.Encoders;
 using BolWallet.Extensions;
+using BolWallet.Helpers;
 using BolWallet.Services.BolRpc;
 using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
@@ -55,6 +56,7 @@ public static class MauiProgram
         services.AddScoped<ICitizenshipHashTableProcessor, CitizenshipHashTableProcessor>();
         services.AddSingleton<IFilePicker>(_ => FilePicker.Default);
 		services.AddScoped<ICountriesService, CountriesService>();
+        services.AddScoped<INinHelper, NinHelper>();
 
         RegisterPermissionServices(services);
         
