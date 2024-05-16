@@ -43,18 +43,27 @@
                               Disabled="true" />
             </MudItem>
             <MudItem xs="12" sm="12" md="12">
-                <MudSelect T="Bol.Core.Model.Gender" Label="Gender" Variant="MudBlazor.Variant.Outlined"
-                           Margin="@Margin.Dense" Dense="true" AnchorOrigin="Origin.BottomCenter"
-                           @bind-Value="@IndividualCodenameForm.Gender" Required="true" RequiredError="Gender is required">
+                <MudSelect T="Bol.Core.Model.Gender?" 
+                           Label="Gender"
+                           Variant="MudBlazor.Variant.Outlined"
+                           Margin="@Margin.Dense"
+                           Dense="true"
+                           AnchorOrigin="Origin.BottomCenter"
+                           @bind-Value="@IndividualCodenameForm.Gender"
+                           Required="true"
+                           RequiredError="Gender is required"
+                           FullWidth="true">
                     @foreach (var g in Genders)
                     {
-                        <MudSelectItem T="Bol.Core.Model.Gender" Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
+                        <MudSelectItem T="Bol.Core.Model.Gender?"
+                                       Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
                     }
                 </MudSelect>
             </MudItem>
             <MudItem xs="12" sm="12" md="12">
                 <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
                                Margin="@Margin.Dense"
+                               HelperText="@IndividualCodenameForm.Birthdate.HelpMessage"
                                MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
                                DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)" />
             </MudItem>
@@ -148,7 +157,10 @@
 
         OnCountrySelected(registrationCountry);
 
-        BirthDate = IndividualCodenameForm.Birthdate.Value == null ? new DateTime(lastYear, 12, 31) : Convert.ToDateTime(IndividualCodenameForm.Birthdate.Value);
+        if (IndividualCodenameForm.Birthdate.Value is not null)
+        {
+            BirthDate = Convert.ToDateTime(IndividualCodenameForm.Birthdate.Value);
+        }
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
