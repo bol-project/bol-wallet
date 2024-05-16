@@ -60,11 +60,12 @@ public class IndividualCodenameForm : ObservableObject
             var date = DateTime.Parse(value);
             return date.Year.CompareTo(DateTime.Today.Year) < 0;
         },
-        IsMandatory = true
+        IsMandatory = true,
+        HelpMessage = "Birthdate cannot be in the future or in the current year"
     };
 
-    private Gender _gender;
-    public Gender Gender
+    private Gender? _gender;
+    public Gender? Gender
     {
         get => _gender;
         set
