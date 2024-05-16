@@ -65,6 +65,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     public bool HasAddedMandatoryFiles => Files is 
         { Passport: not null } 
         or { IdentityCard: not null, IdentityCardBack: not null }
+        or { ProofOfNin: not null }
         or { BirthCertificate: not null };
     
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
