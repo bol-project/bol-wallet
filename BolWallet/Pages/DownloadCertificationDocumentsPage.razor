@@ -6,6 +6,10 @@
 <MudThemeProvider />
 <MudDialogProvider />
 
+<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
 <MudPaper Elevation="3" Class="px-4 py-5 my-2">
     @if (files != null && files.Any())
     {
@@ -62,8 +66,8 @@
     {
         <MudText Typo="Typo.body1" Class="text-white">No documents available.</MudText>
     }
-    <MudItem Class="bottom-button" xs="12">
-        <MudButton ButtonType="MudBlazor.ButtonType.Submit" OnClick="()=>navigationService.NavigateTo<MainWithAccountViewModel>()"
+    <MudItem Class="next-button" xs="12">
+        <MudButton ButtonType="MudBlazor.ButtonType.Submit" OnClick="@(async()=>await ViewModel.CheckCodenameExistanceAndProceeddCommand.ExecuteAsync(null))"
                    Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.ArrowForwardIos"
                    Style="background: linear-gradient(to right, #673ab7, #512da8); color: white; padding: 15px 30px; font-size: 14px;">
             Next
@@ -84,8 +88,7 @@
         border: 2px solid #a0522d;
     }
 
-    .bottom-button {
-        margin-top: 100%;
+    .next-button {
         width: 100%;
         text-align: center;
     }

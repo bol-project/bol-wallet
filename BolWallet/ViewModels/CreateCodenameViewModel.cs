@@ -44,45 +44,6 @@ public partial class CreateCodenameViewModel : BaseViewModel
             await NavigationService.NavigateTo<CreateCompanyEdiViewModel>(true);
     }
 
-    [Obsolete($"Use {nameof(CodenameExists)} instead.")]
-    protected async Task<Result<bool>> CheckCodenameExists(string codename, CancellationToken token = default)
-    {
-        var result = await BolRpcService.GetBolAccount(codename, token);
-        if (result.IsSuccess)
-        {
-            return Result.Success(true);
-        }
-
-        if (result.Status == ResultStatus.NotFound)
-        {
-            return Result.Success(false);
-        }
-
-        return Result.CriticalError(result.Message, result.Errors);
-    }
-
-    protected async Task<Result<CodenameExistsCheck>> CodenameExists(string codename, CancellationToken token = default)
-    {
-        try
-        {
-            IsLoading = true;
-            var alternatives = (await BolService.FindAlternativeCodeNames(codename, token)).ToArray();
-
-            return alternatives.Length == 0
-                ? Result.Success(CodenameExistsCheck.CodenameDoesNotExist())
-                : Result.Success(CodenameExistsCheck.CodenameExists(alternatives));
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error checking if codename {Codename} exists", codename);
-            return Result.CriticalError(e.Message);
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
     protected static DateTime GetBirthDate(string value) =>
         DateOnly.ParseExact(value, Constants.BirthDateFormat, CultureInfo.InvariantCulture)
             .ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);

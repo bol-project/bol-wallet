@@ -56,39 +56,14 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
             };
 
             var result = _codeNameService.Generate(company);
-            var codenameExistsResult = await CodenameExists(result, token);
-            
-            switch (codenameExistsResult.IsSuccess)
-            {
-                case true when !codenameExistsResult.Data.Exists:
-                    {
-                        userData.Codename = result;
-                        userData.Company = company;
-                        userData.IsIndividualRegistration = false;
 
-                        await _secureRepository.SetAsync("userdata", userData);
+            userData.Codename = result;
+            userData.Company = company;
+            userData.IsIndividualRegistration = false;
 
-                        Codename = result;
-                        return;
-                    }
-                case true when codenameExistsResult.Data.Exists:
-                    {
-                        var alternatives = string.Join(Environment.NewLine, codenameExistsResult.Data.Alternatives);
-                
-                        await Toast
-                            .Make($"The codename already exists. Found:{Environment.NewLine}{alternatives}",
-                                ToastDuration.Long)
-                            .Show(token);
-                
-                        return;
-                    }
-                case false:
-                    {
-                        await Toast.Make($"Codename existence check failed with error: {codenameExistsResult.Message}",
-                            ToastDuration.Long).Show(token);
-                        return;
-                    }
-            }
+            await _secureRepository.SetAsync("userdata", userData);
+
+            Codename = result;
         }
         catch (Exception ex)
         {
