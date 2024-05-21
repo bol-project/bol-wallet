@@ -22,7 +22,6 @@
             </MudCard>
             <MudCard>
                 <MudExpansionPanel Text="Generated Documents">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Info" OnClick="ViewModel.OpenGeneratedDocumentsMoreInfo" />
                     @foreach (var file in files.Where(f => f.FileName.EndsWith(".yaml") || f.FileName.EndsWith(".json")))
                     {
                         <MudCard Class="styled-card" style="font-size: 12px;">
@@ -40,7 +39,6 @@
             </MudCard>
             <MudCard>
                 <MudExpansionPanel Text="Uploaded Documents">
-                    <MudIconButton Icon="@Icons.Material.Outlined.Info" OnClick="ViewModel.OpenGeneratedDocumentsMoreInfo" />
                     @foreach (var file in files.Where(f => !f.FileName.EndsWith(".yaml")))
                     {
                         <MudCard Class="styled-card" style="font-size: 12px;">
