@@ -1,4 +1,5 @@
-﻿using Bol.Core.Abstractions;
+﻿using System.Text;
+using Bol.Address.Abstractions;
 using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
@@ -7,17 +8,23 @@ namespace BolWallet.ViewModels;
 
 public partial class MainViewModel : BaseViewModel
 {
+    private readonly IPermissionService _permissionService;
     private readonly ISecureRepository _secureRepository;
-    private readonly IWalletService _walletService;
+    private readonly IExportKeyFactory _exportKeyFactory;
+    private readonly ISha256Hasher _sha256;
 
     public MainViewModel(
         INavigationService navigationService,
+        IPermissionService permissionService,
         ISecureRepository secureRepository,
-        IWalletService walletService)
+        IExportKeyFactory exportKeyFactory,
+        ISha256Hasher sha256)
         : base(navigationService)
     {
+        _permissionService = permissionService;
         _secureRepository = secureRepository;
-        _walletService = walletService;
+        _exportKeyFactory = exportKeyFactory;
+        _sha256 = sha256;
     }
 
     [ObservableProperty]
@@ -56,7 +63,11 @@ public partial class MainViewModel : BaseViewModel
             if (pickResult == null)
                 return;
 
-            var jsonString = await File.ReadAllTextAsync(pickResult.FullPath);
+            var jsonString = File.ReadAllText(pickResult.FullPath);
+
+            var bolWallet =
+                JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString,
+                    Constants.WalletJsonSerializerDefaultOptions);
             
             var passwordPopup = new PasswordPopup();
             await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
@@ -64,26 +75,26 @@ public partial class MainViewModel : BaseViewModel
             
             if (string.IsNullOrEmpty(password)) return;
 
-            try
-            {
-                IsLoading = true;
-                var validPassword = await Task.Run(() => _walletService.CheckWalletPassword(jsonString, password));
-                if (!validPassword)
-                {
-                    await Application.Current.MainPage.DisplayAlert(
-                        "Incorrect Password",
-                        "Please provide a valid password.",
-                        "OK");
-                    return;
-                }
-            }
-            finally
-            { 
-                IsLoading = false;
-            }
+            IsLoading = true;
+            var codeNameAccount = bolWallet.accounts.Single(account => account.Label == "codename");
+            var codeNameKey = await Task.Run(() => _exportKeyFactory.GetDecryptedPrivateKey(
+                codeNameAccount.Key,
+                password,
+                bolWallet.Scrypt.N,
+                bolWallet.Scrypt.R,
+                bolWallet.Scrypt.P));
             
-            var bolWallet = JsonSerializer.Deserialize<Bol.Core.Model.BolWallet>(jsonString,
-                    Constants.WalletJsonSerializerDefaultOptions);
+            var expectedCodeNameKey = _sha256.Hash(Encoding.ASCII.GetBytes(bolWallet.Name));
+            IsLoading = false;
+            
+            if (!codeNameKey.SequenceEqual(expectedCodeNameKey))
+            {
+                await Application.Current.MainPage.DisplayAlert(
+                    "Incorrect Password",
+                    "Please provide a valid password.",
+                    "OK");
+                return;
+            }
 
             var userData = new UserData { Codename = bolWallet.Name, BolWallet = bolWallet, WalletPassword = password };
 
