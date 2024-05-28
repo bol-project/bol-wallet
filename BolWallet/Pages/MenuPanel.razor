@@ -23,7 +23,7 @@
             <MudNavGroup Title="Community" Expanded="true">
                 <MudNavLink Icon="@Icons.Material.Rounded.AccountCircle" OnClick="() => NavigationService.NavigateTo<AccountViewModel>(true)">My Account</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.SupervisedUserCircle" OnClick="() => NavigationService.NavigateTo<GetCertifiedViewModel>(true)">Get Certified</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
+           <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
             </MudNavGroup>
             <MudNavGroup Title="Certifier">
                 @if (!BolAccount.IsCertifier)
@@ -41,9 +41,9 @@
             </MudNavGroup>
             <MudNavGroup Title="Tools">
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink>
+@*                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink> *@
+@*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@
             </MudNavGroup>
         </MudNavMenu>
     </MudDrawer>
