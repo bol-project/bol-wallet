@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BolWallet.Views.DownloadCertificationDocumentsPage"
              Title="Bol Documents"
-             xmlns:pages="clr-namespace:BolWallet.Pages">
+             xmlns:pages="clr-namespace:BolWallet.Pages"
+             NavigationPage.HasBackButton="False">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
