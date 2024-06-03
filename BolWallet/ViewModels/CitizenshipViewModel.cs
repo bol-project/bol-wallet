@@ -15,7 +15,7 @@ public partial class CitizenshipViewModel : BaseViewModel
     private readonly ILogger<CitizenshipViewModel> _logger;
     private readonly List<string> _allCountries;
     private UserData UserData { get; set; }
-    
+
     [ObservableProperty]
     public CitizenshipsForm citizenshipsForm;
 
@@ -33,7 +33,7 @@ public partial class CitizenshipViewModel : BaseViewModel
         _dialogService = dialogService;
         _logger = logger;
         _allCountries = _content.Countries.Select(country => country.Name).ToList();
-        
+
         citizenshipsForm = new CitizenshipsForm();
     }
 
@@ -41,17 +41,17 @@ public partial class CitizenshipViewModel : BaseViewModel
     {
         IsLoading = true;
         UserData = await GetUserData();
-        
+
         var citizenships = UserData.Citizenships.Select(citizenship => citizenship.Name).ToArray();
-        
+
         CitizenshipsForm.FirstCountry = citizenships.FirstOrDefault() ?? string.Empty;
         CitizenshipsForm.SecondCountry = citizenships.Skip(1).FirstOrDefault() ?? string.Empty;
         CitizenshipsForm.ThirdCountry = citizenships.Skip(2).FirstOrDefault() ?? string.Empty;
-        
+
         await base.OnInitializedAsync();
         IsLoading = false;
     }
-    
+
     public void OpenMoreInfo()
     {
         var parameters = new DialogParameters<MoreInfoDialog>
@@ -62,7 +62,21 @@ public partial class CitizenshipViewModel : BaseViewModel
         };
 
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        
+
+        _dialogService.Show<MoreInfoDialog>("", parameters, options);
+    }
+
+    private void OpenCountriesNotSupportedInfo(string country)
+    {
+        var parameters = new DialogParameters<MoreInfoDialog>
+        {
+            { x => x.Title, CountriesNotSupportedInformation.GetTitle(country) },
+            { x => x.Paragraph1, CountriesNotSupportedInformation.GetDescription(country) },
+            {χ => χ.Paragraph2, CountriesNotSupportedInformation.Content}
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
         _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
 
@@ -81,23 +95,23 @@ public partial class CitizenshipViewModel : BaseViewModel
             throw;
         }
     }
-    
-    public List<string> SelectedCountries => new List<string> 
+
+    public List<string> SelectedCountries => new List<string>
             { CitizenshipsForm.FirstCountry, CitizenshipsForm.SecondCountry, CitizenshipsForm.ThirdCountry }
         .Where(country => !string.IsNullOrEmpty(country))
         .ToList();
-    
+
     public Task<IEnumerable<string>> FilterCountries(string filter)
     {
         var filteredCountries = _allCountries
             .Where(country => !SelectedCountries.Contains(country));
-        
-        if (!string.IsNullOrEmpty(filter)) 
+
+        if (!string.IsNullOrEmpty(filter))
         {
             filteredCountries = filteredCountries
                 .Where(country => country.Contains(filter, StringComparison.OrdinalIgnoreCase));
         }
-        
+
         return Task.FromResult(filteredCountries);
     }
 
@@ -116,7 +130,61 @@ public partial class CitizenshipViewModel : BaseViewModel
                 break;
         }
     }
-    
+
+    public void SetCountry(string country, int position)
+    {
+        if (string.IsNullOrEmpty(country))
+        {
+            RemoveCountryByPosition(position);
+            return;
+        }
+
+        if (IsCountryValid(country))
+        {
+            switch (position)
+            {
+                case 1:
+                    CitizenshipsForm.FirstCountry = country;
+                    break;
+                case 2:
+                    CitizenshipsForm.SecondCountry = country;
+                    break;
+                case 3:
+                    CitizenshipsForm.ThirdCountry = country;
+                    break;
+            }
+        }
+        else
+        {
+            OpenCountriesNotSupportedInfo(country);
+
+            RemoveCountryByPosition(position);
+        }
+    }
+
+    private bool IsCountryValid(string countryName)
+    {
+        var countryCode = _content.Countries.Where(c => c.Name == countryName).Select(c => c.Alpha3).FirstOrDefault();
+
+        return _content.NinPerCountryCode[countryCode].Status == Bol.Core.Model.NinStatus.Active;
+    }
+
+    private void RemoveCountryByPosition(int position)
+    {
+        switch (position)
+        {
+            case 1:
+                CitizenshipsForm.FirstCountry = string.Empty;
+                break;
+            case 2:
+                CitizenshipsForm.SecondCountry = string.Empty;
+                break;
+            case 3:
+                CitizenshipsForm.ThirdCountry = string.Empty;
+                break;
+        }
+    }
+
     [RelayCommand]
     private async Task TrySubmitForm(CitizenshipsForm context)
     {
