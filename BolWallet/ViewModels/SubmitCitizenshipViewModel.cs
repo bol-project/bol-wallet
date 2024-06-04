@@ -155,9 +155,10 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [RelayCommand]
     public void SetNinInternationalName()
     {
-        NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
+        if (CitizenshipForm?.CountryCode is not null)
+            NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm?.CountryCode].InternationalName;
     }
-    
+
     [RelayCommand]
     private void RemoveFile(string fileTypeStr)
     {
