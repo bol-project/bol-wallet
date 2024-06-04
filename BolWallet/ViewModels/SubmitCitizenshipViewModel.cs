@@ -97,6 +97,9 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     .First(c => c.Name == CitizenshipForm.CountryName).Alpha3;
                 IsFormInitialized = true;
             }
+
+            SetNinInternationalName();
+
             IsLoading = false;
         }
         catch (Exception ex)
@@ -150,7 +153,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     }
     
     [RelayCommand]
-    private void SetNinInternationalName()
+    public void SetNinInternationalName()
     {
         NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
     }

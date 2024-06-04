@@ -16,36 +16,39 @@
             <MudCard Style="padding: 20px;">
                 <MudCardContent>
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.CitizenshipsForm.FirstCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a first country."
                                      AdornmentIcon="Icons.Material.Filled.Search"
                                      Required="true"
                                      ResetValueOnEmptyText="true"
-                                     RequiredError="Country is required" Strict="true">
+                                     RequiredError="Country is required" Strict="true"
+                                     Value="@ViewModel.CitizenshipsForm.FirstCountry"
+                                     ValueChanged="@(value => ViewModel.SetCountry(value,1))">
                     </MudAutocomplete>
 
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.CitizenshipsForm.SecondCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a second country (optional)."
                                      AdornmentIcon="Icons.Material.Filled.Search"
                                      ResetValueOnEmptyText="true"
                                      Disabled="@HasSelectedFirstCountry"
-                                     Required="false">
+                                     Required="false"
+                                     Value="@ViewModel.CitizenshipsForm.SecondCountry"
+                                     ValueChanged="@(value => ViewModel.SetCountry(value,2))">
                     </MudAutocomplete>
 
                     <MudAutocomplete Class="autocomplete-margin" T="string" Label="Citizenship Country"
-                                     @bind-Value="@ViewModel.CitizenshipsForm.ThirdCountry"
                                      SearchFunc="@ViewModel.FilterCountries"
                                      Dense="true" Variant="Variant.Outlined"
                                      HelperText="Choose a third country (optional)."
                                      AdornmentIcon="Icons.Material.Filled.Search"
                                      ResetValueOnEmptyText="true"
                                      Disabled="@HasSelectedSecondCountry"
-                                     Required="false">
+                                     Required="false"
+                                     Value="@ViewModel.CitizenshipsForm.ThirdCountry"
+                                     ValueChanged="@(value => ViewModel.SetCountry(value,3))">
                     </MudAutocomplete>
 
                     <MudChipSet Class="autocomplete-margin">
