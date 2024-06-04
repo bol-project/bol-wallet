@@ -1,0 +1,142 @@
+@page "/certify"
+
+@inject CertifyViewModel ViewModel
+
+<MudThemeProvider />
+
+<MudGrid>
+    <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+        <EditForm Model="@ViewModel" OnValidSubmit="ViewModel.Lookup">
+            <DataAnnotationsValidator />
+            <MudCard Class="styled-card" hidden="@(ViewModel.AlternativeAccounts.Any())">
+                <MudCardContent>
+                    <MudTextField Immediate="true" Label="CodeName"
+                                  HelperText="Type or paste the CodeName of the individual or organization that you want to certify."
+                                  Class="mt-3"
+                                  @bind-Value="ViewModel.CodeName"
+                                  For="@(() => ViewModel.CodeName)"
+                                  InputType="InputType.Text"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudProgressCircular hidden="@(!ViewModel.IsLoading)" Indeterminate="true" Size="Size.Small"/>
+                    <MudText hidden="@(!ViewModel.IsLoading)">Looking for alternative CodeNames...</MudText>
+                    <MudButton Disabled="ViewModel.IsLoading" ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Continue</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </MudItem>
+    @if (ViewModel.IsMultiCitizenship)
+    {
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Class="styled-card">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Error">
+                            <MudIcon Icon="@Icons.Material.Rounded.Block"/>
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">The CodeName you entered belongs to the Multiple Citizenship List!</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudItem>
+    }
+    @if (ViewModel.IsAlternativeCertified)
+    {
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Class="styled-card">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Error">
+                            <MudIcon Icon="@Icons.Material.Rounded.Block"/>
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">The CodeName you entered has Alternative CodeNames registered that are already Certified!</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudItem>
+    }
+    @if (ViewModel.AlternativeAccounts.Any() && !ViewModel.IsMultiCitizenship && !ViewModel.IsAlternativeCertified)
+    {
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Class="styled-card">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Success">
+                            <MudIcon Icon="@Icons.Material.Rounded.ThumbUp"/>
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">The CodeName you entered does not have any certification issues.</MudText>
+                        <MudText>You can proceed with certification if identification documents have been thoroughly checked and visual contact has been made with the subject.</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudItem>
+    }
+    @foreach (var account in ViewModel.AlternativeAccounts)
+    {
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Class="styled-card">
+                @if (account.CodeName == ViewModel.CodeName)
+                {
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="Color.Primary">
+                                <MudIcon Icon="@Icons.Material.Rounded.PersonSearch"/>
+                            </MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">The account you entered.</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(account.CodeName)"/>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                }
+                else
+                {
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="Color.Warning">
+                                <MudIcon Icon="@Icons.Material.Rounded.WarningAmber"/>
+                            </MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Alternative account with the same details found!</MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudIconButton Icon="@Icons.Material.Rounded.ContentCopy" Color="Color.Default" OnClick="() => ClipBoard(account.CodeName)"/>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                }
+                <MudCardContent>
+                    <MudList>
+                        <MudListItem>CodeName: @(account.CodeName)</MudListItem>
+                        <MudListItem>Status: @(account.AccountStatus)</MudListItem>
+                        <MudListItem>Certifications: @(account.Certifications)</MudListItem>
+                    </MudList>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+    }
+    <MudItem hidden="@(!ViewModel.AlternativeAccounts.Any())" xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+        <MudCard>
+            <MudCardActions>
+                <MudProgressCircular hidden="@(!ViewModel.IsLoading)" Indeterminate="true" Size="Size.Small"/>
+                <MudButton Color="Color.Primary" OnClick="@(ViewModel.Certify)" Disabled="@(ViewModel.CertifyDisabled)" Class="ml-auto" Variant="Variant.Filled">Certify</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private void ClipBoard(string clip)
+    {
+        Clipboard.Default.SetTextAsync(clip);
+        Toast.Make("Copied to Clipboard").Show();
+    }
+}

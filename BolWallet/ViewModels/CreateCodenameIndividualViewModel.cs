@@ -46,7 +46,7 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 MiddleName = IndividualCodenameForm.MiddleName.Value,
                 Surname = IndividualCodenameForm.Surname.Value,
                 ThirdName = IndividualCodenameForm.ThirdName.Value,
-                Gender = IndividualCodenameForm.Gender,
+                Gender = IndividualCodenameForm.Gender.Value,
                 Combination = IndividualCodenameForm.Combination.Value,
                 Nin = IndividualCodenameForm.NIN.Value,
                 Birthdate = GetBirthDate(IndividualCodenameForm.Birthdate.Value),

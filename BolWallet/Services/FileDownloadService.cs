@@ -37,7 +37,7 @@ public class FileDownloadService : IFileDownloadService
             }
         }
 
-        foreach (EncryptedCitizenshipForm encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
+        foreach (EncryptedCitizenshipData encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
         {
             foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperties())
             {
@@ -76,7 +76,7 @@ public class FileDownloadService : IFileDownloadService
                 FileName = $"Citizenship_{i}_{userdata.GetShortHash()}.yaml",
                 Content = Encoding.UTF8.GetBytes(citizenship)
             })));
-        
+
         return files;
     }
 
@@ -162,19 +162,36 @@ public class FileDownloadService : IFileDownloadService
             string json = JsonSerializer.Serialize(data, Constants.WalletJsonSerializerDefaultOptions);
             byte[] jsonData = Encoding.UTF8.GetBytes(json);
 
-            using (var stream = new MemoryStream(jsonData))
-            {
-                var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
-
-                if (result.IsSuccessful)
-                {
-                    await Toast.Make($"File '{fileName}' saved successfully!").Show();
-                }
-            }
+            await SaveBytesToFileAsync(jsonData, fileName, cancellationToken);
         }
         catch (Exception ex)
         {
             await Toast.Make(ex.Message).Show();
+        }
+    }
+
+    public async Task DownloadDataAsync(byte[] data, string fileName, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await SaveBytesToFileAsync(data, fileName, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+
+    private async Task SaveBytesToFileAsync(byte[] data, string fileName, CancellationToken cancellationToken = default)
+    {
+        using (var stream = new MemoryStream(data))
+        {
+            var result = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
+
+            if (result.IsSuccessful)
+            {
+                await Toast.Make($"File '{fileName}' saved successfully!").Show();
+            }
         }
     }
 }

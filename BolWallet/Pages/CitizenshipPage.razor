@@ -3,6 +3,11 @@
 @inherits MvvmComponentBase<CitizenshipViewModel>
 
 <MudThemeProvider/>
+<MudDialogProvider />
+
+<MudOverlay Visible="ViewModel.IsLoading" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
 
 <EditForm Model="ViewModel.citizenshipsForm" OnValidSubmit="@OnValidSubmit" >
     <DataAnnotationsValidator/>
@@ -49,10 +54,13 @@
                             <MudChip Text="@country" OnClose="@(() => ViewModel.RemoveCountry(country))"/>
                         }
                     </MudChipSet>
-                    <MudTooltip Placement="Placement.Right" Text="You can select up to three countries of citizenship. 
-                                                          It is important to select all your citizenships otherwise the account may fail to be validated.">
-                        <MudFab Icon="@Icons.Material.Filled.Info" Color="Color.Info"/>
-                    </MudTooltip>
+                    <MudButton
+                        Size="Size.Small"
+                        Variant="Variant.Filled"
+                        Color="Color.Info"
+                        OnClick="ViewModel.OpenMoreInfo">
+                        More Info
+                    </MudButton>
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"

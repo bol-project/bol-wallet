@@ -1,5 +1,4 @@
 ﻿@page "/create-edi-company-page"
-@using System.Reflection
 
 @inherits MvvmComponentBase<CreateCompanyEdiViewModel>
 @inject GenerateWalletWithPasswordViewModel GenerateWalletWithPasswordViewModel;
@@ -82,7 +81,7 @@
 
     private async Task GetFile(string property)
     {
-        await createCompanyEdiViewModel.PickPhotoCommand.ExecuteAsync(property);
+        await createCompanyEdiViewModel.PickFileCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }

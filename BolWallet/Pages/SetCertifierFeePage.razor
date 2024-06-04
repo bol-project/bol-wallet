@@ -1,0 +1,52 @@
+﻿@page "/set-certifier-fee"
+
+@inject IBolService bolService;
+@inject INavigationService NavigationService
+
+<MudThemeProvider />
+
+<MudOverlay @bind-Visible="isProgressBarVisible" DarkBackground="true">
+    <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
+</MudOverlay>
+
+<EditForm Model="@setCertifierFeeForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard>
+                <MudCardContent>
+                    <MudText>1) Add 100 bol as collateral to your first commercial address. They will be reserved for as long as you are a certifier.</MudText>
+                    <MudText>2) Please note that there is a maximum fee limit of 0,05b that you can set for your certification services.</MudText>
+                    <MudText>3) Set the fee you will charge for your services.</MudText>
+
+                    <MudTextField Immediate=true Label="Fee" Required="true" HelperText="Set Your Fee as Certifier" Class="mt-3"
+                                  @bind-Value="setCertifierFeeForm.Fee" For="@(() => setCertifierFeeForm.Fee)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="MudBlazor.ButtonType.Submit"
+                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Set</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    SetCertifierFeeForm setCertifierFeeForm = new SetCertifierFeeForm();
+
+    private bool isProgressBarVisible = false;
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        try
+        {
+            var fee = new BigInteger(Math.Round(setCertifierFeeForm.Fee, 8) * 100000000);
+            await bolService.SetCertifierFee(fee);
+            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+    }
+}

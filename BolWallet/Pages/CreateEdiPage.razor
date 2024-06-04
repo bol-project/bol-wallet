@@ -18,14 +18,14 @@
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
                 @if (edi.Item1 == "PersonalVoice")
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => GetAudioFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => PickAudioFileAsync(edi.Item1))"></MudIconButton>
                     <MudIconButton Icon="@(ViewModel.IsRecording ? Icons.Material.Filled.Stop : Icons.Material.Filled.Mic)" 
                                    Color="@(ViewModel.IsRecording ? Color.Error : Color.Primary)" aria-label="@edi.Item1" 
                                    OnClick="@(async () => await StartAudioRecording())"></MudIconButton>
                 }
                 else
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>GetFile(edi.Item1))"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>PickFileAsync(edi.Item1))"></MudIconButton>
                     <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@edi.Item1" OnClick="@(args=>PickPhotoAsync(edi.Item1))" />
                     <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>TakePhotoAsync(edi.Item1))"></MudIconButton>
                 }
@@ -124,14 +124,14 @@
         await InvokeAsync(() => StateHasChanged());
     }
 
-    private async Task GetAudioFile(string property)
+    private async Task PickAudioFileAsync(string property)
     {
         await createEdiViewModel.PickAudioCommand.ExecuteAsync(property);
 
         await UpdateIdentificationDocumentsList(property);
     }
 
-    private async Task GetFile(string property)
+    private async Task PickFileAsync(string property)
     {
         await createEdiViewModel.PickFileCommand.ExecuteAsync(property);
 

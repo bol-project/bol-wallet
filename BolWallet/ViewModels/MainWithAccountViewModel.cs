@@ -90,6 +90,11 @@ public partial class MainWithAccountViewModel : BaseViewModel
             {
                 await FetchBolAccountData(token);
             }
+
+            if (IsAccountOpen)
+            {
+                await App.Current.MainPage.Navigation.PushAsync(new HomePage());
+            }
         }
         catch (Exception ex)
         {
@@ -121,7 +126,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         return true;
     }
 
-    private async Task FetchBolAccountData(CancellationToken token)
+    public async Task FetchBolAccountData(CancellationToken token)
     {
         try
         {
@@ -150,11 +155,12 @@ public partial class MainWithAccountViewModel : BaseViewModel
                 if (BolAccount.AccountStatus == AccountStatus.Open)
                     IsAccountOpen = true;
                 else
-                    await NavigationService.NavigateTo<CertifyViewModel>(true);
+                    await NavigationService.NavigateTo<GetCertifiedViewModel>(true);
 
                 CommercialBalancesDisplayList = (BolAccount?.CommercialBalances ?? new())
                     .Select(pair => new BalanceDisplayItem { Address = pair.Key, Balance = pair.Value })
                     .ToList();
+
                 return;
             }
             
