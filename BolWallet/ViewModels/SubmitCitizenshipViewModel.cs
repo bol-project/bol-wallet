@@ -65,7 +65,6 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     public bool HasAddedMandatoryFiles => Files is 
         { Passport: not null } 
         or { IdentityCard: not null, IdentityCardBack: not null }
-        or { ProofOfNin: not null }
         or { BirthCertificate: not null };
     
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
@@ -97,6 +96,9 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
                     .First(c => c.Name == CitizenshipForm.CountryName).Alpha3;
                 IsFormInitialized = true;
             }
+
+            SetNinInternationalName();
+
             IsLoading = false;
         }
         catch (Exception ex)
@@ -150,11 +152,12 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     }
     
     [RelayCommand]
-    private void SetNinInternationalName()
+    public void SetNinInternationalName()
     {
-        NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm.CountryCode].InternationalName;
+        if (CitizenshipForm?.CountryCode is not null)
+            NinInternationalName = _registerContent.NinPerCountryCode[CitizenshipForm?.CountryCode].InternationalName;
     }
-    
+
     [RelayCommand]
     private void RemoveFile(string fileTypeStr)
     {

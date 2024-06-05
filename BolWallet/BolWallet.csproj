@@ -83,10 +83,10 @@
 
   <ItemGroup>
     <!-- App Icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" BaseSize="128,128" />
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" Color="White" BaseSize="128,128" />
 
     <!-- Splash Screen -->
-    <MauiSplashScreen Include="Resources\Images\bol_logo.png" Color="white" BaseSize="128,128" />
+    <MauiSplashScreen Include="Resources\Images\bol_logo.svg" Color="White" BaseSize="128,128" />
 
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
@@ -212,8 +212,8 @@
   <ItemGroup>
     <PackageReference Include="akavache" Version="9.1.20" />
     <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
+    <PackageReference Include="BolChain.Core" Version="1.1.1" />
     <PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
-    <PackageReference Include="BolChain.Core" Version="1.1.0-beta.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
