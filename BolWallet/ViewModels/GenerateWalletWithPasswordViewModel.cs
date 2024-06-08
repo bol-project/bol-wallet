@@ -36,15 +36,34 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     [ObservableProperty]
     private string _walletCreationProgress = "Please keep the application open...";
 
+    public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            userData = await this._secureRepository.GetAsync<UserData>("userdata");
+
+            if (userData.BolWallet is not null)
+                await App.Current.MainPage.Navigation.PushAsync(new Views.DownloadCertificationDocumentsPage());
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show(cancellationToken);
+        }
+    }
+
     [RelayCommand]
     private async Task Submit()
     {
         try
         {
+            if (userData.BolWallet is not null)
+            {
+                await App.Current.MainPage.Navigation.PushAsync(new Views.DownloadCertificationDocumentsPage());
+                return;
+            }
+
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
-
-            UserData userData = await this._secureRepository.GetAsync<UserData>("userdata");
 
             Bol.Core.Model.BolWallet bolWallet;
 
