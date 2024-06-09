@@ -41,9 +41,6 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         try
         {
             userData = await this._secureRepository.GetAsync<UserData>("userdata");
-
-            if (userData.BolWallet is not null)
-                await App.Current.MainPage.Navigation.PushAsync(new Views.DownloadCertificationDocumentsPage());
         }
         catch (Exception ex)
         {
@@ -58,7 +55,7 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
         {
             if (userData.BolWallet is not null)
             {
-                await App.Current.MainPage.Navigation.PushAsync(new Views.DownloadCertificationDocumentsPage());
+                await NavigationService.NavigateTo<DownloadCertificationDocumentsViewModel>();
                 return;
             }
 
@@ -78,6 +75,8 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
             await Task.Run(async () => await _secureRepository.SetAsync("userdata", userData));
 
             await DownloadWalletAsync(bolWallet);
+
+            await NavigationService.NavigateTo<DownloadCertificationDocumentsViewModel>();
         }
         catch (Exception ex)
         {
