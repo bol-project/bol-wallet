@@ -34,12 +34,6 @@
 	<string>"Bol requires access to your microphone."</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Bol requires access to photos gallery for picking photos.</string>
-    <key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-		<string>processing</string>
-	</array>
     <key>CFBundleVersion</key>
     <string>2024.0605.1730</string>
     <key>CFBundleShortVersionString</key>
