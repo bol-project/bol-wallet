@@ -58,9 +58,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
     <WarningsAsErrors />
-    <CreatePackage>false</CreatePackage>
+    <ArchiveOnBuild>true</ArchiveOnBuild>
     <CodesignProvision>Automatic</CodesignProvision>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
     <MtouchInterpreter>-all,System.Collections.Immutable</MtouchInterpreter>
   </PropertyGroup>
 
