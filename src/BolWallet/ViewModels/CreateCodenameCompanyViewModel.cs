@@ -56,7 +56,7 @@ public partial class CreateCodenameCompanyViewModel : CreateCodenameViewModel
             };
 
             var result = _codeNameService.Generate(company);
-            var codenameExistsResult = await CodenameExists(result, token);
+            var codenameExistsResult = await CheckCodenameExists(result, token);
             
             switch (codenameExistsResult.IsSuccess)
             {
