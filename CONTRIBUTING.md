@@ -1,10 +1,10 @@
-# Contributing to Wallet
+# Contributing to BOL Wallet
 
-Thank you for your interest in contributing to BolWallet! We welcome contributions from everyone. By participating in this project, you agree to abide by the following guidelines.
+Thank you for your interest in contributing to BOL Wallet! We welcome contributions from everyone. By participating in this project, you agree to abide by the following guidelines.
 
 ## Table of Contents
 
-- [Contributing to Wallet](#contributing-to-wallet)
+- [Contributing to BOL Wallet](#contributing-to-bol-wallet)
   - [Table of Contents](#table-of-contents)
   - [How to Contribute](#how-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
