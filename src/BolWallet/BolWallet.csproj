@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>BolWallet</RootNamespace>
     <UseMaui>true</UseMaui>
-    <MauiVersion>8.0.20</MauiVersion>
+    <MauiVersion>8.0.60</MauiVersion>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
 
@@ -58,9 +58,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
     <WarningsAsErrors />
-    <CreatePackage>false</CreatePackage>
+    <ArchiveOnBuild>true</ArchiveOnBuild>
     <CodesignProvision>Automatic</CodesignProvision>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
     <MtouchInterpreter>-all,System.Collections.Immutable</MtouchInterpreter>
   </PropertyGroup>
 
@@ -212,7 +213,7 @@
   <ItemGroup>
     <PackageReference Include="akavache" Version="9.1.20" />
     <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
-    <PackageReference Include="BolChain.Core" Version="1.1.1" />
+    <PackageReference Include="BolChain.Core" Version="1.1.2" />
     <PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
@@ -268,4 +269,8 @@
     </PropertyGroup>
   </Target>
 
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+    <BundleResource Include="Platforms\iOS\PrivacyInfo.xcprivacy" LogicalName="PrivacyInfo.xcprivacy" />
+  </ItemGroup>
+  
 </Project>
