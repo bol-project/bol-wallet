@@ -56,8 +56,8 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
             userData.BirthCountryCode = IndividualCodenameForm.CountryOfBirth.Alpha3;
 
             var result = _codeNameService.Generate(person);
-            var codenameExistsResult = await CodenameExists(result, token);
-            
+            var codenameExistsResult = await CheckCodenameExists(result, token);
+
             switch (codenameExistsResult.IsSuccess)
             {
                 case true when !codenameExistsResult.Data.Exists:
@@ -74,12 +74,12 @@ public partial class CreateCodenameIndividualViewModel : CreateCodenameViewModel
                 case true when codenameExistsResult.Data.Exists:
                     {
                         var alternatives = string.Join(Environment.NewLine, codenameExistsResult.Data.Alternatives);
-                
+
                         await Toast
                             .Make($"The codename already exists. Found:{Environment.NewLine}{alternatives}",
                                 ToastDuration.Long)
                             .Show(token);
-                
+
                         return;
                     }
                 case false:
