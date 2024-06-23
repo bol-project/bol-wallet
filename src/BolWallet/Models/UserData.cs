@@ -22,6 +22,7 @@ public class UserData
     public string WalletPassword { get; set; }
     public bool IsCertifier { get; set; }
     public bool IsIndividualRegistration { get; set; }
+    public bool UseMainnet { get; set; }
 
     public string GetShortHash()
     {
