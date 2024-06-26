@@ -42,63 +42,68 @@
                               HelperText="@IndividualCodenameForm.NIN.HelpMessage" Immediate="true" Required="true" RequiredError="@IndividualCodenameForm.NIN.ErrorMessage"
                               Disabled="true" />
             </MudItem>
-            <MudItem xs="12" sm="12" md="12">
-                <MudSelect T="Bol.Core.Model.Gender?" 
-                           Label="Gender"
-                           Variant="MudBlazor.Variant.Outlined"
-                           Margin="@Margin.Dense"
-                           Dense="true"
-                           AnchorOrigin="Origin.BottomCenter"
-                           @bind-Value="@IndividualCodenameForm.Gender"
-                           Required="true"
-                           RequiredError="Gender is required"
-                           FullWidth="true">
-                    @foreach (var g in Genders)
-                    {
-                        <MudSelectItem T="Bol.Core.Model.Gender?"
-                                       Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
-                    }
-                </MudSelect>
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12">
-                <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
+            @if (registrationCountry is not null)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudSelect T="Bol.Core.Model.Gender?"
+                               Label="Gender"
+                               Variant="MudBlazor.Variant.Outlined"
                                Margin="@Margin.Dense"
-                               HelperText="@IndividualCodenameForm.Birthdate.HelpMessage"
-                               MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
-                               DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)" />
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12">
-                <MudAutocomplete T="Country" Label="Birth Country" @bind-Value="@IndividualCodenameForm.CountryOfBirth" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
-                                 SearchFunc="@Search" HelperText="Choose the country where you were born." ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
-                                 Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
-                </MudAutocomplete>
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12">
-                <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@IndividualCodenameForm.Combination.Value"
-                              Margin="@Margin.Dense"
-                              Required="true" RequiredError="@IndividualCodenameForm.Combination.ErrorMessage" />
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12">
-                <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameIndividualViewModel.Codename"
-                              Margin="@Margin.Dense" ReadOnly="true"
-                              Required="true" RequiredError="Codename is required" />
-            </MudItem>
-            <MudItem xs="12">
-                <div class="text-center">
-                    <!-- Use a div with text-center class to center the buttons -->
-                    @if (IndividualCodenameForm?.IsFormFilled ?? false)
-                    {
+                               Dense="true"
+                               AnchorOrigin="Origin.BottomCenter"
+                               @bind-Value="@IndividualCodenameForm.Gender"
+                               Required="true"
+                               RequiredError="Gender is required"
+                               Error="!IndividualCodenameForm.Gender.HasValue"
+                               ErrorText=@IndividualCodenameForm.GenderErrorMessage
+                               FullWidth="true">
+                        @foreach (var g in Genders)
+                        {
+                            <MudSelectItem T="Bol.Core.Model.Gender?"
+                                           Value="@(Enum.Parse<Bol.Core.Model.Gender>(g.ToString()))" />
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudDatePicker Label="Birth Date(yyyy-MM-dd)" Editable="true" Date="@BirthDate" Variant="MudBlazor.Variant.Outlined"
+                                   Margin="@Margin.Dense"
+                                   Required="true"
+                                   MinDate="new DateTime(1900, 1, 1)" MaxDate="new DateTime(lastYear, 12, 31)"
+                                   Error="!IndividualCodenameForm.Birthdate.IsReady" ErrorText="@IndividualCodenameForm.Birthdate.ErrorMessage"
+                                   DateChanged="@OnDateChanged" Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudAutocomplete T="Country" Label="Birth Country" @bind-Value="@IndividualCodenameForm.CountryOfBirth" Margin="@Margin.Dense" Dense="true" Variant="MudBlazor.Variant.Outlined"
+                                     SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : e.Name)" OnBlur="@(x=>StateHasChanged())"
+                                     Error="IndividualCodenameForm.CountryOfBirth is null" ErrorText=@IndividualCodenameForm.CountryOfBirthErrorMessage
+                                     Required="true" AdornmentIcon="@Icons.Material.Filled.Search" RequiredError="Country is required" Strict="false">
+                    </MudAutocomplete>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Combination" @bind-Value="@IndividualCodenameForm.Combination.Value"
+                                  Margin="@Margin.Dense"
+                                  Required="true" RequiredError="@IndividualCodenameForm.Combination.ErrorMessage"
+                                  Error="!IndividualCodenameForm.Combination.IsReady" ErrorText="@IndividualCodenameForm.Combination.ErrorMessage" />
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" Variant="MudBlazor.Variant.Outlined" Label="Codename" @bind-Value="@createCodenameIndividualViewModel.Codename"
+                                  Margin="@Margin.Dense" ReadOnly="true"
+                                  Required="true" RequiredError="Codename is required" />
+                </MudItem>
+                <MudItem xs="12">
+                    <div class="text-center">
+                        <!-- Use a div with text-center class to center the buttons -->
                         @if (string.IsNullOrEmpty(createCodenameIndividualViewModel.Codename.Trim()))
                         {
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=>createCodenameIndividualViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="!IndividualCodenameForm?.IsFormFilled ?? true" Color="Color.Primary" OnClick="@(()=>createCodenameIndividualViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
                         }
                         else
                         {
                             <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> createCodenameIndividualViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
                         }
-                    }
-                </div>
-            </MudItem>
+                    </div>
+                </MudItem>
+            }
         </MudGrid>
     </MudForm>
 </div>
