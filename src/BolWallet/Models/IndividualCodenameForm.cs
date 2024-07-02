@@ -76,6 +76,8 @@ public class IndividualCodenameForm : ObservableObject
         }
     }
 
+    public string GenderErrorMessage = "Gender selection is required.";
+
     public BaseProperty Combination { get; set; } = new()
     {
         ErrorMessage = "Combination should be a capital letter or a digit",
@@ -119,6 +121,8 @@ public class IndividualCodenameForm : ObservableObject
         }
     }
 
+    public string CountryOfBirthErrorMessage = "Choose the country where you were born.";
+
     public bool IsFormFilled =>
         FirstName.IsReady &&
         Surname.IsReady &&
@@ -127,6 +131,7 @@ public class IndividualCodenameForm : ObservableObject
         Birthdate.IsReady &&
         Combination.IsReady &&
         NIN.IsReady &&
+        Gender.HasValue &&
         CountryOfBirth is not null &&
         SelectedCountry is not null;
 
