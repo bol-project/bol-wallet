@@ -66,7 +66,7 @@
 					<DataTemplate x:DataType="models:BalanceDisplayItem">
 						<ViewCell>
 							<Grid>
-								<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                                <Frame CornerRadius="25" BackgroundColor="{DynamicResource Primary}" Padding="15">
 									<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
 										<Label 
 												Text="{Binding Address}" 
