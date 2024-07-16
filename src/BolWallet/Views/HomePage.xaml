@@ -6,7 +6,7 @@
     xmlns:pages="clr-namespace:BolWallet.Pages"
     Title="Home"
     BackgroundColor="{DynamicResource SecondaryColor}"
-    NavigationPage.HasNavigationBar="false">
+    NavigationPage.HasBackButton="false">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
