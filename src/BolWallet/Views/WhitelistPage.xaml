@@ -12,7 +12,7 @@
 			PlaceholderColor="Black" BackgroundColor="#EDF2F7" TextColor="Black" Margin="0,0,0,10" />
 		<Button 
 			Text="Whitelist"
-			BackgroundColor="DarkSlateBlue"
+			BackgroundColor="{DynamicResource Primary}"
 			TextColor="White"
 			Command="{Binding WhitelistCommand}"	/>
 	</StackLayout>

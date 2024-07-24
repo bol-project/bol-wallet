@@ -42,7 +42,7 @@
             <Frame
 				Grid.Row="1"
 				CornerRadius="25"
-				BackgroundColor="#582cd4">
+				BackgroundColor="{DynamicResource Primary}">
 					<StackLayout
 								VerticalOptions="CenterAndExpand"
 								Orientation="Vertical">
@@ -63,7 +63,7 @@
 				<Frame
 				  IsVisible="{Binding IsAccountOpen}"
 				  CornerRadius="45"
-				  BackgroundColor="#582cd4">
+				  BackgroundColor="{DynamicResource Primary}">
 					<StackLayout
 					  VerticalOptions="CenterAndExpand"
 					  Orientation="Vertical">
@@ -85,7 +85,7 @@
 				<Frame
 				  IsVisible="{Binding IsAccountOpen}"
 				  CornerRadius="45"
-				  BackgroundColor="#582cd4">
+				  BackgroundColor="{DynamicResource Primary}">
 					<StackLayout
 							VerticalOptions="CenterAndExpand"
 							Orientation="Vertical">
@@ -107,7 +107,7 @@
 				<Frame
 				  IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
 				  CornerRadius="45"
-				  BackgroundColor="#582cd4">
+				  BackgroundColor="{DynamicResource Primary}">
 					<StackLayout
 						VerticalOptions="CenterAndExpand"
 						Orientation="Vertical">
@@ -164,7 +164,7 @@
 						<FontImageSource 
 				FontFamily="MaterialIconsRegular"
 				Glyph="{x:Static helpers:Icons.Arrow_drop_down_circle}"
-				Color="#582cd4"
+				Color="{DynamicResource Primary}"
 				/>
 					</ImageButton.Source>
 				</ImageButton>
@@ -175,7 +175,7 @@
 						<DataTemplate x:DataType="models:BalanceDisplayItem">
 							<ViewCell>
 								<Grid>
-									<Frame CornerRadius="25" BackgroundColor="#582cd4" Padding="15">
+                                            <Frame CornerRadius="25" BackgroundColor="{DynamicResource Primary}" Padding="15">
 										<StackLayout VerticalOptions="CenterAndExpand" Orientation="Vertical">
 											<Label 
 											Text="{Binding Address}" 
@@ -209,7 +209,7 @@
 				<Button
 					IsVisible="{Binding CanWhiteList}"
 					Command="{Binding WhitelistCommand}"
-											BackgroundColor="DarkSlateBlue"
+											BackgroundColor="{DynamicResource Primary}"
 											TextColor="White"
 					HorizontalOptions="FillAndExpand"
 					Text="Whitelist your Main Address" />
@@ -220,7 +220,7 @@
 				<Button
 				IsVisible="{Binding CanRegister}"
 				Command="{Binding RegisterCommand}"
-							BackgroundColor="DarkSlateBlue"
+							BackgroundColor="{DynamicResource Primary}"
 							TextColor="White"
 				HorizontalOptions="FillAndExpand"
 				Text="Register" />

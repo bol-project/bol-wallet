@@ -124,7 +124,7 @@ public partial class GetCertifiedViewModel : BaseViewModel
                         CodeName = codeName,
                         Fee = certifier.CertificationFee,
                         Color = BolAccount.CertificationRequests.ContainsKey(codeName)
-                            ? Colors.LightSeaGreen
+                            ? Color.FromUint(0xFF0050FF)
                             : Colors.WhiteSmoke
                     });
                 }
