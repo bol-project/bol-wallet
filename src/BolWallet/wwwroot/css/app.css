@@ -18,6 +18,12 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+.mud-button {
+    background-color: #0050FF !important; 
+    color: white !important;
+    border-color: #003EB3 !important; 
+}
+
 .content {
     padding-top: 1.1rem;
 }

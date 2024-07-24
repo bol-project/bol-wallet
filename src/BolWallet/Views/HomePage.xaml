@@ -5,8 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:BolWallet.Pages"
     Title="Home"
-    BackgroundColor="{DynamicResource SecondaryColor}"
-    NavigationPage.HasNavigationBar="false">
+    BackgroundColor="{DynamicResource SecondaryColor}">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>

@@ -16,7 +16,7 @@
                         <MudText Typo="Typo.h5">Download All Documents</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudIconButton Icon="@Icons.Material.Rounded.Archive" Color="Color.Primary" OnClick=" async () => await DownloadAllDocuments()" />
+                        <MudIconButton Icon="@Icons.Material.Rounded.Archive" Style="color:#0050FF" OnClick=" async () => await DownloadAllDocuments()" />
                     </CardHeaderActions>
                 </MudCardHeader>
             </MudCard>
@@ -30,7 +30,7 @@
                                     <MudText Typo="Typo.h6">@file.FileName</MudText>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
-                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
+                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Style="color:#0050FF" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
                                 </CardHeaderActions>
                             </MudCardHeader>
                         </MudCard>
@@ -47,7 +47,7 @@
                                     <MudText Typo="Typo.h6">@file.FileName</MudText>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
-                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Color="Color.Primary" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
+                                    <MudIconButton Icon="@Icons.Material.Rounded.Download" Style="color:#0050FF" OnClick="async () => await ViewModel.DownloadDocumentCommand.ExecuteAsync(file)" />
                                 </CardHeaderActions>
                             </MudCardHeader>
                         </MudCard>
@@ -63,7 +63,7 @@
     <MudItem Class="bottom-button" xs="12">
         <MudButton ButtonType="MudBlazor.ButtonType.Submit" OnClick="()=>navigationService.NavigateTo<MainWithAccountViewModel>()"
                    Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Size="Size.Large" Icon="@Icons.Material.Filled.ArrowForwardIos"
-                   Style="background: linear-gradient(to right, #673ab7, #512da8); color: white; padding: 15px 30px; font-size: 14px;">
+                  >
             Next
         </MudButton>
     </MudItem>
