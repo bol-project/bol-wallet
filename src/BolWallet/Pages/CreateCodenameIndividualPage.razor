@@ -95,11 +95,11 @@
                         <!-- Use a div with text-center class to center the buttons -->
                         @if (string.IsNullOrEmpty(createCodenameIndividualViewModel.Codename.Trim()))
                         {
-                            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="!IndividualCodenameForm?.IsFormFilled ?? true" Color="Color.Primary" OnClick="@(()=>createCodenameIndividualViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Style="background-color:#0050FF !important" Disabled="!IndividualCodenameForm?.IsFormFilled ?? true" OnClick="@(()=>createCodenameIndividualViewModel.GenerateCommand.Execute(null))">Generate</MudButton>
                         }
                         else
                         {
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(()=> createCodenameIndividualViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Style="background-color:#0050FF !important" OnClick="@(()=> createCodenameIndividualViewModel.SubmitCommand.Execute(null))">Submit</MudButton>
                         }
                     </div>
                 </MudItem>
@@ -111,6 +111,11 @@
     .text-center {
         text-align: center;
     }
+
+    .mud-button{
+        background-color: #594AE2 !important
+    }
+
 </style>
 @code
 {
