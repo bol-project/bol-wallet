@@ -7,35 +7,64 @@
 
 <MudGrid>
     <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-        <EditForm Model="@ViewModel.MultiCitizenshipModel" OnValidSubmit="ViewModel.Generate">
-            <DataAnnotationsValidator />
-            <MudCard Class="styled-card">
-                <MudCardContent>
-                    <MudSelect T="string" Label="Country" Required="true" HelperText="Enter the Country on which the individual holds a citizenship." @bind-value="ViewModel.MultiCitizenshipModel.CountryCode">
-                        @foreach (var country in _content.Countries)
-                        {
-                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                    <MudDatePicker Editable="true" @bind-Date="ViewModel.MultiCitizenshipModel.BirthDate"
-                                   MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today"
-                                   Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)"/>
-                    <MudTextField Label="First Name" HelperText="Enter the First Name of the individual." Required="true" Class="mt-3"
-                                  @bind-Value="ViewModel.MultiCitizenshipModel.FirstName" For="@(() => ViewModel.MultiCitizenshipModel.FirstName)"/>
-                    <MudTextField Class="mt-3" T="string" For="@(() => ViewModel.MultiCitizenshipModel.Nin)" Label="NIN" @bind-Value="@ViewModel.MultiCitizenshipModel.Nin"
-                                  OnlyValidateIfDirty="false" HelperText="@ViewModel.NinInternationalName"
-                                  Immediate="true" Required="true"
-                                  RequiredError="NIN is required!"
-                                  Error="@(!string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage))"
-                                  ErrorText="@ViewModel.NinValidationErrorMessage"
-                                  OnBlur="@ViewModel.ValidateNin"/>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Generate Short Hash</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </EditForm>
+        <MudSwitch @bind-Value="ViewModel.IsKnownShortHash" Color="Color.Primary" Label="I have the Short Hash" />
     </MudItem>
+
+    @if(ViewModel.IsKnownShortHash){
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <EditForm Model="@ViewModel.MultiCitizenshipShortHashModel" OnValidSubmit="ViewModel.CheckMultiCitizenship">
+                <DataAnnotationsValidator />
+                <MudCard Class="styled-card">
+                    <MudCardContent>
+                        <MudSelect T="string" Label="Country" Required="true" HelperText="Enter the Country on which the individual holds a citizenship." @bind-value="ViewModel.MultiCitizenshipShortHashModel.CountryCode">
+                            @foreach (var country in _content.Countries)
+                            {
+                                <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudTextField Label="Short Hash" HelperText="Enter the Short Hash of the individual." Required="true" Class="mt-3"
+                                      @bind-Value="ViewModel.MultiCitizenshipShortHashModel.ShortHash" For="@(() => ViewModel.MultiCitizenshipShortHashModel.ShortHash)" MaxLength="11" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Check Short Hash</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </MudItem>
+    }
+    else
+    {
+        <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <EditForm Model="@ViewModel.MultiCitizenshipModel" OnValidSubmit="ViewModel.Generate">
+                <DataAnnotationsValidator />
+                <MudCard Class="styled-card">
+                    <MudCardContent>
+                        <MudSelect T="string" Label="Country" Required="true" HelperText="Enter the Country on which the individual holds a citizenship." @bind-value="ViewModel.MultiCitizenshipModel.CountryCode">
+                            @foreach (var country in _content.Countries)
+                            {
+                                <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudDatePicker Editable="true" @bind-Date="ViewModel.MultiCitizenshipModel.BirthDate"
+                                       MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today"
+                                       Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat" Placeholder="Birth Date(yyyy-MM-dd)"/>
+                        <MudTextField Label="First Name" HelperText="Enter the First Name of the individual." Required="true" Class="mt-3"
+                                      @bind-Value="ViewModel.MultiCitizenshipModel.FirstName" For="@(() => ViewModel.MultiCitizenshipModel.FirstName)"/>
+                        <MudTextField Class="mt-3" T="string" For="@(() => ViewModel.MultiCitizenshipModel.Nin)" Label="NIN" @bind-Value="@ViewModel.MultiCitizenshipModel.Nin"
+                                      OnlyValidateIfDirty="false" HelperText="@ViewModel.NinInternationalName"
+                                      Immediate="true" Required="true"
+                                      RequiredError="NIN is required!"
+                                      Error="@(!string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage))"
+                                      ErrorText="@ViewModel.NinValidationErrorMessage"
+                                      OnBlur="@ViewModel.ValidateNin"/>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Generate Short Hash</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </MudItem>
+    }
     <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
         <MudCard hidden="@(string.IsNullOrWhiteSpace(ViewModel.ShortHash))">
             @if (ViewModel.IsMultiCitizenshipRegistered)

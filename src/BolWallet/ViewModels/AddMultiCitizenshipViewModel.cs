@@ -20,7 +20,21 @@ public class MultiCitizenshipModel
 
     [Required] 
     public DateTime? BirthDate { get; set; }
+
+    [StringLength(11, MinimumLength = 10, ErrorMessage = "Short Hash must be exactly 10 or 11 characters.")]
+    public string ShortHash { get; set; }
 }
+
+public class MultiCitizenshipShortHashModel
+{
+    [Required]
+    public string CountryCode { get; set; }
+
+    [Required]
+    [StringLength(11, MinimumLength = 10, ErrorMessage = "Short Hash must be exactly 10 or 11 characters.")]
+    public string ShortHash { get; set; }
+}
+
 
 public partial class AddMultiCitizenshipViewModel : BaseViewModel
 {
@@ -36,10 +50,12 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
     }
 
     public MultiCitizenshipModel MultiCitizenshipModel { get; } = new MultiCitizenshipModel();
-    
+    public MultiCitizenshipShortHashModel MultiCitizenshipShortHashModel { get; } = new MultiCitizenshipShortHashModel();
+
     [ObservableProperty] private string _shortHash;
     [ObservableProperty] private bool _isMultiCitizenshipRegistered;
     [ObservableProperty] private bool _isLoading;
+    [ObservableProperty] private bool _isKnownShortHash;
 
     public async Task Generate()
     {
@@ -52,6 +68,20 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
         {
             IsMultiCitizenshipRegistered = false;
         }
+    }
+
+    public async Task CheckMultiCitizenship()
+    {
+        try
+        {
+            ShortHash = MultiCitizenshipShortHashModel.ShortHash;
+            IsMultiCitizenshipRegistered = await _bolService.IsMultiCitizenship(MultiCitizenshipShortHashModel.CountryCode, ShortHash);
+        }
+        catch (RpcException)
+        {
+            IsMultiCitizenshipRegistered = false;
+        }
+        catch (Exception) { }
     }
 
     public async Task Register()
