@@ -7,7 +7,9 @@
 
 <MudGrid>
     <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-        <MudSwitch @bind-Value="ViewModel.IsKnownShortHash" Color="Color.Primary" Label="I have the Short Hash" />
+        <MudSwitch T="bool" Value="@ViewModel.IsKnownShortHash"
+                   ValueChanged="@ViewModel.OnKnownShortHashToggleChange"
+                Color="Color.Primary" Label="I have the Short Hash" />
     </MudItem>
 
     @if(ViewModel.IsKnownShortHash){
@@ -121,4 +123,6 @@
         Clipboard.Default.SetTextAsync(clip);
         Toast.Make("Copied to Clipboard").Show();
     }
+
+
 }

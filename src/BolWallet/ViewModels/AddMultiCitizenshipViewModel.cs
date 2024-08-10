@@ -49,8 +49,8 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
         _registerContent = registerContent;
     }
 
-    public MultiCitizenshipModel MultiCitizenshipModel { get; } = new MultiCitizenshipModel();
-    public MultiCitizenshipShortHashModel MultiCitizenshipShortHashModel { get; } = new MultiCitizenshipShortHashModel();
+    public MultiCitizenshipModel MultiCitizenshipModel { get; set; } = new MultiCitizenshipModel();
+    public MultiCitizenshipShortHashModel MultiCitizenshipShortHashModel { get; set; } = new MultiCitizenshipShortHashModel();
 
     [ObservableProperty] private string _shortHash;
     [ObservableProperty] private bool _isMultiCitizenshipRegistered;
@@ -116,7 +116,15 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
             IsLoading = false;
         }
     }
-    
+
+    public void OnKnownShortHashToggleChange(bool newValue)
+    {
+        IsKnownShortHash = newValue;
+        MultiCitizenshipModel = new MultiCitizenshipModel();
+        MultiCitizenshipShortHashModel = new MultiCitizenshipShortHashModel();
+        ShortHash = string.Empty;
+    }
+
     public void ValidateNin()
     {
         var countryCode = MultiCitizenshipModel.CountryCode;
