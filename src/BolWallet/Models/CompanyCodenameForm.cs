@@ -70,11 +70,11 @@ public partial class CompanyCodenameForm : ObservableObject
 
     public BaseProperty Combination { get; set; } = new()
     {
-        ErrorMessage = "Extra Digit should be a capital letter or a digit",
+        ErrorMessage = "Combination should be a capital letter or a digit",
         IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
-        Value = "",
+        Value = "1",
         IsMandatory = true,
-        HelpMessage = "Extra Digit should be a capital letter or a digit"
+        HelpMessage = "Combination should be a capital letter or a digit"
     };
 
     public bool IsFormFilled =>
