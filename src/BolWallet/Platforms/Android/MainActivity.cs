@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using AndroidX.AppCompat.App;
+using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
 
 namespace BolWallet;
 
@@ -14,6 +15,8 @@ public class MainActivity : MauiAppCompatActivity
 		base.OnCreate(bundle);
 		Window.AddFlags(WindowManagerFlags.KeepScreenOn);
 
-		AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
+        App.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+
+        AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
 	}
 }
