@@ -49,10 +49,15 @@
                     FontSize="24"
                     TextColor="{DynamicResource Primary}" />
                 <Label
-                    Text="You need 2 certifications to Open your Account."
+                    Text="You will get 1 certification in this round."
                     IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
                     HorizontalTextAlignment="Center"
                     TextColor="{DynamicResource Primary}" />
+                <Label
+                   Text="You need 2 rounds with 1 certification in each round to open your account."
+                   IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{DynamicResource Primary}" />
                 <Label
                     Text="Your Account is Open but you can acquire additional certifications."
                     IsVisible="{Binding IsAccountOpen}"
