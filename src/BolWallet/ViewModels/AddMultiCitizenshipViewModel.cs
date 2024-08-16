@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Bol.Core.Abstractions;
 using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
+using Microsoft.Extensions.Logging;
 
 namespace BolWallet.ViewModels;
 
@@ -41,12 +42,19 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
     private readonly ICodeNameService _codeNameService;
     private readonly IBolService _bolService;
     private readonly RegisterContent _registerContent;
-    
-    public AddMultiCitizenshipViewModel(INavigationService navigationService, ICodeNameService codeNameService, IBolService bolService, RegisterContent registerContent) : base(navigationService)
+    private readonly ILogger<AddMultiCitizenshipViewModel> _logger;
+
+    public AddMultiCitizenshipViewModel(
+        INavigationService navigationService,
+        ICodeNameService codeNameService,
+        IBolService bolService,
+        RegisterContent registerContent,
+        ILogger<AddMultiCitizenshipViewModel> logger) : base(navigationService)
     {
         _codeNameService = codeNameService;
         _bolService = bolService;
         _registerContent = registerContent;
+        _logger = logger;
     }
 
     public MultiCitizenshipModel MultiCitizenshipModel { get; set; } = new MultiCitizenshipModel();
@@ -64,9 +72,11 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
         {
             IsMultiCitizenshipRegistered = await _bolService.IsMultiCitizenship(MultiCitizenshipModel.CountryCode, ShortHash);
         }
-        catch (RpcException)
+        catch (RpcException ex)
         {
             IsMultiCitizenshipRegistered = false;
+
+            _logger.LogError(ex, ex.Message);
         }
     }
 
@@ -77,11 +87,12 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
             ShortHash = MultiCitizenshipShortHashModel.ShortHash;
             IsMultiCitizenshipRegistered = await _bolService.IsMultiCitizenship(MultiCitizenshipShortHashModel.CountryCode, ShortHash);
         }
-        catch (RpcException)
+        catch (RpcException ex)
         {
             IsMultiCitizenshipRegistered = false;
+
+            _logger.LogError(ex, ex.Message);
         }
-        catch (Exception) { }
     }
 
     public async Task Register()
