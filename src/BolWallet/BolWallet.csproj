@@ -128,6 +128,9 @@
     <MauiXaml Update="Views\DownloadCertificationDocumentsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Views\WalletCreationInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\WhitelistPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

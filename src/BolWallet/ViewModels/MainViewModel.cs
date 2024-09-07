@@ -30,9 +30,9 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task NavigateToCodenameIndividualPage()
+    private async Task NavigateToWalletCreationInfoPage()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
+        await App.Current.MainPage.Navigation.PushAsync(new Views.WalletCreationInfo());
     }
 
     [RelayCommand]
