@@ -12,9 +12,7 @@ using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
-using Newtonsoft.Json;
 using Plugin.Maui.Audio;
-using YamlDotNet.Serialization;
 using Country = BolWallet.Models.Country;
 
 namespace BolWallet;
@@ -91,8 +89,8 @@ public static class MauiProgram
         // This model will hold the data from the Register flow
         services.AddSingleton(sp =>
         {
-            var countries = JsonConvert.DeserializeObject<List<Country>>(ReadResource("BolWallet.Resources.Content.country_code.json"));
-            var ninSpecifications = JsonConvert.DeserializeObject<List<NinSpecification>>(ReadResource("BolWallet.Resources.Content.nin.json"));
+            var countries = JsonSerializer.Deserialize<List<Country>>(ReadResource("BolWallet.Resources.Content.country_code.json"), Constants.WalletJsonSerializerDefaultOptions);
+            var ninSpecifications = JsonSerializer.Deserialize<List<NinSpecification>>(ReadResource("BolWallet.Resources.Content.nin.json"), Constants.WalletJsonSerializerDefaultOptions);
 
             return new RegisterContent
             {
