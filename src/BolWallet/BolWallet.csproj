@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>BolWallet</RootNamespace>
     <UseMaui>true</UseMaui>
-    <MauiVersion>8.0.82</MauiVersion>
+    <MauiVersion>8.0.90</MauiVersion>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
 
