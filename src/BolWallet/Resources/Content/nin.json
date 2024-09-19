@@ -1,0 +1,2522 @@
+[
+  {
+    "Country": "Afghanistan",
+    "CountryCode": "AFG",
+    "InternationalName": "Afghan Identity Card (e-Tazkira)",
+    "LocalName": "Tazkira",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Aland Islands",
+    "CountryCode": "ALA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Albania",
+    "CountryCode": "ALB",
+    "InternationalName": "Personal Number",
+    "LocalName": "Numri Personal",
+    "Format": "A11111111A",
+    "Digits": 10,
+    "Regex": "^[A-Z][0-9]{8}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Algeria",
+    "CountryCode": "DZA",
+    "InternationalName": "National Identification Number (NIN)",
+    "LocalName": "بطاقة الهوية الوطن   carte nationale d’identité",
+    "Format": "111111111111111111",
+    "Digits": 18,
+    "Regex": "^[0-9]{18}$",
+    "Status": 1
+  },
+  {
+    "Country": "American Samoa",
+    "CountryCode": "ASM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Andorra",
+    "CountryCode": "AND",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Angola",
+    "CountryCode": "AGO",
+    "InternationalName": "National Identification Number (NIN)",
+    "LocalName": "Bihete de intentidade no",
+    "Format": "1111111AA111",
+    "Digits": 12,
+    "Regex": "^[0-9]{7}[A-Z]{2}[0-9]{3}$",
+    "Status": 1
+  },
+  {
+    "Country": "Anguilla",
+    "CountryCode": "AIA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Antarctica",
+    "CountryCode": "ATA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Antigua and Barbuda",
+    "CountryCode": "ATG",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Argentina",
+    "CountryCode": "ARG",
+    "InternationalName": "National Identity Document)",
+    "LocalName": "DNI - Documento Nacional de Identidad",
+    "Format": "11111111",
+    "Digits": 8,
+    "Regex": "^[0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "Armenia",
+    "CountryCode": "ARM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Aruba",
+    "CountryCode": "ABW",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Australia",
+    "CountryCode": "AUS",
+    "InternationalName": "National Identity Document)",
+    "LocalName": "Tax File Number (TFN)",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Austria",
+    "CountryCode": "AUT",
+    "InternationalName": "Sector-Specific Personal Identifier (ssPIN)",
+    "LocalName": "CCR-ID Austrian Identity Card",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Azerbaijan",
+    "CountryCode": "AZE",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bahamas",
+    "CountryCode": "BHS",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bahrain",
+    "CountryCode": "BHR",
+    "InternationalName": " Identification Card (with a personal number)",
+    "LocalName": "بطاقة الهوية ",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Bangladesh",
+    "CountryCode": "BGD",
+    "InternationalName": "National Identity Card",
+    "LocalName": "জাতীয় পরিচয়পত্র",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Barbados",
+    "CountryCode": "BRB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Belarus",
+    "CountryCode": "BLR",
+    "InternationalName": "Personal Number",
+    "LocalName": "персональный номер",
+    "Format": "1111111A111AA1",
+    "Digits": 14,
+    "Regex": "^[0-9]{7}[A-Z][0-9]{3}[A-Z]{2}[0-9]$",
+    "Status": 1
+  },
+  {
+    "Country": "Belgium",
+    "CountryCode": "BEL",
+    "InternationalName": "National Register Number",
+    "LocalName": "Rijksregisternummer",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Belize",
+    "CountryCode": "BLZ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Benin",
+    "CountryCode": "BEN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bermuda",
+    "CountryCode": "BMU",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bhutan",
+    "CountryCode": "BTN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bolivia , Plurinational State of",
+    "CountryCode": "BOL",
+    "InternationalName": "Identity Card",
+    "LocalName": "Cedula de Identidad",
+    "Format": "1111111A1A1",
+    "Digits": 11,
+    "Regex": "^[0-9]{7}[A-Z][0-9][A-Z][0-9]$",
+    "Status": 1
+  },
+  {
+    "Country": "Bonaire, Sint Eustatius and Saba",
+    "CountryCode": "BES",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bosnia and Herzegovina",
+    "CountryCode": "BIH",
+    "InternationalName": "Unique Master Citizen Number",
+    "LocalName": "Jedinstveni matični broj građana",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Botswana",
+    "CountryCode": "BWA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bouvet Island",
+    "CountryCode": "BVT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Brazil",
+    "CountryCode": "BRA",
+    "InternationalName": "Civilian Identity Registr",
+    "LocalName": "Cadastro de Pessoas Físicas (CPF)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "British Indian Ocean Territory",
+    "CountryCode": "IOT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "British Virgin Islands",
+    "CountryCode": "VGB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Brunei Darussalam",
+    "CountryCode": "BRN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Bulgaria",
+    "CountryCode": "BGR",
+    "InternationalName": "Uniform Civil Number",
+    "LocalName": "Единен граждански номер (ЕГН)",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Burkina Faso",
+    "CountryCode": "BFA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Burundi",
+    "CountryCode": "BDI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cambodia",
+    "CountryCode": "KHM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cameroon",
+    "CountryCode": "CMR",
+    "InternationalName": "National Identity Number",
+    "LocalName": "",
+    "Format": "11111111111111111",
+    "Digits": 17,
+    "Regex": "^[0-9]{17}$",
+    "Status": 1
+  },
+  {
+    "Country": "Canada",
+    "CountryCode": "CAN",
+    "InternationalName": "Social Insurance Number",
+    "LocalName": "Social Insurance number (SIN)",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Cape Verde",
+    "CountryCode": "CPV",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cayman Islands",
+    "CountryCode": "CYM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Central African Republic",
+    "CountryCode": "CAF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Chad",
+    "CountryCode": "TCD",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Chile",
+    "CountryCode": "CHL",
+    "InternationalName": "National Identification Number",
+    "LocalName": " Rol Único Nacional (RUN)",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "China",
+    "CountryCode": "CHN",
+    "InternationalName": "Citizenship Number",
+    "LocalName": "公民身份号码   ",
+    "Format": "111111111111111111",
+    "Digits": 18,
+    "Regex": "^[0-9]{18}$",
+    "Status": 1
+  },
+  {
+    "Country": "Christmas Island",
+    "CountryCode": "CXR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cocos (Keeling) Islands",
+    "CountryCode": "CCK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Colombia",
+    "CountryCode": "COL",
+    "InternationalName": "ID card",
+    "LocalName": " Número Único de Identificación Personal (NUIP ) ",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Comoros",
+    "CountryCode": "COM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Congo (Brazzaville)",
+    "CountryCode": "COG",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Congo, (Kinshasa)",
+    "CountryCode": "COD",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cook Islands",
+    "CountryCode": "COK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Costa Rica",
+    "CountryCode": "CRI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Côte d'Ivoire",
+    "CountryCode": "CIV",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Croatia",
+    "CountryCode": "HRV",
+    "InternationalName": "Personal Identification Number",
+    "LocalName": "Osobni identifikacijski broj (OIB)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Cuba",
+    "CountryCode": "CUB",
+    "InternationalName": "Identity card",
+    "LocalName": "Carnet de identidad",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Curaçao",
+    "CountryCode": "CUW",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Cyprus",
+    "CountryCode": "CYP",
+    "InternationalName": "ID card number",
+    "LocalName": "Αριθμός δελτίου ταυτότητας",
+    "Format": "1111111",
+    "Digits": 7,
+    "Regex": "^[0-9]{7}$",
+    "Status": 1
+  },
+  {
+    "Country": "Czech Republic",
+    "CountryCode": "CZE",
+    "InternationalName": "Birth Number",
+    "LocalName": "Rodné číslo (RČ)",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Denmark",
+    "CountryCode": "DNK",
+    "InternationalName": "Personal Identification Number",
+    "LocalName": "CPR, Det Centrale Personregisteer",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Djibouti",
+    "CountryCode": "DJI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Dominica",
+    "CountryCode": "DMA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Dominican Republic",
+    "CountryCode": "DOM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Ecuador",
+    "CountryCode": "ECU",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Egypt",
+    "CountryCode": "EGY",
+    "InternationalName": "National Identification Number",
+    "LocalName": "Documento Nacional de Identidad",
+    "Format": "11111111111111",
+    "Digits": 14,
+    "Regex": "^[0-9]{14}$",
+    "Status": 1
+  },
+  {
+    "Country": "El Salvador",
+    "CountryCode": "SLV",
+    "InternationalName": "Unique ID Number",
+    "LocalName": "Numero Unico de Identidad",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Equatorial Guinea",
+    "CountryCode": "GNQ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Eritrea",
+    "CountryCode": "ERI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Estonia",
+    "CountryCode": "EST",
+    "InternationalName": "Personal Identification Code",
+    "LocalName": "Isikukood (IK)",
+    "Format": "A1111111111",
+    "Digits": 11,
+    "Regex": "^[A-Z][0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Ethiopia",
+    "CountryCode": "ETH",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Falkland Islands (Malvinas)",
+    "CountryCode": "FLK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Faroe Islands",
+    "CountryCode": "FRO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Fiji",
+    "CountryCode": "FJI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Finland",
+    "CountryCode": "FIN",
+    "InternationalName": "Personal Identity Code",
+    "LocalName": "Henkilötunnus (HETU)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "France",
+    "CountryCode": "FRA",
+    "InternationalName": "National Identification Number",
+    "LocalName": "Numéri d'inscription au répertoire (INSEE)",
+    "Format": "111111111111111",
+    "Digits": 15,
+    "Regex": "^[0-9]{15}$",
+    "Status": 1
+  },
+  {
+    "Country": "French Guiana",
+    "CountryCode": "GUF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "French Polynesia",
+    "CountryCode": "PYF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "French Southern Territories",
+    "CountryCode": "ATF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Gabon",
+    "CountryCode": "GAB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Gambia",
+    "CountryCode": "GMB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Georgia",
+    "CountryCode": "GEO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Germany",
+    "CountryCode": "DEU",
+    "InternationalName": "Tax Identification Number",
+    "LocalName": "Steuer-ID  (Steueridentifikationsnummer, ID-Nr.)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Ghana",
+    "CountryCode": "GHA",
+    "InternationalName": "Personal Identification  ",
+    "LocalName": "Personal Identification  ",
+    "Format": "AAA1111111111",
+    "Digits": 13,
+    "Regex": "^[A-Z]{3}[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Gibraltar",
+    "CountryCode": "GIB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Greece",
+    "CountryCode": "GRC",
+    "InternationalName": "AMKA",
+    "LocalName": "AMKA",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Greenland",
+    "CountryCode": "GRL",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Grenada",
+    "CountryCode": "GRD",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Guadeloupe",
+    "CountryCode": "GLP",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Guam",
+    "CountryCode": "GUM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Guatemala",
+    "CountryCode": "GTM",
+    "InternationalName": "National Identity Document",
+    "LocalName": "Documento Personal de Identificación",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Guernsey",
+    "CountryCode": "GGY",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Guinea",
+    "CountryCode": "GIN",
+    "InternationalName": "National Identity Document",
+    "LocalName": "Guyana national identity card",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Guinea-Bissau",
+    "CountryCode": "GNB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Guyana",
+    "CountryCode": "GUY",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Haiti",
+    "CountryCode": "HTI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Heard and Mcdonald Islands",
+    "CountryCode": "HMD",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Honduras",
+    "CountryCode": "HND",
+    "InternationalName": "ID number",
+    "LocalName": "Numero de identification",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Hong Kong, SAR China",
+    "CountryCode": "HKG",
+    "InternationalName": "Identity card",
+    "LocalName": "香港身份證  Hēunggóng sānfánjing (HKID)",
+    "Format": "A1111111",
+    "Digits": 8,
+    "Regex": "^[A-Z][0-9]{7}$",
+    "Status": 1
+  },
+  {
+    "Country": "Hungary",
+    "CountryCode": "HUN",
+    "InternationalName": "Personal Identification Number",
+    "LocalName": "Személyi azonosító szám",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Iceland",
+    "CountryCode": "ISL",
+    "InternationalName": "Personal Identification Number",
+    "LocalName": "National Identification numberring (kennitala)",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "India",
+    "CountryCode": "IND",
+    "InternationalName": "Unique Identification Number",
+    "LocalName": "Aadhaar",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Indonesia",
+    "CountryCode": "IDN",
+    "InternationalName": "ID number",
+    "LocalName": "Nomor Induk Kependudukan",
+    "Format": "1111111111111111",
+    "Digits": 16,
+    "Regex": "^[0-9]{16}$",
+    "Status": 1
+  },
+  {
+    "Country": "Iran, Islamic Republic of",
+    "CountryCode": "IRN",
+    "InternationalName": "Iran ID",
+    "LocalName": "کارتممی",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Iraq",
+    "CountryCode": "IRQ",
+    "InternationalName": "Iraq National Card",
+    "LocalName": "البطاقة الوطنية \/ كارتى نيشتيمانى",
+    "Format": "111111111A",
+    "Digits": 10,
+    "Regex": "^[0-9]{9}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Ireland",
+    "CountryCode": "IRL",
+    "InternationalName": "Personal Public Service Number",
+    "LocalName": "Uimhir Phearsanta Seirbhιse Poiblí ή Uimh PSP",
+    "Format": "11111111A",
+    "Digits": 9,
+    "Regex": "^[0-9]{8}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Isle of Man",
+    "CountryCode": "IMN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Israel",
+    "CountryCode": "ISR",
+    "InternationalName": "Identity Number",
+    "LocalName": "מספר זהות Mispar Zehut",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Italy",
+    "CountryCode": "ITA",
+    "InternationalName": "Italian fiscal code card",
+    "LocalName": "Codice fiscale",
+    "Format": "AAAAAA11A11A111A",
+    "Digits": 16,
+    "Regex": "^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Jamaica",
+    "CountryCode": "JAM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Japan",
+    "CountryCode": "JPN",
+    "InternationalName": "My Number",
+    "LocalName": "マイナンバーmai Namba",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Jersey",
+    "CountryCode": "JEY",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Jordan",
+    "CountryCode": "JOR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Kazakhstan",
+    "CountryCode": "KAZ",
+    "InternationalName": "Individual Identification Number",
+    "LocalName": " ЖСН , ZhSN ,: ИИН , IIN - Жеке сәйкестендіру номері қысқ. ЖСН",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Kenya",
+    "CountryCode": "KEN",
+    "InternationalName": "ID number",
+    "LocalName": "ID number",
+    "Format": "11111111",
+    "Digits": 8,
+    "Regex": "^[0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "Kiribati",
+    "CountryCode": "KIR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Korea (North)",
+    "CountryCode": "PRK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Korea (South)",
+    "CountryCode": "KOR",
+    "InternationalName": "Resident registration number",
+    "LocalName": "주민등록번호",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Kosovo",
+    "CountryCode": "RKS",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Kuwait",
+    "CountryCode": "KWT",
+    "InternationalName": "Kuwait Civil Number",
+    "LocalName": "الرقم المدني‎",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Kyrgyzstan",
+    "CountryCode": "KGZ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Lao PDR",
+    "CountryCode": "LAO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Latvia",
+    "CountryCode": "LVA",
+    "InternationalName": "Personal Code",
+    "LocalName": "Personas kods",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Lebanon",
+    "CountryCode": "LBN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Lesotho",
+    "CountryCode": "LSO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Liberia",
+    "CountryCode": "LBR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Libya",
+    "CountryCode": "LBY",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Liechtenstein",
+    "CountryCode": "LIE",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Lithuania",
+    "CountryCode": "LTU",
+    "InternationalName": "Personal Code",
+    "LocalName": "Asmens kodas)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Luxembourg",
+    "CountryCode": "LUX",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Macao, SAR China",
+    "CountryCode": "MAC",
+    "InternationalName": "Macau Resident Identity Card",
+    "LocalName": "澳門居民身份證",
+    "Format": "11111111",
+    "Digits": 8,
+    "Regex": "^[0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "Madagascar",
+    "CountryCode": "MDG",
+    "InternationalName": "National Identification Number (NIN)",
+    "LocalName": "National Identification Number (NIN)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 0
+  },
+  {
+    "Country": "Malawi",
+    "CountryCode": "MWI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Malaysia",
+    "CountryCode": "MYS",
+    "InternationalName": "Identity Card Number",
+    "LocalName": "National Registration Identity Card Number (NRIC No)",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Maldives",
+    "CountryCode": "MDV",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mali",
+    "CountryCode": "MLI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Malta",
+    "CountryCode": "MLT",
+    "InternationalName": "Identity Card",
+    "LocalName": "Tal -identita",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Marshall Islands",
+    "CountryCode": "MHL",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Martinique",
+    "CountryCode": "MTQ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mauritania",
+    "CountryCode": "MRT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mauritius",
+    "CountryCode": "MUS",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mayotte",
+    "CountryCode": "MYT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mexico",
+    "CountryCode": "MEX",
+    "InternationalName": "Unique Population Registry Code",
+    "LocalName": "CURP - Clave Única de Registro de Población",
+    "Format": "AAAA111111AAAAAA11",
+    "Digits": 18,
+    "Regex": "^[A-Z]{4}[0-9]{6}[A-Z]{6}[0-9]{2}$",
+    "Status": 1
+  },
+  {
+    "Country": "Micronesia, Federated States of",
+    "CountryCode": "FSM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Moldova",
+    "CountryCode": "MDA",
+    "InternationalName": "Personal Code",
+    "LocalName": "IDNP - Numarul de Identificare",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Monaco",
+    "CountryCode": "MCO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Mongolia",
+    "CountryCode": "MNG",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Montenegro",
+    "CountryCode": "MNE",
+    "InternationalName": "Unique Master Citizen Number",
+    "LocalName": "Jedinstveni matični broj građana",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Montserrat",
+    "CountryCode": "MSR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Morocco",
+    "CountryCode": "MAR",
+    "InternationalName": "National carde",
+    "LocalName": "بطاقة التعريف الوطنية",
+    "Format": "AA1111111",
+    "Digits": 9,
+    "Regex": "^[A-Z]{2}[0-9]{7}$",
+    "Status": 1
+  },
+  {
+    "Country": "Mozambique",
+    "CountryCode": "MOZ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Myanmar",
+    "CountryCode": "MMR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Namibia",
+    "CountryCode": "NAM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Nauru",
+    "CountryCode": "NRU",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Nepal",
+    "CountryCode": "NPL",
+    "InternationalName": "Citizenship No",
+    "LocalName": "",
+    "Format": "111111",
+    "Digits": 6,
+    "Regex": "^[0-9]{6}$",
+    "Status": 1
+  },
+  {
+    "Country": "Netherlands",
+    "CountryCode": "NLD",
+    "InternationalName": "Citizen Service Number",
+    "LocalName": " Burgerserv Icenummer -BSN  ",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Netherlands Antilles",
+    "CountryCode": "ANT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "New Caledonia",
+    "CountryCode": "NCL",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "New Zealand",
+    "CountryCode": "NZL",
+    "InternationalName": "National Health Index (NHI) number",
+    "LocalName": "National Health Index (NHI) number",
+    "Format": "AAA1111",
+    "Digits": 7,
+    "Regex": "^[A-Z]{3}[0-9]{4}$",
+    "Status": 1
+  },
+  {
+    "Country": "Nicaragua",
+    "CountryCode": "NIC",
+    "InternationalName": "Identity number ",
+    "LocalName": "Sedula De Identidad",
+    "Format": "11111111111111",
+    "Digits": 14,
+    "Regex": "^[0-9]{14}$",
+    "Status": 1
+  },
+  {
+    "Country": "Niger",
+    "CountryCode": "NER",
+    "InternationalName": "National Identification Number (NIN)",
+    "LocalName": "National Identification Number (NIN)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Nigeria",
+    "CountryCode": "NGA",
+    "InternationalName": "National Identification Number",
+    "LocalName": "National Identification Number (NIN)",
+    "Format": "1A111111111",
+    "Digits": 11,
+    "Regex": "^[0-9][A-Z][0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Niue",
+    "CountryCode": "NIU",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Norfolk Island",
+    "CountryCode": "NFK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "North Macedonia ",
+    "CountryCode": "MKD",
+    "InternationalName": "Unique Master Citizen Number",
+    "LocalName": "Единствен матичен број на граѓанинот, acronym ЕМБГ",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Northern Mariana Islands",
+    "CountryCode": "MNP",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Norway",
+    "CountryCode": "NOR",
+    "InternationalName": "National Identification Number - birth number",
+    "LocalName": "fødselsnumme",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Oman",
+    "CountryCode": "OMN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Pakistan",
+    "CountryCode": "PAK",
+    "InternationalName": "National Tax Number (commonly known as NTN)",
+    "LocalName": "National Database and Registration Authority (NADRA)",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Palau",
+    "CountryCode": "PLW",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Palestinian Territory",
+    "CountryCode": "PSE",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Panama",
+    "CountryCode": "PAN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Papua New Guinea",
+    "CountryCode": "PNG",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Paraguay",
+    "CountryCode": "PRY",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Peru",
+    "CountryCode": "PER",
+    "InternationalName": "National identity Card",
+    "LocalName": "Documento Nacional de Identidad (DNI)",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Philippines",
+    "CountryCode": "PHIL",
+    "InternationalName": "Natinal ID card",
+    "LocalName": " Pambansang Pagkakakilanlan",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Philippines",
+    "CountryCode": "PHL",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Pitcairn",
+    "CountryCode": "PCN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Poland",
+    "CountryCode": "POL",
+    "InternationalName": "Public Electronic Census System",
+    "LocalName": "Powszechny Elektroniczny System Ewidencji Ludności - PESEL",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Portugal",
+    "CountryCode": "PRT",
+    "InternationalName": "Citizen Card",
+    "LocalName": "Cartão de cidadão",
+    "Format": "11111111",
+    "Digits": 8,
+    "Regex": "^[0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "Puerto Rico",
+    "CountryCode": "PRI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Qatar",
+    "CountryCode": "QAT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Réunion",
+    "CountryCode": "REU",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Romania",
+    "CountryCode": "ROU",
+    "InternationalName": "Personal Numerical Code",
+    "LocalName": "Cod Numeric Personal, CNP",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Russian Federation",
+    "CountryCode": "RUS",
+    "InternationalName": "SNILS card - Individual insurance account number (SNILS)",
+    "LocalName": "страховой номер индивидуального лицевого счета СНИЛС",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Rwanda",
+    "CountryCode": "RWA",
+    "InternationalName": "National identification number",
+    "LocalName": "National identification number",
+    "Format": "1111111111111111",
+    "Digits": 16,
+    "Regex": "^[0-9]{16}$",
+    "Status": 1
+  },
+  {
+    "Country": "Saint Helena, Ascension and Tristan da Cunha",
+    "CountryCode": "SHN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint Kitts and Nevis",
+    "CountryCode": "KNA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint Lucia",
+    "CountryCode": "LCA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint Pierre and Miquelon",
+    "CountryCode": "SPM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint Vincent and Grenadines",
+    "CountryCode": "VCT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint-Barthélemy",
+    "CountryCode": "BLM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saint-Martin (French part)",
+    "CountryCode": "MAF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Samoa",
+    "CountryCode": "WSM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "San Marino",
+    "CountryCode": "SMR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Sao Tome and Principe",
+    "CountryCode": "STP",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Saudi Arabia",
+    "CountryCode": "SAU",
+    "InternationalName": "National ID Card",
+    "LocalName": "Biṭāgat Al-hawiyya Al-waṭaniyya بطاقة الهوية الوطنية",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Senegal",
+    "CountryCode": "SEN",
+    "InternationalName": "ID number",
+    "LocalName": "Numero d' identite",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Serbia",
+    "CountryCode": "SRB",
+    "InternationalName": "Personal identification number",
+    "LocalName": "Јединствени матични број грађана",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Seychelles",
+    "CountryCode": "SYC",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Sierra Leone",
+    "CountryCode": "SLE",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Singapore",
+    "CountryCode": "SGP",
+    "InternationalName": "National Registration Identity Card (NRIC)",
+    "LocalName": "身份证",
+    "Format": "A1111111A",
+    "Digits": 9,
+    "Regex": "^[A-Z][0-9]{7}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Sint Maarten (Dutch part)",
+    "CountryCode": "SXM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Slovakia",
+    "CountryCode": "SVK",
+    "InternationalName": "Citizen's Identification Card Number",
+    "LocalName": "Rodné číslo (RČ",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Slovenia",
+    "CountryCode": "SVN",
+    "InternationalName": "Unique Master Citizen Number",
+    "LocalName": "Enotna matična številka občana (EMŠO)",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Solomon Islands",
+    "CountryCode": "SLB",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Somalia",
+    "CountryCode": "SOM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "South Africa",
+    "CountryCode": "ZAF",
+    "InternationalName": "National Identification Number",
+    "LocalName": "person identification",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "South Georgia and the South Sandwich Islands",
+    "CountryCode": "SGS",
+    "InternationalName": "Personal namber",
+    "LocalName": "პირადი ნომერი (p’iradi nomeri)",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "South Sudan",
+    "CountryCode": "SSD",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Spain",
+    "CountryCode": "ESP",
+    "InternationalName": "National Identity Document",
+    "LocalName": "Documento Nacional de Identidad(DNI)",
+    "Format": "11111111A",
+    "Digits": 9,
+    "Regex": "^[0-9]{8}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Sri Lanka",
+    "CountryCode": "LKA",
+    "InternationalName": "National Identity Document",
+    "LocalName": "ජාතික හැඳුනුම්පත தேசிய அடையாள அட்டை",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Sudan",
+    "CountryCode": "SDN",
+    "InternationalName": "Personal Number",
+    "LocalName": "Nomer pribadi",
+    "Format": "A1111111111111",
+    "Digits": 14,
+    "Regex": "^[A-Z][0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Suriname",
+    "CountryCode": "SUR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Svalbard and Jan Mayen Islands",
+    "CountryCode": "SJM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Swaziland",
+    "CountryCode": "SWZ",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Sweden",
+    "CountryCode": "SWE",
+    "InternationalName": "Personal Identity Number",
+    "LocalName": "Personnummer",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Switzerland",
+    "CountryCode": "CHE",
+    "InternationalName": "National Identification Number",
+    "LocalName": "Anonymous Thirteen-Digit Number",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Syrian Arab Republic (Syria)",
+    "CountryCode": "SYR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Taiwan, Republic of China",
+    "CountryCode": "TWN",
+    "InternationalName": "National Identification Number",
+    "LocalName": "身份證---國家註冊號碼\n",
+    "Format": "A111111111",
+    "Digits": 10,
+    "Regex": "^[A-Z][0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Tajikistan",
+    "CountryCode": "TJK",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Tanzania, United Republic of",
+    "CountryCode": "TZA",
+    "InternationalName": "NIDA",
+    "LocalName": "NIDA ",
+    "Format": "11111111111111111111",
+    "Digits": 20,
+    "Regex": "^[0-9]{20}$",
+    "Status": 1
+  },
+  {
+    "Country": "Thailand",
+    "CountryCode": "THA",
+    "InternationalName": "Identification Number",
+    "LocalName": "หมายเลขประจำตัวประชาชน",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "Timor-Leste",
+    "CountryCode": "TLS",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Togo",
+    "CountryCode": "TGO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Tokelau",
+    "CountryCode": "TKL",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Tonga",
+    "CountryCode": "TON",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Trinidad and Tobago",
+    "CountryCode": "TTO",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Tunisia",
+    "CountryCode": "TUN",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Turkey",
+    "CountryCode": "TUR",
+    "InternationalName": "Turkish Identification Number",
+    "LocalName": "Türkiye Cumhuriyeti Kimlik Numarası",
+    "Format": "11111111111",
+    "Digits": 11,
+    "Regex": "^[0-9]{11}$",
+    "Status": 1
+  },
+  {
+    "Country": "Turkmenistan",
+    "CountryCode": "TKM",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Turks and Caicos Islands",
+    "CountryCode": "TCA",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Tuvalu",
+    "CountryCode": "TUV",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Uganda",
+    "CountryCode": "UGA",
+    "InternationalName": "National ID card",
+    "LocalName": "",
+    "Format": "AA11111111AA1A",
+    "Digits": 14,
+    "Regex": "^[A-Z]{2}[0-9]{8}[A-Z]{2}[0-9][A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "Ukraine",
+    "CountryCode": "UKR",
+    "InternationalName": "Record Number (without -) ",
+    "LocalName": "Запис No.  (без -) ",
+    "Format": "1111111111111",
+    "Digits": 13,
+    "Regex": "^[0-9]{13}$",
+    "Status": 1
+  },
+  {
+    "Country": "United Arab Emirates",
+    "CountryCode": "ARE",
+    "InternationalName": "National ID Card",
+    "LocalName": "هيئة الإمارات للهوية",
+    "Format": "111111111111111",
+    "Digits": 15,
+    "Regex": "^[0-9]{15}$",
+    "Status": 1
+  },
+  {
+    "Country": "United Kingdom",
+    "CountryCode": "GBR",
+    "InternationalName": "National Insurrance Number (NIS)",
+    "LocalName": "National Insurrance Number (NIS)",
+    "Format": "AA111111A",
+    "Digits": 9,
+    "Regex": "^[A-Z]{2}[0-9]{6}[A-Z]$",
+    "Status": 1
+  },
+  {
+    "Country": "United States of America",
+    "CountryCode": "USA",
+    "InternationalName": "Social Security number (SSN)",
+    "LocalName": "Social Security number (SSN)",
+    "Format": "111111111",
+    "Digits": 9,
+    "Regex": "^[0-9]{9}$",
+    "Status": 1
+  },
+  {
+    "Country": "Uruguay",
+    "CountryCode": "URY",
+    "InternationalName": "National ID card",
+    "LocalName": "Numero de identidad",
+    "Format": "11111111",
+    "Digits": 8,
+    "Regex": "^[0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "US Minor Outlying Islands",
+    "CountryCode": "UMI",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Uzbekistan",
+    "CountryCode": "UZB",
+    "InternationalName": "National ID card",
+    "LocalName": "Shaxsiy raqami",
+    "Format": "111111111111111",
+    "Digits": 15,
+    "Regex": "^[0-9]{15}$",
+    "Status": 1
+  },
+  {
+    "Country": "Vanuatu",
+    "CountryCode": "VUT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Vatican City",
+    "CountryCode": "VAT",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Venezuela (Bolivarian Republic)",
+    "CountryCode": "VEN",
+    "InternationalName": "ID card",
+    "LocalName": "Cédula de Identidad",
+    "Format": "A11111111",
+    "Digits": 9,
+    "Regex": "^[A-Z][0-9]{8}$",
+    "Status": 1
+  },
+  {
+    "Country": "Viet Nam",
+    "CountryCode": "VNM",
+    "InternationalName": "ID card",
+    "LocalName": "Thé cun cước công dân",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Virgin Islands, US",
+    "CountryCode": "VIR",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Wallis and Futuna Islands",
+    "CountryCode": "WLF",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Western Sahara",
+    "CountryCode": "ESH",
+    "InternationalName": "",
+    "LocalName": "",
+    "Format": "0",
+    "Digits": 0,
+    "Regex": "",
+    "Status": 0
+  },
+  {
+    "Country": "Yemen",
+    "CountryCode": "YEM",
+    "InternationalName": "national identification number",
+    "LocalName": "   (raqm alhuiat alwatania)  رقم الهوية الوطنية",
+    "Format": "111111111111",
+    "Digits": 12,
+    "Regex": "^[0-9]{12}$",
+    "Status": 1
+  },
+  {
+    "Country": "Zambia",
+    "CountryCode": "ZMB",
+    "InternationalName": "National ID card",
+    "LocalName": "ID namber",
+    "Format": "1111111111",
+    "Digits": 10,
+    "Regex": "^[0-9]{10}$",
+    "Status": 1
+  },
+  {
+    "Country": "Zimbabwe",
+    "CountryCode": "ZWE",
+    "InternationalName": "National Identification Number (NIN)",
+    "LocalName": "National Identification Number (NIN)",
+    "Format": "11111111A11",
+    "Digits": 11,
+    "Regex": "^[0-9]{8}[A-Z][0-9]{2}$",
+    "Status": 1
+  }
+]

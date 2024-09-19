@@ -20,23 +20,23 @@ namespace BolWallet;
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
+    {
+        var builder = MauiApp.CreateBuilder();
         builder.Services.ConfigureSerilog();
-        
-		builder
-			.UseMauiApp<App>()
-			.UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-				fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
-			});
+
+        builder
+            .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
+            });
 
         builder.Services.AddMauiBlazorWebView();
 
-		builder.Services.AddMudServices();
+        builder.Services.AddMudServices();
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
@@ -45,21 +45,21 @@ public static class MauiProgram
         builder.AddConfiguration("BolWallet.appsettings.json");
 #endif
 
-		var services = builder.Services;
+        var services = builder.Services;
 
         // Register Services
-		services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
-		services.AddScoped<ISecureRepository, AkavacheRepository>();
-		services.AddSingleton<INavigationService, NavigationService>();
+        services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
+        services.AddScoped<ISecureRepository, AkavacheRepository>();
+        services.AddSingleton<INavigationService, NavigationService>();
         services.AddScoped<IMediaService, MediaService>();
         services.AddScoped<ICitizenshipHashTableProcessor, CitizenshipHashTableProcessor>();
         services.AddSingleton<IFilePicker>(_ => FilePicker.Default);
-		services.AddScoped<ICountriesService, CountriesService>();
+        services.AddScoped<ICountriesService, CountriesService>();
 
         RegisterPermissionServices(services);
-        
+
         services.AddSingleton(MediaPicker.Default);
-		builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+        builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
 
@@ -68,10 +68,10 @@ public static class MauiProgram
         services.RegisterViewAndViewModelSubsystem();
 
         services.AddSingleton(AudioManager.Current);
-        
+
         var bolConfig = new BolWalletAppConfig();
         builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
-        
+
         // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
         services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
         services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
@@ -81,7 +81,7 @@ public static class MauiProgram
         {
             client.BaseAddress = new Uri(bolConfig.RpcEndpoint);
         });
-        
+
         services.AddBolSdk();
 
         services.AddSingleton<HttpClient>();
@@ -89,9 +89,9 @@ public static class MauiProgram
         // This model will hold the data from the Register flow
         services.AddSingleton(sp =>
         {
-            var countries = sp.GetRequiredService<IOptions<List<Bol.Core.Model.Country>>>().Value;
-            var ninSpecifications = sp.GetRequiredService<IOptions<List<NinSpecification>>>().Value;
-      
+            var countries = JsonSerializer.Deserialize<List<Country>>(ReadResource("BolWallet.Resources.Content.country_code.json"), Constants.WalletJsonSerializerDefaultOptions);
+            var ninSpecifications = JsonSerializer.Deserialize<List<NinSpecification>>(ReadResource("BolWallet.Resources.Content.nin.json"), Constants.WalletJsonSerializerDefaultOptions);
+
             return new RegisterContent
             {
                 Countries = countries.Select(c => new Country { Alpha3 = c.Alpha3, Name = c.Name, Region = c.Region }).ToList(),
@@ -110,7 +110,7 @@ public static class MauiProgram
         Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
         return builder.Build();
-	}
+    }
 
     private static IServiceCollection RegisterPermissionServices(IServiceCollection services)
     {
@@ -130,22 +130,39 @@ public static class MauiProgram
     }
 
     private static MauiAppBuilder AddConfiguration(this MauiAppBuilder builder, string appSettingsPath)
-	{
-		var assembly = Assembly.GetExecutingAssembly();
-		using var stream = assembly.GetManifestResourceStream(appSettingsPath);
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream(appSettingsPath);
 
-		var configRoot = new ConfigurationBuilder()
-			.AddJsonStream(stream)
-			.Build();
+        var configRoot = new ConfigurationBuilder()
+            .AddJsonStream(stream)
+            .Build();
 
-		builder.Configuration.AddConfiguration(configRoot);
+        builder.Configuration.AddConfiguration(configRoot);
 
-		var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
 
-		var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
+        var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
 
-		builder.Services.AddSingleton(bolConfig);
+        builder.Services.AddSingleton(bolConfig);
 
-		return builder;
-	}
+        return builder;
+    }
+
+    private static string ReadResource(string filePath)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+
+        using var stream = assembly.GetManifestResourceStream(filePath);
+
+        if (stream is null)
+        {
+            throw new FileNotFoundException(nameof(filePath));
+        }
+
+        using var reader = new StreamReader(stream);
+        var result = reader.ReadToEnd();
+
+        return result;
+    }
 }
