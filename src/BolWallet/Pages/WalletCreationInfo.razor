@@ -1,0 +1,62 @@
+﻿@page "/create-account"
+@using MudBlazor
+@using Microsoft.AspNetCore.Components
+
+<MudThemeProvider />
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex justify-center align-center h-100 mt-5">
+    <MudCard Elevation="3">
+        <MudCardContent>
+            <MudText Typo="Typo.h4" GutterBottom="true">Create Your Personal Wallet Account on Bol</MudText>
+            <MudText Typo="Typo.body1">
+                Before proceeding, please ensure you are fully informed about creating a valid account. You can access the manual or watch the informative video using the links below:
+            </MudText>
+            <MudList>
+                <MudListItem>
+                    <MudLink Href="https://www.1bol.org/wallet-manuals/" Target="_blank">Wallet Creation Manuals</MudLink>
+                </MudListItem>
+                <MudListItem>
+                    <MudLink Href="https://www.1bol.org/video-2/" Target="_blank">Step-by-Step Video</MudLink>
+                </MudListItem>
+            </MudList>
+
+            <MudCheckBox @bind-Value="IsManualRead" Label="I have reviewed the manual or video and understand the account creation process." />
+
+            <MudDivider Class="my-4" />
+
+            <MudText Typo="Typo.h5" GutterBottom="true">To successfully create your individual wallet, please ensure the following:</MudText>
+            <MudList>
+                <MudListItem>
+                    <MudCheckBox @bind-Value="IsCitizenshipChecked" Label="Submit all citizenships you hold." />
+                </MudListItem>
+                <MudListItem>
+                    <MudCheckBox @bind-Value="IsNameFilledCorrectly" Label="Provide your full personal details exactly as they appear in your passport or ID (including name, birthdate, etc.)." />
+                </MudListItem>
+                <MudListItem>
+                    <MudCheckBox @bind-Value="IsNINCorrect" Label="Provide the correct National Identification Number (NIN) for your country." />
+                </MudListItem>
+            </MudList>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToCodenameIndividualPage" Disabled="@(IsNavigationDisabled)">
+                Create My Individual Wallet
+            </MudButton>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    private bool IsManualRead = false;
+    private bool IsCitizenshipChecked = false;
+    private bool IsNameFilledCorrectly = false;
+    private bool IsNINCorrect = false;
+
+    private bool IsNavigationDisabled => !(IsManualRead && IsCitizenshipChecked && IsNameFilledCorrectly && IsNINCorrect);
+
+    private async Task NavigateToCodenameIndividualPage()
+    {
+        if (!IsNavigationDisabled)
+        {
+            await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
+        }
+    }
+}
