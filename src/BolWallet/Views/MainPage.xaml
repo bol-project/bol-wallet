@@ -38,7 +38,8 @@
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 WidthRequest="200"
-                Text="New Individual Wallet" />
+                Text="New Individual Wallet" 
+                IsVisible="{OnPlatform iOS=false, Default=true}" />
 
             <Button
                 Grid.Row="3"
@@ -46,7 +47,8 @@
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
                 WidthRequest="200"
-                Text="New Company Wallet" />
+                Text="New Company Wallet" 
+                IsVisible="{OnPlatform iOS=false, Default=true}" />
             <Button
              Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"

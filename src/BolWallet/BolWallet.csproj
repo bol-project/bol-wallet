@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>BolWallet</RootNamespace>
     <UseMaui>true</UseMaui>
-    <MauiVersion>8.0.82</MauiVersion>
+    <MauiVersion>8.0.90</MauiVersion>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
 
@@ -259,7 +259,9 @@
     <EmbeddedResource Include="appsettings.json" />
     <Content Remove="appsettings.Development.json" />
     <EmbeddedResource Include="appsettings.Development.json" />
+    <Content Remove="Resources\Content\country_code.json" />
     <EmbeddedResource Include="Resources\Content\country_code.json" />
+    <Content Remove="Resources\Content\nin.json" />
     <EmbeddedResource Include="Resources\Content\nin.json" />
     <Content Remove="TestAccount.json" />
   </ItemGroup>
