@@ -101,19 +101,45 @@
                                         @switch (propertyInfo.Name)
                                         {
                                             case "IdentityCard":
-                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardSha256"  For="@(() => ViewModel.CitizenshipForm.IdentityCardSha256)" Label="Identity Card SHA-256" Variant="Variant.Outlined" />
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         Text="Is Mandatory" />
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardSha256" OnBlur="@(x => form.IdentityCardSha256 = form.IdentityCardSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.IdentityCardSha256)" Label="Identity Card SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "IdentityCardBack":
-                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardBackSha256" For="@(() => ViewModel.CitizenshipForm.IdentityCardBackSha256)" Label="Identity Card Back SHA-256" Variant="Variant.Outlined" />
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
+                                                         Text="Is Mandatory">
+                                                </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardBackSha256" OnBlur="@(x => form.IdentityCardBackSha256 = form.IdentityCardBackSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.IdentityCardBackSha256)" Label="Identity Card Back SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "Passport":
-                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.PassportSha256" For="@(() => ViewModel.CitizenshipForm.PassportSha256)" Label="Passport SHA-256" Variant="Variant.Outlined" />
-                                                break;
-                                            case "BirthCertificate":
-                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.BirthCertificateSha256" For="@(() => ViewModel.CitizenshipForm.BirthCertificateSha256)" Label="Birth Certificate SHA-256" Variant="Variant.Outlined" />
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
+                                                         Text="Use instead of Identity">
+                                                </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.PassportSha256" OnBlur="@(x => form.PassportSha256 = form.PassportSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.PassportSha256)" Label="Passport SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "ProofOfNin":
-                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.ProofOfNinSha256" For="@(() => ViewModel.CitizenshipForm.ProofOfNinSha256)" Label="Proof of NIN SHA-256" Variant="Variant.Outlined" />
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.ProofOfNinSha256" OnBlur="@(x => form.ProofOfNinSha256 = form.ProofOfNinSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.ProofOfNinSha256)" Label="Proof of NIN SHA-256" Variant="Variant.Outlined" />
+                                                break;
+                                            case "BirthCertificate":
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("Children can be registered with this document.").Show())"
+                                                         Text="Use for children">
+                                                </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.BirthCertificateSha256" OnBlur="@(x => form.BirthCertificateSha256 = form.BirthCertificateSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.BirthCertificateSha256)" Label="Birth Certificate SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                         }
                                     </MudItem>
