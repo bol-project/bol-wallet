@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using Bol.Core.Model;
+using Bol.Cryptography;
 using BolWallet.Bolnformation;
 using BolWallet.Components;
 using CommunityToolkit.Maui.Alerts;
@@ -17,6 +19,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     private readonly INavigationService _navigationService;
     private readonly ISecureRepository _secureRepository;
     private readonly IDialogService _dialogService;
+    private readonly IBase16Encoder _base16Encoder;
     private readonly ILogger<SubmitCitizenshipViewModel> _logger;
 
     private UserData UserData { get; set; }
@@ -28,6 +31,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IDialogService dialogService,
+        IBase16Encoder base16Encoder,
         ILogger<SubmitCitizenshipViewModel> logger) : base(navigationService)
     {
         _mediaService = mediaService;
@@ -36,6 +40,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         _navigationService = navigationService;
         _secureRepository = secureRepository;
         _dialogService = dialogService;
+        _base16Encoder = base16Encoder;
         _logger = logger;
     }
 
@@ -44,6 +49,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
     [ObservableProperty] private List<string> _outstandingCitizenships;
     [ObservableProperty] private EncryptedCitizenshipForm _citizenshipForm;
     [ObservableProperty] CitizenshipHashTableFiles _files;
+    [ObservableProperty] private bool _isSha256InputMode;
 
     [ObservableProperty] private string _ninInternationalName;
     [ObservableProperty] private string _ninValidationErrorMessage = "";
@@ -66,7 +72,12 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         { Passport: not null } 
         or { IdentityCard: not null, IdentityCardBack: not null }
         or { BirthCertificate: not null };
-    
+
+    public bool HasAddedMandatoryHashes =>
+        (!string.IsNullOrEmpty(CitizenshipForm.IdentityCardSha256) && !string.IsNullOrEmpty(CitizenshipForm.IdentityCardBackSha256)) ||
+        !string.IsNullOrEmpty(CitizenshipForm.PassportSha256) ||
+        !string.IsNullOrEmpty(CitizenshipForm.BirthCertificateSha256);
+
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
 
     public async Task OnInitializeAsync(CancellationToken cancellationToken = default)
@@ -129,6 +140,12 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
         return outstandingCountries;
     }
+
+    public void OnKnownHashInputModeChange(bool newValue)
+    {
+        IsSha256InputMode = newValue;
+    }
+
 
     [RelayCommand]
     private async Task PickFile(string fileType)
@@ -279,6 +296,70 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         catch (Exception e)
         {
             _logger.LogError(e, "Error submitting citizenship form.");
+            throw;
+        }
+        finally
+        {
+            IsLoading = false;
+            await _navigationService.NavigateTo<SubmitCitizenshipViewModel>();
+        }
+    }
+
+    [RelayCommand]
+    private async Task SubmitHashForm(EncryptedCitizenshipForm form, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            IsLoading = true;
+
+            await Task.Run((Func<Task>)(async () =>
+            {
+                var countryCode = form.CountryCode;
+
+                var citizenshipHashes = new CitizenshipHashTable
+                {
+                    IdentityCard = form.IdentityCardSha256?.ToUpper() ?? null,
+                    IdentityCardBack = form.IdentityCardBackSha256?.ToUpper() ?? null,
+                    Passport = form.PassportSha256?.ToUpper() ?? null,
+                    ProofOfNin = form.ProofOfNinSha256?.ToUpper() ?? null,
+                    BirthCertificate = form.BirthCertificateSha256?.ToUpper() ?? null
+                };
+
+                var encryptedCitizenshipData = new EncryptedCitizenshipData
+                {
+                    CountryCode = countryCode,
+                    CountryName = form.CountryName,
+                    Nin = form.Nin,
+                    SurName = form.SurName,
+                    FirstName = form.FirstName,
+                    SecondName = form.SecondName,
+                    ThirdName = form.ThirdName,
+                    CitizenshipHashes = citizenshipHashes,
+                    IsSubmitted = true
+                };
+
+                var existingFormIndex = UserData
+                    .EncryptedCitizenshipForms
+                    .FindIndex(f => f.CountryCode == form.CountryCode);
+
+                // If the form already exists, replace it
+                if (existingFormIndex != -1)
+                {
+                    UserData.EncryptedCitizenshipForms.RemoveAt(existingFormIndex);
+                    UserData.EncryptedCitizenshipForms.Insert(existingFormIndex, encryptedCitizenshipData);
+                }
+                else
+                {
+                    UserData.EncryptedCitizenshipForms.Add(encryptedCitizenshipData);
+                }
+
+                await _secureRepository.SetAsync("userdata", UserData);
+                OutstandingCitizenships.Remove(form.CountryName);
+            }), cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error submitting citizenship hash form.");
             throw;
         }
         finally
