@@ -23,37 +23,43 @@ public class FileDownloadService : IFileDownloadService
     {
         var files = new List<FileItem>();
 
-        foreach (PropertyInfo property in userdata.GenericHashTableFiles.GetType().GetProperties())
+        if (userdata.GenericHashTableFiles is not null)
         {
-            var ediFileItem = property.GetValue(userdata.GenericHashTableFiles) as FileItem;
-
-            if (ediFileItem?.Content != null)
+            foreach (PropertyInfo property in userdata.GenericHashTableFiles.GetType().GetProperties())
             {
-                files.Add(new FileItem()
+                var ediFileItem = property.GetValue(userdata.GenericHashTableFiles) as FileItem;
+
+                if (ediFileItem?.Content != null)
                 {
-                    FileName = $"{Path.GetFileNameWithoutExtension(ediFileItem.FileName)}_{userdata.GetShortHash()}{Path.GetExtension(ediFileItem.FileName)}",
-                    Content = ediFileItem.Content
-                });
+                    files.Add(new FileItem()
+                    {
+                        FileName = $"{Path.GetFileNameWithoutExtension(ediFileItem.FileName)}_{userdata.GetShortHash()}{Path.GetExtension(ediFileItem.FileName)}",
+                        Content = ediFileItem.Content
+                    });
+                }
             }
         }
 
         foreach (EncryptedCitizenshipData encryptedCitizenshipForm in userdata.EncryptedCitizenshipForms)
         {
-            foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperties())
+            if (encryptedCitizenshipForm.CitizenshipActualBytes is not null)
             {
-                var ediFileItem = property.GetValue(encryptedCitizenshipForm.CitizenshipActualBytes) as string;
-
-                PropertyInfo ediFileName = encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property.Name);
-
-                var fileName = ediFileName.GetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames) as string;
-
-                if (ediFileItem != Bol.Core.Constants.HASH_ZEROS)
+                foreach (PropertyInfo property in encryptedCitizenshipForm.CitizenshipActualBytes.GetType().GetProperties())
                 {
-                    files.Add(new FileItem()
+                    var ediFileItem = property.GetValue(encryptedCitizenshipForm.CitizenshipActualBytes) as string;
+
+                    PropertyInfo ediFileName = encryptedCitizenshipForm.CitizenshipHashTableFileNames.GetType().GetProperty(property.Name);
+
+                    var fileName = ediFileName.GetValue(encryptedCitizenshipForm.CitizenshipHashTableFileNames) as string;
+
+                    if (ediFileItem != Bol.Core.Constants.HASH_ZEROS)
                     {
-                        FileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{userdata.GetShortHash()}{Path.GetExtension(fileName)}",
-                        Content = _base16Encoder.Decode(ediFileItem)
-                    });
+                        files.Add(new FileItem()
+                        {
+                            FileName = $"{Path.GetFileNameWithoutExtension(fileName)}_{userdata.GetShortHash()}{Path.GetExtension(fileName)}",
+                            Content = _base16Encoder.Decode(ediFileItem)
+                        });
+                    }
                 }
             }
         }
