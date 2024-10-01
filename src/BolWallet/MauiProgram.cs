@@ -69,17 +69,14 @@ public static class MauiProgram
 
         services.AddSingleton(AudioManager.Current);
 
-        var bolConfig = new BolWalletAppConfig();
-        builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
-
+        builder.Services.AddSingleton(Preferences.Default);
+        builder.Services.AddSingleton<INetworkPreferences, NetworkPreferences>();
+        
         // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
-        services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
-        services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
-
-        // Register service to fetch the BoL Contract hash from the RPC node.
-        services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService", client =>
+        services.AddSingleton(typeof(IOptions<BolConfig>), sp =>
         {
-            client.BaseAddress = new Uri(bolConfig.RpcEndpoint);
+            var networkPreferences = sp.GetRequiredService<INetworkPreferences>();
+            return Microsoft.Extensions.Options.Options.Create(networkPreferences.TargetNetworkConfig);
         });
 
         services.AddBolSdk();
@@ -140,12 +137,13 @@ public static class MauiProgram
 
         builder.Configuration.AddConfiguration(configRoot);
 
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-
-        var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
-
-        builder.Services.AddSingleton(bolConfig);
-
+        var bolSettingsSection = builder.Configuration.GetRequiredSection("BolSettings");
+        var mainNetBolConfig = bolSettingsSection.GetSection(Constants.MainNet).Get<BolWalletAppConfig>();
+        var testNetBolConfig = bolSettingsSection.GetSection(Constants.TestNet).Get<BolWalletAppConfig>();
+        
+        builder.Services.AddKeyedSingleton(Constants.MainNet, mainNetBolConfig);
+        builder.Services.AddKeyedSingleton(Constants.TestNet, testNetBolConfig);
+        
         return builder;
     }
 
