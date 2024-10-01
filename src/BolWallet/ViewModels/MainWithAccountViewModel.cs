@@ -13,7 +13,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
     private readonly IBolRpcService _bolRpcClient;
-    private readonly IOptions<BolWalletAppConfig> _bolConfig;
+    private readonly INetworkPreferences _networkPreferences;
     private readonly IOptions<BolConfig> _bolSdkConfig;
 
     public string WelcomeText => "Welcome";
@@ -57,7 +57,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _isCommercialAddressesExpanded = false;
-
+    
     public MainWithAccountViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
@@ -65,7 +65,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
         IBolRpcService bolRpcClient,
-        IOptions<BolWalletAppConfig> bolConfig,
+        INetworkPreferences networkPreferences,
         IOptions<BolConfig> bolSdkConfig)
         : base(navigationService)
     {
@@ -74,7 +74,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
         _bolRpcClient = bolRpcClient;
-        _bolConfig = bolConfig;
+        _networkPreferences = networkPreferences;
         _bolSdkConfig = bolSdkConfig;
     }
 
@@ -217,7 +217,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             IsLoading = true;
 
-            Uri uri = new Uri($"{_bolConfig.Value.BolCertifierEndpoint}/{MainAddress}");
+            Uri uri = new Uri($"{_networkPreferences.TargetNetworkConfig.BolCertifierEndpoint}/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
             
             while (!IsWhiteListed)
