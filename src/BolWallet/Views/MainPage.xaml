@@ -14,7 +14,7 @@
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
             <Label
@@ -22,7 +22,7 @@
                 FontSize="32"
                 HorizontalOptions="Center"
                 SemanticProperties.HeadingLevel="Level1"
-                Text="Welcome to Bol!" />
+                Text="{Binding WelcomeMessage}" />
 
             <Image
                 Grid.Row="1"
@@ -31,9 +31,18 @@
                 SemanticProperties.Description="Welcome to Bol"
                 Source="bol_logo.png"
                 WidthRequest="250" />
-
+            
             <Button
                 Grid.Row="2"
+                Command="{Binding SwitchNetworkCommand}"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                WidthRequest="200"
+                Text="{Binding SwitchToNetworkText}" 
+                IsVisible="{OnPlatform iOS=false, Default=true}" />
+
+            <Button
+                Grid.Row="3"
                 Command="{Binding NavigateToWalletCreationInfoPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
@@ -42,7 +51,7 @@
                 IsVisible="{OnPlatform iOS=false, Default=true}" />
 
             <Button
-                Grid.Row="3"
+                Grid.Row="4"
                 Command="{Binding NavigateToCodenameCompanyPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
@@ -50,15 +59,15 @@
                 Text="New Company Wallet" 
                 IsVisible="{OnPlatform iOS=false, Default=true}" />
             <Button
-             Grid.Row="4"
+             Grid.Row="5"
              Command="{Binding ImportYourWalletCommand}"
              FontAttributes="Bold"
              HorizontalOptions="Center"
              WidthRequest="200"
              Text="Import Existing Wallet" />
             
-            <ActivityIndicator Grid.Row="5"
-                               Grid.RowSpan="6"
+            <ActivityIndicator Grid.Row="6"
+                               Grid.RowSpan="7"
                                HorizontalOptions="CenterAndExpand"
                                VerticalOptions="EndAndExpand"
                                IsRunning="True"
@@ -66,7 +75,7 @@
                                Color="Coral"
                                HeightRequest="200"
                                WidthRequest="200"/>
-            <Label Grid.Row="6"
+            <Label Grid.Row="7"
                    Text="Unlocking your wallet... Please wait."
                    IsVisible="{Binding IsLoading}"
                    HorizontalOptions="CenterAndExpand"

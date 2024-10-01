@@ -9,21 +9,41 @@ public partial class MainViewModel : BaseViewModel
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IWalletService _walletService;
-
+    private readonly INetworkPreferences _networkPreferences;
+    
     public MainViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
-        IWalletService walletService)
+        IWalletService walletService,
+        INetworkPreferences networkPreferences)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _walletService = walletService;
+        _networkPreferences = networkPreferences;
+        
+        WelcomeMessage = $"Welcome to Bol! ({_networkPreferences.Name})";
+        SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
     }
 
     [ObservableProperty]
     private bool _isLoading = false;
 
-	[RelayCommand]
+    [ObservableProperty]
+    private string _welcomeMessage;
+    
+    [ObservableProperty]
+    private string _switchToNetworkText;
+
+    [RelayCommand]
+    private void SwitchNetwork()
+    {
+        _networkPreferences.SwitchNetwork();
+        WelcomeMessage = $"Welcome to Bol! ({_networkPreferences.Name})";
+        SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
+    }
+    
+    [RelayCommand]
 	private async Task NavigateToCodenameCompanyPage()
 	{
         await NavigationService.NavigateTo<CreateCodenameCompanyViewModel>(true);
