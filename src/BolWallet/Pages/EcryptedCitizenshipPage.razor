@@ -81,84 +81,150 @@
                     OnClick="ViewModel.OpenMoreInfo">
                     More Info
                 </MudButton>
-                @foreach (var document in citizenshipDocuments)
+                <MudSwitch style="margin-left: auto; margin-top: 20; text-align: right;" T="bool" Value="@ViewModel.IsSha256InputMode"
+                           ValueChanged="@ViewModel.OnKnownHashInputModeChange"
+                           Color="Color.Primary" Label="Switch to Hash Input Mode" />
+                @if (ViewModel.IsSha256InputMode)
                 {
-                    var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
-                    var fileResult = propertyInfo?.GetValue(ViewModel.Files) as FileResult;
+                    @foreach (var document in citizenshipDocuments)
+                    {
+                        var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
 
-                    <MudCard Class="styled-card">
-                        <MudCardContent>
-                            <MudGrid Justify="Justify.SpaceBetween">
-                                <MudItem xs="12" sm="12" md="4">
-                                    <MudText Typo="Typo.body1">@document.description</MudText>
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="4">
-                                    @if (fileResult != null)
-                                    {
-                                        <MudChip
-                                            Class="centered-content"
-                                            Color="Color.Success"
-                                            OnClose="@(args => RemoveFile(propertyInfo.Name))"
-                                            Size="Size.Medium"
-                                            Text="@TrimFileName(fileResult.FileName, 15)"/>
-                                    }
-                                    else if (ViewModel.Files.Passport == null && ViewModel.Files.BirthCertificate == null)
-                                        switch (propertyInfo.Name)
+                        <MudCard Class="styled-card">
+                            <MudCardContent>
+                                <MudGrid Justify="Justify.SpaceBetween">
+                                    <MudItem xs="12" sm="12" md="4">
+                                        <MudText Typo="Typo.body1">@document.description</MudText>
+                                    </MudItem>
+
+                                    <MudItem xs="12" sm="12" md="6">
+                                        @switch (propertyInfo.Name)
                                         {
                                             case "IdentityCard":
-                                                <MudChip 
-                                                Class="centered-content" 
-                                                Icon="@Icons.Material.Filled.Warning" 
-                                                Color="Color.Warning" 
-                                                Size="Size.Medium" 
-                                                Text="Is Mandatory" />
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         Text="Is Mandatory" />
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardSha256" OnBlur="@(x => form.IdentityCardSha256 = form.IdentityCardSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.IdentityCardSha256)" Label="Identity Card SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "IdentityCardBack":
-                                            {
-                                                <MudChip
-                                                    Class="centered-content"
-                                                    Icon="@Icons.Material.Filled.Warning"
-                                                    Color="Color.Warning"
-                                                    Size="Size.Medium"
-                                                    OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
-                                                    Text="Is Mandatory">
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
+                                                         Text="Is Mandatory">
                                                 </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.IdentityCardBackSha256" OnBlur="@(x => form.IdentityCardBackSha256 = form.IdentityCardBackSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.IdentityCardBackSha256)" Label="Identity Card Back SHA-256" Variant="Variant.Outlined" />
                                                 break;
-                                            }
                                             case "Passport":
-                                            {
-                                                <MudChip
-                                                    Class="centered-content"
-                                                    Icon="@Icons.Material.Filled.Warning"
-                                                    Color="Color.Warning"
-                                                    Size="Size.Medium"
-                                                    OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
-                                                    Text="Use instead of Identity">
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
+                                                         Text="Use instead of Identity">
                                                 </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.PassportSha256" OnBlur="@(x => form.PassportSha256 = form.PassportSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.PassportSha256)" Label="Passport SHA-256" Variant="Variant.Outlined" />
                                                 break;
-                                            }
+                                            case "ProofOfNin":
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.ProofOfNinSha256" OnBlur="@(x => form.ProofOfNinSha256 = form.ProofOfNinSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.ProofOfNinSha256)" Label="Proof of NIN SHA-256" Variant="Variant.Outlined" />
+                                                break;
                                             case "BirthCertificate":
-                                            {
-                                                <MudChip
-                                                    Class="centered-content"
-                                                    Icon="@Icons.Material.Filled.Warning"
-                                                    Color="Color.Warning"
-                                                    Size="Size.Medium"
-                                                    OnClick="@(args => Toast.Make("Children can be registered with this document.").Show())"
-                                                    Text="Use for children">
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         OnClick="@(args => Toast.Make("Children can be registered with this document.").Show())"
+                                                         Text="Use for children">
                                                 </MudChip>
+                                                <MudTextField @bind-Value="ViewModel.CitizenshipForm.BirthCertificateSha256" OnBlur="@(x => form.BirthCertificateSha256 = form.BirthCertificateSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.BirthCertificateSha256)" Label="Birth Certificate SHA-256" Variant="Variant.Outlined" />
                                                 break;
-                                            }
                                         }
-                                </MudItem>
-                                <MudItem xs="12" sm="12" md="1">
-                                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@document.file" OnClick="@(args => UploadFile(document.file))"/>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@document.file" OnClick="@(args => PickPhoto(document.file))"/>
-                                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@document.file" OnClick="@(args => TakePhoto(document.file))"/>
-                                </MudItem>
-                            </MudGrid>
-                        </MudCardContent>
-                    </MudCard>
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                        </MudCard>
+                    }
+               
+                }
+                else
+                {
+                    @foreach (var document in citizenshipDocuments)
+                    {
+                        var propertyInfo = ViewModel.Files.GetType().GetProperty(document.file);
+                        var fileResult = propertyInfo?.GetValue(ViewModel.Files) as FileResult;
+
+                        <MudCard Class="styled-card">
+                            <MudCardContent>
+                                <MudGrid Justify="Justify.SpaceBetween">
+                                    <MudItem xs="12" sm="12" md="4">
+                                        <MudText Typo="Typo.body1">@document.description</MudText>
+                                    </MudItem>
+                                    <MudItem xs="12" sm="12" md="4">
+                                        @if (fileResult != null)
+                                        {
+                                            <MudChip Class="centered-content"
+                                                     Color="Color.Success"
+                                                     OnClose="@(args => RemoveFile(propertyInfo.Name))"
+                                                     Size="Size.Medium"
+                                                     Text="@TrimFileName(fileResult.FileName, 15)" />
+                                        }
+                                        else if (ViewModel.Files.Passport == null && ViewModel.Files.BirthCertificate == null)
+                                            switch (propertyInfo.Name)
+                                            {
+                                                case "IdentityCard":
+                                                    <MudChip Class="centered-content"
+                                                             Icon="@Icons.Material.Filled.Warning"
+                                                             Color="Color.Warning"
+                                                             Size="Size.Medium"
+                                                             Text="Is Mandatory" />
+                                                    break;
+                                                case "IdentityCardBack":
+                                                    {
+                                                        <MudChip Class="centered-content"
+                                                                 Icon="@Icons.Material.Filled.Warning"
+                                                                 Color="Color.Warning"
+                                                                 Size="Size.Medium"
+                                                                 OnClick="@(args => Toast.Make("If not available, resubmit the front side.").Show())"
+                                                                 Text="Is Mandatory">
+                                                        </MudChip>
+                                                        break;
+                                                    }
+                                                case "Passport":
+                                                    {
+                                                        <MudChip Class="centered-content"
+                                                                 Icon="@Icons.Material.Filled.Warning"
+                                                                 Color="Color.Warning"
+                                                                 Size="Size.Medium"
+                                                                 OnClick="@(args => Toast.Make("If passport is used, identity card is not mandatory.").Show())"
+                                                                 Text="Use instead of Identity">
+                                                        </MudChip>
+                                                        break;
+                                                    }
+                                                case "BirthCertificate":
+                                                    {
+                                                        <MudChip Class="centered-content"
+                                                                 Icon="@Icons.Material.Filled.Warning"
+                                                                 Color="Color.Warning"
+                                                                 Size="Size.Medium"
+                                                                 OnClick="@(args => Toast.Make("Children can be registered with this document.").Show())"
+                                                                 Text="Use for children">
+                                                        </MudChip>
+                                                        break;
+                                                    }
+                                            }
+                                    </MudItem>
+                                    <MudItem xs="12" sm="12" md="1">
+                                        <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@document.file" OnClick="@(args => UploadFile(document.file))" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@document.file" OnClick="@(args => PickPhoto(document.file))" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@document.file" OnClick="@(args => TakePhoto(document.file))" />
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCardContent>
+                        </MudCard>
+                    }
                 }
             </MudCardContent>
             <MudCardActions Style="padding-bottom: 20px;">
@@ -166,7 +232,10 @@
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
                                Variant="MudBlazor.Variant.Filled"
                                Color="Color.Primary"
-                               Class="ml-auto" Disabled="!ViewModel.HasAddedMandatoryFiles || !string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage)">
+                               Class="ml-auto"
+                               Disabled="@(ViewModel.IsSha256InputMode
+                        ? (!ViewModel.HasAddedMandatoryHashes || !string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage))
+                        : (!ViewModel.HasAddedMandatoryFiles || !string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage)))">
                         Submit
                     </MudButton>
                 </MudItem>
@@ -269,7 +338,15 @@
         try
         {
             var submittedForm = context.Model as EncryptedCitizenshipForm;
-            await ViewModel.SubmitFormCommand.ExecuteAsync(submittedForm);
+
+            if(false){
+                await ViewModel.SubmitFormCommand.ExecuteAsync(submittedForm);
+
+            }
+            else{
+                await ViewModel.SubmitHashFormCommand.ExecuteAsync(submittedForm);
+
+            }
         }
         catch (Exception ex)
         {

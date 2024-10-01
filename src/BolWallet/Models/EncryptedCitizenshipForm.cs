@@ -46,6 +46,21 @@ public class EncryptedCitizenshipForm : ObservableObject
         get => _thirdName;
         set => _thirdName = value?.ToUpper() ?? "";
     }
+
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string IdentityCardSha256 { get; set; }
+
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string IdentityCardBackSha256 { get; set; }
+
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string PassportSha256 { get; set; }
+
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string ProofOfNinSha256 { get; set; }
+
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string BirthCertificateSha256 { get; set; }
 }
 
 public class EncryptedCitizenshipData
