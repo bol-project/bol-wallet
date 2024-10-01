@@ -7,6 +7,9 @@ internal class Constants
     public const string MainNet = "mainnet";
     public const string TestNet = "testnet";
     
+    // Preferences Keys
+    public const string TargetNet = "target-net";
+    
     public static readonly JsonSerializerOptions WalletJsonSerializerDefaultOptions = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
