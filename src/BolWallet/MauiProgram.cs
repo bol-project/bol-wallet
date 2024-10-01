@@ -79,6 +79,9 @@ public static class MauiProgram
             return Microsoft.Extensions.Options.Options.Create(networkPreferences.TargetNetworkConfig);
         });
 
+        // Register service to fetch the BoL Contract hash from the RPC node.
+        services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService");
+
         services.AddBolSdk();
 
         services.AddSingleton<HttpClient>();
@@ -99,11 +102,8 @@ public static class MauiProgram
         services.ConfigureWalletServices();
 
         services.AddTransient<IBase64Encoder, Base64Encoder>();
-        services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService", client =>
-        {
-            client.BaseAddress = new Uri(bolConfig.BolIdentityEndpoint);
-        });
-
+        services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService");
+        
         Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
         return builder.Build();
