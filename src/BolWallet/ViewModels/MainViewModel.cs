@@ -134,7 +134,7 @@ public partial class MainViewModel : BaseViewModel
 
             await _secureRepository.SetAsync("userdata", userData);
 
-            await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
+            await NavigationService.NavigateTo<MainWithAccountViewModel>(changeRoot: true);
         }
         catch (Exception ex)
         {
