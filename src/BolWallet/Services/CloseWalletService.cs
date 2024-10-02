@@ -13,7 +13,7 @@ public class CloseWalletService(
         
         var confirm = await App.Current.MainPage.DisplayAlert(
             "Close Wallet",
-            "Closing your wallet will clear any saved wallet and/or account certification data!",
+            "Closing your wallet will clear all user data, ensure you have saved your wallet and certification files first!",
             "I understand, close my wallet!",
             "Cancel");
 
