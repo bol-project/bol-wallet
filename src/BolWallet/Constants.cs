@@ -3,6 +3,8 @@
 namespace BolWallet;
 internal class Constants
 {
+    public const string AppName = "BOL Wallet";
+    public const string WelcomeMessage = "Welcome to BOL!";
     public const string BirthDateFormat = "yyyy-MM-dd";
     public const string MainNet = "mainnet";
     public const string TestNet = "testnet";
