@@ -64,7 +64,7 @@
                 @if (!string.IsNullOrEmpty(form.CountryCode))
                 {
                     <MudItem xs="12" sm="12" md="12">
-                        <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => form.Nin)" Label="NIN" @bind-Value="@form.Nin"
+                        <MudTextField Class="styled-textfield" T="string" Variant="MudBlazor.Variant.Outlined" For="@(() => form.Nin)" Label="NIN (Last 5 digits)" @bind-Value="@form.Nin"
                                       Margin="@Margin.Dense" OnlyValidateIfDirty="false" HelperText="@ViewModel.NinInternationalName"
                                       Immediate="true" Required="true"
                                       RequiredError="NIN is required!"

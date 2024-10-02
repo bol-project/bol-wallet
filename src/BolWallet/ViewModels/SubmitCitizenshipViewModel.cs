@@ -217,7 +217,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
 
         bool isNinValid = regex.IsMatch(nin);
-        bool isNinLengthCorrect = ninRequiredDigits == nin.Length;
+        bool isNinLengthCorrect = nin.Length == 5;
 
         if (isNinValid && isNinLengthCorrect)
         {
@@ -226,7 +226,7 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         }
 
         NinValidationErrorMessage =
-                $"The National Identification Number (NIN) provided does not match the expected length of {ninRequiredDigits} digits for the country code {countryCode}." +
+                $"The National Identification Number (NIN) provided does not match the expected length of 5 digits." +
                 " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
 
         return Task.CompletedTask;
