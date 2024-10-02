@@ -28,4 +28,6 @@ public interface ISecureRepository
 	/// </summary>
 	/// <returns></returns>
 	Task SetAsync<TEntity>(string key, TEntity entity) where TEntity : class;
+
+    Task RemoveAsync(string key);
 }

@@ -71,6 +71,13 @@ public class AkavacheRepository : ISecureRepository
 		await BlobCache.Secure.InsertObject(key, entity);
 	}
 
+    public async Task RemoveAsync(string key)
+    {
+        ValidateKey(key);
+
+        await BlobCache.Secure.Invalidate(key);
+    }
+
 	private static void ValidateKey(string key)
 	{
 		if (key is null) throw new ArgumentNullException(nameof(key));
