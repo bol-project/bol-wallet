@@ -12,6 +12,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
     private readonly INetworkPreferences _networkPreferences;
+    private readonly ICloseWalletService _closeWalletService;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -61,7 +62,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
-        INetworkPreferences networkPreferences)
+        INetworkPreferences networkPreferences,
+        ICloseWalletService closeWalletService)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
@@ -69,6 +71,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
         _networkPreferences = networkPreferences;
+        _closeWalletService = closeWalletService;
     }
 
     [RelayCommand]
@@ -246,9 +249,5 @@ public partial class MainWithAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task CloseWallet()
-    {
-        await _secureRepository.RemoveAsync("userdata");
-        await NavigationService.NavigateTo<PreloadViewModel>(changeRoot: true);
-    }
+    private async Task CloseWallet() => await _closeWalletService.CloseWallet();
 }

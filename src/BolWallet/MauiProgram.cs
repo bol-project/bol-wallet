@@ -94,6 +94,7 @@ public static class MauiProgram
 
         services.AddTransient<IBase64Encoder, Base64Encoder>();
         services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService");
+        services.AddSingleton<ICloseWalletService, CloseWalletService>();
         
         Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 

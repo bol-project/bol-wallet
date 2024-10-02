@@ -1,7 +1,7 @@
 @using Bol.Core.Model
 @inject INavigationService NavigationService
 @inject IBolService bolService;
-@inject ISecureRepository secureRepository;
+@inject ICloseWalletService closeWalletService;
 
 <MudLayout>
     <MudAppBar Style="background-color:#0050FF">
@@ -46,7 +46,7 @@
                 <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink> *@
                 @*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@
             </MudNavGroup>
-            <MudNavLink Icon="@Icons.Material.Rounded.Logout" OnClick="async () => await CloseWallet()">Close Wallet</MudNavLink>
+            <MudNavLink Icon="@Icons.Material.Rounded.Logout" OnClick="async () => await closeWalletService.CloseWallet()">Close Wallet</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <CascadingValue Value="BolAccount">
@@ -93,22 +93,5 @@
         {
             await Toast.Make(ex.Message).Show();
         }
-    }
-
-    private async Task CloseWallet()
-    {
-        var confirm = await App.Current.MainPage.DisplayAlert(
-            "Close Wallet",
-            "Closing your wallet will clear any saved wallet and/or account certification data!",
-            "I understand, close my wallet!",
-            "Cancel");
-
-        if (!confirm)
-        {
-            return;
-        }
-        
-        await secureRepository.RemoveAsync("userdata");
-        await NavigationService.NavigateTo<PreloadViewModel>(changeRoot: true);
     }
 }
