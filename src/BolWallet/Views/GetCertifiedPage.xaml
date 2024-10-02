@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="BolWallet.Views.GetCertifiedPage"
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
 			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
@@ -27,13 +28,13 @@
 	</ContentPage.ToolbarItems>
 	
 	<ContentPage.Resources>
-		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
 	</ContentPage.Resources>
 	<ScrollView>
 		<StackLayout>
 			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
-				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
-				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -50,12 +51,12 @@
                     TextColor="{DynamicResource Primary}" />
                 <Label
                     Text="You will get 1 certification in this round."
-                    IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                    IsVisible="{Binding IsAccountOpen, Converter={StaticResource InvertedBoolConverter}}"
                     HorizontalTextAlignment="Center"
                     TextColor="{DynamicResource Primary}" />
                 <Label
                    Text="You need 2 rounds with 1 certification in each round to open your account."
-                   IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                   IsVisible="{Binding IsAccountOpen, Converter={StaticResource InvertedBoolConverter}}"
                    HorizontalTextAlignment="Center"
                    TextColor="{DynamicResource Primary}" />
                 <Label
