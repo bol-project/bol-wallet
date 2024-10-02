@@ -54,6 +54,17 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task SwitchNetwork()
     {
+        var confirm = await Application.Current.MainPage.DisplayAlert(
+            "Network Change",
+            $"The target network will change from {_networkPreferences.Name} to {_networkPreferences.AlternativeName}!!!",
+            $"Yes, change to {_networkPreferences.AlternativeName}!",
+            "Cancel, I don't know what I'm doing!");
+        
+        if (!confirm)
+        {
+            return;
+        }
+        
         _networkPreferences.SwitchNetwork();
         SetTitleMessage();
         SetSwitchToNetworkText();
