@@ -10,6 +10,7 @@ using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
@@ -131,8 +132,13 @@ public static class MauiProgram
         var mainNetBolConfig = bolSettingsSection.GetSection(Constants.MainNet).Get<BolWalletAppConfig>();
         var testNetBolConfig = bolSettingsSection.GetSection(Constants.TestNet).Get<BolWalletAppConfig>();
 
-        builder.Services.AddSingleton<INetworkPreferences>(_ =>
-            new NetworkPreferences(Preferences.Default, mainNetBolConfig, testNetBolConfig));
+        builder.Services.AddSingleton(Preferences.Default);
+        builder.Services.AddSingleton<INetworkPreferences>(sp =>
+            new NetworkPreferences(
+                sp.GetRequiredService<IPreferences>(),
+                mainNetBolConfig,
+                testNetBolConfig,
+                sp.GetRequiredService<ILoggerFactory>().CreateLogger<NetworkPreferences>()));
         
         return builder;
     }

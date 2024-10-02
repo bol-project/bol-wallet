@@ -1,12 +1,14 @@
 ﻿using BolWallet.Models.Messages;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 
 namespace BolWallet.Services;
 
 public class NetworkPreferences(
     IPreferences preferences,
     BolWalletAppConfig mainNetConfig,
-    BolWalletAppConfig testNetConfig) : INetworkPreferences
+    BolWalletAppConfig testNetConfig,
+    ILogger<NetworkPreferences> logger) : INetworkPreferences
 {
     private BolWalletAppConfig _mainNetConfig = mainNetConfig;
     private BolWalletAppConfig _testNetConfig = testNetConfig;
@@ -20,12 +22,16 @@ public class NetworkPreferences(
 
     public void SwitchNetwork()
     {
+        logger.LogInformation("Switching target network from {Name} to {AlternativeName}", Name, AlternativeName);
+
         preferences.Set(TargetNetworkKey, AlternativeName);
         WeakReferenceMessenger.Default.Send<TargetNetworkChangedMessage>();
     }
 
     public void SetBolContractHash(string value)
     {
+        logger.LogInformation("Received BOL Contract Hash for {TargetNetwork}: {BolContractHash}", Name, value);
+        
         if (IsMainNet)
         {
             _mainNetConfig = _mainNetConfig with { Contract = value };
