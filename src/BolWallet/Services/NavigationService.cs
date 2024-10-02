@@ -27,13 +27,19 @@ public class NavigationService : INavigationService
 		}
 	}
 
-	public Task NavigateTo<TViewModel>(bool useAnimation = true) where TViewModel : class
+	public async Task NavigateTo<TViewModel>(bool useAnimation = true, bool changeRoot = false) where TViewModel : class
 	{
         try
         {
             var page = _viewModelToViewResolver.Resolve<TViewModel>();
+
+            if (changeRoot)
+            {
+                Application.Current.MainPage = new NavigationPage(page);
+                return;
+            }
             
-            return Navigation.PushAsync(page, useAnimation);
+            await Navigation.PushAsync(page, useAnimation);
         }
         catch (Exception exception)
         {
