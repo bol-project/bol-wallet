@@ -4,32 +4,36 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="BolWallet.Views.GetCertifiedPage"
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
-			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
-			 xmlns:Converters="clr-namespace:BolWallet.Converters"
+             x:DataType="viewModels:GetCertifiedViewModel"
+             xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certify Your Account"
 			 BackgroundColor="{DynamicResource SecondaryColor}">
 
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
+    
 	<ContentPage.ToolbarItems>
 		<ToolbarItem 
-		Text="Download BolAccount"
-		Order="Secondary"
-		Priority="0" 
-		Command="{Binding DownloadAccountCommand}"/>
-			<ToolbarItem 
-		Text="Download BolWallet"
-		Order="Secondary"
-		Priority="0" 
-		Command="{Binding DownloadBolWalletCommand}"/>
-			<ToolbarItem 
-		Text="Download Certification Files"
-		Order="Primary"
-		Priority="0" 
-		Command="{Binding DownloadEdiFilesCommand}"/>
+		    Text="Download BolAccount"
+		    Order="Secondary"
+		    Priority="0" 
+		    Command="{Binding DownloadAccountCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+		<ToolbarItem 
+		    Text="Download BolWallet"
+		    Order="Secondary"
+		    Priority="0" 
+		    Command="{Binding DownloadBolWalletCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+		<ToolbarItem 
+		    Text="Download Certification Files"
+		    Order="Primary"
+		    Priority="0" 
+		    Command="{Binding DownloadEdiFilesCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 	</ContentPage.ToolbarItems>
-	
-	<ContentPage.Resources>
-        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
-	</ContentPage.Resources>
+
 	<ScrollView>
 		<StackLayout>
 			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
