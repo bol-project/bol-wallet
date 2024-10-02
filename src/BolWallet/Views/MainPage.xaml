@@ -6,12 +6,13 @@
     x:DataType="viewModels:MainViewModel"
     xmlns:controls1="clr-namespace:BolWallet.Controls"
     BackgroundColor="{DynamicResource SecondaryColor}"
+    Title="{Binding Title}"
     x:Name="this">
     <ScrollView>
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
                                  Default='30'}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
             RowSpacing="25">
 
             <Label
@@ -25,21 +26,17 @@
                 Grid.Row="1"
                 HeightRequest="310"
                 HorizontalOptions="Center"
-                SemanticProperties.Description="Welcome to Bol"
+                SemanticProperties.Description="{Binding WelcomeMessage}"
                 Source="bol_logo.png"
-                WidthRequest="250" />
-            
-            <Button
-                Grid.Row="2"
-                Command="{Binding SwitchNetworkCommand}"
-                FontAttributes="Bold"
-                HorizontalOptions="Center"
-                WidthRequest="200"
-                Text="{Binding SwitchToNetworkText}" 
-                IsVisible="{OnPlatform iOS=false, Default=true}" />
+                WidthRequest="250">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SwitchNetworkCommand}"
+                                          NumberOfTapsRequired="2" />
+                </Image.GestureRecognizers>
+            </Image>
 
             <Button
-                Grid.Row="3"
+                Grid.Row="2"
                 Command="{Binding NavigateToWalletCreationInfoPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
@@ -48,7 +45,7 @@
                 IsVisible="{OnPlatform iOS=false, Default=true}" />
 
             <Button
-                Grid.Row="4"
+                Grid.Row="3"
                 Command="{Binding NavigateToCodenameCompanyPageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
@@ -56,15 +53,15 @@
                 Text="New Company Wallet" 
                 IsVisible="{OnPlatform iOS=false, Default=true}" />
             <Button
-             Grid.Row="5"
+             Grid.Row="4"
              Command="{Binding ImportYourWalletCommand}"
              FontAttributes="Bold"
              HorizontalOptions="Center"
              WidthRequest="200"
              Text="Import Existing Wallet" />
             
-            <ActivityIndicator Grid.Row="6"
-                               Grid.RowSpan="7"
+            <ActivityIndicator Grid.Row="5"
+                               Grid.RowSpan="6"
                                HorizontalOptions="CenterAndExpand"
                                VerticalOptions="EndAndExpand"
                                IsRunning="True"
@@ -72,7 +69,7 @@
                                Color="Coral"
                                HeightRequest="200"
                                WidthRequest="200"/>
-            <Label Grid.Row="7"
+            <Label Grid.Row="6"
                    Text="Unlocking your wallet... Please wait."
                    IsVisible="{Binding IsLoading}"
                    HorizontalOptions="CenterAndExpand"

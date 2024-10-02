@@ -24,8 +24,8 @@ public partial class MainViewModel : BaseViewModel
         _networkPreferences = networkPreferences;
         _bolRpcService = bolRpcService;
         
-        WelcomeMessage = $"Welcome to Bol! ({_networkPreferences.Name})";
-        SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
+        SetTitleMessage();
+        SetSwitchToNetworkText();
     }
 
     private async Task TrySetBolContractHash()
@@ -43,6 +43,8 @@ public partial class MainViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isLoading = false;
 
+    [ObservableProperty] private string _title;
+    
     [ObservableProperty]
     private string _welcomeMessage = Constants.WelcomeMessage;
     
@@ -53,8 +55,8 @@ public partial class MainViewModel : BaseViewModel
     private async Task SwitchNetwork()
     {
         _networkPreferences.SwitchNetwork();
-        WelcomeMessage = _networkPreferences.IsMainNet ? Constants.WelcomeMessage : $"Welcome to Bol! ({_networkPreferences.Name})";
-        SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
+        SetTitleMessage();
+        SetSwitchToNetworkText();
         await TrySetBolContractHash();
     }
     
@@ -130,5 +132,15 @@ public partial class MainViewModel : BaseViewModel
         {
             await Toast.Make(ex.Message).Show();
         }
+    }
+
+    private void SetTitleMessage()
+    {
+        Title = _networkPreferences.IsMainNet ? string.Empty : $"{Constants.WelcomeMessage} ({_networkPreferences.Name})";
+    }
+
+    private void SetSwitchToNetworkText()
+    {
+        SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
     }
 }
