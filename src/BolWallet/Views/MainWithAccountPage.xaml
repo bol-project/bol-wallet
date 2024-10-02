@@ -18,6 +18,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem 
             Text="Close Wallet"
+            IconImageSource="logout"
             Order="Primary"
             Priority="0" 
             Command="{Binding CloseWalletCommand}"/>
