@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BolWallet.Services;
 
-public class BolServiceFactory : IRecipient<TargetNetworkChangedMessage>
+public class BolServiceFactory : IRecipient<WalletClosedMessage>
 {
     private IServiceScope _serviceScope;
     private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -27,11 +27,10 @@ public class BolServiceFactory : IRecipient<TargetNetworkChangedMessage>
         return _serviceScope.ServiceProvider.GetRequiredService<BolService>();
     }
 
-    public void Receive(TargetNetworkChangedMessage message)
+    public void Receive(WalletClosedMessage message)
     {
-        _logger.LogInformation("Received Target Network Changed Message, disposing BOL services...");
-        
-        _serviceScope.Dispose();
+        _logger.LogInformation("Received {Message}, disposing BOL services...", message.GetType().Name);
+        _serviceScope?.Dispose();
         _serviceScope = null;
     }
 }

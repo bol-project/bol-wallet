@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.Logging;
 
 namespace BolWallet.Services;
 
 public class CloseWalletService(
     ISecureRepository secureRepository,
     INavigationService navigationService,
+    IMessenger messenger,
     ILogger<CloseWalletService> logger) : ICloseWalletService
 {
     public async Task CloseWallet()
@@ -26,7 +28,8 @@ public class CloseWalletService(
         logger.LogInformation("Close wallet request confirmed...");
         await secureRepository.RemoveAsync("userdata");
         logger.LogInformation("User Data cleaned up...");
-        
+
+        _ = messenger.Send(Constants.WalletClosedMessage);
         await navigationService.NavigateTo<PreloadViewModel>(changeRoot: true);
     }
 }

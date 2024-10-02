@@ -13,7 +13,9 @@ internal class Constants
     // Preferences Keys
     public const string TargetNet = "target-net";
     
+    // Static messages to re-use
     public static readonly TargetNetworkChangedMessage TargetNetworkChangedMessage = new();
+    public static readonly WalletClosedMessage WalletClosedMessage = new();
     
     public static readonly JsonSerializerOptions WalletJsonSerializerDefaultOptions = new()
     {
