@@ -2,6 +2,7 @@
     x:Class="BolWallet.Views.MainWithAccountPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:MainWithAccountViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}"
@@ -13,6 +14,7 @@
 
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
 	</ContentPage.Resources>
     
     <ContentPage.ToolbarItems>
@@ -21,7 +23,8 @@
             IconImageSource="logout"
             Order="Primary"
             Priority="0" 
-            Command="{Binding CloseWalletCommand}"/>
+            Command="{Binding CloseWalletCommand}" 
+            IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}"/>
     </ContentPage.ToolbarItems>
 
 	<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
