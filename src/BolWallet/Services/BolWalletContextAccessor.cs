@@ -1,13 +1,11 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Accessors;
-using Bol.Core.Model;
-using Microsoft.Extensions.Options;
 
 namespace BolWallet.Services
 {
     public class BolWalletContextAccessor(
         WalletContextAccessor walletContextAccessor,
-        IOptions<BolConfig> bolConfig) : IContextAccessor
+        INetworkPreferences networkPreferences) : IContextAccessor
     {
         public IBolContext GetContext()
         {
@@ -18,7 +16,7 @@ namespace BolWallet.Services
             }
 
             return new BolContext(
-                bolConfig.Value.Contract,
+                networkPreferences.TargetNetworkConfig.Contract,
                 bolContext.CodeName,
                 bolContext.Edi,
                 bolContext.CodeNameKey,
