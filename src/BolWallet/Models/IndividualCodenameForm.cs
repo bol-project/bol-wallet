@@ -103,8 +103,8 @@ public class IndividualCodenameForm : ObservableObject
             SetProperty(ref _selectedCountry, value);
             NIN.HelpMessage = _content.NinPerCountryCode[SelectedCountry.Alpha3].InternationalName;
             NIN.IsEnabled = string.IsNullOrEmpty(SelectedCountry.Alpha3);
-            NIN.IsValid = value => new Regex(@"^[A-Z0-9]+$").IsMatch(value) && _content.NinPerCountryCode[SelectedCountry.Alpha3].Digits == value.Length;
-            NIN.ErrorMessage = $"National Identification Number (NIN) does not match length for country {SelectedCountry.Alpha3}. Only capital letters(A-F) and numbers accepted";
+            NIN.IsValid = value => new Regex(@"^[A-Z0-9]+$").IsMatch(value) && value.Length == 5;
+            NIN.ErrorMessage = $"Please provide the last 5 characters of the NIN, using only uppercase letters (A-F) and numbers.";
             OnPropertyChanged(nameof(NIN));
             Invalidate();
         }
