@@ -28,16 +28,6 @@ public partial class MainViewModel : BaseViewModel
         SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
     }
 
-    public override async Task OnInitializedAsync()
-    {
-        if (string.IsNullOrWhiteSpace(_networkPreferences.TargetNetworkConfig.Contract))
-        {
-            await TrySetBolContractHash();
-        }
-        
-        await base.OnInitializedAsync();
-    }
-
     private async Task TrySetBolContractHash()
     {
         var result = await _bolRpcService.GetBolContractHash();
