@@ -25,7 +25,6 @@ public class NetworkPreferences(
         logger.LogInformation("Switching target network from {Name} to {AlternativeName}", Name, AlternativeName);
 
         preferences.Set(TargetNetworkKey, AlternativeName);
-        WeakReferenceMessenger.Default.Send<TargetNetworkChangedMessage>();
     }
 
     public void SetBolContractHash(string value)

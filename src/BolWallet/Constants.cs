@@ -1,4 +1,5 @@
 ﻿using System.Text.Encodings.Web;
+using BolWallet.Models.Messages;
 
 namespace BolWallet;
 internal class Constants
@@ -11,6 +12,8 @@ internal class Constants
     
     // Preferences Keys
     public const string TargetNet = "target-net";
+    
+    public static readonly TargetNetworkChangedMessage TargetNetworkChangedMessage = new();
     
     public static readonly JsonSerializerOptions WalletJsonSerializerDefaultOptions = new()
     {

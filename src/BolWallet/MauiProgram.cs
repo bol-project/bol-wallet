@@ -9,9 +9,9 @@ using BolWallet.Services.BolRpc;
 using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
@@ -95,6 +95,7 @@ public static class MauiProgram
         services.AddTransient<IBase64Encoder, Base64Encoder>();
         services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService");
         services.AddSingleton<ICloseWalletService, CloseWalletService>();
+        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         
         Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 

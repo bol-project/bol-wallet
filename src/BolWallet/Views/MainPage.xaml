@@ -82,7 +82,7 @@
                                WidthRequest="200" />
             
             <Label Grid.Row="6"
-                   Text="Unlocking your wallet... Please wait."
+                   Text="{Binding LoadingText}"
                    IsVisible="{Binding IsLoading}"
                    HorizontalOptions="CenterAndExpand"
                    TextColor="Blue"

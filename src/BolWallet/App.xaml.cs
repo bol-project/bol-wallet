@@ -8,12 +8,12 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 {
     private readonly INetworkPreferences _networkPreferences;
 
-    public App(PreloadPage preloadPage, INetworkPreferences networkPreferences)
+    public App(PreloadPage preloadPage, INetworkPreferences networkPreferences, IMessenger messenger)
 	{
         _networkPreferences = networkPreferences;
         InitializeComponent();
 
-        WeakReferenceMessenger.Default.Register(this);
+        messenger.Register(this);
 		UserAppTheme = AppTheme.Light;
 
 #if WINDOWS
@@ -77,7 +77,7 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 #endif
     public void Receive(TargetNetworkChangedMessage message)
     {
-        Current.MainPage.Window.Title = CreateWindowTitle();
+        MainThread.BeginInvokeOnMainThread(() => Current.MainPage.Window.Title = CreateWindowTitle());
     }
 
     private string CreateWindowTitle() => _networkPreferences.IsMainNet
