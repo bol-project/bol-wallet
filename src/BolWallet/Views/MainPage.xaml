@@ -7,9 +7,6 @@
     xmlns:controls1="clr-namespace:BolWallet.Controls"
     BackgroundColor="{DynamicResource SecondaryColor}"
     x:Name="this">
-    <ContentPage.BindingContext>
-        <viewModels:RadialControlViewModel />
-    </ContentPage.BindingContext>
     <ScrollView>
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
