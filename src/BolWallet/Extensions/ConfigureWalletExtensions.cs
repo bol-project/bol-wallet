@@ -13,7 +13,10 @@ public static class ConfigureWalletExtensions
         services.AddTransient<WalletContextAccessor>();
         services.AddTransient<IContextAccessor, BolWalletContextAccessor>();
 
-        services.AddTransient<IBolService, BolService>();
+        services.AddScoped<BolService>();
+        services.AddSingleton<BolServiceFactory>();
+        services.AddTransient<IBolService>(sp => sp.GetRequiredService<BolServiceFactory>().Create());
+        
 		services.AddTransient<IOptions<WalletConfiguration>>((sp) =>
 		{
 			ISecureRepository secureRepository = sp.GetRequiredService<ISecureRepository>();
