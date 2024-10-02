@@ -14,6 +14,14 @@
 	<ContentPage.Resources>
 		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 	</ContentPage.Resources>
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Close Wallet"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding CloseWalletCommand}"/>
+    </ContentPage.ToolbarItems>
 
 	<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
 		<ScrollView>

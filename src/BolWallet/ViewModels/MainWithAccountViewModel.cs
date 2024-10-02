@@ -244,6 +244,11 @@ public partial class MainWithAccountViewModel : BaseViewModel
     {
         await NavigationService.NavigateTo<AccountViewModel>(true);
     }
+
+    [RelayCommand]
+    private async Task CloseWallet()
+    {
+        await _secureRepository.RemoveAsync("userdata");
+        await NavigationService.NavigateTo<PreloadViewModel>(changeRoot: true);
+    }
 }
-
-
