@@ -78,11 +78,10 @@ public partial class MainViewModel : BaseViewModel
         _networkPreferences.SwitchNetwork();
         await TrySetBolContractHash();
         SetTitleMessage();
+        _ = _messenger.Send(Constants.TargetNetworkChangedMessage);
 
         LoadingText = string.Empty;
         IsLoading = false;
-        
-        _ = _messenger.Send(Constants.TargetNetworkChangedMessage);
     }
     
     [RelayCommand]
