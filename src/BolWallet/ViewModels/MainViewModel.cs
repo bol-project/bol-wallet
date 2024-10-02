@@ -136,7 +136,7 @@ public partial class MainViewModel : BaseViewModel
 
     private void SetTitleMessage()
     {
-        Title = _networkPreferences.IsMainNet ? string.Empty : $"{Constants.WelcomeMessage} ({_networkPreferences.Name})";
+        Title = _networkPreferences.IsMainNet ? string.Empty : $"({_networkPreferences.Name})";
     }
 
     private void SetSwitchToNetworkText()
