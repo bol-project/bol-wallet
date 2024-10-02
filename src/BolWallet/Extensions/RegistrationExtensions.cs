@@ -10,6 +10,7 @@ public static class RegistrationExtensions
 		services.AddSingleton<IViewModelToViewResolver, ViewModelToViewResolver>();
 
 		services
+            .BindViewModelToView<PreloadViewModel, PreloadPage>()
 			.BindViewModelToView<MainViewModel, MainPage>()
             .BindViewModelToView<CreateCodenameCompanyViewModel, CreateCodenameCompanyPage>()
             .BindViewModelToView<CreateCodenameIndividualViewModel, CreateCodenameIndividualPage>()

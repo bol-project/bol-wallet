@@ -1,18 +1,19 @@
 ﻿using BolWallet.Controls;
+using BolWallet.Models.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+
 namespace BolWallet;
 
-public partial class App : Application
+public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 {
-	private readonly ICountriesService _countriesService;
-	private readonly ISecureRepository _secureRepository;
+    private readonly INetworkPreferences _networkPreferences;
 
-	public App(MainPage mainPage, IServiceProvider serviceProvider, ISecureRepository secureRepository, ICountriesService countriesService)
+    public App(PreloadPage preloadPage, INetworkPreferences networkPreferences)
 	{
-		_countriesService = countriesService;
-		_secureRepository = secureRepository;
+        _networkPreferences = networkPreferences;
+        InitializeComponent();
 
-		InitializeComponent();
-
+        WeakReferenceMessenger.Default.Register(this);
 		UserAppTheme = AppTheme.Light;
 
 #if WINDOWS
@@ -40,29 +41,15 @@ public partial class App : Application
 #endif
 			});
 
-		UserData userData = secureRepository.Get<UserData>("userdata");
-
-		if (userData?.BolWallet == null)
-		{
-			MainPage = new NavigationPage(mainPage);
-			return;
-		}
-
-		using var scope = serviceProvider.CreateScope();
-
-		ContentPage contentPage = scope.ServiceProvider.GetRequiredService<MainWithAccountPage>();
-
-		MainPage = new NavigationPage(contentPage);
-	}
-
-	protected override Window CreateWindow(IActivationState activationState)
-	{
-		Window window = base.CreateWindow(activationState);
-
-		window.Created += async (sender, args) => await _countriesService.GetAsync();
-
-		return window;
-	}
+        MainPage = new NavigationPage(preloadPage);
+    }
+    
+    protected override Window CreateWindow(IActivationState activationState)
+    {
+        Window window = base.CreateWindow(activationState);
+        window.Title = CreateWindowTitle();
+        return window;
+    }
 
 #if WINDOWS
     private static void MapHorizontalOptions(IViewHandler handler, IView view)
@@ -88,4 +75,12 @@ public partial class App : Application
     }
 
 #endif
+    public void Receive(TargetNetworkChangedMessage message)
+    {
+        Current.MainPage.Window.Title = CreateWindowTitle();
+    }
+
+    private string CreateWindowTitle() => _networkPreferences.IsMainNet
+        ? Constants.AppName
+        : $"{Constants.AppName} ({_networkPreferences.Name})";
 }
