@@ -1,10 +1,8 @@
-﻿using Bol.Core.Model;
+﻿namespace BolWallet.Models;
 
-namespace BolWallet.Models;
-
-public class BolWalletAppConfig : BolConfig
-{
-    public string BolIdentityEndpoint { get; set; } = "";
-    public string BolExplorerEndpoint { get; set; } = "";
-    public string BolCertifierEndpoint { get; set; } = "";
-}
+public readonly record struct BolWalletAppConfig(
+    string RpcEndpoint,
+    string BolIdentityEndpoint,
+    string BolExplorerEndpoint,
+    string BolCertifierEndpoint,
+    string Contract);

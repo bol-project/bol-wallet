@@ -32,6 +32,13 @@ public static class ConfigureWalletExtensions
 			return Options.Create(userData?.BolWallet ?? new Bol.Core.Model.BolWallet());
 		});
 
+        services.AddTransient<IOptions<BolConfig>>(sp =>
+        {
+            var networkPreferences = sp.GetRequiredService<INetworkPreferences>();
+            var targetNetworkConfig = networkPreferences.TargetNetworkConfig;
+            return Options.Create(new BolConfig { RpcEndpoint = targetNetworkConfig.RpcEndpoint, Contract = targetNetworkConfig.Contract });
+        });
+
 		return services;
 	}
 }

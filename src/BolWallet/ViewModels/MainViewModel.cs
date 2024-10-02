@@ -1,5 +1,4 @@
 ﻿using Bol.Core.Abstractions;
-using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 
@@ -10,37 +9,63 @@ public partial class MainViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly IWalletService _walletService;
     private readonly INetworkPreferences _networkPreferences;
-    
+    private readonly IBolRpcService _bolRpcService;
+
     public MainViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IWalletService walletService,
-        INetworkPreferences networkPreferences)
+        INetworkPreferences networkPreferences,
+        IBolRpcService bolRpcService)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _walletService = walletService;
         _networkPreferences = networkPreferences;
+        _bolRpcService = bolRpcService;
         
         WelcomeMessage = $"Welcome to Bol! ({_networkPreferences.Name})";
         SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
+    }
+
+    public override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_networkPreferences.TargetNetworkConfig.Contract))
+        {
+            await TrySetBolContractHash();
+        }
+        
+        await base.OnInitializedAsync();
+    }
+
+    private async Task TrySetBolContractHash()
+    {
+        var result = await _bolRpcService.GetBolContractHash();
+        if (result.IsFailed)
+        {
+            await Toast.Make(result.Message).Show();
+            return;
+        }
+
+        _networkPreferences.SetBolContractHash(result.Data);
     }
 
     [ObservableProperty]
     private bool _isLoading = false;
 
     [ObservableProperty]
-    private string _welcomeMessage;
+    private string _welcomeMessage = Constants.WelcomeMessage;
     
     [ObservableProperty]
     private string _switchToNetworkText;
-
+    
     [RelayCommand]
-    private void SwitchNetwork()
+    private async Task SwitchNetwork()
     {
         _networkPreferences.SwitchNetwork();
-        WelcomeMessage = $"Welcome to Bol! ({_networkPreferences.Name})";
+        WelcomeMessage = _networkPreferences.IsMainNet ? Constants.WelcomeMessage : $"Welcome to Bol! ({_networkPreferences.Name})";
         SwitchToNetworkText = $"Switch to {_networkPreferences.AlternativeName}";
+        await TrySetBolContractHash();
     }
     
     [RelayCommand]

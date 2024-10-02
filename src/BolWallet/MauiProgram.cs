@@ -69,16 +69,6 @@ public static class MauiProgram
 
         services.AddSingleton(AudioManager.Current);
 
-        builder.Services.AddSingleton(Preferences.Default);
-        builder.Services.AddSingleton<INetworkPreferences, NetworkPreferences>();
-        
-        // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
-        services.AddSingleton(typeof(IOptions<BolConfig>), sp =>
-        {
-            var networkPreferences = sp.GetRequiredService<INetworkPreferences>();
-            return Microsoft.Extensions.Options.Options.Create(networkPreferences.TargetNetworkConfig);
-        });
-
         // Register service to fetch the BoL Contract hash from the RPC node.
         services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService");
 
@@ -140,9 +130,9 @@ public static class MauiProgram
         var bolSettingsSection = builder.Configuration.GetRequiredSection("BolSettings");
         var mainNetBolConfig = bolSettingsSection.GetSection(Constants.MainNet).Get<BolWalletAppConfig>();
         var testNetBolConfig = bolSettingsSection.GetSection(Constants.TestNet).Get<BolWalletAppConfig>();
-        
-        builder.Services.AddKeyedSingleton(Constants.MainNet, mainNetBolConfig);
-        builder.Services.AddKeyedSingleton(Constants.TestNet, testNetBolConfig);
+
+        builder.Services.AddSingleton<INetworkPreferences>(_ =>
+            new NetworkPreferences(Preferences.Default, mainNetBolConfig, testNetBolConfig));
         
         return builder;
     }
