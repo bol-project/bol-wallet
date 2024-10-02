@@ -107,9 +107,9 @@
             </StackLayout>
             
             <StackLayout Spacing="15" Padding="10" IsVisible="{Binding CertifiersSelected}">
-				<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
+				<CollectionView ItemsSource="{Binding MandatoryCertifiers}">
 					<CollectionView.ItemTemplate>
-						<DataTemplate>
+						<DataTemplate x:DataType="viewModels:CertifierListItem">
 							<Grid  Padding="3" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
@@ -149,8 +149,8 @@
                 
                 <CollectionView  ItemsSource="{Binding Certifiers}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid  Padding="3" >
+                        <DataTemplate x:DataType="viewModels:CertifierListItem">
+                            <Grid Padding="3" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="1*" />
