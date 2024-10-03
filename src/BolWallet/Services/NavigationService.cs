@@ -35,7 +35,8 @@ public class NavigationService : INavigationService
 
             if (changeRoot)
             {
-                Application.Current.MainPage = new NavigationPage(page);
+                Navigation.InsertPageBefore(page, Navigation.NavigationStack[0]);
+                await Navigation.PopToRootAsync(useAnimation);
                 return;
             }
             
