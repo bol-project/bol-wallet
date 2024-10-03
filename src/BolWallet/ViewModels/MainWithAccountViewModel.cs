@@ -86,7 +86,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
             if (IsAccountOpen)
             {
-                await App.Current.MainPage.Navigation.PushAsync(new HomePage());
+                await NavigationService.NavigateTo<HomeViewModel>(changeRoot: true);
             }
         }
         catch (Exception ex)
