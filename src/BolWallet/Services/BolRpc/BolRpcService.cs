@@ -5,7 +5,7 @@ using SimpleResults;
 
 namespace BolWallet.Services.BolRpc;
 
-internal class BolRpcService(HttpClient client, ILogger<BolRpcService> logger) : IBolRpcService
+internal class BolRpcService(HttpClient client, INetworkPreferences networkPreferences, ILogger<BolRpcService> logger) : IBolRpcService
 {
     public async Task<Result<string>> GetBolContractHash(CancellationToken token = default) =>
         await PerformRpcRequest<string>(BolRpcMethods.GetBolContractHashRequest, token: token);
@@ -20,7 +20,7 @@ internal class BolRpcService(HttpClient client, ILogger<BolRpcService> logger) :
         try
         {
             using var response = await client.PostAsJsonAsync(
-                null as string,
+                networkPreferences.TargetNetworkConfig.RpcEndpoint,
                 request,
                 BolRpcConstants.JsonSerializerDefaults,
                 token);

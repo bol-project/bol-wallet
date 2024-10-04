@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="BolWallet.Views.GetCertifiedPage"
 			 xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
-			 xmlns:helpers="clr-namespace:BolWallet.Helpers"
-			 xmlns:Converters="clr-namespace:BolWallet.Converters"
+             x:DataType="viewModels:GetCertifiedViewModel"
+             xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certify Your Account"
 			 BackgroundColor="{DynamicResource SecondaryColor}">
 
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
+    
 	<ContentPage.ToolbarItems>
 		<ToolbarItem 
-		Text="Download BolAccount"
-		Order="Secondary"
-		Priority="0" 
-		Command="{Binding DownloadAccountCommand}"/>
-			<ToolbarItem 
-		Text="Download BolWallet"
-		Order="Secondary"
-		Priority="0" 
-		Command="{Binding DownloadBolWalletCommand}"/>
-			<ToolbarItem 
-		Text="Download Certification Files"
-		Order="Primary"
-		Priority="0" 
-		Command="{Binding DownloadEdiFilesCommand}"/>
+		    Text="Download BolAccount"
+		    Order="Secondary"
+		    Priority="0" 
+		    Command="{Binding DownloadAccountCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+		<ToolbarItem 
+		    Text="Download BolWallet"
+		    Order="Secondary"
+		    Priority="0" 
+		    Command="{Binding DownloadBolWalletCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+		<ToolbarItem 
+		    Text="Download Certification Files"
+		    Order="Primary"
+		    Priority="0" 
+		    Command="{Binding DownloadEdiFilesCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 	</ContentPage.ToolbarItems>
-	
-	<ContentPage.Resources>
-		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-	</ContentPage.Resources>
+
 	<ScrollView>
 		<StackLayout>
 			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
-				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
-				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
+				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
+				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
 						<FontImageSource 
 						FontFamily="MaterialIconsRegular"
@@ -50,12 +55,12 @@
                     TextColor="{DynamicResource Primary}" />
                 <Label
                     Text="You will get 1 certification in this round."
-                    IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                    IsVisible="{Binding IsAccountOpen, Converter={StaticResource InvertedBoolConverter}}"
                     HorizontalTextAlignment="Center"
                     TextColor="{DynamicResource Primary}" />
                 <Label
                    Text="You need 2 rounds with 1 certification in each round to open your account."
-                   IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+                   IsVisible="{Binding IsAccountOpen, Converter={StaticResource InvertedBoolConverter}}"
                    HorizontalTextAlignment="Center"
                    TextColor="{DynamicResource Primary}" />
                 <Label
@@ -102,9 +107,9 @@
             </StackLayout>
             
             <StackLayout Spacing="15" Padding="10" IsVisible="{Binding CertifiersSelected}">
-				<CollectionView  ItemsSource="{Binding MandatoryCertifiers}">
+				<CollectionView ItemsSource="{Binding MandatoryCertifiers}">
 					<CollectionView.ItemTemplate>
-						<DataTemplate>
+						<DataTemplate x:DataType="viewModels:CertifierListItem">
 							<Grid  Padding="3" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
@@ -144,8 +149,8 @@
                 
                 <CollectionView  ItemsSource="{Binding Certifiers}">
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid  Padding="3" >
+                        <DataTemplate x:DataType="viewModels:CertifierListItem">
+                            <Grid Padding="3" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="1*" />

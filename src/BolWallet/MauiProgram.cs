@@ -9,8 +9,9 @@ using BolWallet.Services.BolRpc;
 using BolWallet.Services.PermissionServices;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
@@ -69,18 +70,8 @@ public static class MauiProgram
 
         services.AddSingleton(AudioManager.Current);
 
-        var bolConfig = new BolWalletAppConfig();
-        builder.Configuration.GetSection("BolSettings").Bind(bolConfig);
-
-        // Initial registration of BolConfig will have a null value for Contract which will be updated lazily.
-        services.AddSingleton(typeof(IOptions<BolConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
-        services.AddSingleton(typeof(IOptions<BolWalletAppConfig>), Microsoft.Extensions.Options.Options.Create(bolConfig));
-
         // Register service to fetch the BoL Contract hash from the RPC node.
-        services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService", client =>
-        {
-            client.BaseAddress = new Uri(bolConfig.RpcEndpoint);
-        });
+        services.AddHttpClient<IBolRpcService, BolRpcService>("BolRpcService");
 
         services.AddBolSdk();
 
@@ -102,11 +93,10 @@ public static class MauiProgram
         services.ConfigureWalletServices();
 
         services.AddTransient<IBase64Encoder, Base64Encoder>();
-        services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService", client =>
-        {
-            client.BaseAddress = new Uri(bolConfig.BolIdentityEndpoint);
-        });
-
+        services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService");
+        services.AddSingleton<ICloseWalletService, CloseWalletService>();
+        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
+        
         Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
         return builder.Build();
@@ -140,12 +130,18 @@ public static class MauiProgram
 
         builder.Configuration.AddConfiguration(configRoot);
 
-        var configuration = builder.Services.BuildServiceProvider().GetRequiredService<IConfiguration>();
+        var bolSettingsSection = builder.Configuration.GetRequiredSection("BolSettings");
+        var mainNetBolConfig = bolSettingsSection.GetSection(Constants.MainNet).Get<BolWalletAppConfig>();
+        var testNetBolConfig = bolSettingsSection.GetSection(Constants.TestNet).Get<BolWalletAppConfig>();
 
-        var bolConfig = configuration.GetRequiredSection("BolSettings").Get<BolConfig>();
-
-        builder.Services.AddSingleton(bolConfig);
-
+        builder.Services.AddSingleton(Preferences.Default);
+        builder.Services.AddSingleton<INetworkPreferences>(sp =>
+            new NetworkPreferences(
+                sp.GetRequiredService<IPreferences>(),
+                mainNetBolConfig,
+                testNetBolConfig,
+                sp.GetRequiredService<ILoggerFactory>().CreateLogger<NetworkPreferences>()));
+        
         return builder;
     }
 

@@ -49,6 +49,15 @@ public class SecureRepository : ISecureRepository
 		await _secureStorage.SetAsync(key, entityAsJson);
 	}
 
+    public Task RemoveAsync(string key)
+    {
+        ValidateKey(key);
+        
+        _secureStorage.Remove(key);
+        
+        return Task.CompletedTask;
+    }
+
 	private static void ValidateKey(string key)
 	{
 		if (key is null) throw new ArgumentNullException(nameof(key));

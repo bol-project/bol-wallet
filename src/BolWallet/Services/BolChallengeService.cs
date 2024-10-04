@@ -3,14 +3,15 @@ using SimpleResults;
 
 namespace BolWallet.Services;
 
-public class BolChallengeService(HttpClient httpClient) : IBolChallengeService
+public class BolChallengeService(HttpClient httpClient, INetworkPreferences networkPreferences) : IBolChallengeService
 {
     public async Task<Result> CompleteChallenge(string challenge, string signature, string publicKey, string codename,
         CancellationToken token = default)
     {
         try
         {
-            var response = await httpClient.PostAsJsonAsync("challenge", new
+            var uri = $"{networkPreferences.TargetNetworkConfig.BolIdentityEndpoint}/challenge";
+            var response = await httpClient.PostAsJsonAsync(uri, new
             {
                 challenge,
                 signature,
