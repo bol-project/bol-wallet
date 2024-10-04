@@ -35,7 +35,8 @@ public static class RegistrationExtensions
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>()
             .BindViewModelToView<AddMultiCitizenshipViewModel, AddMultiCitizenship>()
             .BindViewModelToView<SubmitCitizenshipViewModel, EcryptedCitizenshipPage>()
-            .BindViewModelToView<DownloadCertificationDocumentsViewModel, DownloadCertificationDocumentsPage>();
+            .BindViewModelToView<DownloadCertificationDocumentsViewModel, DownloadCertificationDocumentsPage>()
+            .BindViewModelToView<HomeViewModel, HomePage>();
 
         return services;
 	}
