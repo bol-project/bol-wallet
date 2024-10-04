@@ -1,6 +1,7 @@
 @using Bol.Core.Model
 @inject INavigationService NavigationService
 @inject IBolService bolService;
+@inject ICloseWalletService closeWalletService;
 
 <MudLayout>
     <MudAppBar Style="background-color:#0050FF">
@@ -41,10 +42,11 @@
             </MudNavGroup>
             <MudNavGroup Title="Tools">
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
-@*                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
+                @*                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink> *@
-@*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@
+                @*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@
             </MudNavGroup>
+            <MudNavLink Icon="@Icons.Material.Rounded.Logout" OnClick="async () => await closeWalletService.CloseWallet()">Close Wallet</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <CascadingValue Value="BolAccount">

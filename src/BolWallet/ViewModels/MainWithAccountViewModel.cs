@@ -3,7 +3,6 @@ using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
-using Microsoft.Extensions.Options;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel
@@ -12,9 +11,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IDeviceDisplay _deviceDisplay;
     private readonly IAddressTransformer _addressTransformer;
-    private readonly IBolRpcService _bolRpcClient;
-    private readonly IOptions<BolWalletAppConfig> _bolConfig;
-    private readonly IOptions<BolConfig> _bolSdkConfig;
+    private readonly INetworkPreferences _networkPreferences;
+    private readonly ICloseWalletService _closeWalletService;
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -57,25 +55,23 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _isCommercialAddressesExpanded = false;
-
+    
     public MainWithAccountViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
-        IBolRpcService bolRpcClient,
-        IOptions<BolWalletAppConfig> bolConfig,
-        IOptions<BolConfig> bolSdkConfig)
+        INetworkPreferences networkPreferences,
+        ICloseWalletService closeWalletService)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _deviceDisplay = deviceDisplay;
         _addressTransformer = addressTransformer;
-        _bolRpcClient = bolRpcClient;
-        _bolConfig = bolConfig;
-        _bolSdkConfig = bolSdkConfig;
+        _networkPreferences = networkPreferences;
+        _closeWalletService = closeWalletService;
     }
 
     [RelayCommand]
@@ -86,14 +82,11 @@ public partial class MainWithAccountViewModel : BaseViewModel
             _deviceDisplay.KeepScreenOn = true;
             IsLoading = true;
 
-            if (await TrySetBolContractHash(token))
-            {
-                await FetchBolAccountData(token);
-            }
+            await FetchBolAccountData(token);
 
             if (IsAccountOpen)
             {
-                await App.Current.MainPage.Navigation.PushAsync(new HomePage());
+                await NavigationService.NavigateTo<HomeViewModel>(changeRoot: true);
             }
         }
         catch (Exception ex)
@@ -106,24 +99,6 @@ public partial class MainWithAccountViewModel : BaseViewModel
             IsLoading = false;
             IsRefreshing = false;
         }
-    }
-
-    private async Task<bool> TrySetBolContractHash(CancellationToken token)
-    {
-        if (!string.IsNullOrWhiteSpace(_bolSdkConfig.Value.Contract))
-        {
-            return true;
-        }
-
-        var result = await _bolRpcClient.GetBolContractHash(token);
-        if (result.IsFailed)
-        {
-            await Toast.Make(result.Message).Show(token);
-            return false;
-        }
-
-        _bolSdkConfig.Value.Contract = result.Data;
-        return true;
     }
 
     public async Task FetchBolAccountData(CancellationToken token)
@@ -217,7 +192,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         {
             IsLoading = true;
 
-            Uri uri = new Uri($"{_bolConfig.Value.BolCertifierEndpoint}/{MainAddress}");
+            Uri uri = new Uri($"{_networkPreferences.TargetNetworkConfig.BolCertifierEndpoint}/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
             
             while (!IsWhiteListed)
@@ -272,6 +247,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
     {
         await NavigationService.NavigateTo<AccountViewModel>(true);
     }
+
+    [RelayCommand]
+    private async Task CloseWallet() => await _closeWalletService.CloseWallet();
 }
-
-

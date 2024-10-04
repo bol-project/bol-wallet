@@ -49,10 +49,10 @@ public partial class CompanyCodenameForm : ObservableObject
 
     public BaseProperty VatNumber { get; set; } = new()
     {
-        ErrorMessage = "VAT needs to be at least 5 characters",
-        IsValid = value => value.Length >= 5,
+        ErrorMessage = "Provide the last 5 characters of the VAT.",
+        IsValid = value => value.Length == 5,
         IsMandatory = true,
-        HelpMessage = "VAT needs to be at least 5 characters"
+        HelpMessage = "Provide the last 5 characters of the VAT."
     };
     
 
@@ -70,11 +70,11 @@ public partial class CompanyCodenameForm : ObservableObject
 
     public BaseProperty Combination { get; set; } = new()
     {
-        ErrorMessage = "Extra Digit should be a capital letter or a digit",
+        ErrorMessage = "Combination should be a capital letter or a digit",
         IsValid = value => OneCapitalLetterOrDigit.IsMatch(value),
-        Value = "",
+        Value = "1",
         IsMandatory = true,
-        HelpMessage = "Extra Digit should be a capital letter or a digit"
+        HelpMessage = "Combination should be a capital letter or a digit"
     };
 
     public bool IsFormFilled =>

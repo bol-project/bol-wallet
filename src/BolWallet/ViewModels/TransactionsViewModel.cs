@@ -13,7 +13,7 @@ public partial class TransactionsViewModel : BaseViewModel
 
 	private readonly IBolService _bolService;
 	private readonly ISecureRepository _secureRepository;
-    private readonly IOptions<BolWalletAppConfig> _bolConfig;
+    private readonly INetworkPreferences _networkPreferences;
 
 	public string TransactionsLabel => "Transactions";
     
@@ -24,11 +24,11 @@ public partial class TransactionsViewModel : BaseViewModel
 		INavigationService navigationService,
 		IBolService bolService,
 		ISecureRepository secureRepository,
-        IOptions<BolWalletAppConfig> bolConfig) : base(navigationService)
+        INetworkPreferences networkPreferences) : base(navigationService)
 	{
 		_bolService = bolService;
 		_secureRepository = secureRepository;
-        _bolConfig = bolConfig;
+        _networkPreferences = networkPreferences;
     }
 
 	[RelayCommand]
@@ -46,7 +46,7 @@ public partial class TransactionsViewModel : BaseViewModel
         try
         {
             await Browser.OpenAsync(
-                $"{_bolConfig.Value.BolExplorerEndpoint}/transaction/{transactionHash}",
+                $"{_networkPreferences.TargetNetworkConfig.BolExplorerEndpoint}/transaction/{transactionHash}",
                 BrowserLaunchMode.SystemPreferred);
         }
         catch (Exception ex)

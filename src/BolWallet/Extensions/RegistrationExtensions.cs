@@ -10,6 +10,7 @@ public static class RegistrationExtensions
 		services.AddSingleton<IViewModelToViewResolver, ViewModelToViewResolver>();
 
 		services
+            .BindViewModelToView<PreloadViewModel, PreloadPage>()
 			.BindViewModelToView<MainViewModel, MainPage>()
             .BindViewModelToView<CreateCodenameCompanyViewModel, CreateCodenameCompanyPage>()
             .BindViewModelToView<CreateCodenameIndividualViewModel, CreateCodenameIndividualPage>()
@@ -34,7 +35,8 @@ public static class RegistrationExtensions
             .BindViewModelToView<CitizenshipViewModel, CitizenshipPage>()
             .BindViewModelToView<AddMultiCitizenshipViewModel, AddMultiCitizenship>()
             .BindViewModelToView<SubmitCitizenshipViewModel, EcryptedCitizenshipPage>()
-            .BindViewModelToView<DownloadCertificationDocumentsViewModel, DownloadCertificationDocumentsPage>();
+            .BindViewModelToView<DownloadCertificationDocumentsViewModel, DownloadCertificationDocumentsPage>()
+            .BindViewModelToView<HomeViewModel, HomePage>();
 
         return services;
 	}

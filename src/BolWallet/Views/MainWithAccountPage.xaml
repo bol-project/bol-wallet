@@ -2,18 +2,28 @@
     x:Class="BolWallet.Views.MainWithAccountPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:viewModels="clr-namespace:BolWallet.ViewModels"
     x:DataType="viewModels:MainWithAccountViewModel"
     BackgroundColor="{DynamicResource SecondaryColor}"
-	xmlns:Converters="clr-namespace:BolWallet.Converters"
 	xmlns:helpers="clr-namespace:BolWallet.Helpers"
 	Title="Account Main Page"
 	xmlns:models="clr-namespace:BolWallet.Models"
 	NavigationPage.HasBackButton="False">
 
 	<ContentPage.Resources>
-		<Converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
 	</ContentPage.Resources>
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Close Wallet"
+            IconImageSource="logout"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding CloseWalletCommand}" 
+            IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}"/>
+    </ContentPage.ToolbarItems>
 
 	<RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
 		<ScrollView>
@@ -27,7 +37,7 @@
 			<StackLayout Grid.Row="2" Grid.ColumnSpan="3" IsVisible="{OnPlatform False, WinUI=True}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
 					<ActivityIndicator IsVisible="{Binding IsRefreshing}" IsRunning="True" />
 			</StackLayout>
-            <StackLayout Grid.Row="0" Grid.ColumnSpan="3" IsVisible="{Binding IsRefreshing, Converter={StaticResource InverseBooleanConverter}}">
+            <StackLayout Grid.Row="0" Grid.ColumnSpan="3" IsVisible="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}">
                 <ActivityIndicator IsVisible="{Binding IsLoading}" IsRunning="True" />
             </StackLayout>
             <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="Start" HorizontalOptions="End">
@@ -38,7 +48,7 @@
                     </ImageButton.Source>
                 </ImageButton>
             </StackLayout>
-            <StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+            <StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Grid.Row="0" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
             <Frame
 				Grid.Row="1"
 				CornerRadius="25"
@@ -105,7 +115,7 @@
 				</Frame>
 
 				<Frame
-				  IsVisible="{Binding IsAccountOpen, Converter={StaticResource InverseBooleanConverter}}"
+				  IsVisible="{Binding IsAccountOpen, Converter={StaticResource InvertedBoolConverter}}"
 				  CornerRadius="45"
 				  BackgroundColor="{DynamicResource Primary}">
 					<StackLayout
@@ -156,7 +166,7 @@
 					FontSize="12"
 					Text="Community Operations" />
 			</StackLayout>
-			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
+			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">
 				<Label IsVisible="{Binding IsAccountOpen}" Text="Commercial Balances" HorizontalOptions="Center" FontSize="Title"   Margin="0,20,0,10" />
 
 				<ImageButton IsVisible="{Binding IsAccountOpen}"  Command="{Binding ExpandCommercialAddressCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
