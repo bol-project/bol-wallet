@@ -339,13 +339,12 @@
         {
             var submittedForm = context.Model as EncryptedCitizenshipForm;
 
-            if(false){
-                await ViewModel.SubmitFormCommand.ExecuteAsync(submittedForm);
-
+            if (ViewModel.IsSha256InputMode)
+            {
+                await ViewModel.SubmitHashFormCommand.ExecuteAsync(submittedForm);
             }
             else{
-                await ViewModel.SubmitHashFormCommand.ExecuteAsync(submittedForm);
-
+                await ViewModel.SubmitFormCommand.ExecuteAsync(submittedForm);
             }
         }
         catch (Exception ex)

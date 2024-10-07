@@ -9,7 +9,8 @@ internal class Constants
     public const string BirthDateFormat = "yyyy-MM-dd";
     public const string MainNet = "mainnet";
     public const string TestNet = "testnet";
-    
+    public const string DefaultHash = "0000000000000000000000000000000000000000000000000000000000000000";
+
     // Preferences Keys
     public const string TargetNet = "target-net";
     
