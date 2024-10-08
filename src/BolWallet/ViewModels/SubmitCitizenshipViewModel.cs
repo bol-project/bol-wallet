@@ -318,11 +318,11 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
 
                 var citizenshipHashes = new CitizenshipHashTable
                 {
-                    IdentityCard = form.IdentityCardSha256?.ToUpper() ?? null,
-                    IdentityCardBack = form.IdentityCardBackSha256?.ToUpper() ?? null,
-                    Passport = form.PassportSha256?.ToUpper() ?? null,
-                    ProofOfNin = form.ProofOfNinSha256?.ToUpper() ?? null,
-                    BirthCertificate = form.BirthCertificateSha256?.ToUpper() ?? null
+                    IdentityCard = form.IdentityCardSha256?.ToUpper() ?? Constants.DefaultHash,
+                    IdentityCardBack = form.IdentityCardBackSha256?.ToUpper() ?? Constants.DefaultHash,
+                    Passport = form.PassportSha256?.ToUpper() ?? Constants.DefaultHash,
+                    ProofOfNin = form.ProofOfNinSha256?.ToUpper() ?? Constants.DefaultHash,
+                    BirthCertificate = form.BirthCertificateSha256?.ToUpper() ?? Constants.DefaultHash
                 };
 
                 var encryptedCitizenshipData = new EncryptedCitizenshipData
