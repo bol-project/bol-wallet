@@ -21,7 +21,7 @@ namespace BolWallet.Models
     {
         private string _drivingLicense;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string DrivingLicense
         {
@@ -31,7 +31,7 @@ namespace BolWallet.Models
 
         private string _otherIdentity;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string OtherIdentity
         {
@@ -41,7 +41,7 @@ namespace BolWallet.Models
 
         private string _facePhoto;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string FacePhoto
         {
@@ -51,7 +51,7 @@ namespace BolWallet.Models
 
         private string _personalVoice;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string PersonalVoice
         {
@@ -61,7 +61,7 @@ namespace BolWallet.Models
 
         private string _proofOfCommunication;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string ProofOfCommunication
         {
@@ -71,7 +71,7 @@ namespace BolWallet.Models
 
         private string _proofOfResidence;
 
-        [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+        [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
         [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
         public string ProofOfResidence
         {

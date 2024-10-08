@@ -49,7 +49,7 @@ public class EncryptedCitizenshipForm : ObservableObject
 
     private string _identityCardSha256;
 
-    [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
     public string IdentityCardSha256
     {
@@ -59,7 +59,7 @@ public class EncryptedCitizenshipForm : ObservableObject
 
     private string _identityCardBackSha256;
 
-    [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
     public string IdentityCardBackSha256
     {
@@ -69,7 +69,7 @@ public class EncryptedCitizenshipForm : ObservableObject
 
     private string _passportSha256;
 
-    [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
     public string PassportSha256
     {
@@ -79,7 +79,7 @@ public class EncryptedCitizenshipForm : ObservableObject
 
     private string _proofOfNinSha256;
 
-    [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
     public string ProofOfNinSha256
     {
@@ -89,7 +89,7 @@ public class EncryptedCitizenshipForm : ObservableObject
 
     private string _birthCertificateSha256;
 
-    [RegularExpression("^[A-Z0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
     public string BirthCertificateSha256
     {
