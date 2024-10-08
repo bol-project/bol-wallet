@@ -14,12 +14,13 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
 
     public BolServiceFactory(
         IServiceScopeFactory serviceScopeFactory,
+        IMessenger messenger,
         ILogger<BolServiceFactory> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register<WalletClosedMessage>(this);
-        WeakReferenceMessenger.Default.Register<WalletCreatedMessage>(this);
+        messenger.Register<WalletClosedMessage>(this);
+        messenger.Register<WalletCreatedMessage>(this);
     }
 
     public IBolService Create()
