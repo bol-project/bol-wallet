@@ -30,6 +30,7 @@ public partial class CreateEdiViewModel : BaseViewModel
         _mediaService = mediaService;
         _certificationMatrix = new CertificationMatrix { Hashes = new GenericHashTable() };
         GenericHashTableForm = new GenericHashTableForm();
+        GenericSHA256TableForm = new GenericSHA256TableForm();
         EdiFiles = new GenericHashTableFiles();
     }
     
@@ -37,9 +38,18 @@ public partial class CreateEdiViewModel : BaseViewModel
     
     [ObservableProperty] private GenericHashTableForm _genericHashTableForm;
 
+    [ObservableProperty] private GenericSHA256TableForm _genericSHA256TableForm;
+    
     [ObservableProperty] private bool _isLoading = false;
 
     [ObservableProperty] private bool _isRecording = false;
+
+    [ObservableProperty] private bool _isSha256InputMode;
+
+    public void OnKnownHashInputModeChange(bool newValue)
+    {
+        IsSha256InputMode = newValue;
+    }
 
     [RelayCommand]
     private async Task PickFileAsync(string propertyName)
@@ -158,6 +168,19 @@ public partial class CreateEdiViewModel : BaseViewModel
         {
             IsLoading = false;
         }
+    }
+
+    [RelayCommand]
+    private async Task SubmitHashForm()
+    {
+        _certificationMatrix.Hashes.FacePhoto = GenericSHA256TableForm.FacePhoto?.ToUpper() ?? Constants.DefaultHash;
+        _certificationMatrix.Hashes.PersonalVoice = GenericSHA256TableForm.PersonalVoice?.ToUpper() ?? Constants.DefaultHash;
+        _certificationMatrix.Hashes.DrivingLicense = GenericSHA256TableForm.DrivingLicense?.ToUpper() ?? Constants.DefaultHash;
+        _certificationMatrix.Hashes.OtherIdentity = GenericSHA256TableForm.OtherIdentity?.ToUpper() ?? Constants.DefaultHash;
+        _certificationMatrix.Hashes.ProofOfCommunication = GenericSHA256TableForm.ProofOfCommunication?.ToUpper() ?? Constants.DefaultHash;
+        _certificationMatrix.Hashes.ProofOfResidence = GenericSHA256TableForm.ProofOfResidence?.ToUpper() ?? Constants.DefaultHash;
+
+        await Submit();
     }
 
     private async Task PathPerImport(PropertyInfo propertyNameInfo, FileResult fileResult)
