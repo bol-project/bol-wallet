@@ -54,7 +54,7 @@ public class EncryptedCitizenshipForm : ObservableObject
     public string IdentityCardSha256
     {
         get => _identityCardSha256;
-        set => _identityCardSha256 = value?.ToUpper() ?? "";
+        set => _identityCardSha256 = value?.ToUpper();
     }
 
     private string _identityCardBackSha256;
@@ -64,7 +64,7 @@ public class EncryptedCitizenshipForm : ObservableObject
     public string IdentityCardBackSha256
     {
         get => _identityCardBackSha256;
-        set => _identityCardBackSha256 = value?.ToUpper() ?? "";
+        set => _identityCardBackSha256 = value?.ToUpper();
     }
 
     private string _passportSha256;
@@ -74,7 +74,7 @@ public class EncryptedCitizenshipForm : ObservableObject
     public string PassportSha256
     {
         get => _passportSha256;
-        set => _passportSha256 = value?.ToUpper() ?? "";
+        set => _passportSha256 = value?.ToUpper();
     }
 
     private string _proofOfNinSha256;
@@ -84,7 +84,7 @@ public class EncryptedCitizenshipForm : ObservableObject
     public string ProofOfNinSha256
     {
         get => _proofOfNinSha256;
-        set => _proofOfNinSha256 = value?.ToUpper() ?? "";
+        set => _proofOfNinSha256 = value?.ToUpper();
     }
 
     private string _birthCertificateSha256;
@@ -94,7 +94,7 @@ public class EncryptedCitizenshipForm : ObservableObject
     public string BirthCertificateSha256
     {
         get => _birthCertificateSha256;
-        set => _birthCertificateSha256 = value?.ToUpper() ?? "";
+        set => _birthCertificateSha256 = value?.ToUpper();
     }
 }
 

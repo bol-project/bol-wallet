@@ -26,7 +26,7 @@ namespace BolWallet.Models
         public string DrivingLicense
         {
             get => _drivingLicense;
-            set => _drivingLicense = value?.ToUpper() ?? "";
+            set => _drivingLicense = value?.ToUpper();
         }
 
         private string _otherIdentity;
@@ -36,7 +36,7 @@ namespace BolWallet.Models
         public string OtherIdentity
         {
             get => _otherIdentity;
-            set => _otherIdentity = value?.ToUpper() ?? "";
+            set => _otherIdentity = value?.ToUpper();
         }
 
         private string _facePhoto;
@@ -46,7 +46,7 @@ namespace BolWallet.Models
         public string FacePhoto
         {
             get => _facePhoto;
-            set => _facePhoto = value?.ToUpper() ?? "";
+            set => _facePhoto = value?.ToUpper();
         }
 
         private string _personalVoice;
@@ -56,7 +56,7 @@ namespace BolWallet.Models
         public string PersonalVoice
         {
             get => _personalVoice;
-            set => _personalVoice = value?.ToUpper() ?? "";
+            set => _personalVoice = value?.ToUpper();
         }
 
         private string _proofOfCommunication;
@@ -66,7 +66,7 @@ namespace BolWallet.Models
         public string ProofOfCommunication
         {
             get => _proofOfCommunication;
-            set => _proofOfCommunication = value?.ToUpper() ?? "";
+            set => _proofOfCommunication = value?.ToUpper();
         }
 
         private string _proofOfResidence;
@@ -76,7 +76,7 @@ namespace BolWallet.Models
         public string ProofOfResidence
         {
             get => _proofOfResidence;
-            set => _proofOfResidence = value?.ToUpper() ?? "";
+            set => _proofOfResidence = value?.ToUpper();
         }
     }
 }
