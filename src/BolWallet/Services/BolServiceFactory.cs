@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BolWallet.Services;
 
-public class BolServiceFactory : IRecipient<WalletClosedMessage>
+public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<WalletCreatedMessage>
 {
     private IServiceScope _serviceScope;
     private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -14,11 +14,13 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>
 
     public BolServiceFactory(
         IServiceScopeFactory serviceScopeFactory,
+        IMessenger messenger,
         ILogger<BolServiceFactory> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        messenger.Register<WalletClosedMessage>(this);
+        messenger.Register<WalletCreatedMessage>(this);
     }
 
     public IBolService Create()
@@ -30,6 +32,13 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>
     public void Receive(WalletClosedMessage message)
     {
         _logger.LogInformation("Received {Message}, disposing BOL services...", message.GetType().Name);
+        _serviceScope?.Dispose();
+        _serviceScope = null;
+    }
+    
+    public void Receive(WalletCreatedMessage message)
+    {
+        _logger.LogInformation("Received {Message}, disposing BOL services so new instances get access to new wallet...", message.GetType().Name);
         _serviceScope?.Dispose();
         _serviceScope = null;
     }

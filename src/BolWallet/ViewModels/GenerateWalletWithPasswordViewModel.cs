@@ -1,8 +1,6 @@
 ﻿using Bol.Core.Abstractions;
-using Bol.Cryptography;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Storage;
-using System.Text;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BolWallet.ViewModels;
 
@@ -12,19 +10,22 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly IFileDownloadService _fileDownloadService;
     private readonly IDeviceDisplay _deviceDisplay;
+    private readonly IMessenger _messenger;
 
     public GenerateWalletWithPasswordViewModel(
         INavigationService navigationService,
         IWalletService walletService,
         ISecureRepository secureRepository,
         IFileDownloadService fileDownloadService,
-        IDeviceDisplay deviceDisplay)
+        IDeviceDisplay deviceDisplay,
+        IMessenger messenger)
         : base(navigationService)
     {
         _walletService = walletService;
         _secureRepository = secureRepository;
         _fileDownloadService = fileDownloadService;
         _deviceDisplay = deviceDisplay;
+        _messenger = messenger;
     }
 
     [ObservableProperty]
@@ -76,6 +77,8 @@ public partial class GenerateWalletWithPasswordViewModel : BaseViewModel
 
             await DownloadWalletAsync(bolWallet);
 
+            _messenger.Send(Constants.WalletCreatedMessage);
+            
             await NavigationService.NavigateTo<DownloadCertificationDocumentsViewModel>();
         }
         catch (Exception ex)
