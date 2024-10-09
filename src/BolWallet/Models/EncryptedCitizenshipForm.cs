@@ -47,20 +47,55 @@ public class EncryptedCitizenshipForm : ObservableObject
         set => _thirdName = value?.ToUpper() ?? "";
     }
 
-    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
-    public string IdentityCardSha256 { get; set; }
+    private string _identityCardSha256;
 
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
-    public string IdentityCardBackSha256 { get; set; }
+    public string IdentityCardSha256
+    {
+        get => _identityCardSha256;
+        set => _identityCardSha256 = value?.ToUpper();
+    }
 
-    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
-    public string PassportSha256 { get; set; }
+    private string _identityCardBackSha256;
 
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
-    public string ProofOfNinSha256 { get; set; }
+    public string IdentityCardBackSha256
+    {
+        get => _identityCardBackSha256;
+        set => _identityCardBackSha256 = value?.ToUpper();
+    }
 
+    private string _passportSha256;
+
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
     [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
-    public string BirthCertificateSha256 { get; set; }
+    public string PassportSha256
+    {
+        get => _passportSha256;
+        set => _passportSha256 = value?.ToUpper();
+    }
+
+    private string _proofOfNinSha256;
+
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string ProofOfNinSha256
+    {
+        get => _proofOfNinSha256;
+        set => _proofOfNinSha256 = value?.ToUpper();
+    }
+
+    private string _birthCertificateSha256;
+
+    [RegularExpression("^[A-F0-9]*$", ErrorMessage = "Only capital letters and numbers are allowed.")]
+    [StringLength(64, MinimumLength = 64, ErrorMessage = "The SHA-256 hash must be exactly 64 characters.")]
+    public string BirthCertificateSha256
+    {
+        get => _birthCertificateSha256;
+        set => _birthCertificateSha256 = value?.ToUpper();
+    }
 }
 
 public class EncryptedCitizenshipData

@@ -11,32 +11,91 @@
     <MudProgressCircular Color="Color.Primary" Style="height:170px;width:170px;" Indeterminate="true" />
 </MudOverlay>
 <MudGrid Style="padding:5px">
-    <Virtualize Items="IdentificationDocuments" Context="edi">
+    <MudSwitch Style="margin-left: auto; margin-top: 20px; text-align: right;" T="bool" Value="@ViewModel.IsSha256InputMode"
+               ValueChanged="@ViewModel.OnKnownHashInputModeChange"
+               Color="Color.Primary" Label="Switch to Hash Input Mode" />
+
+    @if (ViewModel.IsSha256InputMode)
+    {
         <MudItem xs="12" sm="12" md="12">
-            <MudStack Row="true" @key="edi">
-                <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
-                @if (edi.Item1 == "PersonalVoice")
-                {
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => PickAudioFileAsync(edi.Item1))"></MudIconButton>
-                    <MudIconButton Icon="@(ViewModel.IsRecording ? Icons.Material.Filled.Stop : Icons.Material.Filled.Mic)" 
-                                   Color="@(ViewModel.IsRecording ? Color.Error : Color.Primary)" aria-label="@edi.Item1" 
-                                   OnClick="@(async () => await StartAudioRecording())"></MudIconButton>
-                }
-                else
-                {
-                    <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>PickFileAsync(edi.Item1))"></MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@edi.Item1" OnClick="@(args=>PickPhotoAsync(edi.Item1))" />
-                    <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>TakePhotoAsync(edi.Item1))"></MudIconButton>
-                }
-            </MudStack>
+            <EditForm Model="@ViewModel.GenericSHA256TableForm" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+                <MudStack Row="false">
+                    <MudTextField  @bind-Value="@ViewModel.GenericSHA256TableForm.FacePhoto"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.FacePhoto = ViewModel.GenericSHA256TableForm.FacePhoto?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.FacePhoto)"
+                                  Variant="Variant.Outlined"
+                                  Label="Face Photo SHA-256*" />
+
+                    <MudTextField @bind-Value="@ViewModel.GenericSHA256TableForm.PersonalVoice"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.PersonalVoice = ViewModel.GenericSHA256TableForm.PersonalVoice?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.PersonalVoice)"
+                                  Variant="Variant.Outlined"
+                                  Label="Personal Voice SHA-256*" />
+
+                    <MudTextField @bind-Value="@ViewModel.GenericSHA256TableForm.DrivingLicense"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.DrivingLicense = ViewModel.GenericSHA256TableForm.DrivingLicense?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.DrivingLicense)"
+                                  Variant="Variant.Outlined"
+                                  Label="Driving License SHA-256" />
+
+                    <MudTextField @bind-Value="@ViewModel.GenericSHA256TableForm.OtherIdentity"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.OtherIdentity = ViewModel.GenericSHA256TableForm.OtherIdentity?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.OtherIdentity)"
+                                  Variant="Variant.Outlined"
+                                  Label="Other Identity SHA-256" />
+
+                    <MudTextField @bind-Value="@ViewModel.GenericSHA256TableForm.ProofOfCommunication"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.ProofOfCommunication = ViewModel.GenericSHA256TableForm.ProofOfCommunication?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.ProofOfCommunication)"
+                                  Variant="Variant.Outlined"
+                                  Label="Proof Of Communication SHA-256" />
+
+                    <MudTextField @bind-Value="@ViewModel.GenericSHA256TableForm.ProofOfResidence"
+                                  OnBlur="@(x => ViewModel.GenericSHA256TableForm.ProofOfResidence = ViewModel.GenericSHA256TableForm.ProofOfResidence?.Trim().ToUpper())"
+                                  For="@(() => ViewModel.GenericSHA256TableForm.ProofOfResidence)"
+                                  Variant="Variant.Outlined"
+                                  Label="Proof Of Residence SHA-256" />
+                </MudStack>
+                <MudItem xs="12" sm="12" md="12">
+                    <div class="text-center mt-3">
+                        <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(string.IsNullOrEmpty(ViewModel.GenericSHA256TableForm.PersonalVoice) || string.IsNullOrEmpty(ViewModel.GenericSHA256TableForm.FacePhoto))">Submit</MudButton>
+                    </div>
+                </MudItem>
+            </EditForm>
+
         </MudItem>
-    </Virtualize>
-    <MudItem xs="12" sm="12" md="12">
-        <div class="text-center">
-            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isPersonalVoiceSumbitted && isFacePhotoSumbitted))">Submit</MudButton>
-        </div>
-    </MudItem>
+      
+    }
+    else
+    {
+        <Virtualize Items="IdentificationDocuments" Context="edi">
+            <MudItem xs="12" sm="12" md="12">
+                <MudStack Row="true" @key="edi">
+                    <MudField Style="width:150px" Label="@edi.Item3" Variant="MudBlazor.Variant.Text" InnerPadding="false"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.CheckCircle" AdornmentColor="@edi.Item2">@edi.Item4</MudField>
+                    @if (edi.Item1 == "PersonalVoice")
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args => PickAudioFileAsync(edi.Item1))"></MudIconButton>
+                        <MudIconButton Icon="@(ViewModel.IsRecording ? Icons.Material.Filled.Stop : Icons.Material.Filled.Mic)"
+                                       Color="@(ViewModel.IsRecording ? Color.Error : Color.Primary)" aria-label="@edi.Item1"
+                                       OnClick="@(async () => await StartAudioRecording())"></MudIconButton>
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@edi.Item1" OnClick="@(args=>PickFileAsync(edi.Item1))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Photo" aria-label="@edi.Item1" OnClick="@(args=>PickPhotoAsync(edi.Item1))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.CameraAlt" aria-label="@edi.Item1" OnClick="@(args=>TakePhotoAsync(edi.Item1))"></MudIconButton>
+                    }
+                </MudStack>
+            </MudItem>
+        </Virtualize>
+        <MudItem xs="12" sm="12" md="12">
+            <div class="text-center">
+                <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit" Class="ml-auto" Color="Color.Primary" Disabled="@(!(isPersonalVoiceSumbitted && isFacePhotoSumbitted))">Submit</MudButton>
+            </div>
+        </MudItem>
+    }
 </MudGrid>
 
 @if (ViewModel.IsRecording)
@@ -54,7 +113,7 @@
     .text-center {
         text-align: center;
     }
-    
+
     .recording-overlay {
         position: fixed;
         top: 0;
@@ -67,7 +126,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .recording-dialog {
         background-color: white;
         padding: 20px;
@@ -78,6 +137,7 @@
     }
 
 </style>
+
 @code {
     CreateEdiViewModel createEdiViewModel;
 
@@ -112,8 +172,15 @@
             ViewModel.IsLoading = true;
             StateHasChanged();
         });
-        
-        await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
+
+        if (ViewModel.IsSha256InputMode)
+        {
+            await createEdiViewModel.SubmitHashFormCommand.ExecuteAsync(null);
+        }
+        else
+        {
+            await createEdiViewModel.SubmitCommand.ExecuteAsync(null);
+        }
 
         await InvokeAsync(() =>
         {
@@ -149,7 +216,7 @@
                 ViewModel.IsLoading = true;
                 StateHasChanged();
             });
-            
+
             await UpdateIdentificationDocumentsList(property);
         }
         catch (Exception e)
@@ -179,7 +246,7 @@
                 ViewModel.IsLoading = true;
                 StateHasChanged();
             });
-            
+
             await UpdateIdentificationDocumentsList(property);
         }
         catch (Exception e)
