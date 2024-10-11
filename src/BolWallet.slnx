@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="BolWallet/BolWallet.csproj">
+    <Configuration Solution="Debug|Any CPU" Project="Debug|Any CPU|Deploy" />
+    <Configuration Solution="Release|Any CPU" Project="Release|Any CPU|Deploy" />
+  </Project>
+</Solution>
