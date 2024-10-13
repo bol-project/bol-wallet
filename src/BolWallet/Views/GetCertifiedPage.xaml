@@ -15,29 +15,28 @@
     </ContentPage.Resources>
     
 	<ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Download Certification Files"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding DownloadEdiFilesCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
         <ToolbarItem 
 		    Text="Download BolAccount"
 		    Order="Secondary"
-		    Priority="0" 
+		    Priority="1" 
 		    Command="{Binding DownloadAccountCommand}"
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 		<ToolbarItem 
 		    Text="Download BolWallet"
 		    Order="Secondary"
-		    Priority="1" 
+		    Priority="2" 
 		    Command="{Binding DownloadBolWalletCommand}"
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
-		<ToolbarItem
-		    Text="Download Certification Files"
-		    Order="Primary"
-		    Priority="0" 
-		    Command="{Binding DownloadEdiFilesCommand}"
-            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
-        
         <ToolbarItem 
             Text="Close Wallet"
             Order="Secondary"
-            Priority="2" 
+            Priority="3" 
             Command="{Binding CloseWalletCommand}" 
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 	</ContentPage.ToolbarItems>
