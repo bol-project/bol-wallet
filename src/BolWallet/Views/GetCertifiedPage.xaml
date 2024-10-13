@@ -7,8 +7,9 @@
              x:DataType="viewModels:GetCertifiedViewModel"
              xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certify Your Account"
-			 BackgroundColor="{DynamicResource SecondaryColor}">
-
+			 BackgroundColor="{DynamicResource SecondaryColor}"
+             NavigationPage.HasBackButton="False">
+    
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
