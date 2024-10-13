@@ -9,6 +9,8 @@ public partial class MainWithAccountPage : ContentPage
         _mainWithAccountViewModel = mainWithAccountViewModel;
         InitializeComponent();
         BindingContext = _mainWithAccountViewModel;
+
+        Unloaded += (_, _) => _mainWithAccountViewModel?.Dispose();
     }
 
 	protected override async void OnAppearing()

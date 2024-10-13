@@ -5,7 +5,7 @@ using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
-public partial class MainWithAccountViewModel : BaseViewModel
+public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
@@ -268,4 +268,14 @@ public partial class MainWithAccountViewModel : BaseViewModel
         await _cts.CancelAsync();
         await _closeWalletService.CloseWallet();
     }   
+
+    public void Dispose()
+    {
+        if (_cts is { IsCancellationRequested: false })
+        {
+            _cts.Cancel();
+        }
+        
+        _cts.Dispose();
+    }
 }
