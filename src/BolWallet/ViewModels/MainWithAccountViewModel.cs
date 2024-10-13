@@ -149,7 +149,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
             catch (RpcException ex)
             {
                 IsWhiteListed = false;
-                await Toast.Make(ex.Message).Show();
+                await Toast.Make(ex.Message).Show(token);
             }
 
             CanWhiteList = !IsWhiteListed && !IsRegistered;
@@ -157,7 +157,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
     }
 
