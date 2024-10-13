@@ -1,7 +1,10 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Accessors;
 using Bol.Core.Model;
+using Bol.Core.Rpc;
+using Bol.Core.Rpc.Abstractions;
 using Bol.Core.Services;
+using Bol.Core.Transactions;
 using Microsoft.Extensions.Options;
 
 namespace BolWallet.Extensions;
@@ -13,6 +16,13 @@ public static class ConfigureWalletExtensions
         services.AddTransient<WalletContextAccessor>();
         services.AddTransient<IContextAccessor, BolWalletContextAccessor>();
 
+        // For SDK services with a direct or indirect dependency to IOptions<BolConfig>
+        // make them transient to use a new IOptions<BolConfig> instance properly and
+        // avoid using an incorrect BolConfig after closing/opening wallets.
+        services.AddTransient<IRpcClient, RpcClient>();
+        services.AddTransient<ITransactionService, TransactionService>();
+        services.AddSingleton<HttpClient>();
+        
         services.AddScoped<BolService>();
         services.AddSingleton<BolServiceFactory>();
         services.AddTransient<IBolService>(sp => sp.GetRequiredService<BolServiceFactory>().Create());
