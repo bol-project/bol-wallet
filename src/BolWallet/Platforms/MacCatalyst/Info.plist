@@ -31,9 +31,9 @@
 		<string>processing</string>
 	</array>
 	<key>CFBundleVersion</key>
-    <string>2024.1014.1830</string>
+    <string>2024.1014.2100</string>
 	<key>CFBundleShortVersionString</key>
-    <string>2.3.0</string>
+    <string>2.3.1</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSHumanReadableCopyright</key>
