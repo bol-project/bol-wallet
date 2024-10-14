@@ -5,7 +5,7 @@ using Bol.Core.Rpc.Model;
 using CommunityToolkit.Maui.Alerts;
 
 namespace BolWallet.ViewModels;
-public partial class MainWithAccountViewModel : BaseViewModel
+public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
@@ -13,6 +13,8 @@ public partial class MainWithAccountViewModel : BaseViewModel
     private readonly IAddressTransformer _addressTransformer;
     private readonly INetworkPreferences _networkPreferences;
     private readonly ICloseWalletService _closeWalletService;
+
+    private readonly CancellationTokenSource _cts = new();
 
     public string WelcomeText => "Welcome";
     public string BalanceText => "Total Balance";
@@ -147,7 +149,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
             catch (RpcException ex)
             {
                 IsWhiteListed = false;
-                await Toast.Make(ex.Message).Show();
+                await Toast.Make(ex.Message).Show(token);
             }
 
             CanWhiteList = !IsWhiteListed && !IsRegistered;
@@ -155,7 +157,7 @@ public partial class MainWithAccountViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
     }
 
@@ -168,16 +170,22 @@ public partial class MainWithAccountViewModel : BaseViewModel
 
             await _bolService.Register(token);
 
-            while (!IsRegistered)
+            var cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, token);
+            
+            while (!IsRegistered && !cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(TimeSpan.FromSeconds(5), token);
-                await FetchBolAccountData(token);
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken.Token);
+                await FetchBolAccountData(cancellationToken.Token);
             }
-            await Toast.Make("Your Account has been registered.").Show();
+
+            if (IsRegistered)
+            {
+                await Toast.Make("Your Account has been registered.").Show(token);
+            }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not TaskCanceledException)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
         finally
         {
@@ -195,16 +203,22 @@ public partial class MainWithAccountViewModel : BaseViewModel
             Uri uri = new Uri($"{_networkPreferences.TargetNetworkConfig.BolCertifierEndpoint}/{MainAddress}");
             await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
             
-            while (!IsWhiteListed)
+            var cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, token);
+            
+            while (!IsWhiteListed && !cancellationToken.IsCancellationRequested)
             {
-                await Task.Delay(TimeSpan.FromSeconds(5), token);
-                await FetchBolAccountData(token);
+                await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken.Token);
+                await FetchBolAccountData(cancellationToken.Token);
             }
-            await Toast.Make("Your Main Address has been Whitelisted.").Show();
+
+            if (IsWhiteListed)
+            {
+                await Toast.Make("Your Main Address has been Whitelisted.").Show(token);
+            }
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is not TaskCanceledException)
         {
-            await Toast.Make(ex.Message).Show();
+            await Toast.Make(ex.Message).Show(token);
         }
         finally
         {
@@ -249,5 +263,19 @@ public partial class MainWithAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task CloseWallet() => await _closeWalletService.CloseWallet();
+    private async Task CloseWallet()
+    {
+        await _cts.CancelAsync();
+        await _closeWalletService.CloseWallet();
+    }   
+
+    public void Dispose()
+    {
+        if (_cts is { IsCancellationRequested: false })
+        {
+            _cts.Cancel();
+        }
+        
+        _cts.Dispose();
+    }
 }

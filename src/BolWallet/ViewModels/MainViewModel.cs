@@ -61,17 +61,25 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task SwitchNetwork()
     {
-        var confirm = await Application.Current.MainPage.DisplayAlert(
+        var prompt = await Application.Current.MainPage.DisplayPromptAsync(
             "Network Change",
-            $"The target network will change from {_networkPreferences.Name} to {_networkPreferences.AlternativeName}!!!",
-            $"Yes, change to {_networkPreferences.AlternativeName}!",
-            "Cancel, I don't know what I'm doing!");
+            $"You are currently connected to {_networkPreferences.Name}." +
+            $"{Environment.NewLine}{Environment.NewLine}" +
+            $"To switch to {_networkPreferences.AlternativeName}, type its name below:",
+            keyboard: Keyboard.Plain,
+            initialValue: "",
+            accept: $"Yes, change to {_networkPreferences.AlternativeName}!",
+            cancel: "Cancel, I don't know what I'm doing!");
         
-        if (!confirm)
+        if (string.IsNullOrWhiteSpace(prompt) || !prompt.Equals(_networkPreferences.AlternativeName))
         {
+            await Application.Current.MainPage.DisplayAlert("Network Change",
+                $"{_networkPreferences.AlternativeName} network name wasn't verified, no switch will occur.",
+                "OK");
+            
             return;
         }
-
+        
         IsLoading = true;
         LoadingText = "Changing network...";
         
@@ -82,6 +90,10 @@ public partial class MainViewModel : BaseViewModel
 
         LoadingText = string.Empty;
         IsLoading = false;
+        
+        await Application.Current.MainPage.DisplayAlert("Network Change",
+            $"Switch to {_networkPreferences.Name} network completed successfully.",
+            "OK");
     }
     
     [RelayCommand]

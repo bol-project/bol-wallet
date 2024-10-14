@@ -10,7 +10,20 @@ public partial class GetCertifiedPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = getCertifiedViewModel;
-	}
+
+        if (DeviceInfo.Platform != DevicePlatform.iOS &&
+            DeviceInfo.Platform != DevicePlatform.MacCatalyst)
+        {
+            return;
+        }
+
+        var closeWalletToolbarItem = ToolbarItems.First(x => x.Text == "Close Wallet");
+        closeWalletToolbarItem.Order = ToolbarItemOrder.Primary;
+        closeWalletToolbarItem.IconImageSource = ImageSource.FromFile("logout");
+        
+        ToolbarItems.Clear();
+        ToolbarItems.Add(closeWalletToolbarItem);
+    }
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();

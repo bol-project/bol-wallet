@@ -8,16 +8,19 @@ public partial class GetCertifiedViewModel : BaseViewModel
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
     private readonly IFileDownloadService _fileDownloadService;
+    private readonly ICloseWalletService _closeWalletService;
 
     public GetCertifiedViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
-        IFileDownloadService fileDownloadService) : base(navigationService)
+        IFileDownloadService fileDownloadService,
+        ICloseWalletService closeWalletService) : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _fileDownloadService = fileDownloadService;
+        _closeWalletService = closeWalletService;
     }
 
     [ObservableProperty]
@@ -49,6 +52,11 @@ public partial class GetCertifiedViewModel : BaseViewModel
 
     [ObservableProperty]
     private List<CertifierListItem> _certifiers = new();
+
+    [ObservableProperty]
+    private bool _doesNotSupportsThreeDotMenuToolbarItem =
+        DeviceInfo.Platform == DevicePlatform.iOS || 
+        DeviceInfo.Platform == DevicePlatform.MacCatalyst;
 
     public async Task Initialize(CancellationToken token)
     {
@@ -279,6 +287,9 @@ public partial class GetCertifiedViewModel : BaseViewModel
     {
         await _fileDownloadService.DownloadDataAsync(userData.BolWallet, "BolWallet.json", cancellationToken);
     }
+
+    [RelayCommand]
+    private async Task CloseWallet() => await _closeWalletService.CloseWallet();
 }
 
 public class CertifierListItem
