@@ -5,6 +5,7 @@ using Bol.Core.Rpc;
 using Bol.Core.Rpc.Abstractions;
 using Bol.Core.Services;
 using Bol.Core.Transactions;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace BolWallet.Extensions;
@@ -52,6 +53,19 @@ public static class ConfigureWalletExtensions
             return Options.Create(new BolConfig { RpcEndpoint = targetNetworkConfig.RpcEndpoint, Contract = targetNetworkConfig.Contract });
         });
 
-		return services;
+        // Re-register SDK's Cache as scoped instead of the default singleton
+        // to make sure it's disposed and new BolService instances don't use the same instance.
+        // This avoids loading the same BolContext as the loaded first,
+        // even after closing a wallet and opening another.
+        services.AddScoped<ICachingService>(provider =>
+        {
+            var cacheOptions = Options.Create(new MemoryCacheOptions { });
+
+            var memoryCache = new MemoryCache(cacheOptions);
+
+            return new CachingService(memoryCache);
+        });
+
+        return services;
 	}
 }

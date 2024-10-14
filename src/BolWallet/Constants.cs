@@ -18,6 +18,7 @@ internal class Constants
     public static readonly TargetNetworkChangedMessage TargetNetworkChangedMessage = new();
     public static readonly WalletClosedMessage WalletClosedMessage = new();
     public static readonly WalletCreatedMessage WalletCreatedMessage = new();
+    public static readonly WalletCleanupCompletedMessage WalletCleanupCompletedMessage = new();
     
     public static readonly JsonSerializerOptions WalletJsonSerializerDefaultOptions = new()
     {
