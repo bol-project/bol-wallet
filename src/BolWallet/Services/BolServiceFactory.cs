@@ -10,6 +10,7 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
 {
     private IServiceScope _serviceScope;
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IMessenger _messenger;
     private readonly ILogger<BolServiceFactory> _logger;
 
     public BolServiceFactory(
@@ -19,6 +20,8 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
     {
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
+        _messenger = messenger;
+        
         messenger.Register<WalletClosedMessage>(this);
         messenger.Register<WalletCreatedMessage>(this);
     }
@@ -32,14 +35,21 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
     public void Receive(WalletClosedMessage message)
     {
         _logger.LogInformation("Received {Message}, disposing BOL services...", message.GetType().Name);
-        _serviceScope?.Dispose();
-        _serviceScope = null;
+        Cleanup();
     }
     
     public void Receive(WalletCreatedMessage message)
     {
         _logger.LogInformation("Received {Message}, disposing BOL services so new instances get access to new wallet...", message.GetType().Name);
+        Cleanup();
+    }
+
+    private void Cleanup()
+    {
         _serviceScope?.Dispose();
         _serviceScope = null;
+        SendCleanupMessage();
     }
+    
+    private void SendCleanupMessage() => _messenger.Send(Constants.WalletCleanupCompletedMessage);
 }
