@@ -7,36 +7,63 @@
              x:DataType="viewModels:GetCertifiedViewModel"
              xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certify Your Account"
-			 BackgroundColor="{DynamicResource SecondaryColor}">
-
+			 BackgroundColor="{DynamicResource SecondaryColor}"
+             NavigationPage.HasBackButton="False">
+    
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
     
 	<ContentPage.ToolbarItems>
-		<ToolbarItem 
+        <ToolbarItem
+            Text="Download Certification Files"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding DownloadEdiFilesCommand}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+        <ToolbarItem 
 		    Text="Download BolAccount"
 		    Order="Secondary"
-		    Priority="0" 
+		    Priority="1" 
 		    Command="{Binding DownloadAccountCommand}"
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 		<ToolbarItem 
 		    Text="Download BolWallet"
 		    Order="Secondary"
-		    Priority="0" 
+		    Priority="2" 
 		    Command="{Binding DownloadBolWalletCommand}"
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
-		<ToolbarItem 
-		    Text="Download Certification Files"
-		    Order="Primary"
-		    Priority="0" 
-		    Command="{Binding DownloadEdiFilesCommand}"
-            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+        <ToolbarItem 
+            Text="Close Wallet"
+            Order="Secondary"
+            Priority="3" 
+            Command="{Binding CloseWalletCommand}" 
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 	</ContentPage.ToolbarItems>
 
 	<ScrollView>
 		<StackLayout>
-			<StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
+            <StackLayout Spacing="15" Padding="10" Margin="10,10,20,10"
+                         IsVisible="{Binding DoesNotSupportsThreeDotMenuToolbarItem}">
+                <Button 
+                    Text="Download Certification Files"
+                    BackgroundColor="{DynamicResource Primary}"
+                    TextColor="White"
+                    Command="{Binding DownloadEdiFilesCommand}"
+                    IsVisible="{Binding DoesNotSupportsThreeDotMenuToolbarItem}" />
+                <Button 
+                    Text="Download BoL Account"
+                    BackgroundColor="{DynamicResource Primary}"
+                    TextColor="White"
+                    Command="{Binding DownloadAccountCommand}" />
+                <Button 
+                    Text="Download BoL Wallet"
+                    BackgroundColor="{DynamicResource Primary}"
+                    TextColor="White"
+                    Command="{Binding DownloadBolWalletCommand}" />
+            </StackLayout>
+            
+            <StackLayout Spacing="15" Padding="10" Margin="10,10,20,10" >
 				<Label  Text="Refresh" IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small"/>
 				<ImageButton IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Command="{Binding RefreshCommand}" VerticalOptions="Start" HorizontalOptions="EndAndExpand">
 					<ImageButton.Source>
