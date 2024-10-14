@@ -61,7 +61,7 @@
                                       OnBlur="@ViewModel.ValidateNin"/>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Generate Short Hash</MudButton>
+                        <MudButton ButtonType="MudBlazor.ButtonType.Submit" Disabled="@(!string.IsNullOrEmpty(ViewModel.NinValidationErrorMessage))" Variant="MudBlazor.Variant.Filled" Class="ml-auto" Color="Color.Primary">Generate Short Hash</MudButton>
                     </MudCardActions>
                 </MudCard>
             </EditForm>
