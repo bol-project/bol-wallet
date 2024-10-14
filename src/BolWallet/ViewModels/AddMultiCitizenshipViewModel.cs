@@ -142,14 +142,14 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
         var nin = MultiCitizenshipModel.Nin;
 
         if (string.IsNullOrWhiteSpace(countryCode) || string.IsNullOrWhiteSpace(nin)) return;
-        
-        const string Pattern = @"^[A-Z0-9]*$";
+
+        string Pattern = _registerContent.NinPerCountryCode[countryCode].Regex;
         var regex = new Regex(Pattern);
 
         var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
-        
+
         bool isNinValid = regex.IsMatch(nin);
-        bool isNinLengthCorrect = ninRequiredDigits == nin.Length;
+        bool isNinLengthCorrect = nin.Length == 5;
 
         if (isNinValid && isNinLengthCorrect)
         {
@@ -157,9 +157,9 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
             return;
         }
 
-        NinValidationErrorMessage = 
-            $"The National Identification Number (NIN) provided does not match the expected length of {ninRequiredDigits} digits for the country code {countryCode}." +
-            " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+        NinValidationErrorMessage =
+               $"The National Identification Number (NIN) provided does not match the expected length of 5 digits." +
+               " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
     }
 
     public string NinValidationErrorMessage { get; set; }
