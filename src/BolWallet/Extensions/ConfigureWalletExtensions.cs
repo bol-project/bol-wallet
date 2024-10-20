@@ -53,18 +53,8 @@ public static class ConfigureWalletExtensions
             return Options.Create(new BolConfig { RpcEndpoint = targetNetworkConfig.RpcEndpoint, Contract = targetNetworkConfig.Contract });
         });
 
-        // Re-register SDK's Cache as scoped instead of the default singleton
-        // to make sure it's disposed and new BolService instances don't use the same instance.
-        // This avoids loading the same BolContext as the loaded first,
-        // even after closing a wallet and opening another.
-        services.AddScoped<ICachingService>(provider =>
-        {
-            var cacheOptions = Options.Create(new MemoryCacheOptions { });
-
-            var memoryCache = new MemoryCache(cacheOptions);
-
-            return new CachingService(memoryCache);
-        });
+        // Re-register SDK's Cache to use IAppCaching which the app uses as a singleton memory cache.
+        services.AddSingleton<ICachingService>(sp => sp.GetRequiredService<IAppCaching>());
 
         return services;
 	}
