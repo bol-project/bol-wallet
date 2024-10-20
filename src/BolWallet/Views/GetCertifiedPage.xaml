@@ -8,7 +8,7 @@
              xmlns:helpers="clr-namespace:BolWallet.Helpers"
              Title="Certify Your Account"
 			 BackgroundColor="{DynamicResource SecondaryColor}"
-             NavigationPage.HasBackButton="False">
+             NavigationPage.HasBackButton="{Binding IsAccountOpen}">
     
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
