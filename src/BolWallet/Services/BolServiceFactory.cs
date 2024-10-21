@@ -1,4 +1,5 @@
 ﻿using Bol.Core.Abstractions;
+using Bol.Core.Model;
 using Bol.Core.Services;
 using BolWallet.Models.Messages;
 using CommunityToolkit.Mvvm.Messaging;
@@ -11,16 +12,19 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
     private IServiceScope _serviceScope;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IMessenger _messenger;
+    private readonly IAppCaching _cache;
     private readonly ILogger<BolServiceFactory> _logger;
 
     public BolServiceFactory(
         IServiceScopeFactory serviceScopeFactory,
         IMessenger messenger,
+        IAppCaching cache,
         ILogger<BolServiceFactory> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
-        _logger = logger;
         _messenger = messenger;
+        _cache = cache;
+        _logger = logger;
         
         messenger.Register<WalletClosedMessage>(this);
         messenger.Register<WalletCreatedMessage>(this);
@@ -46,6 +50,8 @@ public class BolServiceFactory : IRecipient<WalletClosedMessage>, IRecipient<Wal
 
     private void Cleanup()
     {
+        // Clean cache from the cached wallet using the same key used by the BoL SDK.
+        _cache.Remove(CacheKeyNames.BolContext.ToString());
         _serviceScope?.Dispose();
         _serviceScope = null;
         SendCleanupMessage();
