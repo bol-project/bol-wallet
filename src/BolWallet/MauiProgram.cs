@@ -90,6 +90,9 @@ public static class MauiProgram
             };
         });
 
+        services.AddMemoryCache();
+        services.AddSingleton<IAppCaching, AppCaching>();
+        
         services.ConfigureWalletServices();
 
         services.AddTransient<IBase64Encoder, Base64Encoder>();
