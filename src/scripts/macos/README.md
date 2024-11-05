@@ -1,14 +1,14 @@
 # BoLWallet Mac Catalyst Publishing Guide
 
 - [BoLWallet Mac Catalyst Publishing Guide](#bolwallet-mac-catalyst-publishing-guide)
-  - [Publish a .NET MAUI app for Mac Catalyst](#publish-a-net-maui-app-for-mac-catalyst)
+  - [Publish BolWallet for Mac Catalyst](#publish-bolwallet-for-mac-catalyst)
   - [Verifying app bundle and installer package work](#verifying-app-bundle-and-installer-package-work)
   - [Notarization of installer package](#notarization-of-installer-package)
   - [Notarization ticket stapling](#notarization-ticket-stapling)
   - [Notarization validation](#notarization-validation)
   - [Resources](#resources)
 
-## Publish a .NET MAUI app for Mac Catalyst
+## Publish BolWallet for Mac Catalyst
 
 `maccatalyst` supports both `x64` and `arm64` platforms.
 
