@@ -29,10 +29,10 @@
 
                     <MudSelect T="string" Label="Countries" Required="true" HelperText="Supported Countries as Certifier" MultiSelection="true" @bind-SelectedValues="registerAsCertifierForm.Countries">
                         <MudSelectItem T="string" Value="@("ALL")">Global</MudSelectItem>
-                        @foreach (var country in _content.Countries)
+                     @*    @foreach (var country in _content.Countries)
                         {
                             <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
-                        }
+                        } *@
                     </MudSelect>
 
                     <MudTextField Immediate=true Label="Fee" Required="true" HelperText="Fee as Certifier" Class="mt-3"
