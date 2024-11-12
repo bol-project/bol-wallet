@@ -57,7 +57,6 @@
                 Command="{Binding NavigateToTransaction1PageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                FontSize="8"
                 Text="{Binding TransactionButton1Label}" />
 
             <Button
@@ -66,7 +65,6 @@
                 Command="{Binding NavigateToTransaction2PageCommand}"
                 FontAttributes="Bold"
                 HorizontalOptions="Center"
-                FontSize="8"
                 Text="{Binding TransactionButton2Label}" />
             
             <Entry x:Name="eEntry" Grid.Column="0" Grid.Row="4"

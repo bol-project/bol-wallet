@@ -20,19 +20,16 @@
         <Button
                 Command="{Binding NavigateToTransferPageCommand}"
                 FontAttributes="Bold"
-                FontSize="12"
                 Text="Transfer" />
 
         <Button
                 Command="{Binding NavigateToTransferClaimPageCommand}"
                 IsEnabled="{Binding IsCompanyAccount, Converter={StaticResource InvertedBoolConverter}}"
                 FontAttributes="Bold"
-                FontSize="12"
                 Text="Transfer Claim" />
 
         <Button
                 FontAttributes="Bold"
-                FontSize="12"
                 Command="{Binding ClaimCommand}"
                 IsEnabled="{Binding IsCompanyAccount, Converter={StaticResource InvertedBoolConverter}}"
                 Text="Claim Your Bol" />

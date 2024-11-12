@@ -156,14 +156,12 @@
 
 				<Button
 					FontAttributes="Bold"
-					FontSize="12"
 					Text="Last 10 Transactions"
 					Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
 					Command="{Binding NavigateToCertifierPageCommand}"
 					FontAttributes="Bold"
-					FontSize="12"
 					Text="Community Operations" />
 			</StackLayout>
 			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">

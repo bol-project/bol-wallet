@@ -103,7 +103,6 @@
 		<Button
 			IsVisible="{Binding IsClaimClickable}"
             FontAttributes="Bold"
-            FontSize="12"
             Command="{Binding ClaimCommand}"
             Text="Claim" />
 

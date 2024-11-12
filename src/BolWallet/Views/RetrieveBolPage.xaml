@@ -26,7 +26,6 @@
                 Grid.Row="1"
                 Clicked="OnClickCopyCodename"
                 FontAttributes="Bold"
-                FontSize="8"
                 HorizontalOptions="FillAndExpand"
                 Text="{Binding CodenameText}" />
 
@@ -34,7 +33,6 @@
                 Grid.Row="2"
                 Clicked="OnClickCopyAddress"
                 FontAttributes="Bold"
-                FontSize="8"
                 HorizontalOptions="FillAndExpand"
                 Text="{Binding CommAddressText}" />
         </Grid>
