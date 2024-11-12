@@ -8,6 +8,7 @@
     xmlns:controls1="clr-namespace:BolWallet.Controls"
     BackgroundColor="{DynamicResource SecondaryColor}"
     Title="{Binding Title}"
+    NavigationPage.HasBackButton="False"
     x:Name="this">
     
     <ContentPage.Resources>
