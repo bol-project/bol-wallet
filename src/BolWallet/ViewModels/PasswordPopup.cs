@@ -8,6 +8,8 @@ public sealed class PasswordPopup : Popup
 
     public PasswordPopup()
     {
+        CanBeDismissedByTappingOutsideOfPopup = false;
+        
         Color primaryBlue = Color.FromArgb("#0078D7");
         Color accentBlue = Color.FromArgb("#0052CC");
 
@@ -115,14 +117,6 @@ public sealed class PasswordPopup : Popup
         };
 
         Content = container;
-    }
-
-    protected override Task OnDismissedByTappingOutsideOfPopup(CancellationToken token)
-    {
-        base.OnDismissedByTappingOutsideOfPopup(token);
-        
-        TaskCompletionSource.TrySetResult(null);
-        return Task.CompletedTask;
     }
 }
 
