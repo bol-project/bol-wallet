@@ -21,7 +21,7 @@ public class CloseWalletService(
         
         logger.LogInformation("Close wallet requested...");
         
-        var confirm = await App.Current.MainPage.DisplayAlert(
+        var confirm = await App.Current.Windows[0].Page.DisplayAlert(
             "Close Wallet",
             "Closing your wallet will clear all user data, ensure you have saved your wallet and certification files first!",
             "I understand, close my wallet!",

@@ -61,7 +61,7 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task SwitchNetwork()
     {
-        var prompt = await Application.Current.MainPage.DisplayPromptAsync(
+        var prompt = await Application.Current.Windows[0].Page.DisplayPromptAsync(
             "Network Change",
             $"You are currently connected to {_networkPreferences.Name}." +
             $"{Environment.NewLine}{Environment.NewLine}" +
@@ -73,7 +73,7 @@ public partial class MainViewModel : BaseViewModel
         
         if (string.IsNullOrWhiteSpace(prompt) || !prompt.Equals(_networkPreferences.AlternativeName))
         {
-            await Application.Current.MainPage.DisplayAlert("Network Change",
+            await Application.Current.Windows[0].Page.DisplayAlert("Network Change",
                 $"{_networkPreferences.AlternativeName} network name wasn't verified, no switch will occur.",
                 "OK");
             
@@ -91,7 +91,7 @@ public partial class MainViewModel : BaseViewModel
         LoadingText = string.Empty;
         IsLoading = false;
         
-        await Application.Current.MainPage.DisplayAlert("Network Change",
+        await Application.Current.Windows[0].Page.DisplayAlert("Network Change",
             $"Switch to {_networkPreferences.Name} network completed successfully.",
             "OK");
     }
@@ -105,7 +105,7 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToWalletCreationInfoPage()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.WalletCreationInfo());
+        await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.WalletCreationInfo());
     }
 
     [RelayCommand]
@@ -143,7 +143,7 @@ public partial class MainViewModel : BaseViewModel
             var validPassword = await Task.Run(() => _walletService.CheckWalletPassword(jsonString, password));
             if (!validPassword)
             {
-                await Application.Current.MainPage.DisplayAlert(
+                await Application.Current.Windows[0].Page.DisplayAlert(
                     "Incorrect Password",
                     "Please provide a valid password.",
                     "OK");
