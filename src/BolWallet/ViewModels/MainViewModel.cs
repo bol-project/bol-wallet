@@ -131,9 +131,17 @@ public partial class MainViewModel : BaseViewModel
 
             var jsonString = await File.ReadAllTextAsync(pickResult.FullPath);
             
-            var passwordPopup = new PasswordPopup();
-            await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
-            var password = await passwordPopup.TaskCompletionSource.Task;
+            // var passwordPopup = new PasswordPopup();
+            // await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
+            // var password = await passwordPopup.TaskCompletionSource.Task;
+            
+            var password = await Application.Current.Windows[0].Page.DisplayPromptAsync(
+                "Unlock Wallet",
+                $"Type your password to unlock your wallet.",
+                keyboard: Keyboard.Password,
+                initialValue: "",
+                accept: "OK, unlock my wallet!",
+                cancel: "Cancel");
             
             if (string.IsNullOrEmpty(password)) return;
 
