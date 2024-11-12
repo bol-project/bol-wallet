@@ -45,6 +45,13 @@ public static class MauiProgram
 #else
         builder.AddConfiguration("BolWallet.appsettings.json");
 #endif
+        
+#if IOS || MACCATALYST
+builder.ConfigureMauiHandlers(handlers =>
+{
+    handlers.AddHandler<Microsoft.Maui.Controls.CollectionView, Microsoft.Maui.Controls.Handlers.Items2.CollectionViewHandler2>();
+});
+#endif
 
         var services = builder.Services;
 
