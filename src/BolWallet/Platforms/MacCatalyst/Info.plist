@@ -44,5 +44,7 @@
 	<string>The app can use the microphone to record your voice and use it when creating a new wallet.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app can use the photo library to select photos from your library and use them when creating a new wallet.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
