@@ -135,17 +135,30 @@ public partial class MainViewModel : BaseViewModel
             // var passwordPopup = new PasswordPopup();
             // await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
             // var password = await passwordPopup.TaskCompletionSource.Task;
-            
-            var password = await Application.Current.Windows[0].Page.DisplayPromptAsync(
-                "Unlock Wallet",
-                $"Type your password to unlock your wallet.",
-                keyboard: Keyboard.Password,
-                initialValue: "",
-                accept: "OK, unlock my wallet!",
-                cancel: "Cancel");
-            
-            if (string.IsNullOrEmpty(password)) return;
 
+            string password;
+            while(true)
+            {
+                password = await Application.Current.Windows[0].Page.DisplayPromptAsync(
+                    "Unlock Wallet",
+                    "Type your password to unlock your wallet.",
+                    keyboard: Keyboard.Password,
+                    initialValue: "",
+                    accept: "OK, unlock my wallet!",
+                    cancel: "Cancel");
+
+                if (password is null)
+                {
+                    return;
+                }
+                
+                password = password.Trim();
+                if (password is { Length: > 0 } )
+                {
+                    break;
+                }
+            }
+            
             IsLoading = true;
             LoadingText = "Unlocking your wallet... Please wait.";
                 
