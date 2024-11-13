@@ -2,6 +2,7 @@
 @inject INavigationService NavigationService
 @inject IBolService bolService;
 @inject ICloseWalletService closeWalletService;
+@inject IAppVersion AppVersion;
 
 <MudLayout>
     <MudAppBar Style="background-color:#0050FF">
@@ -12,7 +13,10 @@
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Bol Menu</MudText>
+            <MudList>
+                <MudText Typo="Typo.h6">BOL Wallet</MudText>
+                <MudText Typo="Typo.caption">@(AppVersion.GetVersion())</MudText>
+            </MudList>
         </MudDrawerHeader>
         <MudNavMenu Bordered="true">
             <MudNavGroup Title="Transactions" Expanded="true">
