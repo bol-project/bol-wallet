@@ -57,6 +57,7 @@ builder.ConfigureMauiHandlers(handlers =>
         var services = builder.Services;
 
         // Register Services
+        services.AddSingleton<TimeProvider>(TimeProvider.System);
         services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
         services.AddScoped<ISecureRepository, AkavacheRepository>();
         services.AddSingleton<INavigationService, NavigationService>();

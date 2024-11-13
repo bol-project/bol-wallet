@@ -1,8 +1,10 @@
 @using Bol.Core.Model
+@using CommunityToolkit.Mvvm.Messaging
 @inject INavigationService NavigationService
 @inject IBolService bolService;
 @inject ICloseWalletService closeWalletService;
 @inject IAppVersion AppVersion;
+@inject IMessenger Messenger;
 
 <MudLayout>
     <MudAppBar Style="background-color:#0050FF">
@@ -46,6 +48,7 @@
             </MudNavGroup>
             <MudNavGroup Title="Tools">
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.FolderZip" OnClick="() => Messenger.Send(Constants.SaveLogfileMessage)">Save Logfile</MudNavLink>
                 @*                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink> *@
                 @*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@

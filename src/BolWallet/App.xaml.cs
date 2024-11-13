@@ -7,6 +7,7 @@ namespace BolWallet;
 public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 {
     private readonly INetworkPreferences _networkPreferences;
+    private ILogExtractor _logExtractor = null!;
 
     public App(INetworkPreferences networkPreferences, IMessenger messenger)
 	{
@@ -44,6 +45,10 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
     
     protected override Window CreateWindow(IActivationState activationState)
     {
+        // initialize singleton services which may not be used as dependencies but should exist.
+        // For example to listen to messages.
+        _logExtractor = activationState!.Context.Services.GetRequiredService<ILogExtractor>();
+        
         var preloadPage = activationState.Context.Services.GetRequiredService<PreloadPage>();
         return new Window { Title = CreateWindowTitle(), Page = new NavigationPage(preloadPage) };
     }

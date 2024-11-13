@@ -2,7 +2,9 @@
 using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
+using BolWallet.Models.Messages;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BolWallet.ViewModels;
 public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
@@ -13,7 +15,8 @@ public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
     private readonly IAddressTransformer _addressTransformer;
     private readonly INetworkPreferences _networkPreferences;
     private readonly ICloseWalletService _closeWalletService;
-
+    private readonly IMessenger _messenger;
+    
     private readonly CancellationTokenSource _cts = new();
 
     public string WelcomeText => "Welcome";
@@ -65,7 +68,8 @@ public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
         IDeviceDisplay deviceDisplay, 
         IAddressTransformer addressTransformer,
         INetworkPreferences networkPreferences,
-        ICloseWalletService closeWalletService)
+        ICloseWalletService closeWalletService,
+        IMessenger messenger)
         : base(navigationService)
     {
         _secureRepository = secureRepository;
@@ -74,6 +78,7 @@ public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
         _addressTransformer = addressTransformer;
         _networkPreferences = networkPreferences;
         _closeWalletService = closeWalletService;
+        _messenger = messenger;
     }
 
     [RelayCommand]
@@ -261,13 +266,19 @@ public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
     {
         await NavigationService.NavigateTo<AccountViewModel>(true);
     }
+    
+    [RelayCommand]
+    private void SaveLogfile()
+    {
+        _ = _messenger.Send(Constants.SaveLogfileMessage);
+    }
 
     [RelayCommand]
     private async Task CloseWallet()
     {
         await _cts.CancelAsync();
         await _closeWalletService.CloseWallet();
-    }   
+    }
 
     public void Dispose()
     {

@@ -17,6 +17,16 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            Text="Save Logfile"
+            IconImageSource="zip"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding SaveLogfileCommand}" 
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+    </ContentPage.ToolbarItems>
+    
     <ScrollView>
         <Grid
             Padding="{OnPlatform iOS='30,60,30,30',
