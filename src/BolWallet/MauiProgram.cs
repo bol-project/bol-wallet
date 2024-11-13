@@ -35,6 +35,7 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
             });
 
+        builder.Services.AddSingleton<IAppVersion, AppVersion>();
         builder.Services.AddMauiBlazorWebView();
 
         builder.Services.AddMudServices();
