@@ -17,10 +17,17 @@
     
     <ContentPage.ToolbarItems>
         <ToolbarItem 
+            Text="Save Logfile"
+            IconImageSource="zip"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding SaveLogfileCommand}" 
+            IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}" />
+        <ToolbarItem 
             Text="Close Wallet"
             IconImageSource="logout"
             Order="Primary"
-            Priority="0" 
+            Priority="1" 
             Command="{Binding CloseWalletCommand}" 
             IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}"/>
     </ContentPage.ToolbarItems>

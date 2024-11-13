@@ -16,12 +16,19 @@ public partial class GetCertifiedPage : ContentPage
         {
             return;
         }
+        
+        var saveLogfileToolbarItem = ToolbarItems.First(x => x.Text == "Save Logfile");
+        saveLogfileToolbarItem.Order = ToolbarItemOrder.Primary;
+        saveLogfileToolbarItem.Priority = 0;
+        saveLogfileToolbarItem.IconImageSource = ImageSource.FromFile("zip");
 
         var closeWalletToolbarItem = ToolbarItems.First(x => x.Text == "Close Wallet");
         closeWalletToolbarItem.Order = ToolbarItemOrder.Primary;
+        closeWalletToolbarItem.Priority = 1;
         closeWalletToolbarItem.IconImageSource = ImageSource.FromFile("logout");
         
         ToolbarItems.Clear();
+        ToolbarItems.Add(saveLogfileToolbarItem);
         ToolbarItems.Add(closeWalletToolbarItem);
     }
 	protected override async void OnAppearing()

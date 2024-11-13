@@ -1,4 +1,5 @@
 ﻿using Bol.Core.Abstractions;
+using BolWallet.Models.Messages;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
@@ -176,6 +177,12 @@ public partial class MainViewModel : BaseViewModel
             IsLoading = false;
             LoadingText = String.Empty;
         }
+    }
+    
+    [RelayCommand]
+    private void SaveLogfile()
+    {
+        _ = _messenger.Send(Constants.SaveLogfileMessage);
     }
 
     private void SetTitleMessage()

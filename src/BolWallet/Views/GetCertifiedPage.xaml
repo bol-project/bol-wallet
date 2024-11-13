@@ -34,9 +34,16 @@
 		    Command="{Binding DownloadBolWalletCommand}"
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
         <ToolbarItem 
-            Text="Close Wallet"
+            Text="Save Logfile"
+            IconImageSource="zip"
             Order="Secondary"
             Priority="3" 
+            Command="{Binding SaveLogfileCommand}" 
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+        <ToolbarItem 
+            Text="Close Wallet"
+            Order="Secondary"
+            Priority="4" 
             Command="{Binding CloseWalletCommand}" 
             IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
 	</ContentPage.ToolbarItems>
