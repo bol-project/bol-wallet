@@ -1,4 +1,5 @@
 ﻿using Bol.Core.Abstractions;
+using BolWallet.Models.Messages;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
@@ -61,7 +62,7 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task SwitchNetwork()
     {
-        var prompt = await Application.Current.MainPage.DisplayPromptAsync(
+        var prompt = await Application.Current.Windows[0].Page.DisplayPromptAsync(
             "Network Change",
             $"You are currently connected to {_networkPreferences.Name}." +
             $"{Environment.NewLine}{Environment.NewLine}" +
@@ -73,7 +74,7 @@ public partial class MainViewModel : BaseViewModel
         
         if (string.IsNullOrWhiteSpace(prompt) || !prompt.Equals(_networkPreferences.AlternativeName))
         {
-            await Application.Current.MainPage.DisplayAlert("Network Change",
+            await Application.Current.Windows[0].Page.DisplayAlert("Network Change",
                 $"{_networkPreferences.AlternativeName} network name wasn't verified, no switch will occur.",
                 "OK");
             
@@ -91,7 +92,7 @@ public partial class MainViewModel : BaseViewModel
         LoadingText = string.Empty;
         IsLoading = false;
         
-        await Application.Current.MainPage.DisplayAlert("Network Change",
+        await Application.Current.Windows[0].Page.DisplayAlert("Network Change",
             $"Switch to {_networkPreferences.Name} network completed successfully.",
             "OK");
     }
@@ -105,7 +106,7 @@ public partial class MainViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToWalletCreationInfoPage()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.WalletCreationInfo());
+        await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.WalletCreationInfo());
     }
 
     [RelayCommand]
@@ -131,19 +132,40 @@ public partial class MainViewModel : BaseViewModel
 
             var jsonString = await File.ReadAllTextAsync(pickResult.FullPath);
             
-            var passwordPopup = new PasswordPopup();
-            await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
-            var password = await passwordPopup.TaskCompletionSource.Task;
-            
-            if (string.IsNullOrEmpty(password)) return;
+            // var passwordPopup = new PasswordPopup();
+            // await Application.Current.MainPage.ShowPopupAsync(passwordPopup);
+            // var password = await passwordPopup.TaskCompletionSource.Task;
 
+            string password;
+            while(true)
+            {
+                password = await Application.Current.Windows[0].Page.DisplayPromptAsync(
+                    "Unlock Wallet",
+                    "Type your password to unlock your wallet.",
+                    keyboard: Keyboard.Password,
+                    initialValue: "",
+                    accept: "OK, unlock my wallet!",
+                    cancel: "Cancel");
+
+                if (password is null)
+                {
+                    return;
+                }
+                
+                password = password.Trim();
+                if (password is { Length: > 0 } )
+                {
+                    break;
+                }
+            }
+            
             IsLoading = true;
             LoadingText = "Unlocking your wallet... Please wait.";
                 
             var validPassword = await Task.Run(() => _walletService.CheckWalletPassword(jsonString, password));
             if (!validPassword)
             {
-                await Application.Current.MainPage.DisplayAlert(
+                await Application.Current.Windows[0].Page.DisplayAlert(
                     "Incorrect Password",
                     "Please provide a valid password.",
                     "OK");
@@ -168,6 +190,12 @@ public partial class MainViewModel : BaseViewModel
             IsLoading = false;
             LoadingText = String.Empty;
         }
+    }
+    
+    [RelayCommand]
+    private void SaveLogfile()
+    {
+        _ = _messenger.Send(Constants.SaveLogfileMessage);
     }
 
     private void SetTitleMessage()

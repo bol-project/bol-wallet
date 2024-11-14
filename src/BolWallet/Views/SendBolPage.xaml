@@ -223,7 +223,6 @@
                 Grid.Row="8"
                 Command="{Binding SendBolCommand}"
                 FontAttributes="Bold"
-                FontSize="8"
                 HorizontalOptions="FillAndExpand"
                 Text="Send" />
 

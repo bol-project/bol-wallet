@@ -22,7 +22,6 @@
 
 			<Button
                 Grid.Row="0"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 Text="Get Certifications" 
 				Command="{Binding NavigateToGetCertificationsPageCommand}"
@@ -31,14 +30,12 @@
             <Button
 				Command="{Binding NavigateToWhitelistAndCertifyPageCommand}"
                 Grid.Row="1"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier}"
                 Text="Whitelist and Certify" />
 
             <Button
                 Grid.Row="2"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier}"
 	            Command="{Binding NavigateToAddMultiCitizenshipCommand}"
@@ -46,7 +43,6 @@
 
             <Button
                 Grid.Row="3"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier, Converter={StaticResource InvertedBoolConverter}}"
 				Command="{Binding NavigateToRegisterAsCertifierPageCommand}"
@@ -54,7 +50,6 @@
 
             <Button
                 Grid.Row="4"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 IsEnabled="{Binding IsCertifier}"
                 Command="{Binding UnRegisterAsCertifierCommand}"
@@ -62,7 +57,6 @@
                 
             <Button
                 Grid.Row="5"
-                FontSize="12"
                 HorizontalOptions="FillAndExpand"
                 Command="{Binding CompleteBolLoginChallengeCommand}"
                 Text="Complete BoL Login Challenge" />

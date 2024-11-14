@@ -184,7 +184,6 @@
                 Grid.Row="8"
                 Command="{Binding MoveClaimCommand}"
                 FontAttributes="Bold"
-                FontSize="8"
                 HorizontalOptions="FillAndExpand"
                 Text="Transfer" />
 

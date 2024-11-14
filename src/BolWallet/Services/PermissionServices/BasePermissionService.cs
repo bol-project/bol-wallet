@@ -38,7 +38,7 @@ public abstract class BasePermissionService : IPermissionService
     {
         var permissionName = typeof(T).Name;
 
-        var accepted = await Application.Current.MainPage.DisplayAlert(
+        var accepted = await Application.Current.Windows[0].Page.DisplayAlert(
             "Permission Required",
             $"To continue, please give {permissionName} permissions for this app in your device settings.",
             "Open Settings",

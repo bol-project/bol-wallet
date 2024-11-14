@@ -1,6 +1,8 @@
 ﻿using Bol.Core.Abstractions;
 using Bol.Core.Model;
+using BolWallet.Models.Messages;
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace BolWallet.ViewModels;
 public partial class GetCertifiedViewModel : BaseViewModel
@@ -9,18 +11,21 @@ public partial class GetCertifiedViewModel : BaseViewModel
     private readonly IBolService _bolService;
     private readonly IFileDownloadService _fileDownloadService;
     private readonly ICloseWalletService _closeWalletService;
+    private readonly IMessenger _messenger;
 
     public GetCertifiedViewModel(
         INavigationService navigationService,
         ISecureRepository secureRepository,
         IBolService bolService,
         IFileDownloadService fileDownloadService,
-        ICloseWalletService closeWalletService) : base(navigationService)
+        ICloseWalletService closeWalletService,
+        IMessenger messenger) : base(navigationService)
     {
         _secureRepository = secureRepository;
         _bolService = bolService;
         _fileDownloadService = fileDownloadService;
         _closeWalletService = closeWalletService;
+        _messenger = messenger;
     }
 
     [ObservableProperty]
@@ -290,6 +295,12 @@ public partial class GetCertifiedViewModel : BaseViewModel
 
     [RelayCommand]
     private async Task CloseWallet() => await _closeWalletService.CloseWallet();
+    
+    [RelayCommand]
+    private void SaveLogfile()
+    {
+        _ = _messenger.Send(Constants.SaveLogfileMessage);
+    }
 }
 
 public class CertifierListItem
