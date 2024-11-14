@@ -31,9 +31,9 @@
 		<string>processing</string>
 	</array>
 	<key>CFBundleVersion</key>
-    <string>2024.1105.2230</string>
+	<string>2024.1113.0540</string>
 	<key>CFBundleShortVersionString</key>
-    <string>2.3.3</string>
+	<string>3.0.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSHumanReadableCopyright</key>
@@ -44,5 +44,7 @@
 	<string>The app can use the microphone to record your voice and use it when creating a new wallet.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app can use the photo library to select photos from your library and use them when creating a new wallet.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

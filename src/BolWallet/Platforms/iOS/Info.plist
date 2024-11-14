@@ -7,7 +7,7 @@
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
-        <integer>2</integer>
+		<integer>2</integer>
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
@@ -29,18 +29,20 @@
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
 	<key>NSCameraUsageDescription</key>
-    <string>The app can use the camera to take a photo of a document and use it when creating a new wallet.</string>
+	<string>The app can use the camera to take a photo of a document and use it when creating a new wallet.</string>
 	<key>NSMicrophoneUsageDescription</key>
-    <string>The app can use the microphone to record your voice and use it when creating a new wallet.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>The app can use the photo library to select photos from your library and use them when creating a new wallet.</string>
-    <key>CFBundleVersion</key>
-    <string>2024.1105.2230</string>
-    <key>CFBundleShortVersionString</key>
-    <string>2.3.3</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>NSHumanReadableCopyright</key>
-    <string>1bol.org © 2024</string>
+	<string>The app can use the microphone to record your voice and use it when creating a new wallet.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app can use the photo library to select photos from your library and use them when creating a new wallet.</string>
+	<key>CFBundleVersion</key>
+	<string>2024.1113.0540</string>
+	<key>CFBundleShortVersionString</key>
+	<string>3.0.0</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>1bol.org © 2024</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
