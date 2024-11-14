@@ -7,8 +7,9 @@ namespace BolWallet;
 public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 {
     private readonly INetworkPreferences _networkPreferences;
+    private ILogExtractor _logExtractor = null!;
 
-    public App(PreloadPage preloadPage, INetworkPreferences networkPreferences, IMessenger messenger)
+    public App(INetworkPreferences networkPreferences, IMessenger messenger)
 	{
         _networkPreferences = networkPreferences;
         InitializeComponent();
@@ -40,15 +41,16 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 				handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
 #endif
 			});
-
-        MainPage = new NavigationPage(preloadPage);
     }
     
     protected override Window CreateWindow(IActivationState activationState)
     {
-        Window window = base.CreateWindow(activationState);
-        window.Title = CreateWindowTitle();
-        return window;
+        // initialize singleton services which may not be used as dependencies but should exist.
+        // For example to listen to messages.
+        _logExtractor = activationState!.Context.Services.GetRequiredService<ILogExtractor>();
+        
+        var preloadPage = activationState.Context.Services.GetRequiredService<PreloadPage>();
+        return new Window { Title = CreateWindowTitle(), Page = new NavigationPage(preloadPage) };
     }
 
 #if WINDOWS
@@ -77,7 +79,7 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
 #endif
     public void Receive(TargetNetworkChangedMessage message)
     {
-        MainThread.BeginInvokeOnMainThread(() => Current.MainPage.Window.Title = CreateWindowTitle());
+        MainThread.BeginInvokeOnMainThread(() => Current.Windows[0].Page.Window.Title = CreateWindowTitle());
     }
 
     private string CreateWindowTitle() => _networkPreferences.IsMainNet

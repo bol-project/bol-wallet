@@ -17,10 +17,17 @@
     
     <ContentPage.ToolbarItems>
         <ToolbarItem 
+            Text="Save Logfile"
+            IconImageSource="zip"
+            Order="Primary"
+            Priority="0" 
+            Command="{Binding SaveLogfileCommand}" 
+            IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}" />
+        <ToolbarItem 
             Text="Close Wallet"
             IconImageSource="logout"
             Order="Primary"
-            Priority="0" 
+            Priority="1" 
             Command="{Binding CloseWalletCommand}" 
             IsEnabled="{Binding IsRefreshing, Converter={StaticResource InvertedBoolConverter}}"/>
     </ContentPage.ToolbarItems>
@@ -156,14 +163,12 @@
 
 				<Button
 					FontAttributes="Bold"
-					FontSize="12"
 					Text="Last 10 Transactions"
 					Command="{Binding NavigateToTransactionsPageCommand}"/>
 
 				<Button
 					Command="{Binding NavigateToCertifierPageCommand}"
 					FontAttributes="Bold"
-					FontSize="12"
 					Text="Community Operations" />
 			</StackLayout>
 			<StackLayout IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" Grid.Row="2" Grid.ColumnSpan="3" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Spacing="15" Padding="20">

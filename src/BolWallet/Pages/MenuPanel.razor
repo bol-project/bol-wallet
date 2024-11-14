@@ -1,7 +1,10 @@
 @using Bol.Core.Model
+@using CommunityToolkit.Mvvm.Messaging
 @inject INavigationService NavigationService
 @inject IBolService bolService;
 @inject ICloseWalletService closeWalletService;
+@inject IAppVersion AppVersion;
+@inject IMessenger Messenger;
 
 <MudLayout>
     <MudAppBar Style="background-color:#0050FF">
@@ -12,7 +15,10 @@
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Variant="@DrawerVariant.Responsive" PreserveOpenState="true">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Bol Menu</MudText>
+            <MudList>
+                <MudText Typo="Typo.h6">BOL Wallet</MudText>
+                <MudText Typo="Typo.caption">@(AppVersion.GetVersion())</MudText>
+            </MudList>
         </MudDrawerHeader>
         <MudNavMenu Bordered="true">
             <MudNavGroup Title="Transactions" Expanded="true">
@@ -29,19 +35,20 @@
             <MudNavGroup Title="Certifier">
                 @if (!BolAccount.IsCertifier)
                 {
-                    <MudNavLink Icon="@Icons.Material.Rounded.SupervisorAccount" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage())">Become a Certifier</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.SupervisorAccount" OnClick="() => App.Current.Windows[0].Page.Navigation.PushAsync(new Views.RegisterAsCertifierPage())">Become a Certifier</MudNavLink>
                 }
                 else
                 {
                     <MudNavLink Icon="@Icons.Material.Rounded.PersonAdd" OnClick="() => NavigationService.NavigateTo<CertifyViewModel>(true)">Certify a CodeName</MudNavLink>
                     <MudNavLink Icon="@Icons.Material.Rounded.AddModerator" OnClick="() => NavigationService.NavigateTo<WhitelistViewModel>(true)">Whitelist a Main Address</MudNavLink>
-                    <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
-                    <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.MainPage.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.LockPerson" OnClick="() => App.Current.Windows[0].Page.Navigation.PushAsync(new Views.AddMultiCitizenship())">Submit a Multiple Citizenship</MudNavLink>
+                    <MudNavLink Icon="@Icons.Material.Rounded.AttachMoney" OnClick="() => App.Current.Windows[0].Page.Navigation.PushAsync(new Views.SetCertifierFeePage())">Set Your Fee</MudNavLink>
                     <MudNavLink Icon="@Icons.Material.Rounded.RemoveModerator" OnClick="() => ShowUnregisterConfirmation()">Unregister as Certifier</MudNavLink>
                 }
             </MudNavGroup>
             <MudNavGroup Title="Tools">
                 <MudNavLink Icon="@Icons.Material.Rounded.History" OnClick="() => NavigationService.NavigateTo<TransactionsViewModel>(true)">History</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.FolderZip" OnClick="() => Messenger.Send(Constants.SaveLogfileMessage)">Save Logfile</MudNavLink>
                 @*                 <MudNavLink Icon="@Icons.Material.Rounded.Explore" Href="https://explorer.mainnet.bolchain.net">Explore Blockchain</MudNavLink>
                 <MudNavLink Icon="@Icons.Material.Rounded.Monitor" Href="https://monitor.mainnet.bolchain.net">Monitor Seeds</MudNavLink> *@
                 @*                 <MudNavLink Icon="@Icons.Material.Rounded.Logout" Href="https://monitor.mainnet.bolchain.net">Unload Wallet</MudNavLink> *@
@@ -83,7 +90,7 @@
     {
         try
         {
-            bool confirmed = await App.Current.MainPage.DisplayAlert("Confirm", "Are you sure you want to unregister as a certifier?", "Yes", "No");
+            bool confirmed = await App.Current.Windows[0].Page.DisplayAlert("Confirm", "Are you sure you want to unregister as a certifier?", "Yes", "No");
             if (confirmed)
             {
                 await bolService.UnRegisterAsCertifier();

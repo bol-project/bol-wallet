@@ -53,13 +53,13 @@ public partial class BolCommunityViewModel : BaseViewModel
     [RelayCommand]
     private async Task NavigateToRegisterAsCertifierPage()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.RegisterAsCertifierPage());
+        await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.RegisterAsCertifierPage());
     }
 
     [RelayCommand]
     private async Task NavigateToAddMultiCitizenship()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.AddMultiCitizenship());
+        await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.AddMultiCitizenship());
     }
 
     [RelayCommand]
@@ -79,6 +79,6 @@ public partial class BolCommunityViewModel : BaseViewModel
     [RelayCommand]
     private async Task CompleteBolLoginChallenge()
     {
-        await App.Current.MainPage.Navigation.PushAsync(new Views.CompleteBolLoginChallengePage());
+        await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.CompleteBolLoginChallengePage());
     }
 }

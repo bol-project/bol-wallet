@@ -35,6 +35,7 @@ public static class MauiProgram
                 fonts.AddFont("MaterialIcons-Regular.ttf", "MaterialIconsRegular");
             });
 
+        builder.Services.AddSingleton<IAppVersion, AppVersion>();
         builder.Services.AddMauiBlazorWebView();
 
         builder.Services.AddMudServices();
@@ -45,10 +46,18 @@ public static class MauiProgram
 #else
         builder.AddConfiguration("BolWallet.appsettings.json");
 #endif
+        
+#if IOS || MACCATALYST
+builder.ConfigureMauiHandlers(handlers =>
+{
+    handlers.AddHandler<Microsoft.Maui.Controls.CollectionView, Microsoft.Maui.Controls.Handlers.Items2.CollectionViewHandler2>();
+});
+#endif
 
         var services = builder.Services;
 
         // Register Services
+        services.AddSingleton<TimeProvider>(TimeProvider.System);
         services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
         services.AddScoped<ISecureRepository, AkavacheRepository>();
         services.AddSingleton<INavigationService, NavigationService>();

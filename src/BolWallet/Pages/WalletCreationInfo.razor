@@ -56,7 +56,7 @@
     {
         if (!IsNavigationDisabled)
         {
-            await App.Current.MainPage.Navigation.PushAsync(new Views.CitizenshipPage());
+            await App.Current.Windows[0].Page.Navigation.PushAsync(new Views.CitizenshipPage());
         }
     }
 }

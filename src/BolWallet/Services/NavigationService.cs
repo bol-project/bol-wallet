@@ -16,7 +16,7 @@ public class NavigationService : INavigationService
 	{
 		get
 		{
-			var navigation = Application.Current?.MainPage?.Navigation;
+			var navigation = Application.Current?.Windows[0].Page?.Navigation;
 
 			if (navigation is not null)
 			{

@@ -8,6 +8,8 @@ public sealed class PasswordPopup : Popup
 
     public PasswordPopup()
     {
+        CanBeDismissedByTappingOutsideOfPopup = false;
+        
         Color primaryBlue = Color.FromArgb("#0078D7");
         Color accentBlue = Color.FromArgb("#0052CC");
 
@@ -97,32 +99,24 @@ public sealed class PasswordPopup : Popup
 
         var container = new AbsoluteLayout
         {
-            HorizontalOptions = LayoutOptions.CenterAndExpand,
-            VerticalOptions = LayoutOptions.CenterAndExpand,
-            Margin = new Thickness(20, 100),
-            WidthRequest = 300,
-            HeightRequest = 400,
             Children =
-        {
-            boxView,
-            new VerticalStackLayout
             {
-                Children = { titleLabel, stackLayout },
-                Spacing = 10,
-                Padding = new Thickness(12)
+                boxView,
+                new VerticalStackLayout
+                {
+                    Children = { titleLabel, stackLayout },
+                    Spacing = 10,
+                    Padding = new Thickness(12),
+                    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    Margin = new Thickness(20, 100),
+                    WidthRequest = 300,
+                    HeightRequest = 400,
+                }
             }
-        }
         };
 
         Content = container;
-    }
-
-    protected override Task OnDismissedByTappingOutsideOfPopup(CancellationToken token)
-    {
-        base.OnDismissedByTappingOutsideOfPopup(token);
-        
-        TaskCompletionSource.TrySetResult(null);
-        return Task.CompletedTask;
     }
 }
 

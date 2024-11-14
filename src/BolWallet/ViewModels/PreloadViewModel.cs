@@ -55,11 +55,11 @@ public partial class PreloadViewModel : BaseViewModel
 
             if (userData?.BolWallet == null)
             {
-                await NavigationService.NavigateTo<MainViewModel>(changeRoot: true);
+                await NavigationService.NavigateTo<MainViewModel>();
             }
             else
             {
-                await NavigationService.NavigateTo<MainWithAccountViewModel>(changeRoot: true);
+                await NavigationService.NavigateTo<MainWithAccountViewModel>();
             }
         }
     }

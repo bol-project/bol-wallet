@@ -67,7 +67,7 @@ public static class LoggingExtensions
         Log.Logger.Information("App Info: {@AppInfo}", appInfo);
 
         services.AddLogging(configure => configure.AddSerilog(dispose: true));
-
+        services.AddTransient<ILogExtractor, LogExtractor>();
         return services;
     }
 }

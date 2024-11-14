@@ -32,4 +32,9 @@ public partial class MainWithAccountPage : ContentPage
 			Toast.Make("Copied to Clipboard").Show();
 		}
 	}
+    
+    protected override bool OnBackButtonPressed()
+    {
+        return false;
+    }
 }
