@@ -50,6 +50,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IAppVersion, AppVersion>();
         builder.Services.AddMauiBlazorWebView();
+#if DEBUG
+        builder.Services.AddBlazorWebViewDeveloperTools();
+#endif
 
         builder.Services.AddMudServices();
 
