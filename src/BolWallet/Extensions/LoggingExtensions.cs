@@ -35,6 +35,7 @@ public static class LoggingExtensions
                 outputTemplate,
                 filePath,
                 encoding: Encoding.UTF8,
+                shared: true,
                 fileSizeLimitBytes: MaxFileSizeLimitBytes,
                 rollingInterval: RollingInterval.Day,
                 rollOnFileSizeLimit: true,
