@@ -35,7 +35,6 @@ public static class LoggingExtensions
                 outputTemplate,
                 filePath,
                 encoding: Encoding.UTF8,
-                flushToDiskInterval: TimeSpan.FromSeconds(1),
                 fileSizeLimitBytes: MaxFileSizeLimitBytes,
                 rollingInterval: RollingInterval.Day,
                 rollOnFileSizeLimit: true)
