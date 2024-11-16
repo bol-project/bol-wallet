@@ -37,7 +37,9 @@ public static class LoggingExtensions
                 encoding: Encoding.UTF8,
                 fileSizeLimitBytes: MaxFileSizeLimitBytes,
                 rollingInterval: RollingInterval.Day,
-                rollOnFileSizeLimit: true)
+                rollOnFileSizeLimit: true,
+                retainedFileCountLimit: 15,
+                retainedFileTimeLimit: TimeSpan.FromDays(15))
             .WriteTo.Console(outputTemplate)
             .CreateLogger();
 
