@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class LoggingExtensions
 {
-    private const long MaxFileSizeLimitBytes = 1048576L;
+    private const long MaxFileSizeLimitBytes = 10_000_000;
 
     public static IServiceCollection ConfigureSerilog(this IServiceCollection services)
     {
