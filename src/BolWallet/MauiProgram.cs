@@ -12,6 +12,7 @@ using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
@@ -28,6 +29,18 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .ConfigureLifecycleEvents(AppLifeCycle =>
+            {
+#if WINDOWS
+                    AppLifeCycle.AddWindows(windows =>
+                    {
+                        windows.OnClosed((app, e) =>
+                        {
+                            Environment.Exit(0);
+                        });
+                    });
+#endif
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
