@@ -69,6 +69,7 @@ builder.ConfigureMauiHandlers(handlers =>
         RegisterPermissionServices(services);
 
         services.AddSingleton(MediaPicker.Default);
+        builder.Services.AddSingleton<IFileSystem>(FileSystem.Current);
         builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);
