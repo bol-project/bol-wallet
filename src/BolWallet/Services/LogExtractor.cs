@@ -70,14 +70,19 @@ public class LogExtractor : ILogExtractor, IRecipient<SaveLogfileMessage>
 
             using var fileStream = File.OpenRead(zipFilePath);
             var result = await _fileSaver.SaveAsync(zipFileName, fileStream, token);
-
             if (result.IsSuccessful)
             {
                 await Toast.Make($"File '{zipFileName}' saved successfully!").Show(token);
                 return;
             }
 
-            _messenger.Send(new DisplayErrorMessage("An error occurred while saving the logfile", result.Exception));
+            if (result.FilePath == null)
+            {
+                _logger.LogInformation("Log extraction cancelled by user.");
+                return;
+            }
+
+            _messenger.Send(new DisplayErrorMessage("An error occurred while saving the logfile.", result.Exception));
         }
         catch (Exception ex)
         {
