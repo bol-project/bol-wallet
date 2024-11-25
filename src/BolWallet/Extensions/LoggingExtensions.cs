@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class LoggingExtensions
 {
-    private const long MaxFileSizeLimitBytes = 1048576L;
+    private const long MaxFileSizeLimitBytes = 10_000_000;
 
     public static IServiceCollection ConfigureSerilog(this IServiceCollection services)
     {
@@ -35,10 +35,12 @@ public static class LoggingExtensions
                 outputTemplate,
                 filePath,
                 encoding: Encoding.UTF8,
-                flushToDiskInterval: TimeSpan.FromSeconds(1),
+                shared: true,
                 fileSizeLimitBytes: MaxFileSizeLimitBytes,
                 rollingInterval: RollingInterval.Day,
-                rollOnFileSizeLimit: true)
+                rollOnFileSizeLimit: true,
+                retainedFileCountLimit: 15,
+                retainedFileTimeLimit: TimeSpan.FromDays(15))
             .WriteTo.Console(outputTemplate)
             .CreateLogger();
 

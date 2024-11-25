@@ -12,6 +12,7 @@ using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
@@ -28,6 +29,18 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .ConfigureLifecycleEvents(AppLifeCycle =>
+            {
+#if WINDOWS
+                    AppLifeCycle.AddWindows(windows =>
+                    {
+                        windows.OnClosed((app, e) =>
+                        {
+                            Environment.Exit(0);
+                        });
+                    });
+#endif
+            })
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -37,6 +50,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IAppVersion, AppVersion>();
         builder.Services.AddMauiBlazorWebView();
+#if DEBUG
+        builder.Services.AddBlazorWebViewDeveloperTools();
+#endif
 
         builder.Services.AddMudServices();
 
@@ -69,6 +85,7 @@ builder.ConfigureMauiHandlers(handlers =>
         RegisterPermissionServices(services);
 
         services.AddSingleton(MediaPicker.Default);
+        builder.Services.AddSingleton<IFileSystem>(FileSystem.Current);
         builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
         services.AddSingleton<IDeviceDisplay>(DeviceDisplay.Current);

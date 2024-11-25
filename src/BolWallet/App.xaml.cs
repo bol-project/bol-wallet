@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace BolWallet;
 
-public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
+public partial class App : Application, IRecipient<TargetNetworkChangedMessage>, IRecipient<DisplayErrorMessage>
 {
     private readonly INetworkPreferences _networkPreferences;
     private ILogExtractor _logExtractor = null!;
@@ -14,7 +14,7 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
         _networkPreferences = networkPreferences;
         InitializeComponent();
 
-        messenger.Register(this);
+        messenger.RegisterAll(this);
 		UserAppTheme = AppTheme.Light;
 
 #if WINDOWS
@@ -85,4 +85,13 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>
     private string CreateWindowTitle() => _networkPreferences.IsMainNet
         ? Constants.AppName
         : $"{Constants.AppName} ({_networkPreferences.Name})";
+
+    void IRecipient<DisplayErrorMessage>.Receive(DisplayErrorMessage message)
+    {
+        var text = message.Exception is null
+            ? message.Message
+            : $"{message.Message}{Environment.NewLine}{Environment.NewLine}{message.Exception.ToString()}";
+
+        Current.Windows[0].Page.DisplayAlert("Error", text, "OK");
+    }
 }
