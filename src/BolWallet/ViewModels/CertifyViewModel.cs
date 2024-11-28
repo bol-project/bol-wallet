@@ -68,7 +68,7 @@ public partial class CertifyViewModel : ObservableValidator
             IsAlternativeCertified = (AlternativeAccounts.Count > 1 &&
                                       AlternativeAccounts
                                           .Where(account => account.CodeName != CodeName)
-                                          .Any(account => account.Certifications >= 2));
+                                          .Any(account => account.Certifications > 0));
             CertifyDisabled = IsMultiCitizenship || IsAlternativeCertified;
             IsCheckProcessOver = true;
         }
