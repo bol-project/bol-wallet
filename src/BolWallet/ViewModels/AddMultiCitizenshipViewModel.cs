@@ -100,14 +100,24 @@ public partial class AddMultiCitizenshipViewModel : BaseViewModel
         try
         {
             IsLoading = true;
-            await _bolService.AddMultiCitizenship(MultiCitizenshipModel.CountryCode, ShortHash);
+
+            string countryCode = !string.IsNullOrWhiteSpace(MultiCitizenshipShortHashModel.CountryCode)
+                ? MultiCitizenshipShortHashModel.CountryCode
+                : MultiCitizenshipModel.CountryCode;
+
+            if (string.IsNullOrWhiteSpace(countryCode))
+            {
+                await Toast.Make("Country code is required to register.").Show();
+                return;
+            }
+
+            await _bolService.AddMultiCitizenship(countryCode, ShortHash);
 
             for (int i = 0; i < 20; i++)
             {
                 try
                 {
-                    IsMultiCitizenshipRegistered =
-                        await _bolService.IsMultiCitizenship(MultiCitizenshipModel.CountryCode, ShortHash);
+                    IsMultiCitizenshipRegistered = await _bolService.IsMultiCitizenship(countryCode, ShortHash);
                 }
                 catch (RpcException)
                 {
