@@ -36,10 +36,14 @@ public partial class CertifyViewModel : ObservableValidator
     [ObservableProperty] 
     private bool _certifyDisabled;
 
+    [ObservableProperty]
+    private bool _isCheckProcessOver;
+
     public async Task Lookup()
     {
         try
         {
+            IsCheckProcessOver = false;
             IsLoading = true;
             var alternativeCodeNames = (await _bolService.FindAlternativeCodeNames(CodeName)).ToArray();
             var alternativeAccounts = new List<BolAccount>(alternativeCodeNames.Length);
@@ -64,8 +68,9 @@ public partial class CertifyViewModel : ObservableValidator
             IsAlternativeCertified = (AlternativeAccounts.Count > 1 &&
                                       AlternativeAccounts
                                           .Where(account => account.CodeName != CodeName)
-                                          .Any(account => account.Certifications >= 2));
+                                          .Any(account => account.Certifications > 0));
             CertifyDisabled = IsMultiCitizenship || IsAlternativeCertified;
+            IsCheckProcessOver = true;
         }
         catch (Exception ex)
         {

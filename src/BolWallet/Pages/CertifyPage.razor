@@ -123,6 +123,23 @@
             </MudCard>
         </MudItem>
     }
+    @if (!ViewModel.IsMultiCitizenship && ViewModel.IsCheckProcessOver)
+    {
+         <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+            <MudCard Class="styled-card">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Success">
+                            <MudIcon Icon="@Icons.Material.Rounded.ThumbUp"/>
+                        </MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">ShortHash is not in MultiCitizenship List.</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
+        </MudItem>
+    }
     <MudItem hidden="@(!ViewModel.AlternativeAccounts.Any())" xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
         <MudCard>
             <MudCardActions>

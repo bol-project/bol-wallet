@@ -35,9 +35,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app can use the photo library to select photos from your library and use them when creating a new wallet.</string>
 	<key>CFBundleVersion</key>
-	<string>2024.1113.0540</string>
+	<string>2024.1204.2140</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.0.0</string>
+	<string>3.1.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSHumanReadableCopyright</key>
