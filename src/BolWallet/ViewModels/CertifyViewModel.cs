@@ -24,6 +24,9 @@ public partial class CertifyViewModel : ObservableValidator
     [Required]
     private string _codeName;
 
+    [ObservableProperty]
+    private int _citizenshipCount = 1;
+
     [ObservableProperty] 
     private List<BolAccount> _alternativeAccounts = new();
 
