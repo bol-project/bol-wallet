@@ -1,5 +1,6 @@
 @page "/certify"
 
+@inject RegisterContent _content;
 @inject CertifyViewModel ViewModel
 
 <MudThemeProvider />
@@ -25,7 +26,24 @@
 
                     @if (ViewModel.CitizenshipCount > 1)
                     {
-                       
+                        <MudSelect T="string" Label="Second Citizenship" Required="true" HelperText="Select the first country of citizenship."
+                                   @bind-Value="ViewModel.SelectedExtraCitizenships[0]">
+                            @foreach (var country in _content.Countries)
+                            {
+                                <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        @if (ViewModel.CitizenshipCount > 2)
+                        {
+                            <MudSelect T="string" Label="Third Citizenship" Required="true" HelperText="Select the second country of citizenship."
+                                       @bind-Value="ViewModel.SelectedExtraCitizenships[1]">
+                                @foreach (var country in _content.Countries)
+                                {
+                                    <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
                     }
                 </MudCardContent>
                 <MudCardActions>

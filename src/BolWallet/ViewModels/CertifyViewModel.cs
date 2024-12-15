@@ -15,8 +15,10 @@ public partial class CertifyViewModel : ObservableValidator
     {
         _bolService = bolService;
         _navigation = navigation;
+
+        _selectedExtraCitizenships = new List<string> { "", "" };
     }
-    
+
     [ObservableProperty]
     private bool _isLoading;
 
@@ -27,16 +29,19 @@ public partial class CertifyViewModel : ObservableValidator
     [ObservableProperty]
     private int _citizenshipCount = 1;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private List<BolAccount> _alternativeAccounts = new();
 
     [ObservableProperty]
     private bool _isMultiCitizenship;
 
     [ObservableProperty]
+    private List<string> _selectedExtraCitizenships;
+
+    [ObservableProperty]
     private bool _isAlternativeCertified;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private bool _certifyDisabled;
 
     [ObservableProperty]
@@ -61,7 +66,7 @@ public partial class CertifyViewModel : ObservableValidator
             {
                 await Toast.Make(ex.Message).Show();
             }
-            
+
             foreach (var codeName in alternativeCodeNames)
             {
                 var account = await _bolService.GetAccount(codeName);
@@ -93,7 +98,7 @@ public partial class CertifyViewModel : ObservableValidator
                 throw new Exception("Please Select a CodeName");
 
             IsLoading = true;
-            
+
             await _bolService.Certify(CodeName);
 
             await Toast.Make($"{CodeName} has received the certification.").Show();
