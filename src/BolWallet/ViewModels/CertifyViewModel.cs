@@ -58,13 +58,26 @@ public partial class CertifyViewModel : ObservableValidator
             var codeNameParts = CodeName.Split("<");
             var countryCode = codeNameParts[1];
             var shortHash = codeNameParts[7];
-            try
+
+            SelectedExtraCitizenships.Add(countryCode);
+
+            foreach (var citizenship in SelectedExtraCitizenships)
             {
-                IsMultiCitizenship = await _bolService.IsMultiCitizenship(countryCode, shortHash);
-            }
-            catch (RpcException ex)
-            {
-                await Toast.Make(ex.Message).Show();
+                if (string.IsNullOrEmpty(citizenship)) continue;
+
+                try
+                {
+                    var isMulti = await _bolService.IsMultiCitizenship(citizenship, shortHash);
+                    if (isMulti)
+                    {
+                        IsMultiCitizenship = true;
+                        break;
+                    }
+                }
+                catch (RpcException ex)
+                {
+                    IsMultiCitizenship = false;
+                }
             }
 
             foreach (var codeName in alternativeCodeNames)

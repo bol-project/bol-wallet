@@ -26,7 +26,7 @@
 
                     @if (ViewModel.CitizenshipCount > 1)
                     {
-                        <MudSelect T="string" Label="Second Citizenship" Required="true" HelperText="Select the first country of citizenship."
+                        <MudSelect T="string" Label="Second Citizenship" Required="true" HelperText="Select the second country of citizenship."
                                    @bind-Value="ViewModel.SelectedExtraCitizenships[0]">
                             @foreach (var country in _content.Countries)
                             {
@@ -36,7 +36,7 @@
 
                         @if (ViewModel.CitizenshipCount > 2)
                         {
-                            <MudSelect T="string" Label="Third Citizenship" Required="true" HelperText="Select the second country of citizenship."
+                            <MudSelect T="string" Label="Third Citizenship" Required="true" HelperText="Select the third country of citizenship."
                                        @bind-Value="ViewModel.SelectedExtraCitizenships[1]">
                                 @foreach (var country in _content.Countries)
                                 {
