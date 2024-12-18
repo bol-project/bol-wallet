@@ -61,6 +61,8 @@ public partial class CertifyViewModel : ObservableValidator
 
             SelectedExtraCitizenships.Add(countryCode);
 
+            var primaryAccount = await _bolService.GetAccount(CodeName);
+
             foreach (var citizenship in SelectedExtraCitizenships)
             {
                 if (string.IsNullOrEmpty(citizenship)) continue;
@@ -68,10 +70,15 @@ public partial class CertifyViewModel : ObservableValidator
                 try
                 {
                     var isMulti = await _bolService.IsMultiCitizenship(citizenship, shortHash);
-                    if (isMulti)
+
+                    if (isMulti && primaryAccount.Certifications == 0)
                     {
                         IsMultiCitizenship = true;
                         break;
+                    }
+                    else
+                    {
+                        IsMultiCitizenship = false;
                     }
                 }
                 catch (RpcException ex)
@@ -86,10 +93,12 @@ public partial class CertifyViewModel : ObservableValidator
                 alternativeAccounts.Add(account);
             }
             AlternativeAccounts = alternativeAccounts;
+
             IsAlternativeCertified = (AlternativeAccounts.Count > 1 &&
                                       AlternativeAccounts
                                           .Where(account => account.CodeName != CodeName)
                                           .Any(account => account.Certifications > 0));
+
             CertifyDisabled = IsMultiCitizenship || IsAlternativeCertified;
             IsCheckProcessOver = true;
         }
