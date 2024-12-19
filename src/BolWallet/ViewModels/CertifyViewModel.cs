@@ -121,6 +121,28 @@ public partial class CertifyViewModel : ObservableValidator
 
             IsLoading = true;
 
+
+            var codeNameParts = CodeName.Split("<");
+            var countryCode = codeNameParts[1];
+            var shortHash = codeNameParts[7];
+
+            SelectedExtraCitizenships.Remove(countryCode);
+
+            foreach (var citizenship in SelectedExtraCitizenships)
+            {
+                if (string.IsNullOrEmpty(citizenship)) continue;
+
+                bool isMultiCitizenshipRegistered = false;
+                try
+                {
+                    isMultiCitizenshipRegistered = await _bolService.AddMultiCitizenship(citizenship, shortHash);
+                }
+                catch (RpcException)
+                {
+                    isMultiCitizenshipRegistered = false;
+                }
+            }
+
             await _bolService.Certify(CodeName);
 
             await Toast.Make($"{CodeName} has received the certification.").Show();
