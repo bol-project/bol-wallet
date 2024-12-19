@@ -63,7 +63,9 @@ public partial class CertifyViewModel : ObservableValidator
 
             var primaryAccount = await _bolService.GetAccount(CodeName);
 
-            foreach (var citizenship in SelectedExtraCitizenships)
+            var uniqueCitizenships = new HashSet<string>(SelectedExtraCitizenships);
+
+            foreach (var citizenship in uniqueCitizenships)
             {
                 if (string.IsNullOrEmpty(citizenship)) continue;
 
@@ -121,14 +123,15 @@ public partial class CertifyViewModel : ObservableValidator
 
             IsLoading = true;
 
-
             var codeNameParts = CodeName.Split("<");
             var countryCode = codeNameParts[1];
             var shortHash = codeNameParts[7];
 
             SelectedExtraCitizenships.Remove(countryCode);
 
-            foreach (var citizenship in SelectedExtraCitizenships)
+            var uniqueCitizenships = new HashSet<string>(SelectedExtraCitizenships);
+
+            foreach (var citizenship in uniqueCitizenships)
             {
                 if (string.IsNullOrEmpty(citizenship)) continue;
 
@@ -158,4 +161,5 @@ public partial class CertifyViewModel : ObservableValidator
             IsLoading = false;
         }
     }
+
 }
