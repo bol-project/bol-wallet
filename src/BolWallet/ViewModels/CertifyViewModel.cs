@@ -51,13 +51,20 @@ public partial class CertifyViewModel : ObservableValidator
     {
         try
         {
+            var codeNameParts = CodeName.Split("<");
+            var countryCode = codeNameParts[1];
+            var shortHash = codeNameParts[7];
+
+            if (SelectedExtraCitizenships.Contains(countryCode))
+            {
+                await Toast.Make("The selected country matches the primary country in the CodeName. Please choose a different country for additional citizenship.").Show();
+                return;
+            }
+
             IsCheckProcessOver = false;
             IsLoading = true;
             var alternativeCodeNames = (await _bolService.FindAlternativeCodeNames(CodeName)).ToArray();
             var alternativeAccounts = new List<BolAccount>(alternativeCodeNames.Length);
-            var codeNameParts = CodeName.Split("<");
-            var countryCode = codeNameParts[1];
-            var shortHash = codeNameParts[7];
 
             SelectedExtraCitizenships.Add(countryCode);
 
