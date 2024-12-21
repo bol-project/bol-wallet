@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using Bol.Core.Abstractions;
 using Bol.Core.Model;
 using Bol.Core.Rpc.Model;
@@ -10,11 +11,13 @@ public partial class CertifyViewModel : ObservableValidator
 {
     private readonly IBolService _bolService;
     private readonly INavigationService _navigation;
+    private readonly RegisterContent _registerContent;
 
-    public CertifyViewModel(IBolService bolService, INavigationService navigation)
+    public CertifyViewModel(IBolService bolService, INavigationService navigation, RegisterContent registerContent)
     {
         _bolService = bolService;
         _navigation = navigation;
+        _registerContent = registerContent;
 
         _selectedExtraCitizenships = new List<string> { "", "" };
     }
@@ -46,6 +49,9 @@ public partial class CertifyViewModel : ObservableValidator
 
     [ObservableProperty]
     private bool _isCheckProcessOver;
+
+    [ObservableProperty]
+    private List<MultiCitizenshipModel> _multiCitizenships = new List<MultiCitizenshipModel>();
 
     public async Task Lookup()
     {
@@ -169,4 +175,67 @@ public partial class CertifyViewModel : ObservableValidator
         }
     }
 
+    partial void OnCitizenshipCountChanged(int value)
+    {
+        UpdateMultiCitizenshipCount(value);
+    }
+    public void UpdateMultiCitizenshipCount(int count)
+    {
+        if (count == 1)
+        {
+            MultiCitizenships.Clear();
+        }
+        else
+        {
+            while (MultiCitizenships.Count < count - 1)
+            {
+                MultiCitizenships.Add(new MultiCitizenshipModel());
+            }
+
+            while (MultiCitizenships.Count > count - 1)
+            {
+                MultiCitizenships.RemoveAt(MultiCitizenships.Count - 1);
+            }
+        }
+    }
+
+    public void ValidateNin()
+    {
+        foreach (var citizenship in MultiCitizenships)
+        {
+            var countryCode = citizenship.CountryCode;
+            var nin = citizenship.Nin;
+
+            if (string.IsNullOrWhiteSpace(countryCode) || string.IsNullOrWhiteSpace(nin))
+            {
+                citizenship.NinValidationErrorMessage = "Country code and NIN are required.";
+                continue;
+            }
+
+            if (!_registerContent.NinPerCountryCode.ContainsKey(countryCode))
+            {
+                citizenship.NinValidationErrorMessage = $"Invalid country code: {countryCode}.";
+                continue;
+            }
+
+            var pattern = _registerContent.NinPerCountryCode[countryCode].Regex;
+            var regex = new Regex(pattern);
+
+            var ninRequiredDigits = _registerContent.NinPerCountryCode[countryCode].Digits;
+
+            bool isNinValid = regex.IsMatch(nin);
+            bool isNinLengthCorrect = nin.Length == 5;
+
+            if (isNinValid && isNinLengthCorrect)
+            {
+                citizenship.NinValidationErrorMessage = ""; // Valid NIN
+            }
+            else
+            {
+                citizenship.NinValidationErrorMessage =
+                    $"The National Identification Number (NIN) provided for country {countryCode} does not match the expected length of 5 digits." +
+                    " Please ensure that only capital letters (A-Z) and numbers are used in the NIN.";
+            }
+        }
+    }
 }

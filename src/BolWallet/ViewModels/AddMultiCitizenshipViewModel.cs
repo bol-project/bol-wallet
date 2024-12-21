@@ -24,6 +24,8 @@ public class MultiCitizenshipModel
 
     [StringLength(11, MinimumLength = 10, ErrorMessage = "Short Hash must be exactly 10 or 11 characters.")]
     public string ShortHash { get; set; }
+
+    public string NinValidationErrorMessage { get; set; }
 }
 
 public class MultiCitizenshipShortHashModel
