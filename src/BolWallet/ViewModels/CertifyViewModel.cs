@@ -11,15 +11,19 @@ public partial class CertifyViewModel : ObservableValidator
 {
     private readonly IBolService _bolService;
     private readonly INavigationService _navigation;
+    private readonly ICodeNameService _codeNameService;
     private readonly RegisterContent _registerContent;
 
-    public CertifyViewModel(IBolService bolService, INavigationService navigation, RegisterContent registerContent)
+    public CertifyViewModel(
+        IBolService bolService, 
+        INavigationService navigation,
+        ICodeNameService codeNameService,
+        RegisterContent registerContent)
     {
         _bolService = bolService;
         _navigation = navigation;
+        _codeNameService = codeNameService;
         _registerContent = registerContent;
-
-        _selectedExtraCitizenships = new List<string> { "", "" };
     }
 
     [ObservableProperty]
@@ -37,9 +41,6 @@ public partial class CertifyViewModel : ObservableValidator
 
     [ObservableProperty]
     private bool _isMultiCitizenship;
-
-    [ObservableProperty]
-    private List<string> _selectedExtraCitizenships;
 
     [ObservableProperty]
     private bool _isAlternativeCertified;
@@ -61,7 +62,7 @@ public partial class CertifyViewModel : ObservableValidator
             var countryCode = codeNameParts[1];
             var shortHash = codeNameParts[7];
 
-            if (SelectedExtraCitizenships.Contains(countryCode))
+            if (MultiCitizenships.Select(m => m.CountryCode).Contains(countryCode))
             {
                 await Toast.Make("The selected country matches the primary country in the CodeName. Please choose a different country for additional citizenship.").Show();
                 return;
@@ -72,19 +73,17 @@ public partial class CertifyViewModel : ObservableValidator
             var alternativeCodeNames = (await _bolService.FindAlternativeCodeNames(CodeName)).ToArray();
             var alternativeAccounts = new List<BolAccount>(alternativeCodeNames.Length);
 
-            SelectedExtraCitizenships.Add(countryCode);
-
             var primaryAccount = await _bolService.GetAccount(CodeName);
 
-            var uniqueCitizenships = new HashSet<string>(SelectedExtraCitizenships);
-
-            foreach (var citizenship in uniqueCitizenships)
+            foreach (var citizenship in MultiCitizenships)
             {
-                if (string.IsNullOrEmpty(citizenship)) continue;
+                if (string.IsNullOrEmpty(citizenship.CountryCode)) continue;
 
                 try
                 {
-                    var isMulti = await _bolService.IsMultiCitizenship(citizenship, shortHash);
+                    var generatedShortHash = _codeNameService.GenerateShortHash(citizenship.FirstName, citizenship.BirthDate.Value, citizenship.Nin);
+
+                    var isMulti = await _bolService.IsMultiCitizenship(citizenship.CountryCode, generatedShortHash);
 
                     if (isMulti && primaryAccount.Certifications == 0)
                     {
@@ -136,22 +135,16 @@ public partial class CertifyViewModel : ObservableValidator
 
             IsLoading = true;
 
-            var codeNameParts = CodeName.Split("<");
-            var countryCode = codeNameParts[1];
-            var shortHash = codeNameParts[7];
-
-            SelectedExtraCitizenships.Remove(countryCode);
-
-            var uniqueCitizenships = new HashSet<string>(SelectedExtraCitizenships);
-
-            foreach (var citizenship in uniqueCitizenships)
+            foreach (var citizenship in MultiCitizenships)
             {
-                if (string.IsNullOrEmpty(citizenship)) continue;
+                if (string.IsNullOrEmpty(citizenship.CountryCode)) continue;
 
                 bool isMultiCitizenshipRegistered = false;
                 try
                 {
-                    isMultiCitizenshipRegistered = await _bolService.AddMultiCitizenship(citizenship, shortHash);
+                    var generatedShortHash = _codeNameService.GenerateShortHash(citizenship.FirstName, citizenship.BirthDate.Value, citizenship.Nin);
+
+                    isMultiCitizenshipRegistered = await _bolService.AddMultiCitizenship(citizenship.CountryCode, generatedShortHash);
                 }
                 catch (RpcException)
                 {
