@@ -52,6 +52,12 @@ public partial class CertifyViewModel : ObservableValidator
     private bool _isCheckProcessOver;
 
     [ObservableProperty]
+    private bool _isCodenameShorthashRegistered;
+
+    [ObservableProperty]
+    private string _codenameCountryCode;
+
+    [ObservableProperty]
     private List<MultiCitizenshipModel> _multiCitizenships = new List<MultiCitizenshipModel>();
 
     public async Task Lookup()
@@ -60,6 +66,7 @@ public partial class CertifyViewModel : ObservableValidator
         {
             var codeNameParts = CodeName.Split("<");
             var countryCode = codeNameParts[1];
+            CodenameCountryCode = countryCode;
             var shortHash = codeNameParts[7];
 
             if (MultiCitizenships.Select(m => m.CountryCode).Contains(countryCode))
@@ -85,9 +92,10 @@ public partial class CertifyViewModel : ObservableValidator
 
                     var isMulti = await _bolService.IsMultiCitizenship(citizenship.CountryCode, generatedShortHash);
 
-                    if (isMulti && primaryAccount.Certifications == 0)
+                    if (isMulti)
                     {
                         IsMultiCitizenship = true;
+                        citizenship.IsInMultiCitizenshipList = true;
                         break;
                     }
                     else
@@ -104,6 +112,7 @@ public partial class CertifyViewModel : ObservableValidator
             try
             {
                 IsMultiCitizenship = await _bolService.IsMultiCitizenship(countryCode, shortHash);
+                IsCodenameShorthashRegistered = true;
             }
             catch (RpcException ex) 
             {
@@ -181,6 +190,7 @@ public partial class CertifyViewModel : ObservableValidator
     {
         UpdateMultiCitizenshipCount(value);
     }
+
     public void UpdateMultiCitizenshipCount(int count)
     {
         if (count == 1)

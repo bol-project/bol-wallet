@@ -26,6 +26,8 @@ public class MultiCitizenshipModel
     public string ShortHash { get; set; }
 
     public string NinValidationErrorMessage { get; set; }
+
+    public bool IsInMultiCitizenshipList { get; set; }
 }
 
 public class MultiCitizenshipShortHashModel
