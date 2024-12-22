@@ -18,7 +18,8 @@
                               For="@(() => ViewModel.CodeName)"
                               InputType="InputType.Text" />
 
-                    <MudSelect T="int" Label="Number of Citizenship(s)" @bind-Value="ViewModel.CitizenshipCount" Class="mt-3">
+                    <MudSelect T="int" Label="Number of Citizenship(s)" @bind-Value="ViewModel.CitizenshipCount" Class="mt-3" Required="true" Placeholder="Select a value">
+                        <MudSelectItem Value="0">Select the Number of Citizenship(s)</MudSelectItem>
                         <MudSelectItem Value="1">1</MudSelectItem>
                         <MudSelectItem Value="2">2</MudSelectItem>
                         <MudSelectItem Value="3">3</MudSelectItem>

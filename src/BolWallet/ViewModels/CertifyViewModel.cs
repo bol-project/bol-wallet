@@ -34,7 +34,9 @@ public partial class CertifyViewModel : ObservableValidator
     private string _codeName;
 
     [ObservableProperty]
-    private int _citizenshipCount = 1;
+    [Required(ErrorMessage = "Please select the number of citizenship(s).")]
+    [Range(1, 3, ErrorMessage = "You must select between 1 and 3 citizenships.")]
+    private int _citizenshipCount = 0;
 
     [ObservableProperty]
     private List<BolAccount> _alternativeAccounts = new();
