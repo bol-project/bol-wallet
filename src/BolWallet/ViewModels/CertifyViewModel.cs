@@ -94,7 +94,7 @@ public partial class CertifyViewModel : ObservableValidator
 
                     var isMulti = await _bolService.IsMultiCitizenship(citizenship.CountryCode, generatedShortHash);
 
-                    if (isMulti)
+                    if (isMulti && primaryAccount.Certifications == 0)
                     {
                         IsMultiCitizenship = true;
                         citizenship.IsInMultiCitizenshipList = true;
