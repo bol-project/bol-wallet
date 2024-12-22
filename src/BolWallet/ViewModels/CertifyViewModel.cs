@@ -101,6 +101,15 @@ public partial class CertifyViewModel : ObservableValidator
                 }
             }
 
+            try
+            {
+                IsMultiCitizenship = await _bolService.IsMultiCitizenship(countryCode, shortHash);
+            }
+            catch (RpcException ex) 
+            {
+                IsMultiCitizenship = false;
+            }
+
             foreach (var codeName in alternativeCodeNames)
             {
                 var account = await _bolService.GetAccount(codeName);
