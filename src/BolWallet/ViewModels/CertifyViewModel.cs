@@ -64,6 +64,12 @@ public partial class CertifyViewModel : ObservableValidator
 
     public async Task Lookup()
     {
+        if (!ValidateForm())
+        {
+            await Toast.Make("Please correct the errors in the form before submitting.").Show();
+            return;
+        }
+
         try
         {
             var codeNameParts = CodeName.Split("<");
@@ -155,6 +161,8 @@ public partial class CertifyViewModel : ObservableValidator
 
             IsLoading = true;
 
+            await _bolService.Certify(CodeName);
+
             foreach (var citizenship in MultiCitizenships)
             {
                 if (string.IsNullOrEmpty(citizenship.CountryCode)) continue;
@@ -171,8 +179,6 @@ public partial class CertifyViewModel : ObservableValidator
                     isMultiCitizenshipRegistered = false;
                 }
             }
-
-            await _bolService.Certify(CodeName);
 
             await Toast.Make($"{CodeName} has received the certification.").Show();
 
@@ -252,4 +258,20 @@ public partial class CertifyViewModel : ObservableValidator
             }
         }
     }
+
+    public bool ValidateForm()
+    {
+        var validationResults = new List<ValidationResult>();
+        var context = new ValidationContext(this);
+        var isValid = Validator.TryValidateObject(this, context, validationResults, true);
+
+        foreach (var citizenship in MultiCitizenships)
+        {
+            var citizenshipContext = new ValidationContext(citizenship);
+            isValid &= Validator.TryValidateObject(citizenship, citizenshipContext, validationResults, true);
+        }
+
+        return isValid;
+    }
+
 }
