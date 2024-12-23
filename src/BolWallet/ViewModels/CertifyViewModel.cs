@@ -174,9 +174,12 @@ public partial class CertifyViewModel : ObservableValidator
                 bool isMultiCitizenshipRegistered = false;
                 try
                 {
-                    var generatedShortHash = _codeNameService.GenerateShortHash(citizenship.FirstName, citizenship.BirthDate.Value, citizenship.Nin);
+                    if (!citizenship.IsInMultiCitizenshipList)
+                    {
+                        var generatedShortHash = _codeNameService.GenerateShortHash(citizenship.FirstName, citizenship.BirthDate.Value, citizenship.Nin);
 
-                    isMultiCitizenshipRegistered = await _bolService.AddMultiCitizenship(citizenship.CountryCode, generatedShortHash);
+                        isMultiCitizenshipRegistered = await _bolService.AddMultiCitizenship(citizenship.CountryCode, generatedShortHash);
+                    }
                 }
                 catch (RpcException)
                 {
