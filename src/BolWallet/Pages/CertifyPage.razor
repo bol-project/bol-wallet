@@ -95,24 +95,24 @@
                     <CardHeaderContent>
                         @if (ViewModel.IsCodenameShorthashRegistered)
                         {
-                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode is in the MultiCitizenship list.</MudText>
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is in the MultiCitizenship list.</MudText>
                         }
                         else
                         {
-                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode is not in the MultiCitizenship list.</MudText>
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is not in the MultiCitizenship list.</MudText>
                         }
                         @foreach (var citizenship in ViewModel.MultiCitizenships)
                         {
                             @if (citizenship.IsInMultiCitizenshipList)
                             {
                                 <MudText Typo="Typo.h6">
-                                    @citizenship.CountryCode is in the MultiCitizenship list.
+                                    @citizenship.CountryCode short hash is in the MultiCitizenship list.
                                 </MudText>
                             }
                             else
                             {
                                 <MudText Typo="Typo.h6">
-                                    @citizenship.CountryCode is not in the MultiCitizenship list.
+                                    @citizenship.CountryCode short hash is not in the MultiCitizenship list.
                                 </MudText>
                             }
                         }
@@ -215,24 +215,24 @@
                     <CardHeaderContent>
                         @if (ViewModel.IsCodenameShorthashRegistered)
                         {
-                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode is in the MultiCitizenship list.</MudText>
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is in the MultiCitizenship list.</MudText>
                         }
                         else
                         {
-                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode is not in the MultiCitizenship list.</MudText>
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is not in the MultiCitizenship list.</MudText>
                         }
                         @foreach (var citizenship in ViewModel.MultiCitizenships)
                         {
                             @if (citizenship.IsInMultiCitizenshipList)
                             {
                                 <MudText Typo="Typo.h6">
-                                    @citizenship.CountryCode is in the MultiCitizenship list.
+                                    @citizenship.CountryCode short hash is in the MultiCitizenship list.
                                 </MudText>
                             }
                             else
                             {
                                 <MudText Typo="Typo.h6">
-                                    @citizenship.CountryCode is not in the MultiCitizenship list.
+                                    @citizenship.CountryCode short hash is not in the MultiCitizenship list.
                                 </MudText>
                             }
                         }
