@@ -4,6 +4,7 @@
 
 @inject NavigationManager nav;
 @inject RegisterContent _content;
+@inject ISecureRepository _secureRepository;
 @inject IBolService bolService;
 @inject INavigationService NavigationService
 
@@ -29,18 +30,18 @@
 
                     <MudSelect T="string" Label="Countries" Required="true" HelperText="Supported Countries as Certifier" MultiSelection="true" @bind-SelectedValues="registerAsCertifierForm.Countries">
                         <MudSelectItem T="string" Value="@("ALL")">Global</MudSelectItem>
-                     @*    @foreach (var country in _content.Countries)
+                        @*    @foreach (var country in _content.Countries)
                         {
                             <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
                         } *@
                     </MudSelect>
 
                     <MudTextField Immediate=true Label="Fee" Required="true" HelperText="Fee as Certifier" Class="mt-3"
-                                  @bind-Value="registerAsCertifierForm.Fee" For="@(() => registerAsCertifierForm.Fee)" />
+                    @bind-Value="registerAsCertifierForm.Fee" For="@(() => registerAsCertifierForm.Fee)" />
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton ButtonType="MudBlazor.ButtonType.Submit"
-                               Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                    Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>
@@ -51,15 +52,33 @@
     RegisterAsCertifierForm registerAsCertifierForm = new RegisterAsCertifierForm();
 
     private bool isProgressBarVisible = false;
-    
+
     private async Task OnValidSubmit(EditContext context)
     {
         try
         {
+            var userData = await _secureRepository.GetAsync<UserData>("userdata");
+
+            var codeNameParts = userData.Codename.Split("<");
+            var birthYearStr = codeNameParts[6].Substring(0, codeNameParts[6].Length - 1);
+
+            if (userData.Codename.StartsWith("P") && int.TryParse(birthYearStr, out int birthYear))
+            {
+                int currentYear = DateTime.Now.Year;
+
+                int age = currentYear - birthYear;
+
+                if (age < 16)
+                {
+                    await Toast.Make("You must be at least 16 years old to become a certifier.").Show();
+                    return;
+                }
+            }
+
             List<CoreCountry> supportedCountries = registerAsCertifierForm.Countries
                 .Select(a3 => new CoreCountry { Alpha3 = a3.Trim() })
                 .ToList();
-            
+
             var fee = new BigInteger(Math.Round(registerAsCertifierForm.Fee, 8) * 100000000);
             await bolService.RegisterAsCertifier(supportedCountries, fee);
             await NavigationService.NavigateTo<MainWithAccountViewModel>(true);
