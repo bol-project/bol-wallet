@@ -9,21 +9,26 @@ namespace BolWallet.ViewModels;
 
 public class MultiCitizenshipModel
 {
-    [Required]
+    [Required(ErrorMessage = "Country is required.")]
     public string CountryCode { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "First Name is required.")]
     [RegularExpression("^[A-Z]*$", ErrorMessage = "Only capital letters are allowed.")]
     public string FirstName { get; set; }
-        
-    [Required]
+
+    [Required(ErrorMessage = "NIN is required.")]
+    [StringLength(5, ErrorMessage = "NIN must be 5 characters long.")]
     public string Nin { get; set; }
 
-    [Required] 
+    [Required(ErrorMessage = "Birth Date is required.")]
     public DateTime? BirthDate { get; set; }
 
-    [StringLength(11, MinimumLength = 10, ErrorMessage = "Short Hash must be exactly 10 or 11 characters.")]
+    [StringLength(11, MinimumLength = 10, ErrorMessage = "Short Hash must be 10 or 11 characters.")]
     public string ShortHash { get; set; }
+
+    public string NinValidationErrorMessage { get; set; }
+
+    public bool IsInMultiCitizenshipList { get; set; }
 }
 
 public class MultiCitizenshipShortHashModel

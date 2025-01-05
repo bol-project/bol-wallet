@@ -107,7 +107,7 @@
             <MudCardActions>
                 @if (!ViewModel.IsMultiCitizenshipRegistered)
                 { 
-                    <MudButton Disabled="@(ViewModel.IsLoading)" StartIcon="@Icons.Material.Rounded.LockPerson" Class="ml-auto" Color="Color.Success" OnClick="ViewModel.Register">Register Multiple Citizenship</MudButton>
+                    <MudButton Disabled="true" StartIcon="@Icons.Material.Rounded.LockPerson" Class="ml-auto" Color="Color.Success" OnClick="ViewModel.Register">Register Multiple Citizenship</MudButton>
                 }
                 @if (ViewModel.IsLoading)
                 {

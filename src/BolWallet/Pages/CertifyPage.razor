@@ -1,29 +1,86 @@
 @page "/certify"
 
+@inject RegisterContent _content;
 @inject CertifyViewModel ViewModel
 
 <MudThemeProvider />
 
 <MudGrid>
     <MudItem xs="12" sm="7" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
-        <EditForm Model="@ViewModel" OnValidSubmit="ViewModel.Lookup">
-            <DataAnnotationsValidator />
-            <MudCard Class="styled-card" hidden="@(ViewModel.AlternativeAccounts.Any())">
-                <MudCardContent>
-                    <MudTextField Immediate="true" Label="CodeName"
-                                  HelperText="Type or paste the CodeName of the individual or organization that you want to certify."
-                                  Class="mt-3"
-                                  @bind-Value="ViewModel.CodeName"
-                                  For="@(() => ViewModel.CodeName)"
-                                  InputType="InputType.Text"/>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudProgressCircular hidden="@(!ViewModel.IsLoading)" Indeterminate="true" Size="Size.Small"/>
-                    <MudText hidden="@(!ViewModel.IsLoading)">Looking for alternative CodeNames...</MudText>
-                    <MudButton Disabled="ViewModel.IsLoading" ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Class="ml-auto">Continue</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </EditForm>
+       <EditForm Model="@ViewModel" OnValidSubmit="ViewModel.Lookup">
+        <DataAnnotationsValidator />
+        <MudCard Class="styled-card" hidden="@(ViewModel.AlternativeAccounts.Any())">
+            <MudCardContent>
+                <MudTextField Immediate="true" Label="CodeName"
+                              HelperText="Type or paste the CodeName of the individual or organization that you want to certify."
+                              Class="mt-3"
+                              @bind-Value="ViewModel.CodeName"
+                              For="@(() => ViewModel.CodeName)"
+                              InputType="InputType.Text" />
+
+                    <MudSelect T="int" Label="Number of Citizenship(s)" @bind-Value="ViewModel.CitizenshipCount" Class="mt-3" Required="true" Placeholder="Select a value">
+                        <MudSelectItem Value="0">Select the Number of Citizenship(s)</MudSelectItem>
+                        <MudSelectItem Value="1">1</MudSelectItem>
+                        <MudSelectItem Value="2">2</MudSelectItem>
+                        <MudSelectItem Value="3">3</MudSelectItem>
+                    </MudSelect>
+
+                    @if (ViewModel.CitizenshipCount > 1)
+                    {
+                        @for (var i = 0; i < ViewModel.MultiCitizenships.Count; i++)
+                        {
+                            var citizenship = ViewModel.MultiCitizenships[i];
+
+                            <MudCard Class="mt-3">
+                                <MudCardContent>
+                                    <MudSelect T="string"
+                                               Label="Country"
+                                               Required="true"
+                                               HelperText="Enter the Country on which the individual holds a citizenship."
+                                               @bind-Value="citizenship.CountryCode"
+                                               Error="@string.IsNullOrEmpty(citizenship.CountryCode)"
+                                               ErrorText="Country is required.">
+                                        @foreach (var country in _content.Countries)
+                                        {
+                                            <MudSelectItem T="string" Value="country.Alpha3">@country.Name</MudSelectItem>
+                                        }
+                                    </MudSelect>
+
+
+                                    <MudDatePicker Editable="true" @bind-Date="citizenship.BirthDate"
+                                                   MinDate="new DateTime(1900, 1, 1)" MaxDate="DateTime.Today"
+                                                   Mask="@(new DateMask("0000-00-00"))" DateFormat="@Constants.BirthDateFormat"
+                                                   Placeholder="Birth Date (yyyy-MM-dd)"
+                                                   Error="@(!citizenship.BirthDate.HasValue)"
+                                                   ErrorText="Birth Date is required." />
+
+                                    <MudTextField Label="First Name"
+                                                  HelperText="Enter the First Name of the individual."
+                                                  Required="true"
+                                                  Class="mt-3"
+                                                  @bind-Value="citizenship.FirstName"
+                                                  Error="@(!string.IsNullOrEmpty(citizenship.FirstName) && !Regex.IsMatch(citizenship.FirstName, "^[A-Z]+$"))"
+                                                  ErrorText="First Name must be in all capital letters." />
+
+                                    <MudTextField T="string" Label="NIN" Required="true" Class="mt-3"
+                                                  @bind-Value="citizenship.Nin"
+                                                  Error="@(!string.IsNullOrEmpty(citizenship.NinValidationErrorMessage))"
+                                                  ErrorText="@citizenship.NinValidationErrorMessage"
+                                                  OnBlur="ViewModel.ValidateNin" />
+                                </MudCardContent>
+                            </MudCard>
+                        }
+                    }
+            </MudCardContent>
+            <MudCardActions>
+                <MudProgressCircular hidden="@(!ViewModel.IsLoading)" Indeterminate="true" Size="Size.Small" />
+                <MudText hidden="@(!ViewModel.IsLoading)">Looking for alternative CodeNames...</MudText>
+                <MudButton Disabled="ViewModel.IsLoading" ButtonType="MudBlazor.ButtonType.Submit" Variant="MudBlazor.Variant.Filled"
+                           Color="Color.Primary" Class="ml-auto">Continue</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </EditForm>
+
     </MudItem>
     @if (ViewModel.IsMultiCitizenship)
     {
@@ -36,7 +93,29 @@
                         </MudAvatar>
                     </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6">The CodeName you entered belongs to the Multiple Citizenship List!</MudText>
+                        @if (ViewModel.IsCodenameShorthashRegistered)
+                        {
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is in the MultiCitizenship list.</MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is not in the MultiCitizenship list.</MudText>
+                        }
+                        @foreach (var citizenship in ViewModel.MultiCitizenships)
+                        {
+                            @if (citizenship.IsInMultiCitizenshipList)
+                            {
+                                <MudText Typo="Typo.h6">
+                                    @citizenship.CountryCode short hash is in the MultiCitizenship list.
+                                </MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.h6">
+                                    @citizenship.CountryCode short hash is not in the MultiCitizenship list.
+                                </MudText>
+                            }
+                        }
                     </CardHeaderContent>
                 </MudCardHeader>
             </MudCard>
@@ -134,7 +213,29 @@
                         </MudAvatar>
                     </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.h6">ShortHash is not in MultiCitizenship List.</MudText>
+                        @if (ViewModel.IsCodenameShorthashRegistered)
+                        {
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is in the MultiCitizenship list.</MudText>
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6">@ViewModel.CodenameCountryCode short hash is not in the MultiCitizenship list.</MudText>
+                        }
+                        @foreach (var citizenship in ViewModel.MultiCitizenships)
+                        {
+                            @if (citizenship.IsInMultiCitizenshipList)
+                            {
+                                <MudText Typo="Typo.h6">
+                                    @citizenship.CountryCode short hash is in the MultiCitizenship list.
+                                </MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.h6">
+                                    @citizenship.CountryCode short hash is not in the MultiCitizenship list.
+                                </MudText>
+                            }
+                        }
                     </CardHeaderContent>
                 </MudCardHeader>
             </MudCard>

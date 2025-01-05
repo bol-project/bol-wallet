@@ -31,13 +31,13 @@
 		<string>processing</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2024.1204.2140</string>
+	<string>2025.0105.2230</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.0</string>
+	<string>3.2.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>1bol.org © 2024</string>
+	<string>1bol.org © 2025</string>
 	<key>NSCameraUsageDescription</key>
 	<string>The app can use the camera to take a photo of a document and use it when creating a new wallet.</string>
 	<key>NSMicrophoneUsageDescription</key>
