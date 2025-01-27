@@ -282,6 +282,12 @@ public partial class GetCertifiedViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task OpenCertifierWebsite()
+    {
+        await Launcher.OpenAsync(new Uri("https://www.1bol.org/certifiers/"));
+    }
+
+    [RelayCommand]
     private async Task DownloadAccountAsync(CancellationToken cancellationToken = default)
     {
         await _fileDownloadService.DownloadDataAsync(BolAccount, "BolAccount.json", cancellationToken);

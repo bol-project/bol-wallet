@@ -172,10 +172,18 @@
 			        BackgroundColor="{DynamicResource Primary}"
 			        TextColor="White"
 			        Command="{Binding RequestCertificationCommand}"	CommandParameter="{Binding CertifierCodename}"/>
-                
-                <Label HorizontalOptions="Start" Text="1. Select the codename of one of the certifiers and press Request Certification."/>
-                <Label HorizontalOptions="Start" Text="2. Submit your identification documents to the certifier so that they can verify your identity."/>
-                <Label HorizontalOptions="Start" Text="3. Refresh the page when the certifier has submitted the Certify transaction on their part to proceed."/>
+
+                <Label HorizontalOptions="Start" Text="1. Select the codename of one of the certifiers, click `Request Certification` and wait until the certifier's codename turns blue."/>
+                <Label Text="2. Schedule a video conference with the certifier by visiting the website https://www.1bol.org/certifiers/, finding their codename, and setting up a meeting."
+                     TextColor="Blue"
+                     TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenCertifierWebsiteCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label HorizontalOptions="Start" Text="3. Prepare for the video conference by having the necessary files used during wallet creation and your original identification documents ready."/>
+                <Label HorizontalOptions="Start" Text="4. Refresh the page after the certifier submits the Certify transaction to proceed."/>
+
                 <Label HorizontalOptions="Start" Text="If you are unable to contact your selected certifier, please request your certification from one of the other choices."/>
 			</StackLayout>
 	
