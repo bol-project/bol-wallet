@@ -29,8 +29,8 @@
             </MudNavGroup>
             <MudNavGroup Title="Community" Expanded="true">
                 <MudNavLink Icon="@Icons.Material.Rounded.AccountCircle" OnClick="() => NavigationService.NavigateTo<AccountViewModel>(true)">My Account</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Rounded.SupervisedUserCircle" OnClick="() => NavigationService.NavigateTo<GetCertifiedViewModel>(true)">Get Certified</MudNavLink>
-           <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.SupervisedUserCircle" OnClick="() => ShowCertificationPopup()">Get Certified</MudNavLink>
+                <MudNavLink Icon="@Icons.Material.Rounded.Login" OnClick="() => NavigationService.NavigateTo<CompleteBolLoginChallengeViewModel>(true)">Sign In with Bol</MudNavLink>
             </MudNavGroup>
             <MudNavGroup Title="Certifier">
                 @if (!BolAccount.IsCertifier)
@@ -84,6 +84,29 @@
         await OnRefreshCallback.InvokeAsync(BolAccount);
         await Task.Delay(500);
         idle = true;
+    }
+
+    private async Task ShowCertificationPopup()
+    {
+        int certifications = BolAccount?.Certifications ?? 0;
+
+        string message = certifications switch
+        {
+            >= 4 => $"You already have {certifications} certifications, enough to access all BOL community levels. Do you still need more?",
+            2 => "You have 2 certifications, and your account is open. To become a certifier, you need two more.",
+            _ => null
+        };
+
+        if (message != null)
+        {
+            bool continueAction = await App.Current.Windows[0].Page.DisplayAlert("Certification Status", message, "Yes - I need more certifications", "No - There is no reason");
+            if (!continueAction)
+            {
+                return;
+            }
+        }
+
+        NavigationService.NavigateTo<GetCertifiedViewModel>(true);
     }
 
     private async Task ShowUnregisterConfirmation()
