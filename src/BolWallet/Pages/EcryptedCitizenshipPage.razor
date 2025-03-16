@@ -129,6 +129,11 @@
                                                 <MudTextField @bind-Value="ViewModel.CitizenshipForm.PassportSha256" OnBlur="@(x => form.PassportSha256 = form.PassportSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.PassportSha256)" Label="Passport SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "ProofOfNin":
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         Text="Is Mandatory" />
                                                 <MudTextField @bind-Value="ViewModel.CitizenshipForm.ProofOfNinSha256" OnBlur="@(x => form.ProofOfNinSha256 = form.ProofOfNinSha256?.Trim().ToUpper())" For="@(() => ViewModel.CitizenshipForm.ProofOfNinSha256)" Label="Proof of NIN SHA-256" Variant="Variant.Outlined" />
                                                 break;
                                             case "BirthCertificate":
@@ -171,18 +176,28 @@
                                                      Size="Size.Medium"
                                                      Text="@TrimFileName(fileResult.FileName, 15)" />
                                         }
-                                        else if (ViewModel.Files.Passport == null && ViewModel.Files.BirthCertificate == null)
-                                            switch (propertyInfo.Name)
+                                        else
+                                        {
+                                            @if (propertyInfo.Name == "ProofOfNin")
                                             {
-                                                case "IdentityCard":
-                                                    <MudChip Class="centered-content"
-                                                             Icon="@Icons.Material.Filled.Warning"
-                                                             Color="Color.Warning"
-                                                             Size="Size.Medium"
-                                                             Text="Is Mandatory" />
-                                                    break;
-                                                case "IdentityCardBack":
-                                                    {
+                                                <MudChip Class="centered-content"
+                                                         Icon="@Icons.Material.Filled.Warning"
+                                                         Color="Color.Warning"
+                                                         Size="Size.Medium"
+                                                         Text="Is Mandatory" />
+                                            }
+                                            else if (ViewModel.Files.Passport == null && ViewModel.Files.BirthCertificate == null)
+                                            {
+                                                switch (propertyInfo.Name)
+                                                {
+                                                    case "IdentityCard":
+                                                        <MudChip Class="centered-content"
+                                                                 Icon="@Icons.Material.Filled.Warning"
+                                                                 Color="Color.Warning"
+                                                                 Size="Size.Medium"
+                                                                 Text="Is Mandatory" />
+                                                        break;
+                                                    case "IdentityCardBack":
                                                         <MudChip Class="centered-content"
                                                                  Icon="@Icons.Material.Filled.Warning"
                                                                  Color="Color.Warning"
@@ -191,9 +206,7 @@
                                                                  Text="Is Mandatory">
                                                         </MudChip>
                                                         break;
-                                                    }
-                                                case "Passport":
-                                                    {
+                                                    case "Passport":
                                                         <MudChip Class="centered-content"
                                                                  Icon="@Icons.Material.Filled.Warning"
                                                                  Color="Color.Warning"
@@ -202,9 +215,7 @@
                                                                  Text="Use instead of Identity">
                                                         </MudChip>
                                                         break;
-                                                    }
-                                                case "BirthCertificate":
-                                                    {
+                                                    case "BirthCertificate":
                                                         <MudChip Class="centered-content"
                                                                  Icon="@Icons.Material.Filled.Warning"
                                                                  Color="Color.Warning"
@@ -213,8 +224,9 @@
                                                                  Text="Use for children">
                                                         </MudChip>
                                                         break;
-                                                    }
+                                                }
                                             }
+                                        }
                                     </MudItem>
                                     <MudItem xs="12" sm="12" md="1">
                                         <MudIconButton Icon="@Icons.Material.Filled.UploadFile" aria-label="@document.file" OnClick="@(args => UploadFile(document.file))" />
