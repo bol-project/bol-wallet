@@ -67,20 +67,16 @@ public partial class SubmitCitizenshipViewModel : BaseViewModel
         
         _dialogService.Show<MoreInfoDialog>("", parameters, options);
     }
-
-    public bool HasAddedMandatoryFiles => Files is
-    { IdentityCard: not null, IdentityCardBack: not null, ProofOfNin: not null }
-       or { Passport: not null, ProofOfNin: not null }
-       or { BirthCertificate: not null, ProofOfNin: not null };
-
+    
+    public bool HasAddedMandatoryFiles => Files is 
+        { Passport: not null } 
+        or { IdentityCard: not null, IdentityCardBack: not null }
+        or { BirthCertificate: not null };
 
     public bool HasAddedMandatoryHashes =>
-        !string.IsNullOrEmpty(CitizenshipForm.ProofOfNinSha256) &&
-        (
-            (!string.IsNullOrEmpty(CitizenshipForm.IdentityCardSha256) && !string.IsNullOrEmpty(CitizenshipForm.IdentityCardBackSha256)) ||
-            !string.IsNullOrEmpty(CitizenshipForm.PassportSha256) ||
-            !string.IsNullOrEmpty(CitizenshipForm.BirthCertificateSha256)
-        );
+        (!string.IsNullOrEmpty(CitizenshipForm.IdentityCardSha256) && !string.IsNullOrEmpty(CitizenshipForm.IdentityCardBackSha256)) ||
+        !string.IsNullOrEmpty(CitizenshipForm.PassportSha256) ||
+        !string.IsNullOrEmpty(CitizenshipForm.BirthCertificateSha256);
 
     public IEnumerable<string> SelectedCountryNames => UserData.Citizenships.Select(c => c.Name).ToArray();
 
