@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Blazing.Mvvm;
 using Akavache.NewtonsoftJson;
 using Akavache.Sqlite3;
 using Splat.Builder;
@@ -60,6 +61,7 @@ public static class MauiProgram
 #endif
 
         builder.Services.AddMudServices();
+        builder.Services.AddMvvm();
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();

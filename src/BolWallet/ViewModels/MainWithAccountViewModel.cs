@@ -7,7 +7,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.Messaging;
 
 namespace BolWallet.ViewModels;
-public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
+public partial class MainWithAccountViewModel : BaseViewModel
 {
     private readonly ISecureRepository _secureRepository;
     private readonly IBolService _bolService;
@@ -280,13 +280,19 @@ public partial class MainWithAccountViewModel : BaseViewModel, IDisposable
         await _closeWalletService.CloseWallet();
     }
 
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        if (_cts is { IsCancellationRequested: false })
+        if (disposing)
         {
-            _cts.Cancel();
+            if (_cts is { IsCancellationRequested: false })
+            {
+                _cts.Cancel();
+            }
+        
+            _cts.Dispose();
         }
         
-        _cts.Dispose();
+        // Always call base to ensure command subscriptions are cleaned up
+        base.Dispose(disposing);
     }
 }

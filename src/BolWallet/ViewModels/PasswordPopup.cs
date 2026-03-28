@@ -25,9 +25,9 @@ public sealed class PasswordPopup : Popup
             ClearButtonVisibility = ClearButtonVisibility.WhileEditing
         };
         
-        passwordEntry.Completed += (sender, e) =>
+        passwordEntry.Completed += async (sender, e) =>
         {
-            Close();
+            await CloseAsync();
             TaskCompletionSource.SetResult(passwordEntry.Text);
         };
 
@@ -43,9 +43,9 @@ public sealed class PasswordPopup : Popup
             IsVisible = false
         };
 
-        submitButton.Clicked += (sender, e) =>
+        submitButton.Clicked += async (sender, e) =>
         {
-            Close();
+            await CloseAsync();
             TaskCompletionSource.SetResult(passwordEntry.Text);
         };
 
@@ -60,9 +60,9 @@ public sealed class PasswordPopup : Popup
             HorizontalOptions = LayoutOptions.Fill
         };
 
-        cancelButton.Clicked += (sender, e) =>
+        cancelButton.Clicked += async (sender, e) =>
         {
-            Close();
+            await CloseAsync();
             TaskCompletionSource.SetResult(null);
         };
 
