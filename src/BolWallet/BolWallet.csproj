@@ -220,7 +220,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="akavache" Version="10.1.6" />
+    <PackageReference Include="Akavache.Sqlite3" Version="11.5.1" />
+    <PackageReference Include="Akavache.NewtonsoftJson" Version="11.5.1" />
     <PackageReference Include="Blazing.Mvvm" Version="1.4.0" />
     <PackageReference Include="BolChain.Core" Version="1.1.4" />
     <PackageReference Include="CommunityToolkit.Maui" Version="11.1.0" />

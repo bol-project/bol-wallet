@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
-using Akavache;
+using Akavache.NewtonsoftJson;
+using Akavache.Sqlite3;
+using Splat.Builder;
 using Bol.Core.Extensions;
 using Bol.Core.Model;
 using Bol.Cryptography;
@@ -16,6 +18,7 @@ using Microsoft.Maui.LifecycleEvents;
 using MudBlazor.Services;
 using Plugin.Maui.Audio;
 using Country = BolWallet.Models.Country;
+using Akavache;
 
 namespace BolWallet;
 
@@ -23,6 +26,8 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        ConfigureAkavache();
+        
         var builder = MauiApp.CreateBuilder();
         builder.Services.ConfigureSerilog();
 
@@ -74,7 +79,7 @@ builder.ConfigureMauiHandlers(handlers =>
 
         // Register Services
         services.AddSingleton<TimeProvider>(TimeProvider.System);
-        services.AddScoped<IRepository>(_ => new Repository(BlobCache.UserAccount));
+        services.AddScoped<IRepository>(_ => new Repository(CacheDatabase.UserAccount));
         services.AddScoped<ISecureRepository, AkavacheRepository>();
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddScoped<IMediaService, MediaService>();
@@ -125,10 +130,17 @@ builder.ConfigureMauiHandlers(handlers =>
         services.AddHttpClient<IBolChallengeService, BolChallengeService>("BolChallengeService");
         services.AddSingleton<ICloseWalletService, CloseWalletService>();
         services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
-        
-        Registrations.Start(AppInfo.Current.Name); // TODO stop BlobCache after quit
 
         return builder.Build();
+    }
+
+    private static void ConfigureAkavache()
+    {
+        AppBuilder.CreateSplatBuilder()
+            .WithAkavacheCacheDatabase<NewtonsoftBsonSerializer>(b =>
+                b.WithApplicationName(AppInfo.Current.Name)
+                    .WithSqliteProvider()
+                    .WithSqliteDefaults());
     }
 
     private static IServiceCollection RegisterPermissionServices(IServiceCollection services)

@@ -1,4 +1,6 @@
-﻿using BolWallet.Controls;
+﻿using System.Reactive.Linq;
+using Akavache;
+using BolWallet.Controls;
 using BolWallet.Models.Messages;
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -93,5 +95,11 @@ public partial class App : Application, IRecipient<TargetNetworkChangedMessage>,
             : $"{message.Message}{Environment.NewLine}{Environment.NewLine}{message.Exception.ToString()}";
 
         Current.Windows[0].Page.DisplayAlert("Error", text, "OK");
+    }
+    
+    protected override void CleanUp()
+    {
+        CacheDatabase.Shutdown().Wait();
+        base.CleanUp();
     }
 }
