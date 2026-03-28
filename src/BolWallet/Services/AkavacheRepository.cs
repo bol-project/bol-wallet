@@ -12,7 +12,7 @@ public class AkavacheRepository : ISecureRepository
 
 		try
 		{
-			result = await BlobCache.Secure.GetObject<string>(key);
+			result = await CacheDatabase.Secure.GetObject<string>(key);
 		}
 		catch (KeyNotFoundException)
 		{
@@ -29,7 +29,7 @@ public class AkavacheRepository : ISecureRepository
 
 		try
 		{
-			result = BlobCache.Secure.GetObject<TEntity>(key).Wait();
+			result = CacheDatabase.Secure.GetObject<TEntity>(key).Wait();
 		}
 		catch (KeyNotFoundException)
 		{
@@ -46,7 +46,7 @@ public class AkavacheRepository : ISecureRepository
 
 		try
 		{
-			result = await BlobCache.Secure.GetObject<TEntity>(key);
+			result = await CacheDatabase.Secure.GetObject<TEntity>(key);
 		}
 		catch (KeyNotFoundException)
 		{
@@ -60,7 +60,7 @@ public class AkavacheRepository : ISecureRepository
 		ValidateKey(key);
 		ValidateValue(value);
 
-		await BlobCache.Secure.InsertObject(key, value);
+		await CacheDatabase.Secure.InsertObject(key, value);
 	}
 
 	public async Task SetAsync<TEntity>(string key, TEntity entity) where TEntity : class
@@ -68,14 +68,14 @@ public class AkavacheRepository : ISecureRepository
 		ValidateKey(key);
 		ValidateValue(entity);
 
-		await BlobCache.Secure.InsertObject(key, entity);
+		await CacheDatabase.Secure.InsertObject(key, entity);
 	}
 
     public async Task RemoveAsync(string key)
     {
         ValidateKey(key);
 
-        await BlobCache.Secure.Invalidate(key);
+        await CacheDatabase.Secure.Invalidate(key);
     }
 
 	private static void ValidateKey(string key)
