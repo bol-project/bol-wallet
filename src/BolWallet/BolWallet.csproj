@@ -61,9 +61,9 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
     <WarningsAsErrors />
-    <ArchiveOnBuild>false</ArchiveOnBuild>
+    <ArchiveOnBuild>true</ArchiveOnBuild>
     <CodesignProvision>Automatic</CodesignProvision>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
 
