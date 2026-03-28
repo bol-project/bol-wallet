@@ -5,4 +5,4 @@ public readonly record struct BolWalletAppConfig(
     string BolIdentityEndpoint,
     string BolExplorerEndpoint,
     string BolCertifierEndpoint,
-    string Contract);
+    string Contract = "");
